@@ -304,7 +304,7 @@ return {
         scale = 2.25,
         tier = 19,
     },
-    --]]--
+    --]]
     {
         spritePath = "assets/sprites/boxes/boxgodangry.png",
 
