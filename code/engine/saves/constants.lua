@@ -14,7 +14,7 @@ return {
         },
 
         stats = {
-            highestBoxTier = 1,
+            highestBoxTier = 0,
 
             boxSpawnCooldown = 1.2,
             boxSpawnTier = 1,

@@ -73,31 +73,59 @@ function Module:mergeUpdate(deltaTime)
         local merge = self._activeMerges[i]
         if not merge then goto continue end
 
+        local boxA = merge.boxA
+        local boxB = merge.boxB
+
+        if not boxA or not boxB then
+            table.remove(self._activeMerges, i)
+            goto continue
+        end
+
+        if not boxA.element or not boxB.element then
+            table.remove(self._activeMerges, i)
+            goto continue
+        end
+
         merge.timeSinceStart = merge.timeSinceStart + deltaTime
 
-        if merge.boxA.dragging or merge.boxB.dragging then
-            merge.boxA.merging = false
-            merge.boxB.merging = false
-
-            self._activeMerges[i] = nil
-
+        if boxA.dragging or boxB.dragging then
+            boxA.merging = false
+            boxB.merging = false
+            table.remove(self._activeMerges, i)
             goto continue
         end
 
         local timerLocalized = math.min(merge.timeSinceStart / merge.duration, 1)
         local eased = easing.easeInQuad(timerLocalized)
 
-        merge.boxA.element.x = math.lerp(merge.startAX, merge.middleX, eased)
-        merge.boxA.element.y = math.lerp(merge.startAY, merge.middleY, eased)
-        merge.boxB.element.x = math.lerp(merge.startBX, merge.middleX, eased)
-        merge.boxB.element.y = math.lerp(merge.startBY, merge.middleY, eased)
+        boxA.element.x = math.lerp(merge.startAX, merge.middleX, eased)
+        boxA.element.y = math.lerp(merge.startAY, merge.middleY, eased)
+        boxB.element.x = math.lerp(merge.startBX, merge.middleX, eased)
+        boxB.element.y = math.lerp(merge.startBY, merge.middleY, eased)
 
         if timerLocalized >= 1 then
-            merge.boxA:remove()
-            merge.boxB:remove()
+            if not SaveFilesModule.loadedFile then
+                boxA.merging = false
+                boxB.merging = false
+                table.remove(self._activeMerges, i)
+                goto continue
+            end
 
-            local newBoxTier = merge.boxA.tier + 1
+            local newBoxTier = boxA.tier + 1
             local newBoxData = BoxesObjectModule:getBoxDataByTier(newBoxTier)
+
+            local velocityX = (boxA.velocityX + boxB.velocityX) * CONSTANTS.ELASTICITY
+            local velocityY = (boxA.velocityY + boxB.velocityY) * CONSTANTS.ELASTICITY
+
+            local scaleX = boxA.element.scaleX
+            local scaleY = boxA.element.scaleY
+
+            local middleX = merge.middleX
+            local middleY = merge.middleY
+
+            boxA:remove()
+            boxB:remove()
+
             local newBox = BoxesObjectModule:createBox(newBoxData)
 
             if newBox then
@@ -105,27 +133,28 @@ function Module:mergeUpdate(deltaTime)
                     SaveFilesModule.loadedFile.stats.highestBoxTier = newBoxTier
                 end
 
-                SaveFilesModule.loadedFile.currencies.credits = SaveFilesModule.loadedFile.currencies.credits + newBox.mergeReward
+                SaveFilesModule.loadedFile.currencies.credits =
+                    SaveFilesModule.loadedFile.currencies.credits + newBox.mergeReward
 
-                newBox.element.x, newBox.element.y = merge.middleX, merge.middleY
+                newBox.element.x = middleX
+                newBox.element.y = middleY
 
-                newBox.velocityX = (merge.boxA.velocityX + merge.boxB.velocityX) * CONSTANTS.ELASTICITY
-                newBox.velocityY = (merge.boxA.velocityY + merge.boxB.velocityY) * CONSTANTS.ELASTICITY
+                newBox.velocityX = velocityX
+                newBox.velocityY = velocityY
 
                 newBox._scaleTween = {
-                    startX = merge.boxA.element.scaleX,
-                    startY = merge.boxA.element.scaleY,
+                    startX = scaleX,
+                    startY = scaleY,
                     targetX = newBox.element.scaleX,
                     targetY = newBox.element.scaleY,
                     timeSinceStart = 0,
                     duration = CONSTANTS.BASE_SCALE_TWEEN_DURATION * (1 + newBox.weight / CONSTANTS.WEIGHT_ANIM_DURATION_DIVISOR)
                 }
 
-                newBox.element.scaleX = merge.boxA.element.scaleX
-                newBox.element.scaleY = merge.boxA.element.scaleY
+                newBox.element.scaleX = scaleX
+                newBox.element.scaleY = scaleY
 
                 local mergeSound = SoundModule:createSound(newBox.mergeSoundData)
-
                 if mergeSound then
                     mergeSound:play()
                     mergeSound:remove()
@@ -139,7 +168,7 @@ function Module:mergeUpdate(deltaTime)
             table.remove(self._activeMerges, i)
         end
 
-        :: continue ::
+        ::continue::
     end
 end
 
