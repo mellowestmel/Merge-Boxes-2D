@@ -23,7 +23,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box2.png",
 
-        description = "Jimbo is constantly shocked at everything, constantly horrified of what'll happen next.",
+        description = "Jimbo is constantly shocked at everything, always horrified of what comes next.",
         quote = "WHAT??",
         name = "Jimbo",
 
@@ -36,7 +36,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box3.png",
 
-        description = "Glumbo's constantly planning on taking over the world, but that'll never happen because he's telling his plans to everyone. He's the reason for his brother Jimbo's constant shock.",
+        description = "Glumbo's constantly planning on taking over the world, but that'll never happen because he's telling his plans to everyone. He's the reason his brother Jimbo is constantly shocked.",
         quote = "And that's how I'll take over the world!",
         name = "Glumbo",
 
@@ -50,7 +50,7 @@ return {
         spritePath = "assets/sprites/boxes/box4.png",
 
         description = "Jeremy loves to remind the teacher about the homework. Nobody likes Jeremy.",
-        quote = "Ermm.. actually..! ☝️🤓",
+        quote = "Ermm... actually! ☝️🤓",
         name = "Jeremy",
 
         mergeReward = 15,
@@ -93,7 +93,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box7.png",
 
-        description = "A really enthusiastic box, loves bothering people. Annoying.",
+        description = "A really enthusiastic box who loves bothering people. Annoying.",
         quote = "HEY!!!",
         name = "Carlos",
 
@@ -119,7 +119,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box9.png",
 
-        description = "Goodness gracious!! Is this thing okay!?!? It's eyes are bloodshot!!",
+        description = "Goodness gracious!! Is this thing okay!?!? Its eyes are bloodshot!!",
         quote = "YASS QWEEN 💅💅 WE'RE GETTING SOME GEMINI ENERGY! SLAYY! 💅💅💅",
         name = "Angel",
 
@@ -132,7 +132,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box10.png",
 
-        description = [[An extremely cool cube, who apparantly has terrible parents. Who in their right mind would name their child "Frigid Wendyhot"? Also, who shaved off his other eyebrow?]],
+        description = [[An extremely cool cube, who apparently has terrible parents. Who in their right mind would name their child "Frigid Wendyhot"? Also, who shaved off his other eyebrow?]],
         quote = "Sup, twin?",
         name = "Frigid Wendyhot",
 
@@ -176,7 +176,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box13.png",
 
-        description = "A box that grew so big, it became classifiable as a mountain! Going past this point may not be wise.. He looks a little funny tho.",
+        description = "A box that grew so big, it became classifiable as a mountain! Going past this point may not be wise... He looks a little funny though.",
         quote = "Big back, big back! Big back, big back! Yeah, my back is loaded up with snacks and different foods!",
         name = "Mt. Box",
 
@@ -205,8 +205,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box15.png",
 
-        description = "A box that has been enlightened with the knowledge of everything, even the fact that it's in a game! It has become mute and un-reactive, as it is trying to process everything at once.",
-        quote = "...",
+        description = "A box that has been enlightened with the knowledge of everything, even the fact that it's in a game! It has become mute and unreactive, trying to process everything at once.",
         name = "Transcended",
 
         mergeReward = 222,
@@ -223,7 +222,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box16.png",
 
-        description = "A mesmerizing box which is hard to look at. You have fused so much matter into one being, that it is starting to spill.",
+        description = "A mesmerizing box which is hard to look at. You have fused so much matter into one being that it is starting to spill.",
         quote = "ZXZlcnl0aGluZw==",
         name = "Omnibox",
 
@@ -234,6 +233,8 @@ return {
             element.color = RenderModule:createColor(color.HSVtoRGB(hue, 1, 1))
         end,
 
+        mergeSoundData = {soundPath = "assets/sounds/merge/box16.wav"},
+
         weight = 1100,
         scale = 2,
         tier = 16,
@@ -241,7 +242,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box17.png",
 
-        description = "A sinister and unstable box. It has become so big that it's weight is in the negatives.",
+        description = "A sinister and unstable box. It has become so big that its weight is in the negatives.",
         quote = "MUAHAHAHAHA!",
         name = "Devoided",
 
@@ -250,6 +251,8 @@ return {
         reflectionPath = "assets/sprites/reflections/box17.png",
         reflective = true,
 
+        mergeSoundData = {soundPath = "assets/sounds/merge/box17.wav"},
+
         weight = -60,
         scale = 2.05,
         tier = 17,
@@ -257,11 +260,13 @@ return {
     {
         spritePath = "assets/sprites/boxes/box18.png",
 
-        description = "Quite a playful box that likes to mess around with it's shapeshifting ability. Will occasionally shapeshift into the lower-tier boxes while still being counted as the same tier.",
-        quote = "Hide and seek! will you find me?",
+        description = "Quite a playful box that likes to mess around with its shapeshifting ability. Will occasionally shapeshift into the lower-tier boxes, while still being counted as the same tier.",
+        quote = "Hide and seek! Will you find me?",
         name = "Box o' Matter",
 
         mergeReward = 555,
+
+        mergeSoundData = {soundPath = "assets/sounds/merge/box18.wav"},
 
         weight = 1300,
         scale = 2.15,
@@ -270,7 +275,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box19.png",
 
-        description = "An ancient cosmic entity that has existed since before the universe. Was in the middle of the best nap it has ever had. You woke it up by merging too much. It is not happy about this and it wants you to know that specifically.",
+        description = "An ancient cosmic entity that has existed since before the universe. It was in the middle of the best nap it has ever had.",
         quote = "I was SLEEPING!!",
         name = "Great Old Grumpy One",
 
@@ -281,146 +286,23 @@ return {
         tier = 19,
     },
     {
-        spritePath = "assets/sprites/boxes/box20.png",
+        spritePath = "assets/sprites/boxes/box20_sheet.png",
 
-        description = "A very important box with a very important briefcase that literially is made of cheese. Nobody knows what's in the briefcase. Nobody has ever been important enough to find out. He's got places to be and you are not on his schedule.",
-        quote = "I'm very busy, y'know? I ain't got time enough for these 'ere antics!",
-        name = "The Big Cheese",
+        description = "All the merging you've done has led up to this. The ultimate three-dimensional being.",
+        quote = "",
+        name = "?@%%%&&",
+
+        -- animation = {
+        --     frameWidth = 100,
+        --     frameHeight = 100,
+        --     frameCount = 39,
+        --     fps = 24
+        -- },
 
         mergeReward = 1000,
 
         weight = 1500,
-        scale = 2.35,
+        scale = 2.25,
         tier = 20,
-    },
-    {
-        spritePath = "assets/sprites/boxes/box21.png",
-
-        description = "Nobody has ever understood a word he says. He has predicted every major cosmic event with perfect accuracy. He warned everyone about all of them. Every single time.",
-        quote = "mghmmfmhghmjghrmmmffhmhhhhgh",
-        name = "Mumbles",
-
-        mergeReward = 1250,
-
-        weight = 1600,
-        scale = 2.4,
-        tier = 21,
-    },
-    {
-        spritePath = "assets/sprites/boxes/box22.png",
-
-        description = "A box that cries a lot. Looks like it has some familial problems.",
-        quote = "wah",
-        name = "The 'Saac",
-
-        mergeReward = 1750,
-
-        weight = 1800,
-        scale = 2.5,
-        tier = 22,
-    },
-    {
-        spritePath = "assets/sprites/boxes/box23.png",
-
-        description = "A carefree box who suspiciously looks a lot like the creator of the game. The universe could be collapsing around her and she would think that's pretty neat. Has never once stressed about anything.",
-        quote = "yea",
-        name = "Mellow",
-
-        mergeReward = 2000,
-
-        weight = 1900,
-        scale = 2.55,
-        tier = 23,
-    },
-    -- {
-    --     spritePath = "assets/sprites/boxes/box24.png",
-
-    --     description = "",
-    --     quote = "",
-    --     name = "",
-
-    --     mergeReward = 2250,
-
-    --     weight = 2000,
-    --     scale = 2.6,
-    --     tier = 24,
-    -- },
-    -- {
-    --     spritePath = "assets/sprites/boxes/box25.png",
-
-    --     description = "",
-    --     quote = "",
-    --     name = "",
-
-    --     mergeReward = 2500,
-
-    --     weight = 2100,
-    --     scale = 2.65,
-    --     tier = 25,
-    -- },
-    -- {
-    --     spritePath = "assets/sprites/boxes/box26.png",
-
-    --     description = "",
-    --     quote = "",
-    --     name = "",
-
-    --     mergeReward = 2750,
-
-    --     weight = 2200,
-    --     scale = 2.7,
-    --     tier = 26,
-    -- },
-    -- {
-    --     spritePath = "assets/sprites/boxes/box27.png",
-
-    --     description = "",
-    --     quote = "",
-    --     name = "",
-
-    --     mergeReward = 3000,
-
-    --     weight = 2300,
-    --     scale = 2.75,
-    --     tier = 27,
-    -- },
-    -- {
-    --     spritePath = "assets/sprites/boxes/box28.png",
-
-    --     description = "",
-    --     quote = "",
-    --     name = "",
-
-    --     mergeReward = 3250,
-
-    --     weight = 2400,
-    --     scale = 2.8,
-    --     tier = 28,
-    -- },
-    -- {
-    --     spritePath = "assets/sprites/boxes/box29.png",
-
-    --     description = "",
-    --     quote = "",
-    --     name = "",
-
-    --     mergeReward = 3750,
-
-    --     weight = 2750,
-    --     scale = 2.9,
-    --     tier = 29,
-    -- },
-    -- {
-    --     spritePath = "assets/sprites/boxes/box30.png",
-
-    --     description = "",
-    --     quote = "",
-    --     name = "",
-
-    --     mergeReward = 4000,
-
-    --     weight = 3000,
-    --     scale = 3,
-    --     tier = 30,
-    -- },
+    }
 }
