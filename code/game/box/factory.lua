@@ -19,7 +19,7 @@ function Module:spawn()
 
     local spawnTier = SaveFilesModule.loadedFile.stats.boxSpawnTier
     
-    if SaveFilesModule.loadedFile.stats.highestBoxTier < spawnTier then 
+    if SaveFilesModule.loadedFile.stats.highestBoxTier < spawnTier then
         SaveFilesModule.loadedFile.stats.highestBoxTier = spawnTier
     end
 
