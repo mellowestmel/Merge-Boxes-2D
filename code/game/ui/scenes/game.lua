@@ -32,8 +32,8 @@ local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 local ScreenFlashModule = require("code.game.vfx.screenFlash")
 
 --/// DATA \\\--
-local SharedData = require("code.data.ui.shared")
-local SceneData = require("code.data.ui.game")
+local SharedData = require("code.data.ui.scenes.shared")
+local SceneData = require("code.data.ui.scenes.game")
 
 local Module = {}
 Module._elements = {}

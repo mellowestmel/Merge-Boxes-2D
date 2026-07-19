@@ -16,7 +16,7 @@ local BoxesObjectModule = require("code.game.box.object")
 local UISharedFunctions = require("code.game.ui.shared")
 
 --/// DATA \\\--
-local SceneData = require("code.data.ui.blackMarket")
+local SceneData = require("code.data.ui.scenes.blackMarket")
 
 local Module = {}
 Module._elements = {}
@@ -50,7 +50,7 @@ function Module:update(deltaTime)
     UISharedFunctions:update()
 end
 
-function Module:init()    
+function Module:init()
     MusicHandlerModule:playTrack("blackMarket")
 
     BoxesObjectModule.renderBoxes = false
@@ -63,6 +63,8 @@ function Module:init()
     UISharedFunctions:setupCreditsLabel(self)
 
     UISharedFunctions:setupBackToMenuButton(self)
+
+    UISharedFunctions:setupDialougeBox(self)
 
     setupBackground(self)
     setupShopkeeper(self)

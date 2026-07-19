@@ -1,5 +1,8 @@
 -- ~/code/data/boxes.lua
 
+--/// ENGINE \\\--
+local RenderModule = require("code.engine.render")
+
 --// HELPERS \\--
 local color = require("code.engine.helpers.color")
 
@@ -20,7 +23,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box2.png",
 
-        description = "Jimbo is constantly shocked at everything, constantly horrified of what'll happen next.",
+        description = "Jimbo is constantly shocked at everything, always horrified by what comes next.",
         quote = "WHAT??",
         name = "Jimbo",
 
@@ -33,7 +36,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box3.png",
 
-        description = "Glumbo's constantly planning on taking over the world, but that'll never happen because he's telling his plans to everyone. He's the reason for his brother Jimbo's constant shock.",
+        description = "Glumbo's constantly planning on taking over the world, but that'll never happen because he's telling his plans to everyone. He's the reason his brother Jimbo is constantly shocked.",
         quote = "And that's how I'll take over the world!",
         name = "Glumbo",
 
@@ -47,7 +50,7 @@ return {
         spritePath = "assets/sprites/boxes/box4.png",
 
         description = "Jeremy loves to remind the teacher about the homework. Nobody likes Jeremy.",
-        quote = "Ermm.. actually..! ☝️🤓",
+        quote = "Ermm... actually! ☝️🤓",
         name = "Jeremy",
 
         mergeReward = 15,
@@ -90,7 +93,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box7.png",
 
-        description = "A really enthusiastic box, loves bothering people. Annoying.",
+        description = "A really enthusiastic box who loves bothering people. Annoying.",
         quote = "HEY!!!",
         name = "Carlos",
 
@@ -116,7 +119,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box9.png",
 
-        description = "Goodness gracious!! Is this thing okay!?!? It's eyes are bloodshot!!",
+        description = "Goodness gracious!! Is this thing okay!?!? Its eyes are bloodshot!!",
         quote = "YASS QWEEN 💅💅 WE'RE GETTING SOME GEMINI ENERGY! SLAYY! 💅💅💅",
         name = "Angel",
 
@@ -129,7 +132,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box10.png",
 
-        description = [[An extremely cool cube, who apparantly has terrible parents. Who in their right mind would name their child "Frigid Wendyhot"? Also, who shaved off his other eyebrow?]],
+        description = [[An extremely cool cube, who apparently has terrible parents. Who in their right mind would name their child "Frigid Wendyhot"? Also, who shaved off his other eyebrow?]],
         quote = "Sup, twin?",
         name = "Frigid Wendyhot",
 
@@ -147,7 +150,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box11.png",
 
-        description = "A dizzy cube which bears a striking resemblance to the creator of the game.",
+        description = "A box whose perception is always a few seconds behind reality. It reacts to things that already happened.",
         quote = "Whuh? wha-?",
         name = "Dizzy",
 
@@ -160,7 +163,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box12.png",
 
-        description = "A granite-man transformed into a box. He's the creator of the faces you see on the boxes.",
+        description = "A granite-man transformed into a box. He is the original artist behind every face you see on the boxes.",
         quote = "ROCK NOISES!!!",
         name = "Gochged",
 
@@ -173,7 +176,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box13.png",
 
-        description = "A box that grew so big, it became classifiable as a mountain! Going past this point may not be wise.. He looks a little funny tho.",
+        description = "A box that grew so big, it became classifiable as a mountain! Going past this point may not be wise... He looks a little funny though.",
         quote = "Big back, big back! Big back, big back! Yeah, my back is loaded up with snacks and different foods!",
         name = "Mt. Box",
 
@@ -202,17 +205,10 @@ return {
     {
         spritePath = "assets/sprites/boxes/box15.png",
 
-        description = "A box that has been enlightened with the knowledge of everything, even the fact that it's in a game! It has become mute and un-reactive, as it is trying to process everything at once.",
-        quote = "...",
+        description = "A box that has been enlightened with the knowledge of everything, even the fact that it's in a game! It has become mute and unreactive, trying to process everything at once.",
         name = "Transcended",
 
         mergeReward = 222,
-
-        --screenFlashColor = RenderModule:createColor(255, 255, 255, 1),
-        --screenFlashFadeDuration = 2.25,
-        --flashScreen = true,
-
-        --mergeSoundData = {soundPath = "assets/sounds/merge/box15.wav"},
 
         screenFlashFadeDuration = 1.2,
         flashScreen = true,
@@ -226,22 +222,18 @@ return {
     {
         spritePath = "assets/sprites/boxes/box16.png",
 
-        description = "A mesmerizing box which is hard to look at. You have fused so much matter into one being, that it is starting to spill.",
+        description = "A mesmerizing box which is hard to look at. You have fused so much matter into one being that it is starting to spill.",
         quote = "ZXZlcnl0aGluZw==",
         name = "Omnibox",
 
         mergeReward = 333,
 
-        --screenFlashColor = RenderModule:createColor(255, 255, 255, 1),
-        --screenFlashFadeDuration = 2.25,
-        --flashScreen = true,
-
         onUpdateCosmetic = function(element)
             local hue = (love.timer.getTime() % 5) / 5
-            element.color = color.HSVtoRGB(hue, 1, 1)
+            element.color = RenderModule:createColor(color.HSVtoRGB(hue, 1, 1))
         end,
 
-        --mergeSoundData = {soundPath = "assets/sounds/merge/box16.wav"},
+        mergeSoundData = {soundPath = "assets/sounds/merge/box16.wav"},
 
         weight = 1100,
         scale = 2,
@@ -250,20 +242,16 @@ return {
     {
         spritePath = "assets/sprites/boxes/box17.png",
 
-        description = "A sinister and unstable box. It has become so big that it's weight is in the negatives.",
+        description = "A sinister and unstable box. It has become so big that its weight is in the negatives.",
         quote = "MUAHAHAHAHA!",
         name = "Devoided",
 
         mergeReward = 444,
 
-        --screenFlashColor = RenderModule:createColor(43, 43, 255, 1),
-        --screenFlashFadeDuration = 2.25,
-        --flashScreen = true,
-
         reflectionPath = "assets/sprites/reflections/box17.png",
         reflective = true,
 
-        --mergeSoundData = {soundPath = "assets/sounds/merge/box17.wav"},
+        mergeSoundData = {soundPath = "assets/sounds/merge/box17.wav"},
 
         weight = -60,
         scale = 2.05,
@@ -272,16 +260,13 @@ return {
     {
         spritePath = "assets/sprites/boxes/box18.png",
 
-        description = "Quite a playful box that likes to mess around with it's shapeshifting ability. Will occasionally shapeshift into the lower-tier boxes while still being counted as the same tier.",
-        quote = "Hide and seek! will you find me?",
+        description = "Quite a playful box that likes to mess around with its shapeshifting ability. It will occasionally shapeshift into the lower-tier boxes, while still being counted as the same tier.",
+        quote = "Hide and seek! Will you find me?",
         name = "Box o' Matter",
 
         mergeReward = 555,
 
-        --screenFlashFadeDuration = 2.25,
-        --flashScreen = true,
-
-        --mergeSoundData = {soundPath = "assets/sounds/merge/box18.wav"},
+        mergeSoundData = {soundPath = "assets/sounds/merge/box18.wav"},
 
         weight = 1300,
         scale = 2.15,
@@ -290,14 +275,90 @@ return {
     {
         spritePath = "assets/sprites/boxes/box19.png",
 
-        description = "A rage-baiting, baguette loving, machine loving chimera who has their own territory and also happens to be a virtual japanese singer who also happens to be a 31 year old minor who also happens to be an april fools joke. I don't have anybody in mind here, just to clarify. I'm talking about a fully original character in my own game.",
-        quote = "Thanks for sending me a message. Unfortunately, you're very ugly and I will not be replying to you.",
-        name = "Tasane Keto",
+        description = "An ancient cosmic entity that has existed since before the universe. It was in the middle of the best nap it has ever had.",
+        quote = "I was SLEEPING!!",
+        name = "Great Old Grumpy One",
 
         mergeReward = 666,
 
-        weight = 2000,
-        scale = 2.25,
+        weight = 1400,
+        scale = 2.2,
         tier = 19,
     },
+    {
+        spritePath = "assets/sprites/boxes/box20.png",
+
+        description = "A box so lucky it constantly gets accused of cheating in various games.",
+        quote = "Trust me, it's luck!",
+        name = "Luckroll Box",
+
+        mergeReward = 777,
+
+        mergeSoundData = {soundPath = "assets/sounds/merge/box20.wav"},
+
+        weight = 1500,
+        scale = 2.25,
+        tier = 20,
+    },
+    {
+        spritePath = "assets/sprites/boxes/box21.png",
+
+        description = "A box that loves to collect little stickers and trinkets. It's covered in them. They're everywhere. How is that thing still breathing?",
+        quote = "A little bit of everything, all of the time!",
+        name = "The Collector",
+
+        mergeReward = 888,
+
+        weight = 1600,
+        scale = 2.3,
+        tier = 21,
+    },
+    {
+        spritePath = "assets/sprites/boxes/box22.png",
+
+        description = "A carefree little box who doesn't care what happens around her. Bears a striking resemblance to the creator of this game.",
+        quote = "yea",
+        name = "Mellow Box",
+
+        mergeReward = 999,
+
+        weight = 1700,
+        scale = 2.35,
+        tier = 22,
+    },
+    {
+        spritePath = "assets/sprites/boxes/box23.png",
+
+        description = "A funky-looking box with a weird typing quirk. Staring at it for too long may cause a migraine.",
+        quote = "H3Y, H0W 4R3 Y4????",
+        name = "Glitcherson",
+
+        mergeReward = 1250,
+
+        weight = 2000,
+        scale = 2.4,
+        tier = 23,
+    },
+    {
+        spritePath = "assets/sprites/boxes/box24_sheet.png",
+
+        description = "All the merging you've done has led up to this. The ultimate three-dimensional being.",
+        quote = "nil",
+        name = "?@%%%&&",
+
+        -- animation = {
+        --     frameWidth = 100,
+        --     frameHeight = 100,
+        --     frameCount = 39,
+        --     fps = 24
+        -- },
+
+        mergeReward = 2400,
+
+        mergeSoundData = {soundPath = "assets/sounds/merge/box24.wav"},
+
+        weight = 2400,
+        scale = 2.4,
+        tier = 24,
+    }
 }

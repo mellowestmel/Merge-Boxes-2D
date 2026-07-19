@@ -16,7 +16,7 @@ local BoxesObjectModule = require("code.game.box.object")
 local UISharedFunctions = require("code.game.ui.shared")
 
 --/// DATA \\\--
-local SceneData = require("code.data.ui.upgradeShop")
+local SceneData = require("code.data.ui.scenes.upgradeShop")
 
 local Module = {}
 Module._elements = {}
@@ -46,11 +46,13 @@ local function setupShopkeeper(self)
     table.insert(self._elements, shopkeeper)
 end
 
+
+
 function Module:update(deltaTime)
     UISharedFunctions:update()
 end
 
-function Module:init()    
+function Module:init()
     MusicHandlerModule:playTrack("upgradeShop")
 
     BoxesObjectModule.renderBoxes = false
@@ -63,6 +65,8 @@ function Module:init()
     UISharedFunctions:setupCreditsLabel(self)
 
     UISharedFunctions:setupBackToMenuButton(self)
+
+    UISharedFunctions:setupDialougeBox(self)
 
     setupBackground(self)
     setupShopkeeper(self)

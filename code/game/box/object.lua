@@ -2,9 +2,9 @@
 
 --/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
+local IdManagerModule = require("code.engine.idManager")
 
 --// HELPERS \\--
-local IdManagerModule = require("code.engine.helpers.id-manager")
 local table = require("code.engine.helpers.table")
 
 -- // BOX \\--

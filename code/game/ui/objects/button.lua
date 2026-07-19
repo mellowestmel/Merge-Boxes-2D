@@ -3,9 +3,9 @@
 --/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 local SoundModule = require("code.engine.sound")
+local IdManagerModule = require("code.engine.idManager")
 
 --// HELPERS \\--
-local IdManagerModule = require("code.engine.helpers.id-manager")
 local math = require("code.engine.helpers.math")
 
 --// VFX \\--
@@ -26,7 +26,7 @@ local Button = {
 
     _clickScale = .1,
     _hoverScale = .05,
-    
+
     _scaleSpeed = .5,
 
     _isHovered = false

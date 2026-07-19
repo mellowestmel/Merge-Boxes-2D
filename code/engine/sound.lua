@@ -4,9 +4,10 @@
 --// SAVES \\--
 local SettingsModule = require("code.engine.saves.settings")
 
---// HELPERS \\--
-local IdManagerModule = require("code.engine.helpers.id-manager")
+--// ENGINE \\--
+local IdManagerModule = require("code.engine.idManager")
 
+--// HELPERS \\--
 local math = require("code.engine.helpers.math")
 
 local Sound = {

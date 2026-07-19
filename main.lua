@@ -20,11 +20,15 @@ local UIHandlerModule = require("code.game.ui.handler")
 --// VFX \\--
 local VFXHandlerModule = require("code.game.vfx.handler")
 
-SettingsModule:loadFile()
+function love.load()
+    SettingsModule:loadFile()
 
-MusicHandlerModule.init()
-VFXHandlerModule.init()
-UIHandlerModule.init()
+    MusicHandlerModule.init()
+    VFXHandlerModule.init()
+    UIHandlerModule.init()
+
+    love.graphics.setDefaultFilter("nearest", "nearest")
+end
 
 function love.update(deltaTime)                                                                                                                                                                                                  _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
     BoxHandlerModule:update(deltaTime)

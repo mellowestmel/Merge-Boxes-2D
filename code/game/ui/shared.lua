@@ -23,7 +23,7 @@ local UIButtonObjectModule = require("code.game.ui.objects.button")
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
 --/// DATA \\\--
-local SharedData = require("code.data.ui.shared")
+local SharedData = require("code.data.ui.scenes.shared")
 
 local Module = {}
 Module._updateFunctions = {}
@@ -98,7 +98,7 @@ function Module:setupBackToMenuButton(scene)
                 callback = function()
                     SaveFilesModule:unloadFile(SaveFilesModule.loadedFile)
                     BoxesObjectModule:clearBoxes()
-                    
+
                     UISceneHandlerModule:switch("saveFiles")
                 end
             })
@@ -126,7 +126,7 @@ function Module:setupSessionPlaytimeLabel(scene)
     self._updateFunctions.sessionPlaytimeLabelUpdateFunction = function()
         if not sessionPlaytimeLabel then return end
 
-        sessionPlaytimeLabel.text = 
+        sessionPlaytimeLabel.text =
         "Session Time: " .. string.formatTime(
             SaveFilesModule.loadedFile.stats.playtime
             -
@@ -136,6 +136,11 @@ function Module:setupSessionPlaytimeLabel(scene)
     end
 
     table.insert(scene._elements, sessionPlaytimeLabel)
+end
+
+function Module:setupDialougeBox(scene)
+    local dialougeBox = RenderModule:createElement(SharedData.dialougeBox)
+    table.insert(scene._elements, dialougeBox)
 end
 
 function Module:update()

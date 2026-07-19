@@ -124,7 +124,7 @@ function Quadtree:queryRect(rect)
 
         for _, child in ipairs(self.children) do
 
-            local results = child:queryRange(rect)
+            local results = child:queryRect(rect)
             for _, point in ipairs(results) do
                 table.insert(found, point)
             end

@@ -1,8 +1,9 @@
 -- ~/code/engine/render.lua
 
---// HELPERS \\--
-local IdManagerModule = require("code.engine.helpers.id-manager")
+--// ENGINE \\--
+local IdManagerModule = require("code.engine.idManager")
 
+--// HELPERS \\--
 local math = require("code.engine.helpers.math")
 
 local Module = {}
@@ -11,6 +12,15 @@ Module.imageCache = {}
 Module._elements = {}
 
 local manager = IdManagerModule:createManager()
+
+function Module:createColorFromTable(color)
+    return self:createColor(
+        color[1],
+        color[2],
+        color[3],
+        color[4]
+    )
+end
 
 function Module:createColor(r, g, b, alpha)
     return {
