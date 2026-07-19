@@ -30,7 +30,7 @@ return {
         scaleX = 0.5,
         scaleY = 0.5,
 
-        zIndex = CONSTANTS.Z_WORLD,
+        zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
 
     logo2 = {
@@ -44,7 +44,7 @@ return {
         scaleX = 0.35,
         scaleY = 0.35,
 
-        zIndex = CONSTANTS.Z_WORLD,
+        zIndex = CONSTANTS.Z_UI_TEXT,
     },
 
     playGameButtonHitbox = {
