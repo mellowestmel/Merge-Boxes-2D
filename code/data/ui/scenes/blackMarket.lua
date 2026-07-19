@@ -1,4 +1,4 @@
--- ~/code/data/ui.lua
+-- ~/code/data/ui/scenes/blackMarket.lua
 
 --// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
@@ -20,11 +20,11 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.SHOPKEEPER_DEFAULT_X,
-        y = CONSTANTS.SHOPKEEPER_DEFAULT_Y,
+        x = 300,
+        y = 300,
 
-        scaleX = CONSTANTS.SHOPKEEPER_SCALE_X,
-        scaleY = CONSTANTS.SHOPKEEPER_SCALE_Y,
+        scaleX = CONSTANTS.SPRITE_LARGE_SCALE,
+        scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
 
         zIndex = 2,
     },

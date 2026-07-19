@@ -22,7 +22,7 @@ local UIButtonObjectModule = require("code.game.ui.objects.button")
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
 --/// DATA \\\--
-local SceneData = require("code.data.ui.settings")
+local SceneData = require("code.data.ui.scenes.settings")
 
 local Module = {}
 Module._elements = {}

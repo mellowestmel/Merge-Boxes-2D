@@ -16,7 +16,7 @@ local BoxesObjectModule = require("code.game.box.object")
 local UISharedFunctions = require("code.game.ui.shared")
 
 --/// DATA \\\--
-local SceneData = require("code.data.ui.sacrifice")
+local SceneData = require("code.data.ui.scenes.sacrifice")
 
 local Module = {}
 Module._elements = {}

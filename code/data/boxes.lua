@@ -23,7 +23,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box2.png",
 
-        description = "Jimbo is constantly shocked at everything, always horrified of what comes next.",
+        description = "Jimbo is constantly shocked at everything, always horrified by what comes next.",
         quote = "WHAT??",
         name = "Jimbo",
 
@@ -260,7 +260,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box18.png",
 
-        description = "Quite a playful box that likes to mess around with its shapeshifting ability. Will occasionally shapeshift into the lower-tier boxes, while still being counted as the same tier.",
+        description = "Quite a playful box that likes to mess around with its shapeshifting ability. It will occasionally shapeshift into the lower-tier boxes, while still being counted as the same tier.",
         quote = "Hide and seek! Will you find me?",
         name = "Box o' Matter",
 
@@ -301,7 +301,7 @@ return {
     {
         spritePath = "assets/sprites/boxes/box21.png",
 
-        description = "A box that loves to collect little stickers and trinkets. Its covered in them. They're everywhere. How is that thing still breathing?",
+        description = "A box that loves to collect little stickers and trinkets. It's covered in them. They're everywhere. How is that thing still breathing?",
         quote = "A little bit of everything, all of the time!",
         name = "The Collector",
 

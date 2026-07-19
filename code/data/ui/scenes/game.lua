@@ -1,10 +1,11 @@
--- ~/code/data/ui/game.lua
+-- ~/code/data/ui/scenes/game.lua
 
 --/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
 --// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
+local UI_LAYOUT = require("code.data.ui.layout")
 
 return {
     spawnButtonHitbox = {
@@ -12,8 +13,8 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.SPAWN_BUTTON_X,
-        y = CONSTANTS.SPAWN_BUTTON_Y,
+        x = UI_LAYOUT.SPAWN_BUTTON_X,
+        y = UI_LAYOUT.SPAWN_BUTTON_Y,
 
         color = RenderModule:createColor(255, 200, 0),
 
@@ -29,7 +30,7 @@ return {
         y = CONSTANTS.SPAWN_BUTTON_Y,
 
         color = RenderModule:createColor(255, 255, 255),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, 28),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
 
         zIndex = 1002,
     },
@@ -50,11 +51,11 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.SPAWN_BUTTON_X - CONSTANTS.BUTTON_ROW_OFFSET,
-        y = CONSTANTS.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_ROW_OFFSET,
+        x = UI_LAYOUT.SPAWN_BUTTON_X - CONSTANTS.BUTTON_SPACING,
+        y = UI_LAYOUT.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_SPACING,
 
-        scaleX = 0.75,
-        scaleY = 0.75,
+        scaleX = CONSTANTS.BUTTON_ICON_SCALE,
+        scaleY = CONSTANTS.BUTTON_ICON_SCALE,
 
         color = RenderModule:createColor(110, 153, 202),
 
@@ -66,11 +67,11 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.SPAWN_BUTTON_X,
-        y = CONSTANTS.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_ROW_OFFSET,
+        x = UI_LAYOUT.SPAWN_BUTTON_X,
+        y = UI_LAYOUT.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_ROW_OFFSET,
 
-        scaleX = 0.75,
-        scaleY = 0.75,
+        scaleX = CONSTANTS.BUTTON_ICON_SCALE,
+        scaleY = CONSTANTS.BUTTON_ICON_SCALE,
 
         color = RenderModule:createColor(248, 217, 109),
 
@@ -82,11 +83,11 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.SPAWN_BUTTON_X + CONSTANTS.BUTTON_ROW_OFFSET,
-        y = CONSTANTS.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_ROW_OFFSET,
+        x = UI_LAYOUT.SPAWN_BUTTON_X + CONSTANTS.BUTTON_ROW_OFFSET,
+        y = UI_LAYOUT.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_ROW_OFFSET,
 
-        scaleX = 0.75,
-        scaleY = 0.75,
+        scaleX = CONSTANTS.BUTTON_ICON_SCALE,
+        scaleY = CONSTANTS.BUTTON_ICON_SCALE,
 
         color = RenderModule:createColor(204, 49, 61),
 

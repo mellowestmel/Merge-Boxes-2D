@@ -13,6 +13,15 @@ Module._elements = {}
 
 local manager = IdManagerModule:createManager()
 
+function Module:createColorFromTable(color)
+    return self:createColor(
+        color[1],
+        color[2],
+        color[3],
+        color[4]
+    )
+end
+
 function Module:createColor(r, g, b, alpha)
     return {
         r = (r or 255) / 255,

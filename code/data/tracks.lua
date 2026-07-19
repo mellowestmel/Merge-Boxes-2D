@@ -52,5 +52,5 @@ return {
         trackName = "Passing Time",
 
         isGameplayTrack = true
-    }
+    },
 }
