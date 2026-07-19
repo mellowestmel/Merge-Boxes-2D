@@ -2,7 +2,6 @@
 
 --/// ENGINE \\\--
 local SoundModule = require("code.engine.sound")
-local QuadtreesModule = require("code.engine.quadtrees")
 
 --// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
@@ -180,7 +179,6 @@ local function getMergeRange(boxA, boxB)
 end
 
 function Module:checkMerges()
-    --%note TODO: optimize this with quadtrees
     local boxesArray = BoxesObjectModule:getSortedArray()
     local boxesCount = #boxesArray
 

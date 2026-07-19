@@ -3,7 +3,7 @@ Back to [README.md](README.md)
 ## Legal Notice
 This project contains original content and third-party assets used under their respective licenses or permissions.
 
-All original game code and original assets created by the developer are © ShibaTheDeveloper.
+All original game code and original assets created by the developer are © MellowestMel.
 Unauthorized reuse of original assets outside the game is not permitted.
 
 Third-party assets, including audio, fonts, artwork, and music, are used with permission or under applicable licenses and are credited below.
