@@ -286,10 +286,62 @@ return {
         tier = 19,
     },
     {
-        spritePath = "assets/sprites/boxes/box20_sheet.png",
+        spritePath = "assets/sprites/boxes/box20.png",
+
+        description = "A box so lucky it constantly gets accused of cheating in various games.",
+        quote = "Trust me, it's luck!",
+        name = "Luckroll Box",
+
+        mergeReward = 777,
+
+        weight = 1500,
+        scale = 2.25,
+        tier = 20,
+    },
+    {
+        spritePath = "assets/sprites/boxes/box21.png",
+
+        description = "A box that loves to collect little stickers and trinkets. Its covered in them. They're everywhere. How is that thing still breathing?",
+        quote = "A little bit of everything, all of the time!",
+        name = "The Collector",
+
+        mergeReward = 888,
+
+        weight = 1600,
+        scale = 2.3,
+        tier = 21,
+    },
+    {
+        spritePath = "assets/sprites/boxes/box22.png",
+
+        description = "A carefree little box who doesn't care what happens around her. Bears a striking resemblance to the creator of this game.",
+        quote = "yea",
+        name = "Mellow Box",
+
+        mergeReward = 999,
+
+        weight = 1700,
+        scale = 2.35,
+        tier = 22,
+    },
+    {
+        spritePath = "assets/sprites/boxes/box23.png",
+
+        description = "A funky-looking box with a weird typing quirk. Staring at it for too long may cause a migraine.",
+        quote = "H3Y, H0W 4R3 Y4????",
+        name = "Glitcherson",
+
+        mergeReward = 1250,
+
+        weight = 2000,
+        scale = 2.4,
+        tier = 23,
+    },
+    {
+        spritePath = "assets/sprites/boxes/box24_sheet.png",
 
         description = "All the merging you've done has led up to this. The ultimate three-dimensional being.",
-        quote = "",
+        quote = "nil",
         name = "?@%%%&&",
 
         -- animation = {
@@ -299,10 +351,12 @@ return {
         --     fps = 24
         -- },
 
-        mergeReward = 1000,
+        mergeReward = 2400,
 
-        weight = 1500,
-        scale = 2.25,
-        tier = 20,
+        mergeSoundData = {soundPath = "assets/sounds/merge/box24.wav"},
+
+        weight = 2400,
+        scale = 2.4,
+        tier = 24,
     }
 }
