@@ -29,7 +29,7 @@ return {
         author = "Orzech05",
         trackName = "Blue Business",
 
-        isGameplayTrack = true
+        isGameplayTrack = false
     },
     blackMarket = {
         trackPath = "assets/tracks/blackmarket.ogg",

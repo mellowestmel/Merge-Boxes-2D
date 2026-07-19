@@ -26,7 +26,7 @@ local Button = {
 
     _clickScale = .1,
     _hoverScale = .05,
-    
+
     _scaleSpeed = .5,
 
     _isHovered = false

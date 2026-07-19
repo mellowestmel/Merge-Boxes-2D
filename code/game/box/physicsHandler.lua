@@ -4,6 +4,7 @@ local Module = {}
 
 --/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
+local SoundModule = require("code.engine.sound")
 
 --// HELPERS \\--
 local math = require("code.engine.helpers.math")
@@ -28,7 +29,7 @@ local function applyFriction(box, deltaTime)
     box.velocityY = box.velocityY * (1 - friction * fpsFactor)
 end
 
-local function edgeBounceLR(box) -- check for edge bounces on the x axis
+local function edgeBounceX(box)
     local width = box.element.drawable:getWidth() * box.element.scaleX
     local halfWidth = width * box.element.anchorX
 
@@ -41,7 +42,7 @@ local function edgeBounceLR(box) -- check for edge bounces on the x axis
     end
 end
 
-local function edgeBounceUD(box) -- check for edge bounces on the y axis
+local function edgeBounceY(box)
     local height = box.element.drawable:getHeight() * box.element.scaleY
     local halfHeight = height * box.element.anchorY
 
@@ -93,8 +94,9 @@ function Module:update(deltaTime)
 
         changePosition(box, deltaTime)
         applyFriction(box, deltaTime)
-        edgeBounceLR(box)
-        edgeBounceUD(box)
+
+        edgeBounceX(box)
+        edgeBounceY(box)
 
         :: continue ::
     end

@@ -50,7 +50,7 @@ function Module:update(deltaTime)
     UISharedFunctions:update()
 end
 
-function Module:init()    
+function Module:init()
     MusicHandlerModule:playTrack("upgradeShop")
 
     BoxesObjectModule.renderBoxes = false
