@@ -13,12 +13,12 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON_X,
-        y = UI_LAYOUT.SPAWN_BUTTON_Y,
+        x = UI_LAYOUT.SPAWN_BUTTON.x,
+        y = UI_LAYOUT.SPAWN_BUTTON.y,
 
-        color = RenderModule:createColor(255, 200, 0),
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
 
-        zIndex = 1001,
+        zIndex = CONSTANTS.Z_UI_BUTTON,
     },
 
     spawnButtonLabel = {
@@ -26,13 +26,13 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.SPAWN_BUTTON_X,
-        y = CONSTANTS.SPAWN_BUTTON_Y,
+        x = UI_LAYOUT.SPAWN_BUTTON.x,
+        y = UI_LAYOUT.SPAWN_BUTTON.y,
 
-        color = RenderModule:createColor(255, 255, 255),
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
 
-        zIndex = 1002,
+        zIndex = CONSTANTS.Z_UI_TEXT,
     },
 
     playAreaBackground = {
@@ -43,7 +43,7 @@ return {
         anchorX = 0,
         anchorY = 0,
 
-        zIndex = 1,
+        zIndex = CONSTANTS.Z_BACKGROUND,
     },
 
     upgradeShopButtonHitbox = {
@@ -51,15 +51,15 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON_X - CONSTANTS.BUTTON_SPACING,
-        y = UI_LAYOUT.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_SPACING,
+        x = UI_LAYOUT.SPAWN_BUTTON.x - CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        y = UI_LAYOUT.SPAWN_BUTTON.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
-        scaleX = CONSTANTS.BUTTON_ICON_SCALE,
-        scaleY = CONSTANTS.BUTTON_ICON_SCALE,
+        scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
+        scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
 
-        color = RenderModule:createColor(110, 153, 202),
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_BLUE),
 
-        zIndex = 1004,
+        zIndex = CONSTANTS.Z_UI_TEXT + 2,
     },
 
     blackMarketButtonHitbox = {
@@ -67,15 +67,15 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON_X,
-        y = UI_LAYOUT.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_ROW_OFFSET,
+        x = UI_LAYOUT.SPAWN_BUTTON.x,
+        y = UI_LAYOUT.SPAWN_BUTTON.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
-        scaleX = CONSTANTS.BUTTON_ICON_SCALE,
-        scaleY = CONSTANTS.BUTTON_ICON_SCALE,
+        scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
+        scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
 
-        color = RenderModule:createColor(248, 217, 109),
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GOLD),
 
-        zIndex = 1004,
+        zIndex = CONSTANTS.Z_UI_TEXT + 2,
     },
 
     sacrificeButtonHitbox = {
@@ -83,14 +83,14 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON_X + CONSTANTS.BUTTON_ROW_OFFSET,
-        y = UI_LAYOUT.SPAWN_BUTTON_Y + CONSTANTS.BUTTON_ROW_OFFSET,
+        x = UI_LAYOUT.SPAWN_BUTTON.x + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        y = UI_LAYOUT.SPAWN_BUTTON.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
-        scaleX = CONSTANTS.BUTTON_ICON_SCALE,
-        scaleY = CONSTANTS.BUTTON_ICON_SCALE,
+        scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
+        scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
 
-        color = RenderModule:createColor(204, 49, 61),
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
-        zIndex = 1004,
+        zIndex = CONSTANTS.Z_UI_TEXT + 2,
     },
 }
