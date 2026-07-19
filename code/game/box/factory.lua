@@ -22,7 +22,7 @@ function Module:spawn()
     if SaveFilesModule.loadedFile.stats.highestBoxTier < spawnTier then
         SaveFilesModule.loadedFile.stats.highestBoxTier = spawnTier
     end
-
+    spawnTier = 20
     local data = BoxesObjectModule:getBoxDataByTier(spawnTier)
     local box = BoxesObjectModule:createBox(data)
 

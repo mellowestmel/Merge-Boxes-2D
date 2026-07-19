@@ -124,4 +124,23 @@ return {
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
+
+    dialougeBox = {
+        spritePath = "assets/sprites/ui/button220x75.png",
+
+        type = "sprite",
+
+        anchorX = 0,
+        anchorY = 1,
+
+        x = 0,
+        y = _G.WINDOW_HEIGHT,
+
+        scaleX = 2.5,
+        scaleY = 2.5,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+
+        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+    },
 }

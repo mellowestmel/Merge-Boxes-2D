@@ -46,6 +46,8 @@ local function setupShopkeeper(self)
     table.insert(self._elements, shopkeeper)
 end
 
+
+
 function Module:update(deltaTime)
     UISharedFunctions:update()
 end
@@ -63,6 +65,8 @@ function Module:init()
     UISharedFunctions:setupCreditsLabel(self)
 
     UISharedFunctions:setupBackToMenuButton(self)
+
+    UISharedFunctions:setupDialougeBox(self)
 
     setupBackground(self)
     setupShopkeeper(self)

@@ -294,6 +294,8 @@ return {
 
         mergeReward = 777,
 
+        mergeSoundData = {soundPath = "assets/sounds/merge/box20.wav"},
+
         weight = 1500,
         scale = 2.25,
         tier = 20,

@@ -138,6 +138,11 @@ function Module:setupSessionPlaytimeLabel(scene)
     table.insert(scene._elements, sessionPlaytimeLabel)
 end
 
+function Module:setupDialougeBox(scene)
+    local dialougeBox = RenderModule:createElement(SharedData.dialougeBox)
+    table.insert(scene._elements, dialougeBox)
+end
+
 function Module:update()
     for _, updateFunction in pairs(self._updateFunctions) do
         updateFunction()

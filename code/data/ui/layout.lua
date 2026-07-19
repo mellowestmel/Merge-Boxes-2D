@@ -29,4 +29,12 @@ return {
         TEMPLATE_SCALE_X = 1.5,
         TEMPLATE_SMALL_SCALE = 0.55,
     },
+
+    SHOP = {
+        SHOPKEEPER_X = 25,
+        SHOPKEEPER_Y = 425,
+
+        SHOPKEEPER_ANCHOR_X = 0,
+        SHOPKEEPER_ANCHOR_Y = 1,
+    }
 }
