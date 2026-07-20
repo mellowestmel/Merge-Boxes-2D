@@ -64,7 +64,7 @@ function Module:init()
 
     UISharedFunctions:setupBackToMenuButton(self)
 
-    UISharedFunctions:setupDialougeBox(self)
+    UISharedFunctions:setupDialogueBox(self)
 
     setupBackground(self)
     setupShopkeeper(self)

@@ -138,9 +138,9 @@ function Module:setupSessionPlaytimeLabel(scene)
     table.insert(scene._elements, sessionPlaytimeLabel)
 end
 
-function Module:setupDialougeBox(scene)
-    local dialougeBox = RenderModule:createElement(SharedData.dialougeBox)
-    table.insert(scene._elements, dialougeBox)
+function Module:setupDialogueBox(scene)
+    local dialogueBox = RenderModule:createElement(SharedData.dialogueBox)
+    table.insert(scene._elements, dialogueBox)
 end
 
 function Module:update()

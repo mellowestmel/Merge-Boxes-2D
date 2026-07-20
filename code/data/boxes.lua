@@ -16,7 +16,7 @@ return {
 
         mergeReward = 0,
 
-        weight = 40,
+        weight = 60,
         scale = .7,
         tier = 1,
     },
@@ -29,8 +29,8 @@ return {
 
         mergeReward = 5,
 
-        weight = 50,
-        scale = .8,
+        weight = 70,
+        scale = .75,
         tier = 2,
     },
     {
@@ -42,8 +42,8 @@ return {
 
         mergeReward = 10,
 
-        weight = 55,
-        scale = .9,
+        weight = 85,
+        scale = .8,
         tier = 3,
     },
     {
@@ -53,10 +53,10 @@ return {
         quote = "Ermm... actually! ☝️🤓",
         name = "Jeremy",
 
-        mergeReward = 15,
+        mergeReward = 20,
 
-        weight = 120,
-        scale = 1,
+        weight = 105,
+        scale = .9,
         tier = 4,
     },
     {
@@ -66,15 +66,15 @@ return {
         quote = "I didn't eat that cookie!",
         name = "Muncher",
 
-        mergeReward = 50,
+        mergeReward = 100,
 
         screenFlashFadeDuration = 1.2,
         flashScreen = true,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/special.wav"},
 
-        weight = 250,
-        scale = 1.1,
+        weight = 130,
+        scale = 1,
         tier = 5,
     },
     {
@@ -84,10 +84,10 @@ return {
         quote = "...",
         name = "Dylan",
 
-        mergeReward = 55,
+        mergeReward = 120,
 
-        weight = 255,
-        scale = 1.2,
+        weight = 160,
+        scale = 1.1,
         tier = 6,
     },
     {
@@ -97,10 +97,10 @@ return {
         quote = "HEY!!!",
         name = "Carlos",
 
-        mergeReward = 60,
+        mergeReward = 160,
 
-        weight = 270,
-        scale = 1.3,
+        weight = 200,
+        scale = 1.2,
         tier = 7,
     },
     {
@@ -110,23 +110,23 @@ return {
         quote = "Blehhhh!",
         name = "Goobster Goobington III",
 
-        mergeReward = 65,
+        mergeReward = 320,
 
-        weight = 300,
-        scale = 1.4,
+        weight = 250,
+        scale = 1.3,
         tier = 8,
     },
-    {
+        {
         spritePath = "assets/sprites/boxes/box9.png",
 
         description = "Goodness gracious!! Is this thing okay!?!? Its eyes are bloodshot!!",
         quote = "YASS QWEEN 💅💅 WE'RE GETTING SOME GEMINI ENERGY! SLAYY! 💅💅💅",
         name = "Angel",
 
-        mergeReward = 70,
+        mergeReward = 650,
 
-        weight = 345,
-        scale = 1.5,
+        weight = 320,
+        scale = 1.4,
         tier = 9,
     },
     {
@@ -136,15 +136,15 @@ return {
         quote = "Sup, twin?",
         name = "Frigid Wendyhot",
 
-        mergeReward = 100,
+        mergeReward = 4000,
 
         screenFlashFadeDuration = 1.2,
         flashScreen = true,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/special.wav"},
 
-        weight = 370,
-        scale = 1.58,
+        weight = 400,
+        scale = 1.5,
         tier = 10,
     },
     {
@@ -154,10 +154,10 @@ return {
         quote = "Whuh? wha-?",
         name = "Dizzy",
 
-        mergeReward = 110,
+        mergeReward = 5000,
 
-        weight = 430,
-        scale = 1.66,
+        weight = 500,
+        scale = 1.6,
         tier = 11,
     },
     {
@@ -167,10 +167,10 @@ return {
         quote = "ROCK NOISES!!!",
         name = "Gochged",
 
-        mergeReward = 120,
+        mergeReward = 8000,
 
-        weight = 600,
-        scale = .85,
+        weight = 650,
+        scale = 1.7,
         tier = 12,
     },
     {
@@ -180,9 +180,9 @@ return {
         quote = "Big back, big back! Big back, big back! Yeah, my back is loaded up with snacks and different foods!",
         name = "Mt. Box",
 
-        mergeReward = 130,
+        mergeReward = 13000,
 
-        weight = 500,
+        weight = 850,
         scale = 1.8,
         tier = 13,
     },
@@ -193,13 +193,13 @@ return {
         quote = "RAAAAAAAAAHHH!!!",
         name = "Unstable",
 
-        mergeReward = 140,
+        mergeReward = 22000,
 
         reflectionPath = "assets/sprites/reflections/box14.png",
         reflective = true,
 
-        weight = 750,
-        scale = 1.865,
+        weight = 1100,
+        scale = 1.9,
         tier = 14,
     },
     {
@@ -208,15 +208,15 @@ return {
         description = "A box that has been enlightened with the knowledge of everything, even the fact that it's in a game! It has become mute and unreactive, trying to process everything at once.",
         name = "Transcended",
 
-        mergeReward = 222,
+        mergeReward = 250000,
 
         screenFlashFadeDuration = 1.2,
         flashScreen = true,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/special.wav"},
 
-        weight = 1000,
-        scale = 1.95,
+        weight = 1400,
+        scale = 2,
         tier = 15,
     },
     {
@@ -226,7 +226,7 @@ return {
         quote = "ZXZlcnl0aGluZw==",
         name = "Omnibox",
 
-        mergeReward = 333,
+        mergeReward = 120000,
 
         onUpdateCosmetic = function(element)
             local hue = (love.timer.getTime() % 5) / 5
@@ -235,18 +235,18 @@ return {
 
         mergeSoundData = {soundPath = "assets/sounds/merge/box16.wav"},
 
-        weight = 1100,
-        scale = 2,
+        weight = 1800,
+        scale = 2.1,
         tier = 16,
     },
-    {
+        {
         spritePath = "assets/sprites/boxes/box17.png",
 
         description = "A sinister and unstable box. It has become so big that its weight is in the negatives.",
         quote = "MUAHAHAHAHA!",
         name = "Devoided",
 
-        mergeReward = 444,
+        mergeReward = 180000,
 
         reflectionPath = "assets/sprites/reflections/box17.png",
         reflective = true,
@@ -254,7 +254,7 @@ return {
         mergeSoundData = {soundPath = "assets/sounds/merge/box17.wav"},
 
         weight = -60,
-        scale = 2.05,
+        scale = 2.2,
         tier = 17,
     },
     {
@@ -264,12 +264,12 @@ return {
         quote = "Hide and seek! Will you find me?",
         name = "Box o' Matter",
 
-        mergeReward = 555,
+        mergeReward = 350000,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/box18.wav"},
 
-        weight = 1300,
-        scale = 2.15,
+        weight = 3000,
+        scale = 2.3,
         tier = 18,
     },
     {
@@ -279,10 +279,10 @@ return {
         quote = "I was SLEEPING!!",
         name = "Great Old Grumpy One",
 
-        mergeReward = 666,
+        mergeReward = 700000,
 
-        weight = 1400,
-        scale = 2.2,
+        weight = 3900,
+        scale = 2.35,
         tier = 19,
     },
     {
@@ -292,12 +292,12 @@ return {
         quote = "Trust me, it's luck!",
         name = "Luckroll Box",
 
-        mergeReward = 777,
+        mergeReward = 12000000,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/box20.wav"},
 
-        weight = 1500,
-        scale = 2.25,
+        weight = 5000,
+        scale = 2.4,
         tier = 20,
     },
     {
@@ -307,10 +307,10 @@ return {
         quote = "A little bit of everything, all of the time!",
         name = "The Collector",
 
-        mergeReward = 888,
+        mergeReward = 3000000,
 
-        weight = 1600,
-        scale = 2.3,
+        weight = 6500,
+        scale = 2.45,
         tier = 21,
     },
     {
@@ -320,10 +320,10 @@ return {
         quote = "yea",
         name = "Mellow Box",
 
-        mergeReward = 999,
+        mergeReward = 6000000,
 
-        weight = 1700,
-        scale = 2.35,
+        weight = 8500,
+        scale = 2.5,
         tier = 22,
     },
     {
@@ -333,10 +333,10 @@ return {
         quote = "H3Y, H0W 4R3 Y4????",
         name = "Glitcherson",
 
-        mergeReward = 1250,
+        mergeReward = 12000000,
 
-        weight = 2000,
-        scale = 2.4,
+        weight = 11000,
+        scale = 2.55,
         tier = 23,
     },
     {
@@ -353,12 +353,12 @@ return {
         --     fps = 24
         -- },
 
-        mergeReward = 2400,
+        mergeReward = 400000000,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/box24.wav"},
 
-        weight = 2400,
-        scale = 2.4,
+        weight = 14500,
+        scale = 2.6,
         tier = 24,
     }
 }

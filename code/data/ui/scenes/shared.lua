@@ -125,7 +125,7 @@ return {
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
 
-    dialougeBox = {
+    dialogueBox = {
         spritePath = "assets/sprites/ui/button220x75.png",
 
         type = "sprite",
@@ -140,6 +140,18 @@ return {
         scaleY = 2.5,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+
+        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+    },
+
+    dialogueBoxText = {
+        type = "text",
+
+        anchorX = 0,
+        anchorY = 1,
+
+        x = 0,
+        y = _G.WINDOW_HEIGHT,
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
