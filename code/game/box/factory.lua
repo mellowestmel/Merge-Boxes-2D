@@ -18,7 +18,7 @@ function Module:spawn()
     local y = math.random(-CONSTANTS.AREA_HEIGHT, CONSTANTS.AREA_HEIGHT)
 
     local spawnTier = SaveFilesModule.loadedFile.stats.boxSpawnTier
-    
+
     if SaveFilesModule.loadedFile.stats.highestBoxTier < spawnTier then
         SaveFilesModule.loadedFile.stats.highestBoxTier = spawnTier
     end
