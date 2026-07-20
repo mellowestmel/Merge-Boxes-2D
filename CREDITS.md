@@ -1,12 +1,13 @@
 Back to [README.md](README.md)
 
 ## Legal Notice
-This project contains original content and third-party assets used under their respective licenses or permissions.
+This project is licensed under the MIT License.
 
-All original game code and original assets created by the developer are © MellowestMel.
-Unauthorized reuse of original assets outside the game is not permitted.
+The source code and original assets created by the developer may be modified, reused, distributed, and used for personal or commercial purposes under the terms of the MIT License.
 
-Third-party assets, including audio, fonts, artwork, and music, are used with permission or under applicable licenses and are credited below.
+You are free to create mods, fan projects, videos, streams, reviews, and other content featuring Merge Boxes! 2D. Attribution is appreciated.
+
+Third-party assets, including artwork, audio, fonts, and music, are not covered by the MIT License unless stated otherwise. They remain under their respective licenses or permissions and are credited below.
 
 ## Credits
 
