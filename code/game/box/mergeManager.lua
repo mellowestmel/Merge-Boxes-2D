@@ -1,6 +1,7 @@
 -- ~/code/game/box/mergeManager.lua
 
 --/// ENGINE \\\--
+local QuadtreesModule = require("code.engine.quadtrees")
 local SoundModule = require("code.engine.sound")
 
 --// SAVES \\--
@@ -178,20 +179,59 @@ local function getMergeRange(boxA, boxB)
     return CONSTANTS.BASE_MERGE_RANGE * (avgScale / baseScale)
 end
 
+local function calculateMaxMergeRange()
+    local baseScale = BoxesData[1].scale or 1
+    local maxScale = baseScale
+
+    for _, boxData in ipairs(BoxesData) do
+        if (boxData.scale or 1) > maxScale then
+            maxScale = boxData.scale
+        end
+    end
+
+    maxScale = maxScale * CONSTANTS.SPAWN_SCALE_MULTIPLIER
+
+    return CONSTANTS.BASE_MERGE_RANGE * (maxScale / baseScale)
+end
+
+local maxMergeQueryRadius = calculateMaxMergeRange()
+
 function Module:checkMerges()
     local boxesArray = BoxesObjectModule:getSortedArray()
     local boxesCount = #boxesArray
+
+    local tree = QuadtreesModule:createQuadtree({
+        x = 0,
+        y = 0,
+        width = CONSTANTS.AREA_WIDTH,
+        height = CONSTANTS.AREA_HEIGHT,
+    })
+
+    for index = 1, boxesCount do
+        local box = boxesArray[index]
+
+        tree:insert({
+            x = box.element.x,
+            y = box.element.y,
+            box = box,
+        })
+    end
 
     for indexA = 1, boxesCount do
         local boxA = boxesArray[indexA]
         if boxA.merging then goto continue end
 
-        for indexB = 1, boxesCount do
-            local boxB = boxesArray[indexB]
+        local nearbyPoints = tree:queryRadius(
+            { x = boxA.element.x, y = boxA.element.y },
+            maxMergeQueryRadius
+        )
 
+        for _, point in ipairs(nearbyPoints) do
+            local boxB = point.box
+
+            if not boxB or boxA == boxB then goto continue end
             if boxA.merging or boxB.merging then goto continue end
             if boxA.tier ~= boxB.tier then goto continue end
-            if boxA == boxB then goto continue end
 
             local distanceX = boxA.element.x - boxB.element.x
             local distanceY = boxA.element.y - boxB.element.y
