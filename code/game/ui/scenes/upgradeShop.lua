@@ -88,8 +88,6 @@ function Module:init()
 
     UISharedFunctions:setupBackToMenuButton(self)
 
-    UISharedFunctions:setupDialogueBox(self)
-
     setupTheBirbsWord(self)
     setupBackground(self)
 end

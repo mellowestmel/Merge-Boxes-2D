@@ -59,8 +59,6 @@ function Module:init()
 
     UISharedFunctions:setupBackToMenuButton(self)
 
-    UISharedFunctions:setupDialogueBox(self)
-
     setupBackground(self)
 end
 
