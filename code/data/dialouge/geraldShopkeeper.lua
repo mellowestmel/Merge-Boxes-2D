@@ -1,3 +1,5 @@
+-- ~/code/data/dialouge/geraldShopkeeper.lua
+
 return {
     Greetings = {
         {
