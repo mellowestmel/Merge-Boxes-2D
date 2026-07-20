@@ -2,6 +2,7 @@
 
 --/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
+local SoundModule = require("code.engine.sound")
 
 --// HELPERS \\--
 local table = require("code.engine.helpers.table")
@@ -14,6 +15,9 @@ local BoxesObjectModule = require("code.game.box.object")
 
 --// UI \\--
 local UISharedFunctions = require("code.game.ui.shared")
+
+--/ UI OBJECTS \--
+local UIButtonObjectModule = require("code.game.ui.objects.button")
 
 --/// DATA \\\--
 local SceneData = require("code.data.ui.scenes.upgradeShop")
@@ -41,12 +45,30 @@ local function setupBackground(self)
     table.insert(self._elements, background)
 end
 
-local function setupShopkeeper(self)
-    local shopkeeper = RenderModule:createElement(SceneData.shopkeeper)
-    table.insert(self._elements, shopkeeper)
+local function setupTheBirbsWord(self)
+    local birb = RenderModule:createElement(SceneData.theBirbsWord)
+    table.insert(self._elements, birb)
+
+    local birbButton = UIButtonObjectModule:createButton({
+        elements = {
+            birb
+        },
+
+        hitboxElement = birb,
+
+        mouseButton = 1,
+        onClick = function()
+            local birbSound = SoundModule:createSound({soundPath = "assets/sounds/birb.wav"})
+
+            if birbSound then
+                birbSound:play()
+                birbSound:remove()
+            end
+        end
+    })
+
+    table.insert(self._objects, birbButton)
 end
-
-
 
 function Module:update(deltaTime)
     UISharedFunctions:update()
@@ -68,8 +90,8 @@ function Module:init()
 
     UISharedFunctions:setupDialogueBox(self)
 
+    setupTheBirbsWord(self)
     setupBackground(self)
-    setupShopkeeper(self)
 end
 
 return Module

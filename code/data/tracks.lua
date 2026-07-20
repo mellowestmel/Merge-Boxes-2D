@@ -49,7 +49,7 @@ return {
     game1 = {
         trackPath = "assets/tracks/game1.ogg",
         author = "Orzech05",
-        trackName = "Passing Time",
+        trackName = "Mellow Meadows",
 
         isGameplayTrack = true
     },

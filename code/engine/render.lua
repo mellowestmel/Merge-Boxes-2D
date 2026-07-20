@@ -199,6 +199,8 @@ function Module:createElement(data)
 
         if not Module.imageCache[data.spritePath] then
             local drawable = love.graphics.newImage(data.spritePath)
+            drawable:setFilter("nearest", "nearest")
+
             Module.imageCache[data.spritePath] = drawable
         end
 
@@ -208,8 +210,6 @@ function Module:createElement(data)
         if not data.font then
             data.font = love.graphics.newFont("assets/fonts/Stanberry.ttf")
         end
-
-        data.font:setFilter("nearest", "nearest")
     end
 
     return element

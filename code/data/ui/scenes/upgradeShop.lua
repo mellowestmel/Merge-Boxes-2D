@@ -19,20 +19,14 @@ return {
         zIndex = CONSTANTS.Z_BACKGROUND,
     },
 
-    shopkeeper = {
-        spritePath = "assets/sprites/boxes/box1.png",
+    theBirbsWord = {
+        spritePath = "assets/sprites/birb.png",
 
         type = "sprite",
 
-        x = UI_LAYOUT.SHOP.SHOPKEEPER_X,
-        y = UI_LAYOUT.SHOP.SHOPKEEPER_Y,
+        x = 230,
+        y = 125,
 
-        anchorX = UI_LAYOUT.SHOP.SHOPKEEPER_ANCHOR_X,
-        anchorY = UI_LAYOUT.SHOP.SHOPKEEPER_ANCHOR_Y,
-
-        scaleX = CONSTANTS.SPRITE_LARGE_SCALE,
-        scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
-
-        zIndex = CONSTANTS.Z_WORLD,
-    },
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    }
 }

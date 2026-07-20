@@ -41,11 +41,6 @@ local function setupBackground(self)
     table.insert(self._elements, background)
 end
 
-local function setupShopkeeper(self)
-    local shopkeeper = RenderModule:createElement(SceneData.shopkeeper)
-    table.insert(self._elements, shopkeeper)
-end
-
 function Module:update(deltaTime)
     UISharedFunctions:update()
 end
@@ -67,7 +62,6 @@ function Module:init()
     UISharedFunctions:setupDialogueBox(self)
 
     setupBackground(self)
-    setupShopkeeper(self)
 end
 
 return Module

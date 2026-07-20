@@ -29,7 +29,7 @@ function Module:update(deltaTime)
 end
 
 function Module.init()
-    UISceneHandlerModule:switch("mainMenu")
+    UISceneHandlerModule:switch("splashScreen")
 end
 
 return Module

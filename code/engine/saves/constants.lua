@@ -33,5 +33,7 @@ return {
 
         soundVolume = 1,
         trackVolume = 1,
+
+        fullscreen = true
     }
 }

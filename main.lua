@@ -23,11 +23,16 @@ local VFXHandlerModule = require("code.game.vfx.handler")
 function love.load()
     SettingsModule:loadFile()
 
+    local fullscreen = SettingsModule.loadedFile.fullscreen
+
+    love.window.setMode(_G.WINDOW_WIDTH, _G.WINDOW_HEIGHT, {
+        fullscreen = fullscreen,
+        vsync = 1
+    })
+
     MusicHandlerModule.init()
     VFXHandlerModule.init()
     UIHandlerModule.init()
-
-    love.graphics.setDefaultFilter("nearest", "nearest")
 end
 
 function love.update(deltaTime)                                                                                                                                                                                                  _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"

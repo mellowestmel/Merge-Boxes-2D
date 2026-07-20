@@ -29,6 +29,4 @@ function love.conf(config)
 
     config.window.resizable = true
     config.console = false
-
-    config.window.vsync = 0
 end

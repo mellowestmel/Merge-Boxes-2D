@@ -70,8 +70,14 @@ function Module:decodeSimple(section)
         local index, value = line:match("(%S+)%s+(%S+)")
 
         if index and value then
-            local num = tonumber(value)
-            result[index] = num or value
+            if value == "true" then
+                result[index] = true
+            elseif value == "false" then
+                result[index] = false
+            else
+                local num = tonumber(value)
+                result[index] = num or value
+            end
         end
     end
 
