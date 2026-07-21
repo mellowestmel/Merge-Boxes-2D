@@ -3,6 +3,9 @@
 --/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
+--// SAVES \\--
+local SaveFilesModule = require("code.engine.saves.files")
+
 --// HELPERS \\--
 local table = require("code.engine.helpers.table")
 
@@ -14,6 +17,7 @@ local BoxesObjectModule = require("code.game.box.object")
 
 --// UI \\--
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
+local UISharedFunctions = require("code.game.ui.shared")
 
 --/ UI OBJECTS \--
 local UIButtonObjectModule = require("code.game.ui.objects.button")
@@ -76,12 +80,18 @@ local function setupBackButton(self)
 end
 
 function Module:update()
+    UISharedFunctions:update()
 end
 
 function Module:init()
     MusicHandlerModule:playTrack("mainMenu")
 
     BoxesObjectModule.renderBoxes = false
+
+    if SaveFilesModule.loadedFile then
+        UISharedFunctions:setupSessionPlaytimeLabel(self)
+        UISharedFunctions:setupCreditsLabel(self)
+    end
 
     setupBackButton(self)
     setupBackground(self)
