@@ -38,6 +38,8 @@ function Module:clean()
 
     self._elements = {}
     self._objects = {}
+
+    UISharedFunctions:cleanUpdates()
 end
 
 local function setupBackground(self)
@@ -84,7 +86,7 @@ function Module:init()
     UISharedFunctions:setupShopBackButton(self)
 
     UISharedFunctions:setupSessionPlaytimeLabel(self)
-    UISharedFunctions:setupCreditsLabel(self)
+    UISharedFunctions:setupCurrencyLabels(self)
 
     UISharedFunctions:setupBackToMenuButton(self)
 

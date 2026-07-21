@@ -71,7 +71,7 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_BUTTON
+            CONSTANTS.FONT_LARGE
         ),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
@@ -101,7 +101,7 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_BUTTON
+            CONSTANTS.FONT_LARGE
         ),
 
         zIndex = CONSTANTS.Z_UI_TEXT,

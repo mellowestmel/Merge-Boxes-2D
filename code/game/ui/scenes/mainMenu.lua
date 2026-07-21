@@ -3,6 +3,9 @@
 --/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
+--// SAVES \\--
+local SettingsModule = require("code.engine.saves.settings")
+
 --// HELPERS \\--
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
@@ -42,6 +45,8 @@ function Module:clean()
 
     self._elements = {}
     self._objects = {}
+
+    UISharedFunctions:cleanUpdates()
 end
 
 local function setupLogo(self)
@@ -114,6 +119,9 @@ local function setupQuitButton(self)
 end
 
 function Module:update()
+    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+    if not animationsEnabled then return end
+
     local rotation = math.sin(love.timer.getTime()) * 2
 
     if logo then

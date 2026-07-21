@@ -54,6 +54,8 @@ function Module:clean()
     self._objects = {}
     self._resetButtons = {}
     self._boxes = {}
+
+    UISharedFunctions:cleanUpdates()
 end
 
 local function startGame(slot)

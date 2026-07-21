@@ -63,7 +63,7 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_BUTTON
+            CONSTANTS.FONT_LARGE
         ),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
@@ -86,6 +86,27 @@ return {
         y = CONSTANTS.LARGE_PADDING,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
+
+        zIndex = CONSTANTS.Z_UI_TEXT,
+    },
+
+    holyCatnipLabel = {
+        text = "Holy Catnip:",
+
+        type = "text",
+
+        font = love.graphics.newFont(
+            CONSTANTS.STANBERRY_FONT_PATH,
+            CONSTANTS.FONT_SMALL
+        ),
+
+        anchorX = 0,
+        anchorY = 0,
+
+        x = CONSTANTS.SMALL_PADDING,
+        y = CONSTANTS.LARGE_PADDING * 1.75,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_PURPLE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },

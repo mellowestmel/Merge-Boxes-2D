@@ -333,32 +333,13 @@ return {
         quote = "H3Y, H0W 4R3 Y4????",
         name = "Glitcherson",
 
+        reflectionPath = "assets/sprites/reflections/box23.png",
+        reflective = true,
+
         mergeReward = 12000000,
 
         weight = 11000,
         scale = 2.55,
         tier = 23,
-    },
-    {
-        spritePath = "assets/sprites/boxes/box24_sheet.png",
-
-        description = "All the merging you've done has led up to this. The ultimate three-dimensional being.",
-        quote = "nil",
-        name = "?@%%%&&",
-
-        -- animation = {
-        --     frameWidth = 100,
-        --     frameHeight = 100,
-        --     frameCount = 39,
-        --     fps = 24
-        -- },
-
-        mergeReward = 400000000,
-
-        mergeSoundData = {soundPath = "assets/sounds/merge/box24.wav"},
-
-        weight = 14500,
-        scale = 2.6,
-        tier = 24,
     }
 }

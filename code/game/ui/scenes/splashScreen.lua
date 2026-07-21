@@ -4,8 +4,14 @@
 local RenderModule = require("code.engine.render")
 local SoundModule = require("code.engine.sound")
 
+--// SAVES \\--
+local SettingsModule = require("code.engine.saves.settings")
+
 --// HELPERS \\--
 local table = require("code.engine.helpers.table")
+
+--/// GAME \\\--
+local MusicHandlerModule = require("code.game.musicHandler")
 
 --// UI \\--
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
@@ -76,13 +82,16 @@ local function transition()
 end
 
 function Module:init()
+    MusicHandlerModule:stopTrack(MusicHandlerModule.playingTrack)
+
     transitionTimer = 2
     logoTimer = .5
 
     transitionStarted = false
     logoShown = false
 
-    logoFlipTimer = 0
+    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+    logoFlipTimer = (animationsEnabled and 0 or 999)
 end
 
 function Module:update(deltaTime)
@@ -100,6 +109,7 @@ function Module:update(deltaTime)
     logoFlipTimer = logoFlipTimer - deltaTime
 
     if logoFlipTimer <= 0 then
+
         logoFlipTimer = logoFlipSpeed
 
         splashLogo1.render = not splashLogo1.render

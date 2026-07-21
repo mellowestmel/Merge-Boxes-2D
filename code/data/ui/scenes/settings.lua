@@ -19,30 +19,67 @@ return {
         zIndex = CONSTANTS.Z_BACKGROUND,
     },
 
-    backButtonHitbox = {
-        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+    cancelButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttonx74x74.png",
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        x = UI_LAYOUT.SETTINGS_BUTTON.x,
+        y = UI_LAYOUT.SETTINGS_BUTTON.y,
+
+        scaleX = CONSTANTS.ICON_SMALL_SCALE,
+        scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
 
-    backButtonLabel = {
-        text = "Back",
-
+    currentCategoryLabel = {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = 550,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        font = love.graphics.newFont(
+            CONSTANTS.STANBERRY_FONT_PATH,
+            CONSTANTS.FONT_LARGE
+        ),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    scrollRightButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttonarrowr74x74.png",
+
+        type = "sprite",
+
+        x = CONSTANTS.CENTER_X + 125,
+        y = 550,
+
+        scaleX = CONSTANTS.ICON_SMALL_SCALE,
+        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    scrollLeftButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttonarrowl74x74.png",
+
+        type = "sprite",
+
+        x = CONSTANTS.CENTER_X - 125,
+        y = 550,
+
+        scaleX = CONSTANTS.ICON_SMALL_SCALE,
+        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
     },
 }

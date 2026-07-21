@@ -6,6 +6,7 @@ local SoundModule = require("code.engine.sound")
 
 --// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
+local SettingsModule = require("code.engine.saves.settings")
 
 --// HELPERS \\--
 local easing = require("code.engine.helpers.easing")
@@ -128,7 +129,7 @@ function Module:mergeUpdate(deltaTime)
 
             local newBox = BoxesObjectModule:createBox(newBoxData)
 
-            if newBox then
+            if newBox and newBoxData then
                 if SaveFilesModule.loadedFile.stats.highestBoxTier < newBoxTier then
                     SaveFilesModule.loadedFile.stats.highestBoxTier = newBoxTier
                 end
@@ -151,8 +152,12 @@ function Module:mergeUpdate(deltaTime)
                     duration = CONSTANTS.BASE_SCALE_TWEEN_DURATION * (1 + newBox.weight / CONSTANTS.WEIGHT_ANIM_DURATION_DIVISOR)
                 }
 
-                newBox.element.scaleX = scaleX
-                newBox.element.scaleY = scaleY
+                local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+
+                local scale = (animationsEnabled and scaleX or newBoxData.scale)
+
+                newBox.element.scaleX = scale
+                newBox.element.scaleY = scale
 
                 local mergeSound = SoundModule:createSound(newBox.mergeSoundData)
                 if mergeSound then

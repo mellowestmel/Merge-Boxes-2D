@@ -3,6 +3,9 @@
 --// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 
+--// SHOP \\--
+local UpgradesModule = require("code.game.upgrades")
+
 --// HELPERS \\--
 local math = require("code.engine.helpers.math")
 
@@ -17,26 +20,50 @@ function Module:spawn()
     local x = math.random(0, CONSTANTS.AREA_WIDTH)
     local y = math.random(0, CONSTANTS.AREA_HEIGHT)
 
-    local spawnTier = SaveFilesModule.loadedFile.stats.boxSpawnTier
+    local spawnTier = CONSTANTS.DEFAULT_BOX_SPAWN_TIER
+        + UpgradesModule:getEffect("spawnTier")
 
-    if SaveFilesModule.loadedFile.stats.highestBoxTier < spawnTier then
-        SaveFilesModule.loadedFile.stats.highestBoxTier = spawnTier
+    local spawnAmount = UpgradesModule:getEffect("multiSpawn")
+
+    for _ = 1, spawnAmount do
+        -- Lucky Roll
+        local luckyChance = UpgradesModule:getEffect("luckyRoll")
+
+        if math.random() < luckyChance then
+            spawnTier = spawnTier + 1
+        end
+
+        if SaveFilesModule.loadedFile.stats.highestBoxTier < spawnTier then
+            SaveFilesModule.loadedFile.stats.highestBoxTier = spawnTier
+        end
+
+        local data = BoxesObjectModule:getBoxDataByTier(spawnTier)
+        local box = BoxesObjectModule:createBox(data)
+
+        if box then
+            box.element.x, box.element.y = x, y
+
+            local velocityX = math.random(
+                CONSTANTS.MIN_SPAWN_VELOCITY,
+                CONSTANTS.MAX_SPAWN_VELOCITY
+            )
+
+            local velocityY = math.random(
+                CONSTANTS.MIN_SPAWN_VELOCITY,
+                CONSTANTS.MAX_SPAWN_VELOCITY
+            )
+
+            box.velocityX = velocityX
+            box.velocityY = velocityY
+
+            self.lastSpawned = love.timer.getTime()
+        end
     end
+end
 
-    local data = BoxesObjectModule:getBoxDataByTier(spawnTier)
-    local box = BoxesObjectModule:createBox(data)
-
-    if box then
-        box.element.x, box.element.y = x, y
-
-        local velocityX = math.random(CONSTANTS.MIN_SPAWN_VELOCITY, CONSTANTS.MAX_SPAWN_VELOCITY)
-        local velocityY = math.random(CONSTANTS.MIN_SPAWN_VELOCITY, CONSTANTS.MAX_SPAWN_VELOCITY)
-
-        box.velocityX = velocityX
-        box.velocityY = velocityY
-
-        self.lastSpawned = love.timer.getTime()
-    end
+function Module:getSpawnCooldown()
+    return CONSTANTS.DEFAULT_BOX_SPAWN_COOLDOWN
+        - UpgradesModule:getEffect("spawnCooldown")
 end
 
 return Module

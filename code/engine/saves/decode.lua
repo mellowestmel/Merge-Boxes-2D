@@ -11,17 +11,32 @@ local math = require("code.engine.helpers.math")
 
 local Module = {}
 
-local function normalizeTable(table, default, ignoreKeys)
+local function normalizeTable(input, default, ignoreKeys)
     ignoreKeys = ignoreKeys or {}
+
     local normalized = {}
 
+    input = type(input) == "table" and input or {}
+
     for key, defaultValue in pairs(default) do
+        local value = input[key]
+
         if ignoreKeys[key] then
-            normalized[key] = table[key] or (type(defaultValue) == "table" and {} or defaultValue)
+            normalized[key] = value
+
         elseif type(defaultValue) == "table" then
-            normalized[key] = normalizeTable(table[key] or {}, defaultValue, {})
+            normalized[key] = normalizeTable(
+                value,
+                defaultValue,
+                {}
+            )
+
         else
-            normalized[key] = table[key] ~= nil and table[key] or defaultValue
+            if value == nil then
+                normalized[key] = defaultValue
+            else
+                normalized[key] = value
+            end
         end
     end
 
@@ -99,7 +114,7 @@ function Module:decodeBoxes(section)
 
                 velocityX = tonumber(velocityX),
                 velocityY = tonumber(velocityY),
-                
+
                 x = tonumber(x),
                 y = tonumber(y),
 
@@ -119,7 +134,14 @@ function Module:decodeSlot(section)
 end
 
 function Module:decodeSettings(file)
-    local finalOutput = self:decodeSimple(file)
+    local sections = seperateLines(file)
+
+    local finalOutput = {
+        audio = self:decodeSimple(sections[1]),
+        graphics = self:decodeSimple(sections[2]),
+        accessibility = self:decodeSimple(sections[3]),
+    }
+
     finalOutput = normalizeTable(finalOutput, CONSTANTS.DEFAULT_SETTINGS)
 
     return finalOutput
@@ -137,7 +159,9 @@ function Module:decode(file)
         currencies = self:decodeSimple(sections[2]),
         stats = self:decodeSimple(sections[3]),
 
-        boxes = self:decodeBoxes(sections[4])
+        boxes = self:decodeBoxes(sections[4]),
+
+        upgrades = self:decodeSimple(sections[5])
     }
 
     finalOutput = normalizeTable(finalOutput, CONSTANTS.DEFAULT_DATA, {boxes = true})

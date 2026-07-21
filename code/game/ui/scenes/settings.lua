@@ -5,6 +5,7 @@ local RenderModule = require("code.engine.render")
 
 --// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
+local SettingsModule = require("code.engine.saves.settings")
 
 --// HELPERS \\--
 local table = require("code.engine.helpers.table")
@@ -31,7 +32,13 @@ local SceneData = require("code.data.ui.scenes.settings")
 local Module = {}
 Module._elements = {}
 Module._objects = {}
+
 Module.name = "settings"
+
+local currentCategoryIndex = 1
+local categories = {}
+
+local currentCategoryLabel
 
 function Module:clean()
     for _, element in pairs(self._elements) do
@@ -44,6 +51,8 @@ function Module:clean()
 
     self._elements = {}
     self._objects = {}
+
+    UISharedFunctions:cleanUpdates()
 end
 
 local function setupBackground(self)
@@ -51,20 +60,16 @@ local function setupBackground(self)
     table.insert(self._elements, background)
 end
 
-local function setupBackButton(self)
-    local backButtonHitbox = RenderModule:createElement(SceneData.backButtonHitbox)
-    local backButtonLabel = RenderModule:createElement(SceneData.backButtonLabel)
+local function setupCancelButton(self)
+    local cancelButtonHitbox = RenderModule:createElement(SceneData.cancelButtonHitbox)
+    table.insert(self._elements, cancelButtonHitbox)
 
-    table.insert(self._elements, backButtonHitbox)
-    table.insert(self._elements, backButtonLabel)
-
-    local backButton = UIButtonObjectModule:createButton({
+    local cancelButton = UIButtonObjectModule:createButton({
         elements = {
-            backButtonHitbox,
-            backButtonLabel
+            cancelButtonHitbox
         },
 
-        hitboxElement = backButtonHitbox,
+        hitboxElement = cancelButtonHitbox,
 
         mouseButton = 1,
         onClick = function()
@@ -76,7 +81,84 @@ local function setupBackButton(self)
         end
     })
 
-    table.insert(self._objects, backButton)
+    table.insert(self._objects, cancelButton)
+end
+
+local function updateCategoryLabel()
+    if currentCategoryLabel then
+        currentCategoryLabel.text = categories[currentCategoryIndex] or ""
+    end
+end
+
+local function scrollCategory(increment)
+    currentCategoryIndex = currentCategoryIndex + increment
+
+    if currentCategoryIndex < 1 then
+        currentCategoryIndex = #categories
+    elseif currentCategoryIndex > #categories then
+        currentCategoryIndex = 1
+    end
+
+    updateCategoryLabel()
+end
+
+local function setupCurrentCategoryLabel(self)
+    currentCategoryLabel = RenderModule:createElement(SceneData.currentCategoryLabel)
+    table.insert(self._elements, currentCategoryLabel)
+
+    updateCategoryLabel()
+end
+
+local function setupScrollButtons(self)
+    local scrollRightButtonHitbox = RenderModule:createElement(SceneData.scrollRightButtonHitbox)
+    table.insert(self._elements, scrollRightButtonHitbox)
+
+    local scrollLeftButtonHitbox = RenderModule:createElement(SceneData.scrollLeftButtonHitbox)
+    table.insert(self._elements, scrollLeftButtonHitbox)
+
+    local scrollRightButton = UIButtonObjectModule:createButton({
+        elements = {
+            scrollRightButtonHitbox
+        },
+
+        hitboxElement = scrollRightButtonHitbox,
+
+        mouseButton = 1,
+        onClick = function()
+            scrollCategory(1)
+        end
+    })
+
+    local scrollLeftButton = UIButtonObjectModule:createButton({
+        elements = {
+            scrollLeftButtonHitbox
+        },
+
+        hitboxElement = scrollLeftButtonHitbox,
+
+        mouseButton = 1,
+        onClick = function()
+            scrollCategory(-1)
+        end
+    })
+
+    table.insert(self._objects, scrollRightButton)
+    table.insert(self._objects, scrollLeftButton)
+
+    return scrollLeftButton, scrollRightButton
+end
+
+local function setupCategoryScrolling(self)
+    setupCurrentCategoryLabel(self)
+    setupScrollButtons(self)
+end
+
+local function buildCategories()
+    categories = {}
+
+    for categoryName in pairs(SettingsModule.loadedFile) do
+        table.insert(categories, categoryName)
+    end
 end
 
 function Module:update()
@@ -84,16 +166,21 @@ function Module:update()
 end
 
 function Module:init()
-    MusicHandlerModule:playTrack("mainMenu")
+    MusicHandlerModule:playTrack("settings")
 
     BoxesObjectModule.renderBoxes = false
 
     if SaveFilesModule.loadedFile then
         UISharedFunctions:setupSessionPlaytimeLabel(self)
-        UISharedFunctions:setupCreditsLabel(self)
+        UISharedFunctions:setupCurrencyLabels(self)
     end
 
-    setupBackButton(self)
+    currentCategoryIndex = 1
+
+    buildCategories()
+
+    setupCategoryScrolling(self)
+    setupCancelButton(self)
     setupBackground(self)
 end
 

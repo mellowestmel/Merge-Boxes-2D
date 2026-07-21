@@ -59,12 +59,12 @@ local function loadBoxes(boxesData)
         local boxData = BoxesObjectModule:getBoxDataByTier(box.tier)
         local boxObject = BoxesObjectModule:createBox(boxData)
 
-        if boxObject then -- Silence stupid warnings, I hate them.
+        if boxObject then
             boxObject.velocityX = box.velocityX
             boxObject.velocityY = box.velocityY
 
             boxObject.element.x = box.x
-            boxObject.element.x = box.x
+            boxObject.element.y = box.y
 
             boxObject.element.rotation = box.rotation
         end

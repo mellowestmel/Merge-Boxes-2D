@@ -19,8 +19,11 @@ local BoxFactoryModule = require("code.game.box.factory")
 
 --// SHOP \\--
 local SHOP_CONSTANTS = require("code.game.shop.constants")
+local UpgradesModule = require("code.game.upgrades")
 
 --// UI \\--
+local UI_CONSTANTS = require("code.game.ui.constants")
+
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
 
@@ -50,6 +53,8 @@ local upgradeShopButtonHitbox = nil
 local blackMarketButtonHitbox = nil
 local sacrificeButtonHitbox = nil
 
+local autoSpawnEnabled = false
+
 function Module:clean()
     for _, element in pairs(self._elements) do
         element:remove()
@@ -69,6 +74,7 @@ function Module:clean()
     end
 
     ScreenFlashModule:stop()
+    UISharedFunctions:cleanUpdates()
 end
 
 local function setupBackground(self)
@@ -127,6 +133,33 @@ local function setupSpawnButton(self)
     })
 
     table.insert(self._objects, spawnButton)
+end
+
+local function setupAutoSpawnButton(self)
+    local autoSpawnButtonHitbox = RenderModule:createElement(SceneData.autoSpawnButtonHitbox)
+    local autoSpawnButtonLabel = RenderModule:createElement(SceneData.autoSpawnButtonLabel)
+
+    table.insert(self._elements, autoSpawnButtonHitbox)
+    table.insert(self._elements, autoSpawnButtonLabel)
+
+    local autoSpawnButton = UIButtonObjectModule:createButton({
+        elements = {
+            autoSpawnButtonHitbox,
+            autoSpawnButtonLabel
+        },
+
+        hitboxElement = autoSpawnButtonHitbox,
+
+        mouseButton = 1,
+        onClick = function()
+            autoSpawnEnabled = not autoSpawnEnabled
+
+            autoSpawnButtonLabel.text = "Auto Spawn (" .. (autoSpawnEnabled and "ON" or "OFF") .. ")"
+            autoSpawnButtonHitbox.color = RenderModule:createColorFromTable((autoSpawnEnabled and UI_CONSTANTS.COLOR_GREEN or UI_CONSTANTS.COLOR_RED))
+        end
+    })
+
+    table.insert(self._objects, autoSpawnButton)
 end
 
 local function setupUpgradeShopButton(scene)
@@ -220,36 +253,45 @@ function Module:update()
     UISharedFunctions:update()
 
     if upgradeShopButtonHitbox and blackMarketButtonHitbox and sacrificeButtonHitbox then
-        
+
         upgradeShopButtonHitbox.drawable = lockedImageLogic(
-            SaveFilesModule.loadedFile.stats.highestBoxTier, 
-            SHOP_CONSTANTS.UPGRADE_SHOP_UNLOCK_REQUIREMENT, 
+            SaveFilesModule.loadedFile.stats.highestBoxTier,
+            SHOP_CONSTANTS.UPGRADE_SHOP_UNLOCK_REQUIREMENT,
             SceneData.upgradeShopButtonHitbox.spritePath
         )
 
         blackMarketButtonHitbox.drawable = lockedImageLogic(
-            SaveFilesModule.loadedFile.stats.highestBoxTier, 
-            SHOP_CONSTANTS.BLACK_MARKET_BUYING_REQUIREMENT, 
+            SaveFilesModule.loadedFile.stats.highestBoxTier,
+            SHOP_CONSTANTS.BLACK_MARKET_BUYING_REQUIREMENT,
             SceneData.blackMarketButtonHitbox.spritePath
         )
 
         sacrificeButtonHitbox.drawable = lockedImageLogic(
-            SaveFilesModule.loadedFile.stats.highestBoxTier, 
-            SHOP_CONSTANTS.SACRIFICE_UNLOCK_REQUIREMENT, 
+            SaveFilesModule.loadedFile.stats.highestBoxTier,
+            SHOP_CONSTANTS.SACRIFICE_UNLOCK_REQUIREMENT,
             SceneData.sacrificeButtonHitbox.spritePath
         )
 
     end
 
     if spawnButtonHitbox and spawnButtonLabel and spawnButton then
-        spawnButton.cooldown = SaveFilesModule.loadedFile.stats.boxSpawnCooldown
+        local cooldown = BoxFactoryModule:getSpawnCooldown()
+        spawnButton.cooldown = cooldown
 
         local time = (love.timer.getTime() - BoxFactoryModule.lastSpawned)
-        local timeLeft = SaveFilesModule.loadedFile.stats.boxSpawnCooldown - time
-        
-        local onCooldown = time <= SaveFilesModule.loadedFile.stats.boxSpawnCooldown
+        local timeLeft = cooldown - time
+
+        local onCooldown = time <= cooldown
 
         spawnButtonLabel.text =  (onCooldown and string.format("%.1f", timeLeft) .. "s" or SceneData.spawnButtonLabel.text)
+
+        if not onCooldown and UpgradesModule:getEffect("autoSpawn") and autoSpawnEnabled then
+            spawnButton:mousePressed(
+                spawnButtonHitbox.x,
+                spawnButtonHitbox.y,
+                1
+            )
+        end
     end
 end
 
@@ -278,7 +320,11 @@ function Module:init(slot)
     UISharedFunctions:setupSettingsButton(self)
 
     UISharedFunctions:setupSessionPlaytimeLabel(self)
-    UISharedFunctions:setupCreditsLabel(self)
+    UISharedFunctions:setupCurrencyLabels(self)
+
+    if UpgradesModule:getEffect("autoSpawn") then
+        setupAutoSpawnButton(self)
+    end
 
     setupUpgradeShopButton(self)
     setupBlackMarketButton(self)

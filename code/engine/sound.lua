@@ -32,11 +32,15 @@ local function computeVolume(sound)
     local base =
     (
         sound.type == "sound"
-        and SettingsModule.loadedFile.soundVolume
-        or SettingsModule.loadedFile.trackVolume
+        and SettingsModule.loadedFile.audio.soundVolume
+        or SettingsModule.loadedFile.audio.trackVolume
     )
 
-    return sound.volume * base * SettingsModule.loadedFile.masterVolume
+    if SettingsModule.loadedFile.audio.muteGame then
+        base = 0
+    end
+
+    return sound.volume * base * SettingsModule.loadedFile.audio.masterVolume
 end
 
 function Sound:pause()

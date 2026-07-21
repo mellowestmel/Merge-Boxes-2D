@@ -41,7 +41,7 @@ return {
         y = UI_LAYOUT.MAIN_MENU.BUTTON_Y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -77,7 +77,7 @@ return {
         y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -110,7 +110,7 @@ return {
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT + 1,
     },
@@ -143,7 +143,7 @@ return {
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT + 1,
     },

@@ -1,5 +1,8 @@
 -- ~/code/game/box/scaleTween.lua
 
+--// SAVES \\--
+local SettingsModule = require("code.engine.saves.settings")
+
 --// HELPERS \\--
 local easing = require("code.engine.helpers.easing")
 local math = require("code.engine.helpers.math")
@@ -10,6 +13,9 @@ local BoxesObjectModule = require("code.game.box.object")
 local Module = {}
 
 function Module:update(deltaTime)
+    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+    if not animationsEnabled then return end
+
     local boxesArray = BoxesObjectModule:getSortedArray()
     local boxesCount = #boxesArray
 

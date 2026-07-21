@@ -41,13 +41,13 @@ function Module:encodeBoxes(boxes)
 
     for _, box in pairs(boxes) do
         local line = addString(
-            box.tier, 
+            box.tier,
 
-            box.velocityX, 
-            box.velocityY, 
+            box.velocityX,
+            box.velocityY,
 
-            box.element.x, 
-            box.element.y, 
+            box.element.x,
+            box.element.y,
 
             box.element.rotation
         )
@@ -74,7 +74,11 @@ function Module:encodeSlot(slot)
 end
 
 function Module:encodeSettings(file)
-    local finalOutput = self:encodeSimple(file)
+    local finalOutput = addStringNewLine(
+        self:encodeSimple(file.audio),
+        self:encodeSimple(file.graphics),
+        self:encodeSimple(file.accessibility)
+    )
 
     return finalOutput
 end
@@ -86,7 +90,9 @@ function Module:encode(file)
         self:encodeSimple(file.currencies),
         self:encodeSimple(file.stats),
 
-        self:encodeBoxes(file.boxes)
+        self:encodeBoxes(file.boxes),
+
+        self:encodeSimple(file.upgrades)
     )
 
     finalOutput = encryptBase64(finalOutput)

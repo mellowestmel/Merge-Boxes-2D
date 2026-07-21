@@ -108,16 +108,28 @@ function Module:setupBackToMenuButton(scene)
     table.insert(scene._objects, backToMenuButton)
 end
 
-function Module:setupCreditsLabel(scene)
+function Module:setupCurrencyLabels(scene)
     local creditsLabel = RenderModule:createElement(SharedData.creditsLabel)
 
     self._updateFunctions.creditsLabelUpdateFunction = function()
         if not creditsLabel then return end
 
-        creditsLabel.text = SaveFilesModule.loadedFile.currencies.credits .. " C$"
+        local credits = SaveFilesModule.loadedFile.currencies.credits
+        creditsLabel.text = string.formatNumber(credits) .. " C$"
     end
 
     table.insert(scene._elements, creditsLabel)
+
+    local holyCatnipLabel = RenderModule:createElement(SharedData.holyCatnipLabel)
+
+    self._updateFunctions.holyCatnipLabelUpdateFunction = function()
+        if not holyCatnipLabel then return end
+
+        local holyCatnip = SaveFilesModule.loadedFile.currencies.holyCatnip
+        holyCatnipLabel.text = string.formatNumber(holyCatnip) .. " Holy Catnip"
+    end
+
+    table.insert(scene._elements, holyCatnipLabel)
 end
 
 function Module:setupSessionPlaytimeLabel(scene)
@@ -147,6 +159,10 @@ function Module:update()
     for _, updateFunction in pairs(self._updateFunctions) do
         updateFunction()
     end
+end
+
+function Module:cleanUpdates()
+    self._updateFunctions = {}
 end
 
 return Module

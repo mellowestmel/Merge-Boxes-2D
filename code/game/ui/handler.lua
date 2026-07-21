@@ -12,13 +12,6 @@ function Module:mousePressed(x, y, button)
     UIButtonObjectModule:mousePressed(x, y, button)
 end
 
-function Module:keyPressed(input, scanCode, isRepeat)
-    if input == "f11" then
-        local isFullscreen = love.window.getFullscreen()
-        love.window.setFullscreen(not isFullscreen)
-    end
-end
-
 function Module:textInput(input)
 end
 

@@ -2,9 +2,16 @@
 
 --// ENGINE \\--
 local IdManagerModule = require("code.engine.idManager")
+local ShaderModule = require("code.engine.shaders")
+
+--// SAVES \\--
+local SettingsModule = require("code.engine.saves.settings")
 
 --// HELPERS \\--
 local math = require("code.engine.helpers.math")
+
+--/// DATA \\\--
+local ColorblindData = require("code.data.colorblind")
 
 local Module = {}
 Module.fullscreen = false
@@ -282,6 +289,28 @@ function Module:drawAll()
 
     love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
 
+    local accessibility = SettingsModule.loadedFile.accessibility
+    local graphics = SettingsModule.loadedFile.graphics
+
+    local shader = ShaderModule:get("accessibility")
+
+    shader:send("contrast", graphics.contrast)
+    shader:send("gamma", graphics.gamma)
+
+    shader:send(
+        "enableColorblind",
+        accessibility.colorblindMode ~= "none"
+    )
+
+    if accessibility.colorblindMode ~= "none" then
+        shader:send(
+            "colorMatrix",
+            ColorblindData[accessibility.colorblindMode]
+        )
+    end
+
+    love.graphics.setShader(shader)
+
     for _, element in ipairs(self._sortedCache) do
         if not element.render then goto continue end
         element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
@@ -290,6 +319,14 @@ function Module:drawAll()
     end
 
     love.graphics.setScissor()
+    love.graphics.setShader()
+end
+
+function Module:init()
+    ShaderModule:load(
+        "accessibility",
+        "code/data/shaders/accessibility.glsl"
+    )
 end
 
 return Module

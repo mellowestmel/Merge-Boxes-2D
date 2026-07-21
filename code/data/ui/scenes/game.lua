@@ -30,7 +30,39 @@ return {
         y = UI_LAYOUT.SPAWN_BUTTON.y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
+
+        zIndex = CONSTANTS.Z_UI_TEXT,
+    },
+
+    autoSpawnButtonHitbox = {
+        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+
+        type = "sprite",
+
+        x = UI_LAYOUT.SPAWN_BUTTON.x,
+        y = UI_LAYOUT.SPAWN_BUTTON.y - 65,
+
+        scaleY = .6,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    autoSpawnButtonLabel = {
+        text = "Auto Spawn (OFF)",
+
+        type = "text",
+
+        x = UI_LAYOUT.SPAWN_BUTTON.x,
+        y = UI_LAYOUT.SPAWN_BUTTON.y - 65,
+
+        scaleX = .75,
+        scaleY = .75,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },

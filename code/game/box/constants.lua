@@ -5,6 +5,9 @@ return {
     MIN_SPAWN_VELOCITY = -1,
     MAX_SPAWN_VELOCITY = 1,
 
+    DEFAULT_BOX_SPAWN_COOLDOWN = 1.2,
+    DEFAULT_BOX_SPAWN_TIER = 1,
+
     -- Play Area
     AREA_WIDTH = 550,
     AREA_HEIGHT = 600,

@@ -1,5 +1,8 @@
 -- ~/code/game/vfx/sceneTransition.lua
 
+--// SAVES \\--
+local SettingsModule = require("code.engine.saves.settings")
+
 --/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
@@ -11,12 +14,30 @@ Module.transitioning = false
 function Module:transition(data)
     if not data then data = {} end
 
+    if not SettingsModule.loadedFile.graphics.animationsEnabled then
+        self.transitioning = true
+
+        if self._screenTransitionElement then
+            self._screenTransitionElement.color.alpha = 1
+        end
+
+        if data.callback then
+            data.callback()
+        end
+
+        self._currentTransition = {
+            duration = 0,
+            timeSinceStart = 0,
+            callbackFired = true
+        }
+
+        return
+    end
+
     self.transitioning = true
     self._currentTransition = {
         callback = data.callback or nil,
-
         duration = data.duration or .8,
-
         timeSinceStart = 0,
         callbackFired = false
     }

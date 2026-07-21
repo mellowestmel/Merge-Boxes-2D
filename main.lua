@@ -22,13 +22,13 @@ local VFXHandlerModule = require("code.game.vfx.handler")
 
 function love.load()
     SettingsModule:loadFile()
+    RenderModule:init()
 
-    local fullscreen = SettingsModule.loadedFile.fullscreen
+    local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
+    local vsync = SettingsModule.loadedFile.graphics.vsync
 
-    love.window.setMode(_G.WINDOW_WIDTH, _G.WINDOW_HEIGHT, {
-        fullscreen = fullscreen,
-        vsync = 1
-    })
+    love.window.setFullscreen(fullscreen)
+    love.window.setVSync(vsync)
 
     MusicHandlerModule.init()
     VFXHandlerModule.init()
@@ -51,10 +51,6 @@ end
 function love.mousepressed(_, _, button)
     local mouseX, mouseY = RenderModule:getMousePos()
     UIHandlerModule:mousePressed(mouseX, mouseY, button)
-end
-
-function love.keypressed(input, scanCode, isRepeat)
-    UIHandlerModule:keyPressed(input, scanCode, isRepeat)
 end
 
 function love.textinput(input)
