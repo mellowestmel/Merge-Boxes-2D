@@ -12,6 +12,7 @@ local table = require("code.engine.helpers.table")
 
 --/// GAME \\\--
 local MusicHandlerModule = require("code.game.musicHandler")
+local UpgradesModule = require("code.game.upgrades")
 
 --// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
@@ -19,7 +20,6 @@ local BoxFactoryModule = require("code.game.box.factory")
 
 --// SHOP \\--
 local SHOP_CONSTANTS = require("code.game.shop.constants")
-local UpgradesModule = require("code.game.upgrades")
 
 --// UI \\--
 local UI_CONSTANTS = require("code.game.ui.constants")
@@ -201,7 +201,7 @@ local function setupBlackMarketButton(scene)
 
         mouseButton = 1,
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.BLACK_MARKET_BUYING_REQUIREMENT then return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.BLACK_MARKET_UNLOCK_REQUIREMENT then return end
 
             ScreenTransitionModule:transition({
                 callback = function()
@@ -262,7 +262,7 @@ function Module:update()
 
         blackMarketButtonHitbox.drawable = lockedImageLogic(
             SaveFilesModule.loadedFile.stats.highestBoxTier,
-            SHOP_CONSTANTS.BLACK_MARKET_BUYING_REQUIREMENT,
+            SHOP_CONSTANTS.BLACK_MARKET_UNLOCK_REQUIREMENT,
             SceneData.blackMarketButtonHitbox.spritePath
         )
 

@@ -13,6 +13,9 @@ local table = require("code.engine.helpers.table")
 --// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 
+--// SHOP \\--
+local SHOP_CONSTANTS = require("code.game.shop.constants")
+
 --// UI \\--
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 
@@ -126,7 +129,10 @@ function Module:setupCurrencyLabels(scene)
         if not holyCatnipLabel then return end
 
         local holyCatnip = SaveFilesModule.loadedFile.currencies.holyCatnip
+        local highestBoxTier = SaveFilesModule.loadedFile.stats.highestBoxTier
+
         holyCatnipLabel.text = string.formatNumber(holyCatnip) .. " Holy Catnip"
+        holyCatnipLabel.render = (highestBoxTier >= SHOP_CONSTANTS.CATNIP_SHOP_UNLOCK_REQUIREMENT)
     end
 
     table.insert(scene._elements, holyCatnipLabel)

@@ -3,7 +3,7 @@
 --// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 
---// SHOP \\--
+--/// GAME \\\--
 local UpgradesModule = require("code.game.upgrades")
 
 --// HELPERS \\--

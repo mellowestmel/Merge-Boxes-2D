@@ -1,4 +1,4 @@
--- ~/code/game/upgrades.lua
+-- ~/code/game/box/upgrades.lua
 
 --// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
@@ -16,16 +16,21 @@ function Module:getUpgrade(id)
     return UpgradeData[id]
 end
 
-function Module:isMaxed(id)
-    local upgrade = self:getUpgrade(id)
-
-    return self:getStacks(id) >= upgrade.maxStacks
-end
-
 function Module:getEffect(id)
     local upgrade = self:getUpgrade(id)
 
     return upgrade.effect(self:getStacks(id))
+end
+
+function Module:addStack(id)
+    SaveFilesModule.loadedFile.upgrades[id] =
+        self:getStacks(id) + 1
+end
+
+function Module:isMaxed(id)
+    local upgrade = self:getUpgrade(id)
+
+    return self:getStacks(id) >= upgrade.maxStacks
 end
 
 return Module

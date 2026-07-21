@@ -1,4 +1,4 @@
--- ~/code/game/shop/purchase.lua
+-- ~/code/game/shop/transaction.lua
 
 --// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
@@ -6,10 +6,10 @@ local SaveFilesModule = require("code.engine.saves.files")
 local Module = {}
 
 function Module:canAfford(currency, amount)
-    return SaveFilesModule.loadedFile.currencies[currency] >= amount
+    return (SaveFilesModule.loadedFile.currencies[currency] or 0) >= amount
 end
 
-function Module:spend(currency, amount)
+function Module:purchase(currency, amount, callback)
     if not self:canAfford(currency, amount) then
         return false
     end
@@ -17,12 +17,11 @@ function Module:spend(currency, amount)
     SaveFilesModule.loadedFile.currencies[currency] =
         SaveFilesModule.loadedFile.currencies[currency] - amount
 
-    return true
-end
+    if callback then
+        callback()
+    end
 
-function Module:add(currency, amount)
-    SaveFilesModule.loadedFile.currencies[currency] =
-        (SaveFilesModule.loadedFile.currencies[currency] or 0) + amount
+    return true
 end
 
 return Module
