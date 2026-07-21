@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-field
 -- ~/code/engine/sound.lua
 
 --// SAVES \\--
@@ -16,7 +15,7 @@ local Sound = {
     type = "",
     soundPath = "",
 
-    source = nil,
+    source = {},
 
     volume = 1,
     pitch = 1

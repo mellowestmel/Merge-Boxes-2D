@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-field
 -- ~/code/engine/saves/decode.lua
 
 --// SAVES \\--

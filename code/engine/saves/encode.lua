@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-field
 -- ~/code/engine/saves/encode.lua
 
 --// HELPERS \\--

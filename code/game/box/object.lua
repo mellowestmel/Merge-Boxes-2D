@@ -15,7 +15,7 @@ local BoxesData = require("code.data.boxes")
 
 local Box = {
     id = 0,
-    element = nil,
+    element = {},
 
     dragging = false,
     merging = false,

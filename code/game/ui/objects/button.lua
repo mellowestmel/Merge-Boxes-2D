@@ -22,7 +22,7 @@ local Button = {
     cooldown = 0,
     lastUsed = 0,
 
-    hitboxElement = nil,
+    hitboxElement = {},
 
     mouseButton = 1,
     onClick = nil,
@@ -129,7 +129,7 @@ function Module:createButton(data)
 
         _clickScale = data.clickScale or .1,
         _hoverScale = data.hoverScale or .05,
-        
+
         _scaleSpeed = data.scaleSpeed or .5
     }, Button)
 
