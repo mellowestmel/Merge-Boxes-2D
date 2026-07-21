@@ -22,7 +22,7 @@ function Module:update()
     if mouseDown and not self.draggedBox then
         for index = 1, #boxesArray do
             local box = boxesArray[index]
-            box.element.zIndex = CONSTANTS.BASE_BOX_ZINDEX
+            box.element:setZIndex(CONSTANTS.BASE_BOX_ZINDEX)
 
             if box.element:isPointInside(mouseX, mouseY) then
                 self.draggedBox = box
@@ -31,13 +31,13 @@ function Module:update()
                 lastDraggedBoxAlpha = box.element.color.alpha
                 box.element.color.alpha = CONSTANTS.DRAGGED_BOX_ALPHA
 
-                box.element.zIndex = CONSTANTS.BASE_BOX_ZINDEX + 2
+                box.element:setZIndex(CONSTANTS.BASE_BOX_ZINDEX + 2)
                 break
             end
         end
     elseif not mouseDown and self.draggedBox then
         self.draggedBox.element.color.alpha = lastDraggedBoxAlpha
-        self.draggedBox.element.zIndex = CONSTANTS.BASE_BOX_ZINDEX + 1
+        self.draggedBox.element:setZIndex(CONSTANTS.BASE_BOX_ZINDEX + 1)
 
         self.draggedBox.dragging = false
         self.draggedBox = nil

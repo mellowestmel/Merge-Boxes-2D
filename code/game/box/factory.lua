@@ -14,8 +14,8 @@ local Module = {}
 Module.lastSpawned = 0
 
 function Module:spawn()
-    local x = math.random(-CONSTANTS.AREA_WIDTH, CONSTANTS.AREA_WIDTH)
-    local y = math.random(-CONSTANTS.AREA_HEIGHT, CONSTANTS.AREA_HEIGHT)
+    local x = math.random(0, CONSTANTS.AREA_WIDTH)
+    local y = math.random(0, CONSTANTS.AREA_HEIGHT)
 
     local spawnTier = SaveFilesModule.loadedFile.stats.boxSpawnTier
 

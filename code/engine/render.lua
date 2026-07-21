@@ -11,6 +11,9 @@ Module.fullscreen = false
 Module.imageCache = {}
 Module._elements = {}
 
+Module._sortedCache = {}
+Module._dirty = true
+
 local manager = IdManagerModule:createManager()
 
 function Module:createColorFromTable(color)
@@ -62,7 +65,14 @@ function Element:remove()
     local id = self.id
 
     Module._elements[id] = nil
+    Module._dirty = true
     manager:release(id)
+end
+
+function Element:setZIndex(value)
+    if self.zIndex == value then return end
+    self.zIndex = value
+    Module._dirty = true
 end
 
 function Element:isPointInside(pointX, pointY)
@@ -191,6 +201,7 @@ function Module:createElement(data)
     }, Element)
 
     self._elements[element.id] = element
+    self._dirty = true
 
     if data.type == "sprite" then
         if not (data.spritePath and love.filesystem.getInfo(data.spritePath)) then
@@ -245,35 +256,40 @@ local function getSortOrder(element)
 end
 
 function Module:drawAll()
-    local elementsArray = {}
-    for _, element in pairs(self._elements) do
-        table.insert(elementsArray, element)
+    if self._dirty then
+        local elementsArray = {}
+        for _, element in pairs(self._elements) do
+            table.insert(elementsArray, element)
+        end
+
+        table.sort(elementsArray, function(a, b)
+            return getSortOrder(a) < getSortOrder(b)
+        end)
+
+        self._sortedCache = elementsArray
+        self._dirty = false
     end
 
-    table.sort(elementsArray, function(a, b)
-        return getSortOrder(a) < getSortOrder(b)
-    end)
+    local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
+    local baseWindowWidth, baseWindowHeight = _G.WINDOW_WIDTH, _G.WINDOW_HEIGHT
 
-    for _, element in ipairs(elementsArray) do
+    local windowScaleFactorX = currentWindowWidth / baseWindowWidth
+    local windowScaleFactorY = currentWindowHeight / baseWindowHeight
+    local windowScaleFactor = math.min(windowScaleFactorX, windowScaleFactorY)
+
+    local windowOffsetX = (currentWindowWidth - baseWindowWidth * windowScaleFactor) / 2
+    local windowOffsetY = (currentWindowHeight - baseWindowHeight * windowScaleFactor) / 2
+
+    love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
+
+    for _, element in ipairs(self._sortedCache) do
         if not element.render then goto continue end
-
-        local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
-        local baseWindowWidth, baseWindowHeight = _G.WINDOW_WIDTH, _G.WINDOW_HEIGHT
-
-        local windowScaleFactorX = currentWindowWidth / baseWindowWidth
-        local windowScaleFactorY = currentWindowHeight / baseWindowHeight
-        local windowScaleFactor = math.min(windowScaleFactorX, windowScaleFactorY)
-
-        local windowOffsetX = (currentWindowWidth - baseWindowWidth * windowScaleFactor) / 2
-        local windowOffsetY = (currentWindowHeight - baseWindowHeight * windowScaleFactor) / 2
-
-        love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
         element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
-
-        love.graphics.setScissor()
 
         :: continue ::
     end
+
+    love.graphics.setScissor()
 end
 
 return Module

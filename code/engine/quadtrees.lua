@@ -5,11 +5,13 @@ local math = require("code.engine.helpers.math")
 --[[
 What is a "point"?
 
-i think its like uhhh... idk man..
+I think its like uhhh... idk man..
 a point is like a point in like a space
 and the point like points to a certain point
-if you get what im saying
+if you get what I'm saying
 ]]
+
+local MAX_DEPTH = 8
 
 local Quadtree = {
     width = 100,
@@ -20,6 +22,7 @@ local Quadtree = {
 
     capacity = 4,
     parent = nil,
+    depth = 0,
 
     subdivided = false,
 
@@ -165,7 +168,7 @@ function Quadtree:insert(point)
     local contains = self:contains(point)
     if not contains then return false end
 
-    if not self.subdivided and #self.points < self.capacity then
+    if not self.subdivided and (#self.points < self.capacity or self.depth >= MAX_DEPTH) then
         table.insert(self.points, point)
         return true
     end
@@ -204,7 +207,8 @@ function Quadtree:subdivide()
             y = self.y + offset[2],
 
             capacity = self.capacity,
-            parent = self
+            parent = self,
+            depth = self.depth + 1
         })
 
         table.insert(self.children, child)
@@ -310,6 +314,7 @@ function Module:createQuadtree(data)
 
         capacity = data.capacity or 4,
         parent = data.parent or nil,
+        depth = data.depth or 0,
 
         subdivided = false,
 
