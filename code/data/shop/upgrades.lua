@@ -11,7 +11,7 @@ local rawUpgrades = {
 
         maxStacks = 8,
 
-        cost = function(stacks) return 200 * (stacks + 1)^2.5 end,
+        cost = function(stacks) return 150 * (stacks + 1)^2.5 end,
         effect = function(stacks) return stacks * 0.1 end
     },
     {
@@ -22,7 +22,7 @@ local rawUpgrades = {
 
         maxStacks = 4,
 
-        cost = function(stacks) return 25000 * (stacks + 1)^4 end,
+        cost = function(stacks) return 1500 * (stacks + 1)^4 end,
         effect = function(stacks) return stacks end
     },
     {
@@ -33,7 +33,7 @@ local rawUpgrades = {
 
         maxStacks = 1,
 
-        cost = function() return 70000 end,
+        cost = function() return 15000 end,
         effect = function(stacks) return stacks > 0 end
     },
     {
@@ -42,9 +42,9 @@ local rawUpgrades = {
         name = "Lucky Roll",
         description = "Each spawned box has a chance to spawn one tier higher. Each stack increases the chance by 15%.",
 
-        maxStacks = 5,
+        maxStacks = 10,
 
-        cost = function(stacks) return 50000 * (stacks + 1)^3 end,
+        cost = function(stacks) return 5000 * (stacks + 1)^3 end,
         effect = function(stacks) return stacks * 0.15 end
     },
     {
@@ -55,9 +55,9 @@ local rawUpgrades = {
 
         maxStacks = 3,
 
-        cost = function(stacks) return 75000 * (stacks + 1)^3 end,
+        cost = function(stacks) return 25000 * (stacks + 1)^5 end,
         effect = function(stacks) return stacks + 1 end
-    }
+    },
 }
 
 local upgrades = {}

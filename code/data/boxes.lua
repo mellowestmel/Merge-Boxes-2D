@@ -26,7 +26,7 @@ local rawBoxes = {
         quote = "WHAT??",
         name = "Jimbo",
 
-        mergeReward = 5,
+        mergeReward = 10,
 
         weight = 70,
         scale = .75,
@@ -39,7 +39,7 @@ local rawBoxes = {
         quote = "And that's how I'll take over the world!",
         name = "Glumbo",
 
-        mergeReward = 10,
+        mergeReward = 20,
 
         weight = 85,
         scale = .8,
@@ -52,7 +52,7 @@ local rawBoxes = {
         quote = "Ermm... actually! ☝️🤓",
         name = "Jeremy",
 
-        mergeReward = 20,
+        mergeReward = 30,
 
         weight = 105,
         scale = .9,
@@ -83,7 +83,7 @@ local rawBoxes = {
         quote = "...",
         name = "Dylan",
 
-        mergeReward = 120,
+        mergeReward = 155,
 
         weight = 160,
         scale = 1.1,
@@ -96,7 +96,7 @@ local rawBoxes = {
         quote = "HEY!!!",
         name = "Carlos",
 
-        mergeReward = 160,
+        mergeReward = 310,
 
         weight = 200,
         scale = 1.2,
@@ -109,7 +109,7 @@ local rawBoxes = {
         quote = "Blehhhh!",
         name = "Goobster Goobington III",
 
-        mergeReward = 320,
+        mergeReward = 620,
 
         weight = 250,
         scale = 1.3,
@@ -122,7 +122,7 @@ local rawBoxes = {
         quote = "Oh that's new...",
         name = "Mark",
 
-        mergeReward = 650,
+        mergeReward = 1000,
 
         weight = 320,
         scale = 1.4,
@@ -291,7 +291,7 @@ local rawBoxes = {
         quote = "Trust me, it's luck!",
         name = "Luckroll Box",
 
-        mergeReward = 12000000,
+        mergeReward = 7777777,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/box20.wav"},
 

@@ -135,6 +135,8 @@ local function setupSpawnButton(self)
 end
 
 local function setupAutoSpawnButton(self)
+    autoSpawnEnabled = false
+
     local autoSpawnButtonHitbox = RenderModule:createElement(SceneData.autoSpawnButtonHitbox)
     local autoSpawnButtonLabel = RenderModule:createElement(SceneData.autoSpawnButtonLabel)
 
