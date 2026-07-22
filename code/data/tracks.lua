@@ -1,6 +1,8 @@
 -- ~/code/data/tracks.lua
 
-return {
+local TrackConstructor = require("code.data.constructors.trackConstructor")
+
+local rawTracks = {
     mainMenu = {
         trackPath = "assets/tracks/mainmenu.ogg",
         author = "Orzech05",
@@ -49,8 +51,16 @@ return {
     game1 = {
         trackPath = "assets/tracks/game1.ogg",
         author = "Orzech05",
-        trackName = "Passing Time",
+        trackName = "Mellow Meadows",
 
         isGameplayTrack = true
     },
 }
+
+local tracks = {}
+
+for key, trackData in pairs(rawTracks) do
+    tracks[key] = TrackConstructor.new(trackData)
+end
+
+return tracks

@@ -13,8 +13,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SETTINGS_BUTTON.x,
-        y = UI_LAYOUT.SETTINGS_BUTTON.y,
+        x = UI_LAYOUT.SHARED.SETTINGS_BUTTON.X,
+        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -44,8 +44,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y + 65,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -57,13 +57,13 @@ return {
 
         type = "text",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y + 65,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_BUTTON
+            CONSTANTS.FONT_LARGE
         ),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
@@ -86,6 +86,27 @@ return {
         y = CONSTANTS.LARGE_PADDING,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
+
+        zIndex = CONSTANTS.Z_UI_TEXT,
+    },
+
+    holyCatnipLabel = {
+        text = "Holy Catnip:",
+
+        type = "text",
+
+        font = love.graphics.newFont(
+            CONSTANTS.STANBERRY_FONT_PATH,
+            CONSTANTS.FONT_SMALL
+        ),
+
+        anchorX = 0,
+        anchorY = 0,
+
+        x = CONSTANTS.SMALL_PADDING,
+        y = CONSTANTS.LARGE_PADDING * CONSTANTS.CURRENCY_LABEL_ROW_SPACING_MULTIPLIER,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_PURPLE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -114,8 +135,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SETTINGS_BUTTON.x - 55,
-        y = UI_LAYOUT.SETTINGS_BUTTON.y,
+        x = UI_LAYOUT.SHARED.SETTINGS_BUTTON.X - CONSTANTS.MASSIVE_PADDING,
+        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -123,6 +144,23 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    dialoguePortrait = {
+        type = "sprite",
+
+        anchorX = 0,
+        anchorY = 1,
+
+        x = UI_LAYOUT.SHARED.DIALOGUE.PORTRAIT_X,
+        y = UI_LAYOUT.SHARED.DIALOGUE.PORTRAIT_Y,
+
+        scaleX = CONSTANTS.SPRITE_LARGE_SCALE,
+        scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+
+        zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
 
     dialogueBox = {
@@ -134,10 +172,10 @@ return {
         anchorY = 1,
 
         x = 0,
-        y = _G.WINDOW_HEIGHT,
+        y = _G.RESOLUTION_HEIGHT,
 
-        scaleX = 2.5,
-        scaleY = 2.5,
+        scaleX = CONSTANTS.SPRITE_HUGE_SCALE,
+        scaleY = CONSTANTS.SPRITE_HUGE_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
 
@@ -151,7 +189,7 @@ return {
         anchorY = 1,
 
         x = 0,
-        y = _G.WINDOW_HEIGHT,
+        y = _G.RESOLUTION_HEIGHT,
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },

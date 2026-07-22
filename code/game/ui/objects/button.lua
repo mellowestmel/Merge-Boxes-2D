@@ -1,14 +1,13 @@
 -- ~/code/game/ui/objects/button.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 local SoundModule = require("code.engine.sound")
 local IdManagerModule = require("code.engine.idManager")
 
---// HELPERS \\--
+local SettingsModule = require("code.engine.saves.settings")
+
 local math = require("code.engine.helpers.math")
 
---// VFX \\--
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
 local Button = {
@@ -19,7 +18,7 @@ local Button = {
     cooldown = 0,
     lastUsed = 0,
 
-    hitboxElement = nil,
+    hitboxElement = {},
 
     mouseButton = 1,
     onClick = nil,
@@ -52,12 +51,16 @@ function Button:mousePressed(x, y, mouseButton)
 
     self.lastUsed = love.timer.getTime()
 
-    for _, element in pairs(self.elements) do
-        element._baseScaleX = element._baseScaleX or (element.scaleX or 1)
-        element._baseScaleY = element._baseScaleY or (element.scaleY or 1)
+    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
 
-        element.scaleX = element._baseScaleX - self._clickScale
-        element.scaleY = element._baseScaleY - self._clickScale
+    if animationsEnabled then
+        for _, element in pairs(self.elements) do
+            element._baseScaleX = element._baseScaleX or (element.scaleX or 1)
+            element._baseScaleY = element._baseScaleY or (element.scaleY or 1)
+
+            element.scaleX = element._baseScaleX - self._clickScale
+            element.scaleY = element._baseScaleY - self._clickScale
+        end
     end
 
     if self.playClickSound then
@@ -80,6 +83,9 @@ function Button:update(deltaTime)
     local mouseX, mouseY = RenderModule:getMousePos()
     self._isHovered = self.hitboxElement:isPointInside(mouseX, mouseY)
 
+    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+    local scaleLerp = animationsEnabled and math.min(1, self._scaleSpeed * deltaTime * 10) or 1
+
     for _, element in pairs(self.elements) do
         element._baseScaleX = element._baseScaleX or (element.scaleX or 1)
         element._baseScaleY = element._baseScaleY or (element.scaleY or 1)
@@ -92,8 +98,8 @@ function Button:update(deltaTime)
             targetScaleY = targetScaleY + self._hoverScale
         end
 
-        element.scaleX = element.scaleX + (targetScaleX - element.scaleX) * math.min(1, self._scaleSpeed * deltaTime * 10)
-        element.scaleY = element.scaleY + (targetScaleY - element.scaleY) * math.min(1, self._scaleSpeed * deltaTime * 10)
+        element.scaleX = element.scaleX + (targetScaleX - element.scaleX) * scaleLerp
+        element.scaleY = element.scaleY + (targetScaleY - element.scaleY) * scaleLerp
     end
 end
 
@@ -119,7 +125,7 @@ function Module:createButton(data)
 
         _clickScale = data.clickScale or .1,
         _hoverScale = data.hoverScale or .05,
-        
+
         _scaleSpeed = data.scaleSpeed or .5
     }, Button)
 

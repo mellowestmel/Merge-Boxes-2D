@@ -1,7 +1,5 @@
----@diagnostic disable: undefined-field
 -- ~/code/engine/saves/encode.lua
 
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
@@ -41,13 +39,13 @@ function Module:encodeBoxes(boxes)
 
     for _, box in pairs(boxes) do
         local line = addString(
-            box.tier, 
+            box.tier,
 
-            box.velocityX, 
-            box.velocityY, 
+            box.velocityX,
+            box.velocityY,
 
-            box.element.x, 
-            box.element.y, 
+            box.element.x,
+            box.element.y,
 
             box.element.rotation
         )
@@ -69,24 +67,34 @@ function Module:encodeSimple(section)
 end
 
 
+function Module:encodeVersion(version)
+    return "version " .. version .. "\n"
+end
+
 function Module:encodeSlot(slot)
     return "slot " .. slot .. "\n"
 end
 
 function Module:encodeSettings(file)
-    local finalOutput = self:encodeSimple(file)
+    local finalOutput = addStringNewLine(
+        self:encodeSimple(file.audio),
+        self:encodeSimple(file.graphics),
+        self:encodeSimple(file.accessibility)
+    )
 
     return finalOutput
 end
 
 function Module:encode(file)
     local finalOutput = addStringNewLine(
+        self:encodeVersion(file.version),
         self:encodeSlot(file.slot),
+
+        self:encodeBoxes(file.boxes),
 
         self:encodeSimple(file.currencies),
         self:encodeSimple(file.stats),
-
-        self:encodeBoxes(file.boxes)
+        self:encodeSimple(file.upgrades)
     )
 
     finalOutput = encryptBase64(finalOutput)

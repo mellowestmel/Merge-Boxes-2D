@@ -1,35 +1,34 @@
 -- ~/code/game/ui/handler.lua
 
---// UI \\--
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 
---/ UI OBJECTS \--
+local UIScrollingFrameObjectModule = require("code.game.ui.objects.scrollingFrame")
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
 local Module = {}
 
+function Module:wheelMoved(x, y)
+    UIScrollingFrameObjectModule:wheelMoved(x, y)
+end
+
 function Module:mousePressed(x, y, button)
+    UIScrollingFrameObjectModule:mousePressed(x, y, button)
     UIButtonObjectModule:mousePressed(x, y, button)
 end
 
-function Module:keyPressed(input, scanCode, isRepeat)
-    if input == "f11" then
-        local isFullscreen = love.window.getFullscreen()
-        love.window.setFullscreen(not isFullscreen)
-    end
-end
-
-function Module:textInput(input)
+function Module:mouseReleased(x, y, button)
+    UIScrollingFrameObjectModule:mouseReleased(x, y, button)
 end
 
 function Module:update(deltaTime)
+    UIScrollingFrameObjectModule:updateAll(deltaTime)
     UIButtonObjectModule:updateAll(deltaTime)
 
     UISceneHandlerModule:update(deltaTime)
 end
 
 function Module.init()
-    UISceneHandlerModule:switch("mainMenu")
+    UISceneHandlerModule:switch("splashScreen")
 end
 
 return Module

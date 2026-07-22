@@ -1,12 +1,11 @@
 -- ~/code/data/boxes.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
-
---// HELPERS \\--
 local color = require("code.engine.helpers.color")
 
-return {
+local BoxConstructor = require("code.data.constructors.boxConstructor")
+
+local rawBoxes = {
     {
         spritePath = "assets/sprites/boxes/box1.png",
 
@@ -116,12 +115,12 @@ return {
         scale = 1.3,
         tier = 8,
     },
-        {
+    {
         spritePath = "assets/sprites/boxes/box9.png",
 
-        description = "Goodness gracious!! Is this thing okay!?!? Its eyes are bloodshot!!",
-        quote = "YASS QWEEN 💅💅 WE'RE GETTING SOME GEMINI ENERGY! SLAYY! 💅💅💅",
-        name = "Angel",
+        description = "A box that doesn't look familiar at all... It's new around here, so it will be quite curious and observant of its surroundings.",
+        quote = "Oh that's new...",
+        name = "Mark",
 
         mergeReward = 650,
 
@@ -239,7 +238,7 @@ return {
         scale = 2.1,
         tier = 16,
     },
-        {
+    {
         spritePath = "assets/sprites/boxes/box17.png",
 
         description = "A sinister and unstable box. It has become so big that its weight is in the negatives.",
@@ -303,9 +302,9 @@ return {
     {
         spritePath = "assets/sprites/boxes/box21.png",
 
-        description = "A box that loves to collect little stickers and trinkets. It's covered in them. They're everywhere. How is that thing still breathing?",
-        quote = "A little bit of everything, all of the time!",
-        name = "The Collector",
+        description = "A carefree little box who doesn't care what happens around her. Bears a striking resemblance to the creator of this game.",
+        quote = "yea",
+        name = "Mellow Box",
 
         mergeReward = 3000000,
 
@@ -316,9 +315,9 @@ return {
     {
         spritePath = "assets/sprites/boxes/box22.png",
 
-        description = "A carefree little box who doesn't care what happens around her. Bears a striking resemblance to the creator of this game.",
-        quote = "yea",
-        name = "Mellow Box",
+        description = "A box that loves to collect little stickers and trinkets. It's covered in them. They're everywhere. How is that thing still breathing?",
+        quote = "A little bit of everything, all of the time!",
+        name = "The Collector",
 
         mergeReward = 6000000,
 
@@ -333,32 +332,21 @@ return {
         quote = "H3Y, H0W 4R3 Y4????",
         name = "Glitcherson",
 
+        reflectionPath = "assets/sprites/reflections/box23.png",
+        reflective = true,
+
         mergeReward = 12000000,
 
         weight = 11000,
         scale = 2.55,
         tier = 23,
-    },
-    {
-        spritePath = "assets/sprites/boxes/box24_sheet.png",
-
-        description = "All the merging you've done has led up to this. The ultimate three-dimensional being.",
-        quote = "nil",
-        name = "?@%%%&&",
-
-        -- animation = {
-        --     frameWidth = 100,
-        --     frameHeight = 100,
-        --     frameCount = 39,
-        --     fps = 24
-        -- },
-
-        mergeReward = 400000000,
-
-        mergeSoundData = {soundPath = "assets/sounds/merge/box24.wav"},
-
-        weight = 14500,
-        scale = 2.6,
-        tier = 24,
     }
 }
+
+local boxes = {}
+
+for index, boxData in ipairs(rawBoxes) do
+    boxes[index] = BoxConstructor.new(boxData)
+end
+
+return boxes

@@ -1,15 +1,21 @@
 -- ~/code/engine/render.lua
 
---// ENGINE \\--
 local IdManagerModule = require("code.engine.idManager")
+local ShaderModule = require("code.engine.shaders")
 
---// HELPERS \\--
 local math = require("code.engine.helpers.math")
+
+local SettingsModule = require("code.engine.saves.settings")
+
+local ColorblindData = require("code.data.colorblind")
 
 local Module = {}
 Module.fullscreen = false
 Module.imageCache = {}
 Module._elements = {}
+
+Module._sortedCache = {}
+Module._dirty = true
 
 local manager = IdManagerModule:createManager()
 
@@ -54,7 +60,9 @@ local Element = {
 
     reflective = false,
     render = true,
-    flip = false
+    flip = false,
+
+    scissor = nil
 }
 Element.__index = Element
 
@@ -62,10 +70,46 @@ function Element:remove()
     local id = self.id
 
     Module._elements[id] = nil
+    Module._dirty = true
     manager:release(id)
 end
 
+function Element:setZIndex(value)
+    if self.zIndex == value then return end
+    self.zIndex = value
+    Module._dirty = true
+end
+
+function Element:getHeight()
+    if self.type == "sprite" and self.drawable then
+        return self.drawable:getHeight() * self.scaleY
+    elseif self.type == "text" and self.text then
+        local font = self.font or love.graphics.getFont()
+        return font:getHeight() * self.scaleY
+    end
+    return 0
+end
+
+function Element:getWidth()
+    if self.type == "sprite" and self.drawable then
+        return self.drawable:getWidth() * self.scaleX
+    elseif self.type == "text" and self.text then
+        local font = self.font or love.graphics.getFont()
+        return font:getWidth(self.text) * self.scaleX
+    end
+    return 0
+end
+
 function Element:isPointInside(pointX, pointY)
+    if self.scissor then
+        if pointX < self.scissor.x
+        or pointX > self.scissor.x + self.scissor.width
+        or pointY < self.scissor.y
+        or pointY > self.scissor.y + self.scissor.height then
+            return false
+        end
+    end
+
     local width, height = 0, 0
 
     if self.type == "sprite" and self.drawable then
@@ -107,6 +151,16 @@ function Element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
     local color = self.color or Module:createColor()
     love.graphics.setColor(color.r, color.g, color.b, color.alpha)
 
+    -- Apply Scissor if defined on this element
+    if self.scissor then
+        local scissorX = self.scissor.x * windowScaleFactor + windowOffsetX
+        local scissorY = self.scissor.y * windowScaleFactor + windowOffsetY
+        local scissorWidth = self.scissor.width * windowScaleFactor
+        local scissorHeight = self.scissor.height * windowScaleFactor
+
+        love.graphics.setScissor(scissorX, scissorY, scissorWidth, scissorHeight)
+    end
+
     if self.type == "sprite" and self.drawable then
         local offsetX = self.drawable:getWidth() * self.anchorX
         local offsetY = self.drawable:getHeight() * self.anchorY
@@ -125,10 +179,10 @@ function Element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
             local boxLeft = self.x - self.drawable:getWidth() * self.anchorX
             local boxTop = self.y - self.drawable:getHeight() * self.anchorY
 
-            local rx = boxLeft / _G.WINDOW_WIDTH * iw - (boxLeft / 4)
-            local ry = boxTop / _G.WINDOW_HEIGHT * ih - (boxTop / 4)
-            local rw = boxWidth / _G.WINDOW_WIDTH * iw
-            local rh = boxHeight / _G.WINDOW_HEIGHT * ih
+            local rx = boxLeft / _G.RESOLUTION_WIDTH * iw - (boxLeft / 4)
+            local ry = boxTop / _G.RESOLUTION_HEIGHT * ih - (boxTop / 4)
+            local rw = boxWidth / _G.RESOLUTION_WIDTH * iw
+            local rh = boxHeight / _G.RESOLUTION_HEIGHT * ih
 
             local quad = love.graphics.newQuad(rx, ry, rw, rh, iw, ih)
 
@@ -149,6 +203,12 @@ function Element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
         local drawX = x - font:getWidth(self.text) * scaleX * self.anchorX
         local drawY = y - font:getHeight(self.text) * scaleY * self.anchorY
         love.graphics.print(self.text, drawX, drawY, rotation, scaleX, scaleY)
+    end
+
+    -- Clear/Restore global viewport scissor after drawing
+    if self.scissor then
+        local baseWindowWidth, baseWindowHeight = _G.RESOLUTION_WIDTH, _G.RESOLUTION_HEIGHT
+        love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
     end
 end
 
@@ -187,10 +247,13 @@ function Module:createElement(data)
         reflective = (data.reflective ~= nil) and data.reflective or false,
 
         render = (data.render ~= nil) and data.render or true,
-        flip = (data.flip ~= nil) and data.flip or false
+        flip = (data.flip ~= nil) and data.flip or false,
+
+        scissor = data.scissor or nil
     }, Element)
 
     self._elements[element.id] = element
+    self._dirty = true
 
     if data.type == "sprite" then
         if not (data.spritePath and love.filesystem.getInfo(data.spritePath)) then
@@ -199,6 +262,8 @@ function Module:createElement(data)
 
         if not Module.imageCache[data.spritePath] then
             local drawable = love.graphics.newImage(data.spritePath)
+            drawable:setFilter("nearest", "nearest")
+
             Module.imageCache[data.spritePath] = drawable
         end
 
@@ -208,8 +273,6 @@ function Module:createElement(data)
         if not data.font then
             data.font = love.graphics.newFont("assets/fonts/Stanberry.ttf")
         end
-
-        data.font:setFilter("nearest", "nearest")
     end
 
     return element
@@ -217,7 +280,7 @@ end
 
 function Module:getScaledDimensions(x, y)
     local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
-    local baseWindowWidth, baseWindowHeight = _G.WINDOW_WIDTH, _G.WINDOW_HEIGHT
+    local baseWindowWidth, baseWindowHeight = _G.RESOLUTION_WIDTH, _G.RESOLUTION_HEIGHT
 
     local windowScaleX = currentWindowWidth / baseWindowWidth
     local windowScaleY = currentWindowHeight / baseWindowHeight
@@ -245,35 +308,78 @@ local function getSortOrder(element)
 end
 
 function Module:drawAll()
-    local elementsArray = {}
-    for _, element in pairs(self._elements) do
-        table.insert(elementsArray, element)
+    if self._dirty then
+        local elementsArray = {}
+        for _, element in pairs(self._elements) do
+            table.insert(elementsArray, element)
+        end
+
+        table.sort(elementsArray, function(a, b)
+            return getSortOrder(a) < getSortOrder(b)
+        end)
+
+        self._sortedCache = elementsArray
+        self._dirty = false
     end
 
-    table.sort(elementsArray, function(a, b)
-        return getSortOrder(a) < getSortOrder(b)
-    end)
+    local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
+    local baseWindowWidth, baseWindowHeight = _G.RESOLUTION_WIDTH, _G.RESOLUTION_HEIGHT
 
-    for _, element in ipairs(elementsArray) do
+    local windowScaleFactorX = currentWindowWidth / baseWindowWidth
+    local windowScaleFactorY = currentWindowHeight / baseWindowHeight
+    local windowScaleFactor = math.min(windowScaleFactorX, windowScaleFactorY)
+
+    local windowOffsetX = (currentWindowWidth - baseWindowWidth * windowScaleFactor) / 2
+    local windowOffsetY = (currentWindowHeight - baseWindowHeight * windowScaleFactor) / 2
+
+    love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
+
+    local accessibility = SettingsModule.loadedFile.accessibility
+    local graphics = SettingsModule.loadedFile.graphics
+
+    local shader = ShaderModule:get("accessibility")
+
+    shader:send("contrast", graphics.contrast)
+    shader:send("gamma", graphics.gamma)
+
+    shader:send(
+        "enableColorblind",
+        accessibility.colorblindMode ~= "none"
+    )
+
+    if accessibility.colorblindMode ~= "none" then
+        shader:send(
+            "colorMatrix",
+            ColorblindData[accessibility.colorblindMode]
+        )
+    end
+
+    love.graphics.setShader(shader)
+
+    for _, element in pairs(self._sortedCache) do
         if not element.render then goto continue end
-
-        local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
-        local baseWindowWidth, baseWindowHeight = _G.WINDOW_WIDTH, _G.WINDOW_HEIGHT
-
-        local windowScaleFactorX = currentWindowWidth / baseWindowWidth
-        local windowScaleFactorY = currentWindowHeight / baseWindowHeight
-        local windowScaleFactor = math.min(windowScaleFactorX, windowScaleFactorY)
-
-        local windowOffsetX = (currentWindowWidth - baseWindowWidth * windowScaleFactor) / 2
-        local windowOffsetY = (currentWindowHeight - baseWindowHeight * windowScaleFactor) / 2
-
-        love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
         element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
-
-        love.graphics.setScissor()
 
         :: continue ::
     end
+
+    love.graphics.setScissor()
+    love.graphics.setShader()
+end
+
+function Module:update()
+    local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
+    local vsync = SettingsModule.loadedFile.graphics.vsync
+
+    love.window.setFullscreen(fullscreen)
+    love.window.setVSync(vsync)
+end
+
+function Module:init()
+    ShaderModule:load(
+        "accessibility",
+        "code/data/shaders/accessibility.glsl"
+    )
 end
 
 return Module

@@ -1,27 +1,39 @@
----@diagnostic disable: undefined-field
 -- ~/code/engine/saves/decode.lua
 
---// SAVES \\--
 local CONSTANTS = require("code.engine.saves.constants")
 
---// HELPERS \\--
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
 local Module = {}
 
-local function normalizeTable(table, default, ignoreKeys)
+local function normalizeTable(input, default, ignoreKeys)
     ignoreKeys = ignoreKeys or {}
+
     local normalized = {}
 
+    input = type(input) == "table" and input or {}
+
     for key, defaultValue in pairs(default) do
+        local value = input[key]
+
         if ignoreKeys[key] then
-            normalized[key] = table[key] or (type(defaultValue) == "table" and {} or defaultValue)
+            normalized[key] = value
+
         elseif type(defaultValue) == "table" then
-            normalized[key] = normalizeTable(table[key] or {}, defaultValue, {})
+            normalized[key] = normalizeTable(
+                value,
+                defaultValue,
+                {}
+            )
+
         else
-            normalized[key] = table[key] ~= nil and table[key] or defaultValue
+            if value == nil then
+                normalized[key] = defaultValue
+            else
+                normalized[key] = value
+            end
         end
     end
 
@@ -70,8 +82,14 @@ function Module:decodeSimple(section)
         local index, value = line:match("(%S+)%s+(%S+)")
 
         if index and value then
-            local num = tonumber(value)
-            result[index] = num or value
+            if value == "true" then
+                result[index] = true
+            elseif value == "false" then
+                result[index] = false
+            else
+                local num = tonumber(value)
+                result[index] = num or value
+            end
         end
     end
 
@@ -93,7 +111,7 @@ function Module:decodeBoxes(section)
 
                 velocityX = tonumber(velocityX),
                 velocityY = tonumber(velocityY),
-                
+
                 x = tonumber(x),
                 y = tonumber(y),
 
@@ -105,6 +123,13 @@ function Module:decodeBoxes(section)
     return boxes
 end
 
+function Module:decodeVersion(section)
+    if not section then return end
+
+    local output = string.gsub(section, "version ", "")
+    return tonumber(output)
+end
+
 function Module:decodeSlot(section)
     if not section then return end
 
@@ -113,7 +138,14 @@ function Module:decodeSlot(section)
 end
 
 function Module:decodeSettings(file)
-    local finalOutput = self:decodeSimple(file)
+    local sections = seperateLines(file)
+
+    local finalOutput = {
+        audio = self:decodeSimple(sections[1]),
+        graphics = self:decodeSimple(sections[2]),
+        accessibility = self:decodeSimple(sections[3]),
+    }
+
     finalOutput = normalizeTable(finalOutput, CONSTANTS.DEFAULT_SETTINGS)
 
     return finalOutput
@@ -125,14 +157,30 @@ function Module:decode(file)
 
     local sections = seperateLines(file)
 
+    local hasMigrated = sections[6]
     local finalOutput = {
-        slot = self:decodeSlot(sections[1]),
+        version = self:decodeVersion(sections[1]),
+        slot = self:decodeSlot(sections[2]),
 
-        currencies = self:decodeSimple(sections[2]),
-        stats = self:decodeSimple(sections[3]),
+        boxes = self:decodeBoxes(sections[3]),
 
-        boxes = self:decodeBoxes(sections[4])
+        currencies = self:decodeSimple(sections[4]),
+        stats = self:decodeSimple(sections[5]),
+        upgrades = self:decodeSimple(sections[6])
     }
+
+    if not hasMigrated then
+        finalOutput = {
+            version = CONSTANTS.DEFAULT_DATA.version,
+            slot = self:decodeSlot(sections[1]),
+
+            boxes = self:decodeBoxes(sections[4]),
+
+            currencies = self:decodeSimple(sections[2]),
+            stats = self:decodeSimple(sections[3]),
+            upgrades = table.clone(CONSTANTS.DEFAULT_DATA.upgrades),
+        }
+    end
 
     finalOutput = normalizeTable(finalOutput, CONSTANTS.DEFAULT_DATA, {boxes = true})
 

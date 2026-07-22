@@ -1,25 +1,20 @@
 -- ~/code/game/box/mergeManager.lua
 
---/// ENGINE \\\--
 local QuadtreesModule = require("code.engine.quadtrees")
 local SoundModule = require("code.engine.sound")
 
---// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
+local SettingsModule = require("code.engine.saves.settings")
 
---// HELPERS \\--
 local easing = require("code.engine.helpers.easing")
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
---// BOX \\--
 local CONSTANTS = require("code.game.box.constants")
 local BoxesObjectModule = require("code.game.box.object")
 
---// VFX \\--
 local ScreenFlashModule = require("code.game.vfx.screenFlash")
 
---/// DATA \\\--
 local BoxesData = require("code.data.boxes")
 
 local Module = {}
@@ -128,7 +123,7 @@ function Module:mergeUpdate(deltaTime)
 
             local newBox = BoxesObjectModule:createBox(newBoxData)
 
-            if newBox then
+            if newBox and newBoxData then
                 if SaveFilesModule.loadedFile.stats.highestBoxTier < newBoxTier then
                     SaveFilesModule.loadedFile.stats.highestBoxTier = newBoxTier
                 end
@@ -151,8 +146,12 @@ function Module:mergeUpdate(deltaTime)
                     duration = CONSTANTS.BASE_SCALE_TWEEN_DURATION * (1 + newBox.weight / CONSTANTS.WEIGHT_ANIM_DURATION_DIVISOR)
                 }
 
-                newBox.element.scaleX = scaleX
-                newBox.element.scaleY = scaleY
+                local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+
+                local scale = (animationsEnabled and scaleX or newBoxData.scale)
+
+                newBox.element.scaleX = scale
+                newBox.element.scaleY = scale
 
                 local mergeSound = SoundModule:createSound(newBox.mergeSoundData)
                 if mergeSound then
@@ -183,7 +182,7 @@ local function calculateMaxMergeRange()
     local baseScale = BoxesData[1].scale or 1
     local maxScale = baseScale
 
-    for _, boxData in ipairs(BoxesData) do
+    for _, boxData in pairs(BoxesData) do
         if (boxData.scale or 1) > maxScale then
             maxScale = boxData.scale
         end
@@ -226,7 +225,7 @@ function Module:checkMerges()
             maxMergeQueryRadius
         )
 
-        for _, point in ipairs(nearbyPoints) do
+        for _, point in pairs(nearbyPoints) do
             local boxB = point.box
 
             if not boxB or boxA == boxB then goto continue end

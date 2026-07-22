@@ -1,12 +1,10 @@
 -- ~/code/game/vfx/screenFlash.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
-
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 
---// VFX \\--
+local SettingsModule = require("code.engine.saves.settings")
+
 local CONSTANTS = require("code.game.vfx.constants")
 
 local Module = {}
@@ -14,6 +12,9 @@ Module._screenFlashElement = nil
 Module._fadeDuration = 2
 
 function Module:flash(color, fadeDuration)
+    local screenFlashEnabled = SettingsModule.loadedFile.accessibility.screenFlashEnabled
+    if not screenFlashEnabled then return end
+
     if color then color = table.clone(color) end
 
     self._screenFlashElement.color = color or RenderModule:createColor(

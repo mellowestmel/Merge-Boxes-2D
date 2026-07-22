@@ -1,26 +1,20 @@
 -- ~/code/game/ui/scenes/mainMenu.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// HELPERS \\--
+local SettingsModule = require("code.engine.saves.settings")
+
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
---/// GAME \\\--
 local MusicHandlerModule = require("code.game.musicHandler")
 
---// UI \\--
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
-
---/ UI OBJECTS \--
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
---// VFX \\--
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
---/// DATA \\\--
 local SceneData = require("code.data.ui.scenes.mainMenu")
 
 local Module = {}
@@ -42,6 +36,8 @@ function Module:clean()
 
     self._elements = {}
     self._objects = {}
+
+    UISharedFunctions:cleanUpdates()
 end
 
 local function setupLogo(self)
@@ -113,7 +109,30 @@ local function setupQuitButton(self)
     table.insert(self._objects, quitButton)
 end
 
+local function setupDiscordButton(self)
+    local discordButtonHitbox = RenderModule:createElement(SceneData.discordButtonHitbox)
+    table.insert(self._elements, discordButtonHitbox)
+
+    local discordButton = UIButtonObjectModule:createButton({
+        elements = {
+            discordButtonHitbox
+        },
+
+        hitboxElement = discordButtonHitbox,
+
+        mouseButton = 1,
+        onClick = function()
+            love.system.openURL("https://www.discord.gg/pQShPG8XPf")
+        end
+    })
+
+    table.insert(self._objects, discordButton)
+end
+
 function Module:update()
+    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+    if not animationsEnabled then return end
+
     local rotation = math.sin(love.timer.getTime()) * 2
 
     if logo then
@@ -130,6 +149,7 @@ function Module:init()
     MusicHandlerModule:playTrack("mainMenu")
 
     setupPlayGameButton(self)
+    setupDiscordButton(self)
     setupQuitButton(self)
     setupBackground(self)
     setupLogo(self)

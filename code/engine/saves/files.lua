@@ -1,16 +1,13 @@
 -- ~/code/engine/saves/files.lua
 
---// SAVES \\--
 local CONSTANTS = require("code.engine.saves.constants")
 
 local SavesDecodeModule = require("code.engine.saves.decode")
 local SavesEncodeModule = require("code.engine.saves.encode")
 
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
---// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 
 local Module = {}
@@ -59,17 +56,19 @@ local function loadBoxes(boxesData)
         local boxData = BoxesObjectModule:getBoxDataByTier(box.tier)
         local boxObject = BoxesObjectModule:createBox(boxData)
 
-        if boxObject then -- Silence stupid warnings, I hate them.
+        if boxObject then
             boxObject.velocityX = box.velocityX
             boxObject.velocityY = box.velocityY
 
             boxObject.element.x = box.x
-            boxObject.element.x = box.x
+            boxObject.element.y = box.y
 
             boxObject.element.rotation = box.rotation
         end
     end
 end
+
+-- ~/code/engine/saves/files.lua
 
 function Module:loadFile(slot)
     slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)

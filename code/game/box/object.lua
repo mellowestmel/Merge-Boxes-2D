@@ -1,21 +1,17 @@
 -- ~/code/game/box/object.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 local IdManagerModule = require("code.engine.idManager")
 
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 
--- // BOX \\--
 local CONSTANTS = require("code.game.box.constants")
 
---/// DATA \\\--
 local BoxesData = require("code.data.boxes")
 
 local Box = {
     id = 0,
-    element = nil,
+    element = {},
 
     dragging = false,
     merging = false,
@@ -48,12 +44,16 @@ local Module = {}
 Module.renderBoxes = true
 Module.boxes = {}
 
+Module._sortedCache = {}
+Module._dirty = true
+
 local manager = IdManagerModule:createManager()
 
 function Box:remove()
     local id = self.id
 
     Module.boxes[id] = nil
+    Module._dirty = true
     manager:release(id)
 
     self.element:remove()
@@ -120,6 +120,7 @@ function Module:createBox(data)
     }, Box)
 
     self.boxes[box.id] = box
+    self._dirty = true
 
     box._scaleTween = {
         startX = data.scale * CONSTANTS.SPAWN_SCALE_MULTIPLIER,
@@ -134,6 +135,8 @@ function Module:createBox(data)
 end
 
 function Module:getSortedArray()
+    if not self._dirty then return self._sortedCache end
+
     local array = {}
 
     for _, box in pairs(self.boxes) do
@@ -143,6 +146,9 @@ function Module:getSortedArray()
     table.sort(array, function(a, b)
         return a.element.zIndex > b.element.zIndex
     end)
+
+    self._sortedCache = array
+    self._dirty = false
 
     return array
 end

@@ -1,9 +1,7 @@
 -- ~/code/data/ui/scenes/saveFiles.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
 local UI_LAYOUT = require("code.data.ui.layout")
 
@@ -25,7 +23,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -38,10 +36,10 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -52,7 +50,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER,
 
         rotation = UI_LAYOUT.SAVE_FILES.TEMPLATE_ROTATION,
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SCALE_X,
@@ -62,7 +60,7 @@ return {
             CONSTANTS.COLOR_DARK[1],
             CONSTANTS.COLOR_DARK[2],
             CONSTANTS.COLOR_DARK[3],
-            0.8
+            CONSTANTS.HIGH_ALPHA
         ),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
@@ -74,10 +72,10 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -88,7 +86,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
 
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
@@ -104,15 +102,15 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
 
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 1,
+        zIndex = CONSTANTS.Z_UI_TEXT_OVERLAY,
     },
 
     templateSaveFileResetButtonHitbox = {
@@ -121,7 +119,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
 
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
@@ -137,27 +135,27 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
 
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_BUTTON),
+        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 1,
+        zIndex = CONSTANTS.Z_UI_TEXT_OVERLAY,
     },
 
     templateSaveFileBoxPreview = {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
 
         scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
         scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 2,
+        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
 
     templateSaveFilePlusIcon = {
@@ -166,12 +164,12 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
 
         scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
         scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 2,
+        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
 
     templateSaveHighestTier = {
@@ -180,7 +178,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + 40,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + UI_LAYOUT.SAVE_FILES.HIGHEST_TIER_LABEL_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_SMALL),
@@ -194,7 +192,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + 65,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + UI_LAYOUT.SAVE_FILES.PLAYTIME_LABEL_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_MEDIUM),
