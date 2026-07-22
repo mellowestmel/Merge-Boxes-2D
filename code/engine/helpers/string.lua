@@ -30,12 +30,9 @@ function Module.formatNumber(number)
     if index < #suffixes then
         local value = number / (1000 ^ index)
 
-        -- Changes made:
-        -- 1. Strips whole-number decimals completely (e.g. 50.00K -> 50K)
-        -- 2. Trims trailing zero on single decimals (e.g. 1.50M -> 1.5M)
-        return string.format("%.2f%s", value, suffixes[index + 1])
-            :gsub("%.00([A-Za-z]+)$", "%1")
-            :gsub("0([A-Za-z]+)$", "%1")
+		return string.format("%.2f%s", value, suffixes[index + 1])
+			:gsub("%.00([A-Za-z]+)$", "%1")
+			:gsub("(%.%d)0([A-Za-z]+)$", "%1%2")
     end
 
     return string.format("%.2e", number)
