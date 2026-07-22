@@ -56,6 +56,7 @@ return {
     MAX_SAVE_SLOTS = 3,
 
     DEFAULT_DATA = {
+        version = "v4.0.0-dev",
         slot = 1,
 
         currencies = {

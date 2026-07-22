@@ -4,7 +4,6 @@ math.randomseed(os.time())
 math.random()
 
 _G.SAWE_FILE_ENCRYPTION_KEY = "Next Update: Femboys"
-_G.GAME_VERSION = "v4.0.0-dev"
 
 _G.RESOLUTION_WIDTH = 800
 _G.RESOLUTION_HEIGHT = 600

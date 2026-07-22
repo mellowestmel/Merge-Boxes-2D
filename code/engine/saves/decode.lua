@@ -151,13 +151,14 @@ function Module:decode(file)
     local sections = seperateLines(file)
 
     local finalOutput = {
-        slot = self:decodeSlot(sections[1]),
+        version = self:decodeSimple(sections[1]),
+        slot = self:decodeSlot(sections[2]),
 
-        currencies = self:decodeSimple(sections[2]),
-        stats = self:decodeSimple(sections[3]),
-        upgrades = self:decodeSimple(sections[4]),
+        currencies = self:decodeSimple(sections[3]),
+        stats = self:decodeSimple(sections[4]),
+        upgrades = self:decodeSimple(sections[5]),
 
-        boxes = self:decodeBoxes(sections[5]),
+        boxes = self:decodeBoxes(sections[6]),
     }
 
     finalOutput = normalizeTable(finalOutput, CONSTANTS.DEFAULT_DATA, {boxes = true})

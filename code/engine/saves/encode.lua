@@ -83,6 +83,7 @@ end
 
 function Module:encode(file)
     local finalOutput = addStringNewLine(
+        self:encodeSimple(file.version),
         self:encodeSlot(file.slot),
 
         self:encodeSimple(file.currencies),
