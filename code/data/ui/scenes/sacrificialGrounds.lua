@@ -4,7 +4,7 @@ local CONSTANTS = require("code.game.ui.constants")
 
 return {
     background = {
-        spritePath = "assets/sprites/backgrounds/menubg.png",
+        spritePath = "assets/sprites/backgrounds/sacrificialgroundsbg.png",
 
         type = "sprite",
 

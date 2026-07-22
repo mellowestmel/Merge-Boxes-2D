@@ -1,4 +1,4 @@
--- ~/code/game/ui/scenes/sacrifice.lua
+-- ~/code/game/ui/scenes/sacrificialGrounds.lua
 
 local RenderModule = require("code.engine.render")
 local table = require("code.engine.helpers.table")
@@ -9,12 +9,12 @@ local BoxesObjectModule = require("code.game.box.object")
 
 local UISharedFunctions = require("code.game.ui.shared")
 
-local SceneData = require("code.data.ui.scenes.sacrifice")
+local SceneData = require("code.data.ui.scenes.sacrificialGrounds")
 
 local Module = {}
 Module._elements = {}
 Module._objects = {}
-Module.name = "sacrifice"
+Module.name = "sacrificialGrounds"
 
 function Module:clean()
     for _, element in pairs(self._elements) do
@@ -41,7 +41,7 @@ function Module:update(deltaTime)
 end
 
 function Module:init()
-    MusicHandlerModule:playTrack("sacrifice")
+    MusicHandlerModule:playTrack("sacrificialGrounds")
 
     BoxesObjectModule.renderBoxes = false
 

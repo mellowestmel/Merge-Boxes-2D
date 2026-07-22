@@ -2,7 +2,7 @@
 
 local SaveFilesModule = require("code.engine.saves.files")
 
-local UpgradesModule = require("code.game.upgrades")
+local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
 local math = require("code.engine.helpers.math")
 
@@ -17,13 +17,13 @@ function Module:spawn()
     local y = math.random(0, CONSTANTS.AREA_HEIGHT)
 
     local spawnTier = CONSTANTS.DEFAULT_BOX_SPAWN_TIER
-        + UpgradesModule:getEffect("spawnTier")
+        + UpgradeHandlerModule:getEffect("spawnTier")
 
-    local spawnAmount = UpgradesModule:getEffect("multiSpawn")
+    local spawnAmount = UpgradeHandlerModule:getEffect("multiSpawn")
 
     for _ = 1, spawnAmount do
         -- Lucky Roll
-        local luckyChance = UpgradesModule:getEffect("luckyRoll")
+        local luckyChance = UpgradeHandlerModule:getEffect("luckyRoll")
 
         if math.random() < luckyChance then
             spawnTier = spawnTier + 1
@@ -59,7 +59,7 @@ end
 
 function Module:getSpawnCooldown()
     return CONSTANTS.DEFAULT_BOX_SPAWN_COOLDOWN
-        - UpgradesModule:getEffect("spawnCooldown")
+        - UpgradeHandlerModule:getEffect("spawnCooldown")
 end
 
 return Module

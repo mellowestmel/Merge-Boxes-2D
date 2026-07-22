@@ -9,7 +9,7 @@ local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
-local UpgradesModule = require("code.game.upgrades")
+local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
 local BoxesObjectModule = require("code.game.box.object")
 local BoxFactoryModule = require("code.game.box.factory")
@@ -232,7 +232,7 @@ local function setupSacrificeButton(scene)
 
             ScreenTransitionModule:transition({
                 callback = function()
-                    UISceneHandlerModule:switch("sacrifice")
+                    UISceneHandlerModule:switch("sacrificialGrounds")
                 end
             })
         end
@@ -286,7 +286,7 @@ function Module:update()
 
         spawnButtonLabel.text =  (onCooldown and string.format("%.1f", timeLeft) .. "s" or SceneData.spawnButtonLabel.text)
 
-        if not onCooldown and UpgradesModule:getEffect("autoSpawn") and autoSpawnEnabled then
+        if not onCooldown and UpgradeHandlerModule:getEffect("autoSpawn") and autoSpawnEnabled then
             spawnButton:mousePressed(
                 spawnButtonHitbox.x,
                 spawnButtonHitbox.y,
@@ -323,7 +323,7 @@ function Module:init(slot)
     UISharedFunctions:setupSessionPlaytimeLabel(self)
     UISharedFunctions:setupCurrencyLabels(self)
 
-    if UpgradesModule:getEffect("autoSpawn") then
+    if UpgradeHandlerModule:getEffect("autoSpawn") then
         setupAutoSpawnButton(self)
     end
 

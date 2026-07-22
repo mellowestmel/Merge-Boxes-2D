@@ -2,28 +2,28 @@
 
 local TransactionModule = require("code.game.shop.transaction")
 
-local UpgradesModule = require("code.game.upgrades")
+local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
 local Module = {}
 
 function Module:getCost(id)
-    local upgrade = UpgradesModule:getUpgrade(id)
+    local upgrade = UpgradeHandlerModule:getUpgrade(id)
 
-    return math.floor(upgrade.cost(UpgradesModule:getStacks(id)))
+    return math.floor(upgrade.cost(UpgradeHandlerModule:getStacks(id)))
 end
 
 function Module:canBuy(id)
-    local upgrade = UpgradesModule:getUpgrade(id)
+    local upgrade = UpgradeHandlerModule:getUpgrade(id)
 
     if not upgrade then
         return false
     end
 
-    if UpgradesModule:isMaxed(id) then
+    if UpgradeHandlerModule:isMaxed(id) then
         return false
     end
 
-    if upgrade.canBuy and not upgrade.canBuy(UpgradesModule:getStacks(id)) then
+    if upgrade.canBuy and not upgrade.canBuy(UpgradeHandlerModule:getStacks(id)) then
         return false
     end
 
@@ -38,13 +38,13 @@ function Module:buy(id)
         return false
     end
 
-    local upgrade = UpgradesModule:getUpgrade(id)
+    local upgrade = UpgradeHandlerModule:getUpgrade(id)
 
     return TransactionModule:purchase(
         upgrade.currency or "credits",
         self:getCost(id),
         function()
-            UpgradesModule:addStack(id)
+            UpgradeHandlerModule:addStack(id)
         end
     )
 end

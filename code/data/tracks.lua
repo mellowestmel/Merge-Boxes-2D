@@ -40,7 +40,7 @@ local rawTracks = {
 
         isGameplayTrack = false
     },
-    sacrifice = {
+    sacrificialGrounds = {
         trackPath = "assets/tracks/sacrifice.ogg",
         author = "Orzech05",
         trackName = "Feline Favor",

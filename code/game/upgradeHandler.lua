@@ -1,4 +1,4 @@
--- ~/code/game/upgrades.lua
+-- ~/code/game/upgradeHandler.lua
 
 local SaveFilesModule = require("code.engine.saves.files")
 

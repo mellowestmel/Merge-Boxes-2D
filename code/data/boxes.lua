@@ -295,7 +295,7 @@ local rawBoxes = {
 
         mergeSoundData = {soundPath = "assets/sounds/merge/box20.wav"},
 
-        weight = 5000,
+        weight = 4500,
         scale = 2.4,
         tier = 20,
     },
@@ -308,7 +308,7 @@ local rawBoxes = {
 
         mergeReward = 3000000,
 
-        weight = 6500,
+        weight = 5500,
         scale = 2.45,
         tier = 21,
     },
@@ -321,7 +321,7 @@ local rawBoxes = {
 
         mergeReward = 6000000,
 
-        weight = 8500,
+        weight = 7000,
         scale = 2.5,
         tier = 22,
     },
@@ -329,7 +329,7 @@ local rawBoxes = {
         spritePath = "assets/sprites/boxes/box23.png",
 
         description = "A funky-looking box with a weird typing quirk. Staring at it for too long may cause a migraine.",
-        quote = "H3Y, H0W 4R3 Y4????",
+        quote = "H4H4H4H4HH4H4H4H4H4HH4H4H4H4H44444!!!!! 1 L0V3 B31NG 1N5UFF3R1BL3!!!!",
         name = "Glitcherson",
 
         reflectionPath = "assets/sprites/reflections/box23.png",
@@ -337,7 +337,7 @@ local rawBoxes = {
 
         mergeReward = 12000000,
 
-        weight = 11000,
+        weight = 8000,
         scale = 2.55,
         tier = 23,
     }

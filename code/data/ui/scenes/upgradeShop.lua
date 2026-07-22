@@ -28,12 +28,7 @@ return {
         x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
         y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.UPGRADE_SHOP.BACKGROUND_FRAME.OFFSET_Y,
 
-        color = RenderModule:createColor(
-            CONSTANTS.COLOR_GRAY[1],
-            CONSTANTS.COLOR_GRAY[2],
-            CONSTANTS.COLOR_GRAY[3],
-            CONSTANTS.LOW_ALPHA
-        ),
+        color = RenderModule:createColorFromTable(CONSTANTS.INVISIBLE_COLOR),
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },

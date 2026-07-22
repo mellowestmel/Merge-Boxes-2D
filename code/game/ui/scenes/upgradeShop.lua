@@ -7,9 +7,9 @@ local StringHelper = require("code.engine.helpers.string")
 local TableHelper = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
-local UpgradesModule = require("code.game.upgrades")
+local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
-local PurchaseUpgradesModule = require("code.game.shop.purchaseUpgrades")
+local PurchaseUpgradeHandlerModule = require("code.game.shop.purchaseUpgrades")
 
 local BoxesObjectModule = require("code.game.box.object")
 
@@ -75,7 +75,7 @@ end
 local function getCreditUpgradeIds()
     local creditUpgradeList = {}
 
-    for upgradeIdentifier, upgrade in pairs(UpgradesModule:getAllUpgrades()) do
+    for upgradeIdentifier, upgrade in pairs(UpgradeHandlerModule:getAllUpgrades()) do
         if (upgrade.currency or "credits") == "credits" then
             table.insert(creditUpgradeList, upgradeIdentifier)
         end
@@ -106,7 +106,7 @@ local function createStackIndicators(self, buttonConfig, maximumStacks, currentS
 end
 
 local function createUpgradeButton(self, buttonConfig)
-    local upgrade = UpgradesModule:getUpgrade(buttonConfig.id)
+    local upgrade = UpgradeHandlerModule:getUpgrade(buttonConfig.id)
 
     -- Hitbox Background
     local hitbox = RenderModule:createElement(SceneData.upgradeBuyHitbox)
@@ -127,11 +127,11 @@ local function createUpgradeButton(self, buttonConfig)
     table.insert(buttonConfig.children, nameLabel)
 
     -- Upgrade Cost Label
-    local currentStacks = UpgradesModule:getStacks(buttonConfig.id)
+    local currentStacks = UpgradeHandlerModule:getStacks(buttonConfig.id)
     local maximumStacks = upgrade.maxStacks or 1
-    local isMaxedOut = UpgradesModule:isMaxed(buttonConfig.id)
+    local isMaxedOut = UpgradeHandlerModule:isMaxed(buttonConfig.id)
 
-    local upgradeCost = PurchaseUpgradesModule:getCost(buttonConfig.id)
+    local upgradeCost = PurchaseUpgradeHandlerModule:getCost(buttonConfig.id)
     local formattedCostText = isMaxedOut and "MAX" or string.format("%s Credits", StringHelper.formatNumber(upgradeCost))
 
     local costLabel = RenderModule:createElement(SceneData.upgradeCost)
@@ -155,7 +155,7 @@ local function createUpgradeButton(self, buttonConfig)
         hitboxElement = hitbox,
         mouseButton = MOUSE_PRIMARY_CLICK,
         onClick = function()
-            local success = PurchaseUpgradesModule:buy(buttonConfig.id)
+            local success = PurchaseUpgradeHandlerModule:buy(buttonConfig.id)
             local sound = SoundModule:createSound(
                 {
                     soundPath = (
@@ -221,10 +221,10 @@ function Module:update(deltaTime)
     UISharedFunctions:update()
 
     for _, upgradeButton in ipairs(self._upgradeButtons) do
-        local currentStacks = UpgradesModule:getStacks(upgradeButton.id)
-        local isMaxedOut = UpgradesModule:isMaxed(upgradeButton.id)
+        local currentStacks = UpgradeHandlerModule:getStacks(upgradeButton.id)
+        local isMaxedOut = UpgradeHandlerModule:isMaxed(upgradeButton.id)
 
-        local upgradeCost = PurchaseUpgradesModule:getCost(upgradeButton.id)
+        local upgradeCost = PurchaseUpgradeHandlerModule:getCost(upgradeButton.id)
         upgradeButton.costLabel.text = isMaxedOut and "MAX" or string.format("%s Credits", StringHelper.formatNumber(upgradeCost))
 
         for stackIndex, indicator in ipairs(upgradeButton.indicators) do
