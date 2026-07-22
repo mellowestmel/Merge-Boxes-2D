@@ -15,6 +15,11 @@ return {
         y = 35,
     },
 
+    DISCORD_BUTTON = {
+        x = _G.WINDOW_WIDTH - 35,
+        y = _G.WINDOW_HEIGHT - 35,
+    },
+
     SETTINGS = {
         CATEGORY_ROW_Y = 500,
         CATEGORY_SCROLL_OFFSET_X = 125,

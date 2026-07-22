@@ -47,6 +47,20 @@ return {
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
 
+    discordButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttondiscord74x74.png",
+
+        type = "sprite",
+
+        x = UI_LAYOUT.DISCORD_BUTTON.x,
+        y = UI_LAYOUT.DISCORD_BUTTON.y,
+
+        scaleX = CONSTANTS.ICON_SMALL_SCALE,
+        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
     playGameButtonHitbox = {
         spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
 

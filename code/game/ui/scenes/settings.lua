@@ -129,9 +129,13 @@ local function setupCancelButton(self)
     table.insert(self._objects, cancelButton)
 end
 
+local function capitalizeFirstLetter(text)
+    return text:sub(1, 1):upper() .. text:sub(2)
+end
+
 local function updateCategoryLabel()
     if currentCategoryLabel then
-        currentCategoryLabel.text = categories[currentCategoryIndex] or ""
+        currentCategoryLabel.text = capitalizeFirstLetter(categories[currentCategoryIndex] or "")
     end
 end
 
