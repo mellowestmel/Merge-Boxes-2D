@@ -51,7 +51,7 @@ local settingValueControls = {}
 local categories = {}
 
 -- SceneData entries are shared, static tables (one per hitbox/label type),
--- so we never mutate them directly — each control gets its own shallow
+-- so we never mutate them directly. Each control gets its own shallow
 -- copy with just the fields that differ per-row (y position, sprite, etc).
 local function copyWithOverrides(base, overrides)
     local result = {}
@@ -140,7 +140,7 @@ local function updateCategoryLabel()
 end
 
 -- SETTINGS_SCHEMA (in saves/constants.lua) is the single source of
--- truth for both category/setting order and display names — pairs()
+-- truth for both category/setting order and display names, pairs()
 -- over the save file itself would give no ordering guarantee at all.
 local function getCurrentCategorySchema()
     local currentCategory = categories[currentCategoryIndex]
@@ -273,8 +273,8 @@ local function formatPercent(value)
     return math.floor(value * 100 + 0.5) .. "%"
 end
 
--- Numeric and enum settings are visually and behaviorally identical —
--- two step buttons plus a value label — so both go through this one
+-- Numeric and enum settings are visually and behaviorally identical
+-- two step buttons plus a value label, so both go through this one
 -- control. Only the sprites, the mutation, and the display format
 -- differ, which is why those are parameters rather than duplicated code.
 local function setupStepperControl(self, category, setting, rowY, decreaseSprite, increaseSprite, adjustValue, formatValue)
@@ -322,11 +322,11 @@ local function setupNumericSettingControl(self, category, setting, rowY)
 end
 
 local function setupEnumSettingControl(self, category, setting, rowY)
-    setupStepperControl(self, category, setting, rowY, UI_CONSTANTS.ENUM_DECREASE_BUTTON_PATH, UI_CONSTANTS.ENUM_INCREASE_BUTTON_PATH, cycleEnumSetting, tostring)
+    setupStepperControl(self, category, setting, rowY, UI_CONSTANTS.ENUM_DECREASE_BUTTON_PATH, UI_CONSTANTS.ENUM_INCREASE_BUTTON_PATH, cycleEnumSetting, capitalizeFirstLetter)
 end
 
 -- The control type is inferred from the setting's current Lua value
--- type rather than something declared in the schema — booleans get a
+-- type rather than something declared in the schema, booleans get a
 -- toggle, numbers get a percentage stepper, strings get an enum stepper.
 local function setupSettingValueControl(self, category, setting, rowY)
     local valueType = type(SettingsModule.loadedFile[category][setting.key])
