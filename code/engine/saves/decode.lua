@@ -157,16 +157,30 @@ function Module:decode(file)
 
     local sections = seperateLines(file)
 
+    local hasMigrated = sections[6]
     local finalOutput = {
         version = self:decodeVersion(sections[1]),
         slot = self:decodeSlot(sections[2]),
 
-        currencies = self:decodeSimple(sections[3]),
-        stats = self:decodeSimple(sections[4]),
-        upgrades = self:decodeSimple(sections[5]),
+        boxes = self:decodeBoxes(sections[3]),
 
-        boxes = self:decodeBoxes(sections[6]),
+        currencies = self:decodeSimple(sections[4]),
+        stats = self:decodeSimple(sections[5]),
+        upgrades = self:decodeSimple(sections[6])
     }
+
+    if not hasMigrated then
+        finalOutput = {
+            version = CONSTANTS.DEFAULT_DATA.version,
+            slot = self:decodeSlot(sections[1]),
+
+            boxes = self:decodeBoxes(sections[4]),
+
+            currencies = self:decodeSimple(sections[2]),
+            stats = self:decodeSimple(sections[3]),
+            upgrades = table.clone(CONSTANTS.DEFAULT_DATA.upgrades),
+        }
+    end
 
     finalOutput = normalizeTable(finalOutput, CONSTANTS.DEFAULT_DATA, {boxes = true})
 
