@@ -118,9 +118,9 @@ local rawBoxes = {
     {
         spritePath = "assets/sprites/boxes/box9.png",
 
-        description = "Goodness gracious!! Is this thing okay!?!? Its eyes are bloodshot!!",
-        quote = "YASS QWEEN 💅💅 WE'RE GETTING SOME GEMINI ENERGY! SLAYY! 💅💅💅",
-        name = "Angel",
+        description = "A box that doesn't look familiar at all... It's new around here, so it will be quite curious and observant of its surroundings.",
+        quote = "Oh that's new...",
+        name = "Mark",
 
         mergeReward = 650,
 
