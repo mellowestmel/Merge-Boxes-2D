@@ -7,7 +7,7 @@ local UI_LAYOUT = require("code.data.ui.layout")
 
 return {
     background = {
-        spritePath = "assets/sprites/backgrounds/menubg.png",
+        spritePath = "assets/sprites/backgrounds/settingsmenubg.png",
 
         type = "sprite",
 

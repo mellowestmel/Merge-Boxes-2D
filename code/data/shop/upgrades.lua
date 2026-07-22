@@ -1,5 +1,3 @@
--- ~/code/data/upgrades.lua
-
 local UpgradeConstructor = require("code.data.constructors.upgradeConstructor")
 
 local rawUpgrades = {
@@ -11,9 +9,15 @@ local rawUpgrades = {
 
         maxStacks = 8,
 
-        cost = function(stacks) return 150 * (stacks + 1)^2.5 end,
-        effect = function(stacks) return stacks * 0.1 end
+        cost = function(stacks)
+            return 250 * (stacks + 1)^3
+        end,
+
+        effect = function(stacks)
+            return stacks * 0.1
+        end
     },
+
     {
         id = "spawnTier",
 
@@ -22,9 +26,15 @@ local rawUpgrades = {
 
         maxStacks = 4,
 
-        cost = function(stacks) return 1500 * (stacks + 1)^4 end,
-        effect = function(stacks) return stacks end
+        cost = function(stacks)
+            return 2000 * (stacks + 1)^5
+        end,
+
+        effect = function(stacks)
+            return stacks
+        end
     },
+
     {
         id = "autoSpawn",
 
@@ -33,20 +43,32 @@ local rawUpgrades = {
 
         maxStacks = 1,
 
-        cost = function() return 15000 end,
-        effect = function(stacks) return stacks > 0 end
+        cost = function()
+            return 15000
+        end,
+
+        effect = function(stacks)
+            return stacks > 0
+        end
     },
+
     {
         id = "luckyRoll",
 
         name = "Lucky Roll",
         description = "Each spawned box has a chance to spawn one tier higher. Each stack increases the chance by 15%.",
 
-        maxStacks = 10,
+        maxStacks = 7,
 
-        cost = function(stacks) return 5000 * (stacks + 1)^3 end,
-        effect = function(stacks) return stacks * 0.15 end
+        cost = function(stacks)
+            return 8000 * (stacks + 1)^2.5
+        end,
+
+        effect = function(stacks)
+            return stacks * 0.15
+        end
     },
+
     {
         id = "multiSpawn",
 
@@ -55,8 +77,13 @@ local rawUpgrades = {
 
         maxStacks = 3,
 
-        cost = function(stacks) return 25000 * (stacks + 1)^5 end,
-        effect = function(stacks) return stacks + 1 end
+        cost = function(stacks)
+            return 15000 * (stacks + 1)^4
+        end,
+
+        effect = function(stacks)
+            return stacks + 1
+        end
     },
 }
 

@@ -39,7 +39,7 @@ local rawBoxes = {
         quote = "And that's how I'll take over the world!",
         name = "Glumbo",
 
-        mergeReward = 20,
+        mergeReward = 25,
 
         weight = 85,
         scale = .8,
@@ -52,7 +52,7 @@ local rawBoxes = {
         quote = "Ermm... actually! ☝️🤓",
         name = "Jeremy",
 
-        mergeReward = 30,
+        mergeReward = 50,
 
         weight = 105,
         scale = .9,
@@ -83,7 +83,7 @@ local rawBoxes = {
         quote = "...",
         name = "Dylan",
 
-        mergeReward = 155,
+        mergeReward = 200,
 
         weight = 160,
         scale = 1.1,
@@ -96,7 +96,7 @@ local rawBoxes = {
         quote = "HEY!!!",
         name = "Carlos",
 
-        mergeReward = 310,
+        mergeReward = 400,
 
         weight = 200,
         scale = 1.2,
@@ -109,7 +109,7 @@ local rawBoxes = {
         quote = "Blehhhh!",
         name = "Goobster Goobington III",
 
-        mergeReward = 620,
+        mergeReward = 800,
 
         weight = 250,
         scale = 1.3,
@@ -122,7 +122,7 @@ local rawBoxes = {
         quote = "Oh that's new...",
         name = "Mark",
 
-        mergeReward = 1000,
+        mergeReward = 1500,
 
         weight = 320,
         scale = 1.4,
@@ -135,7 +135,7 @@ local rawBoxes = {
         quote = "Sup, twin?",
         name = "Frigid Wendyhot",
 
-        mergeReward = 4000,
+        mergeReward = 3000,
 
         screenFlashFadeDuration = 1.2,
         flashScreen = true,
@@ -153,7 +153,7 @@ local rawBoxes = {
         quote = "Whuh? wha-?",
         name = "Dizzy",
 
-        mergeReward = 5000,
+        mergeReward = 6000,
 
         weight = 500,
         scale = 1.6,
@@ -166,7 +166,7 @@ local rawBoxes = {
         quote = "ROCK NOISES!!!",
         name = "Gochged",
 
-        mergeReward = 8000,
+        mergeReward = 12000,
 
         weight = 650,
         scale = 1.7,
@@ -179,7 +179,7 @@ local rawBoxes = {
         quote = "Big back, big back! Big back, big back! Yeah, my back is loaded up with snacks and different foods!",
         name = "Mt. Box",
 
-        mergeReward = 13000,
+        mergeReward = 20000,
 
         weight = 850,
         scale = 1.8,
@@ -192,7 +192,7 @@ local rawBoxes = {
         quote = "RAAAAAAAAAHHH!!!",
         name = "Unstable",
 
-        mergeReward = 22000,
+        mergeReward = 35000,
 
         reflectionPath = "assets/sprites/reflections/box14.png",
         reflective = true,
@@ -207,7 +207,7 @@ local rawBoxes = {
         description = "A box that has been enlightened with the knowledge of everything, even the fact that it's in a game! It has become mute and unreactive, trying to process everything at once.",
         name = "Transcended",
 
-        mergeReward = 250000,
+        mergeReward = 75000,
 
         screenFlashFadeDuration = 1.2,
         flashScreen = true,
@@ -225,7 +225,7 @@ local rawBoxes = {
         quote = "ZXZlcnl0aGluZw==",
         name = "Omnibox",
 
-        mergeReward = 120000,
+        mergeReward = 150000,
 
         onUpdateCosmetic = function(element)
             local hue = (love.timer.getTime() % 5) / 5
@@ -245,7 +245,7 @@ local rawBoxes = {
         quote = "MUAHAHAHAHA!",
         name = "Devoided",
 
-        mergeReward = 180000,
+        mergeReward = 300000,
 
         reflectionPath = "assets/sprites/reflections/box17.png",
         reflective = true,
@@ -263,7 +263,7 @@ local rawBoxes = {
         quote = "Hide and seek! Will you find me?",
         name = "Box o' Matter",
 
-        mergeReward = 350000,
+        mergeReward = 600000,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/box18.wav"},
 
@@ -278,7 +278,7 @@ local rawBoxes = {
         quote = "I was SLEEPING!!",
         name = "Great Old Grumpy One",
 
-        mergeReward = 700000,
+        mergeReward = 1200000,
 
         weight = 3900,
         scale = 2.35,
@@ -291,7 +291,7 @@ local rawBoxes = {
         quote = "Trust me, it's luck!",
         name = "Luckroll Box",
 
-        mergeReward = 7777777,
+        mergeReward = 2500000,
 
         mergeSoundData = {soundPath = "assets/sounds/merge/box20.wav"},
 
@@ -306,7 +306,7 @@ local rawBoxes = {
         quote = "yea",
         name = "Mellow Box",
 
-        mergeReward = 3000000,
+        mergeReward = 5000000,
 
         weight = 5500,
         scale = 2.45,
@@ -319,7 +319,7 @@ local rawBoxes = {
         quote = "A little bit of everything, all of the time!",
         name = "The Collector",
 
-        mergeReward = 6000000,
+        mergeReward = 10000000,
 
         weight = 7000,
         scale = 2.5,
@@ -335,7 +335,7 @@ local rawBoxes = {
         reflectionPath = "assets/sprites/reflections/box23.png",
         reflective = true,
 
-        mergeReward = 12000000,
+        mergeReward = 20000000,
 
         weight = 8000,
         scale = 2.55,
