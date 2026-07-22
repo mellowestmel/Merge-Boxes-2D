@@ -60,7 +60,7 @@ return {
             CONSTANTS.COLOR_DARK[1],
             CONSTANTS.COLOR_DARK[2],
             CONSTANTS.COLOR_DARK[3],
-            0.8
+            CONSTANTS.OVERLAY_ALPHA
         ),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
@@ -110,7 +110,7 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 1,
+        zIndex = CONSTANTS.Z_UI_TEXT_OVERLAY,
     },
 
     templateSaveFileResetButtonHitbox = {
@@ -143,7 +143,7 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 1,
+        zIndex = CONSTANTS.Z_UI_TEXT_OVERLAY,
     },
 
     templateSaveFileBoxPreview = {
@@ -155,7 +155,7 @@ return {
         scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
         scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 2,
+        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
 
     templateSaveFilePlusIcon = {
@@ -169,7 +169,7 @@ return {
         scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
         scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 2,
+        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
 
     templateSaveHighestTier = {
@@ -178,7 +178,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + 40,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + UI_LAYOUT.SAVE_FILES.HIGHEST_TIER_LABEL_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_SMALL),
@@ -192,7 +192,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + 65,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + UI_LAYOUT.SAVE_FILES.PLAYTIME_LABEL_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_MEDIUM),

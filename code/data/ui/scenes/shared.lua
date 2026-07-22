@@ -45,7 +45,7 @@ return {
         type = "sprite",
 
         x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + 65,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -58,7 +58,7 @@ return {
         type = "text",
 
         x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + 65,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
@@ -104,7 +104,7 @@ return {
         anchorY = 0,
 
         x = CONSTANTS.SMALL_PADDING,
-        y = CONSTANTS.LARGE_PADDING * 1.75,
+        y = CONSTANTS.LARGE_PADDING * CONSTANTS.CURRENCY_LABEL_ROW_SPACING_MULTIPLIER,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_PURPLE),
 
@@ -155,8 +155,8 @@ return {
         x = UI_LAYOUT.SHARED.DIALOGUE.PORTRAIT_X,
         y = UI_LAYOUT.SHARED.DIALOGUE.PORTRAIT_Y,
 
-        scaleX = 2,
-        scaleY = 2,
+        scaleX = CONSTANTS.SPRITE_LARGE_SCALE,
+        scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
 
@@ -174,8 +174,8 @@ return {
         x = 0,
         y = _G.RESOLUTION_HEIGHT,
 
-        scaleX = 2.5,
-        scaleY = 2.5,
+        scaleX = CONSTANTS.SPRITE_HUGE_SCALE,
+        scaleY = CONSTANTS.SPRITE_HUGE_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
 

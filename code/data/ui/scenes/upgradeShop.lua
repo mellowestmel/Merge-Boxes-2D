@@ -1,6 +1,7 @@
 -- ~/code/data/ui/scenes/upgradeShop.lua
 
 local CONSTANTS = require("code.game.ui.constants")
+local UI_LAYOUT = require("code.data.ui.layout")
 
 return {
     background = {
@@ -19,8 +20,8 @@ return {
 
         type = "sprite",
 
-        x = 230,
-        y = 125,
+        x = UI_LAYOUT.UPGRADE_SHOP.BIRB.X,
+        y = UI_LAYOUT.UPGRADE_SHOP.BIRB.Y,
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     }

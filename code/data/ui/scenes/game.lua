@@ -39,9 +39,9 @@ return {
         type = "sprite",
 
         x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y - 65,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y - UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
 
-        scaleY = .6,
+        scaleY = UI_LAYOUT.GAME.AUTO_SPAWN_BUTTON_HEIGHT_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -54,10 +54,10 @@ return {
         type = "text",
 
         x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y - 65,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y - UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
 
-        scaleX = .75,
-        scaleY = .75,
+        scaleX = UI_LAYOUT.GAME.AUTO_SPAWN_LABEL_SCALE,
+        scaleY = UI_LAYOUT.GAME.AUTO_SPAWN_LABEL_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -89,7 +89,7 @@ return {
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_BLUE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 2,
+        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
 
     blackMarketButtonHitbox = {
@@ -105,7 +105,7 @@ return {
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GOLD),
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 2,
+        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
 
     sacrificeButtonHitbox = {
@@ -121,6 +121,6 @@ return {
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
-        zIndex = CONSTANTS.Z_UI_TEXT + 2,
+        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
 }

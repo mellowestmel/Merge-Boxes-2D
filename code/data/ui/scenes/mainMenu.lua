@@ -25,8 +25,8 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.MAIN_MENU.LOGO_PRIMARY_OFFSET_Y,
 
-        scaleX = 0.5,
-        scaleY = 0.5,
+        scaleX = UI_LAYOUT.MAIN_MENU.LOGO_PRIMARY_SCALE,
+        scaleY = UI_LAYOUT.MAIN_MENU.LOGO_PRIMARY_SCALE,
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
@@ -39,8 +39,8 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.MAIN_MENU.LOGO_SECONDARY_OFFSET_Y,
 
-        scaleX = 0.35,
-        scaleY = 0.35,
+        scaleX = UI_LAYOUT.MAIN_MENU.LOGO_SECONDARY_SCALE,
+        scaleY = UI_LAYOUT.MAIN_MENU.LOGO_SECONDARY_SCALE,
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },

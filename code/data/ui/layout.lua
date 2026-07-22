@@ -10,6 +10,9 @@ return {
 
         LOGO_PRIMARY_OFFSET_Y = 225,
         LOGO_SECONDARY_OFFSET_Y = 100,
+
+        LOGO_PRIMARY_SCALE = 0.5,
+        LOGO_SECONDARY_SCALE = 0.35,
     },
 
     SHARED = {
@@ -49,7 +52,12 @@ return {
         SPAWN_BUTTON = {
             X = BOX_CONSTANTS.AREA_WIDTH + (_G.RESOLUTION_WIDTH - BOX_CONSTANTS.AREA_WIDTH) / 2,
             Y = 475,
-        }
+        },
+
+        SPAWN_BUTTON_ROW_OFFSET = 65,
+
+        AUTO_SPAWN_BUTTON_HEIGHT_SCALE = 0.6,
+        AUTO_SPAWN_LABEL_SCALE = 0.75,
     },
 
     SAVE_FILES = {
@@ -60,5 +68,15 @@ return {
         TEMPLATE_ROTATION = math.rad(90),
         TEMPLATE_SCALE_X = 1.5,
         TEMPLATE_SMALL_SCALE = 0.55,
+
+        HIGHEST_TIER_LABEL_OFFSET = 40,
+        PLAYTIME_LABEL_OFFSET = 65,
+    },
+
+    UPGRADE_SHOP = {
+        BIRB = {
+            X = 230,
+            Y = 125,
+        }
     },
 }
