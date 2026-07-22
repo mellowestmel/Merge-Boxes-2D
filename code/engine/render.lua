@@ -1,16 +1,12 @@
 -- ~/code/engine/render.lua
 
---// ENGINE \\--
 local IdManagerModule = require("code.engine.idManager")
 local ShaderModule = require("code.engine.shaders")
 
---// SAVES \\--
-local SettingsModule = require("code.engine.saves.settings")
-
---// HELPERS \\--
 local math = require("code.engine.helpers.math")
 
---/// DATA \\\--
+local SettingsModule = require("code.engine.saves.settings")
+
 local ColorblindData = require("code.data.colorblind")
 
 local Module = {}
@@ -142,10 +138,10 @@ function Element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
             local boxLeft = self.x - self.drawable:getWidth() * self.anchorX
             local boxTop = self.y - self.drawable:getHeight() * self.anchorY
 
-            local rx = boxLeft / _G.WINDOW_WIDTH * iw - (boxLeft / 4)
-            local ry = boxTop / _G.WINDOW_HEIGHT * ih - (boxTop / 4)
-            local rw = boxWidth / _G.WINDOW_WIDTH * iw
-            local rh = boxHeight / _G.WINDOW_HEIGHT * ih
+            local rx = boxLeft / _G.RESOLUTION_WIDTH * iw - (boxLeft / 4)
+            local ry = boxTop / _G.RESOLUTION_HEIGHT * ih - (boxTop / 4)
+            local rw = boxWidth / _G.RESOLUTION_WIDTH * iw
+            local rh = boxHeight / _G.RESOLUTION_HEIGHT * ih
 
             local quad = love.graphics.newQuad(rx, ry, rw, rh, iw, ih)
 
@@ -235,7 +231,7 @@ end
 
 function Module:getScaledDimensions(x, y)
     local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
-    local baseWindowWidth, baseWindowHeight = _G.WINDOW_WIDTH, _G.WINDOW_HEIGHT
+    local baseWindowWidth, baseWindowHeight = _G.RESOLUTION_WIDTH, _G.RESOLUTION_HEIGHT
 
     local windowScaleX = currentWindowWidth / baseWindowWidth
     local windowScaleY = currentWindowHeight / baseWindowHeight
@@ -278,7 +274,7 @@ function Module:drawAll()
     end
 
     local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
-    local baseWindowWidth, baseWindowHeight = _G.WINDOW_WIDTH, _G.WINDOW_HEIGHT
+    local baseWindowWidth, baseWindowHeight = _G.RESOLUTION_WIDTH, _G.RESOLUTION_HEIGHT
 
     local windowScaleFactorX = currentWindowWidth / baseWindowWidth
     local windowScaleFactorY = currentWindowHeight / baseWindowHeight

@@ -2,14 +2,9 @@
 
 local Module = {}
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
-local SoundModule = require("code.engine.sound")
-
---// HELPERS \\--
 local math = require("code.engine.helpers.math")
 
---// BOX \\--
 local CONSTANTS = require("code.game.box.constants")
 
 local BoxDragHandlerModule = require("code.game.box.dragHandler")

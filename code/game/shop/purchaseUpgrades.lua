@@ -1,9 +1,7 @@
 -- ~/code/game/shop/purchaseUpgrades.lua
 
---// MODULES \\--
 local TransactionModule = require("code.game.shop.transaction")
 
---// DATA \\--
 local UpgradeData = require("code.data.shop.upgrades")
 
 local Module = {}

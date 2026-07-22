@@ -1,25 +1,17 @@
 -- ~/code/game/ui/scenes/upgradeShop.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 local SoundModule = require("code.engine.sound")
 
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 
---/// GAME \\\--
 local MusicHandlerModule = require("code.game.musicHandler")
 
---// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 
---// UI \\--
 local UISharedFunctions = require("code.game.ui.shared")
-
---/ UI OBJECTS \--
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
---/// DATA \\\--
 local SceneData = require("code.data.ui.scenes.upgradeShop")
 
 local Module = {}

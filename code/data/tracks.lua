@@ -1,6 +1,5 @@
 -- ~/code/data/tracks.lua
 
---// CONSTRUCTORS \\--
 local TrackConstructor = require("code.data.constructors.trackConstructor")
 
 local rawTracks = {

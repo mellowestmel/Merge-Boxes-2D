@@ -1,15 +1,11 @@
 -- ~/code/game/box/factory.lua
 
---// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 
---/// GAME \\\--
 local UpgradesModule = require("code.game.upgrades")
 
---// HELPERS \\--
 local math = require("code.engine.helpers.math")
 
---// BOX \\--
 local CONSTANTS = require("code.game.box.constants")
 local BoxesObjectModule = require("code.game.box.object")
 

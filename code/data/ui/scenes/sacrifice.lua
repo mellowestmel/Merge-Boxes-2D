@@ -1,8 +1,6 @@
 -- ~/code/data/ui/scenes/sacrifice.lua
 
---// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
-local UI_LAYOUT = require("code.data.ui.layout")
 
 return {
     background = {

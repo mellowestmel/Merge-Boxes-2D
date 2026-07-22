@@ -13,8 +13,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_X,
-        y = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_Y,
+        x = UI_LAYOUT.SHARED.SETTINGS_BUTTON.X,
+        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -44,8 +44,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y + 65,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + 65,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -57,8 +57,8 @@ return {
 
         type = "text",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y + 65,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + 65,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
@@ -135,8 +135,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_X - 55,
-        y = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_Y,
+        x = UI_LAYOUT.SHARED.SETTINGS_BUTTON.X - CONSTANTS.MASSIVE_PADDING,
+        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -152,8 +152,8 @@ return {
         anchorX = 0,
         anchorY = 1,
 
-        x = UI_LAYOUT.DIALOGUE.PORTRAIT_X,
-        y = UI_LAYOUT.DIALOGUE.PORTRAIT_Y,
+        x = UI_LAYOUT.SHARED.DIALOGUE.PORTRAIT_X,
+        y = UI_LAYOUT.SHARED.DIALOGUE.PORTRAIT_Y,
 
         scaleX = 2,
         scaleY = 2,
@@ -172,7 +172,7 @@ return {
         anchorY = 1,
 
         x = 0,
-        y = _G.WINDOW_HEIGHT,
+        y = _G.RESOLUTION_HEIGHT,
 
         scaleX = 2.5,
         scaleY = 2.5,
@@ -189,7 +189,7 @@ return {
         anchorY = 1,
 
         x = 0,
-        y = _G.WINDOW_HEIGHT,
+        y = _G.RESOLUTION_HEIGHT,
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },

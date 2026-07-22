@@ -1,16 +1,13 @@
 -- ~/code/engine/saves/files.lua
 
---// SAVES \\--
 local CONSTANTS = require("code.engine.saves.constants")
 
 local SavesDecodeModule = require("code.engine.saves.decode")
 local SavesEncodeModule = require("code.engine.saves.encode")
 
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
---// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 
 local Module = {}

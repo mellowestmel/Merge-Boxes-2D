@@ -1,40 +1,29 @@
 -- ~/code/game/ui/scenes/game.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 
---// HELPERS \\--
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
---/// GAME \\\--
 local MusicHandlerModule = require("code.game.musicHandler")
 local UpgradesModule = require("code.game.upgrades")
 
---// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 local BoxFactoryModule = require("code.game.box.factory")
 
---// SHOP \\--
 local SHOP_CONSTANTS = require("code.game.shop.constants")
-
---// UI \\--
-local UI_CONSTANTS = require("code.game.ui.constants")
+local CONSTANTS = require("code.game.ui.constants")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
 
---/ UI OBJECTS \--
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
---// VFX \\--
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 local ScreenFlashModule = require("code.game.vfx.screenFlash")
 
---/// DATA \\\--
 local SharedData = require("code.data.ui.scenes.shared")
 local SceneData = require("code.data.ui.scenes.game")
 
@@ -155,7 +144,7 @@ local function setupAutoSpawnButton(self)
             autoSpawnEnabled = not autoSpawnEnabled
 
             autoSpawnButtonLabel.text = "Auto Spawn (" .. (autoSpawnEnabled and "ON" or "OFF") .. ")"
-            autoSpawnButtonHitbox.color = RenderModule:createColorFromTable((autoSpawnEnabled and UI_CONSTANTS.COLOR_GREEN or UI_CONSTANTS.COLOR_RED))
+            autoSpawnButtonHitbox.color = RenderModule:createColorFromTable((autoSpawnEnabled and CONSTANTS.COLOR_GREEN or CONSTANTS.COLOR_RED))
         end
     })
 

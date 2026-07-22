@@ -1,9 +1,7 @@
 -- ~/code/data/ui/scenes/settings.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
 local UI_LAYOUT = require("code.data.ui.layout")
 
@@ -24,8 +22,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_X,
-        y = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_Y,
+        x = UI_LAYOUT.SHARED.SETTINGS_BUTTON.X,
+        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -55,7 +53,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_NAME_LABEL_OFFSET_X,
-        y = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_Y,
+        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
 

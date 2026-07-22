@@ -1,9 +1,7 @@
 -- ~/code/game/box/upgrades.lua
 
---// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 
---// DATA \\--
 local UpgradeData = require("code.data.shop.upgrades")
 
 local Module = {}

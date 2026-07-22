@@ -1,36 +1,26 @@
 -- ~/code/game/ui/scenes/saveFiles.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// SAVES \\--
 local SAVES_CONSTANTS = require("code.engine.saves.constants")
 local SaveFilesModule = require("code.engine.saves.files")
 
---// HELPERS \\--
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
---/// GAME \\\--
 local MusicHandlerModule = require("code.game.musicHandler")
 
---// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 
---// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
-
---/ UI OBJECTS \--
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
---// VFX \\--
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
---/// DATA \\\--
 local SceneData = require("code.data.ui.scenes.saveFiles")
 
 local Module = {}
@@ -201,7 +191,7 @@ local function setupSaveFileBackgrounds(self)
     firstHitbox:remove()
 
     local totalWidth = (maxSlots * buttonWidth) + (maxSlots - 1)
-    local startX = (_G.WINDOW_WIDTH - totalWidth) / 2
+    local startX = (_G.RESOLUTION_WIDTH - totalWidth) / 2
 
     for index = 1, maxSlots do
         local save = saves[index]

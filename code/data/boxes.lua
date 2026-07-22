@@ -1,12 +1,8 @@
 -- ~/code/data/boxes.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
-
---// HELPERS \\--
 local color = require("code.engine.helpers.color")
 
---// CONSTRUCTORS \\--
 local BoxConstructor = require("code.data.constructors.boxConstructor")
 
 local rawBoxes = {

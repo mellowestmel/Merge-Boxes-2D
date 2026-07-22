@@ -1,16 +1,12 @@
 -- ~/code/game/box/object.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 local IdManagerModule = require("code.engine.idManager")
 
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 
--- // BOX \\--
 local CONSTANTS = require("code.game.box.constants")
 
---/// DATA \\\--
 local BoxesData = require("code.data.boxes")
 
 local Box = {

@@ -1,13 +1,10 @@
 -- ~/code/game/musicHandler.lua
 
---/// ENGINE \\\--
 local SoundModule = require("code.engine.sound")
 
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
---/// DATA \\\--
 local TracksData = require("code.data.tracks")
 
 local Module = {}

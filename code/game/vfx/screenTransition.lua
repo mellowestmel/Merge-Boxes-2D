@@ -1,9 +1,6 @@
 -- ~/code/game/vfx/sceneTransition.lua
 
---// SAVES \\--
 local SettingsModule = require("code.engine.saves.settings")
-
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
 local Module = {}

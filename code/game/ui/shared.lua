@@ -1,31 +1,21 @@
 -- ~/code/game/ui/shared.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 
---// HELPERS \\--
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
---// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 
---// SHOP \\--
 local SHOP_CONSTANTS = require("code.game.shop.constants")
 
---// UI \\--
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
-
---/ UI OBJECTS \--
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
---// VFX \\--
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
---/// DATA \\\--
 local SharedData = require("code.data.ui.scenes.shared")
 
 local Module = {}

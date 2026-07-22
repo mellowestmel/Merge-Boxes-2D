@@ -1,6 +1,5 @@
 -- ~/code/data/ui/scenes/splashScreen.lua
 
---// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
 
 return {

@@ -1,15 +1,10 @@
 -- ~/code/game/vfx/screenFlash.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
-
---// SAVES \\--
-local SettingsModule = require("code.engine.saves.settings")
-
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 
---// VFX \\--
+local SettingsModule = require("code.engine.saves.settings")
+
 local CONSTANTS = require("code.game.vfx.constants")
 
 local Module = {}

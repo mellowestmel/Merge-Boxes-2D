@@ -3,7 +3,6 @@
 --%note Swap in expression-specific portraits here once they're drawn.
 local PORTRAIT = "assets/sprites/portraits/gerald/default.png"
 
---// CONSTRUCTORS \\--
 local DialogueConstructor = require("code.data.constructors.dialogueConstructor")
 
 return {

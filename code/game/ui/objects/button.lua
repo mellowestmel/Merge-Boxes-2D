@@ -1,17 +1,13 @@
 -- ~/code/game/ui/objects/button.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 local SoundModule = require("code.engine.sound")
 local IdManagerModule = require("code.engine.idManager")
 
---// SAVES \\--
 local SettingsModule = require("code.engine.saves.settings")
 
---// HELPERS \\--
 local math = require("code.engine.helpers.math")
 
---// VFX \\--
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
 local Button = {

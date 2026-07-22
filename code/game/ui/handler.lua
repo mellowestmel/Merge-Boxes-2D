@@ -1,9 +1,6 @@
 -- ~/code/game/ui/handler.lua
 
---// UI \\--
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
-
---/ UI OBJECTS \--
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
 local Module = {}

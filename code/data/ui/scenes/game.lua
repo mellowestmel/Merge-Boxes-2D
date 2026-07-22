@@ -1,9 +1,7 @@
 -- ~/code/data/ui/scenes/game.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
 local UI_LAYOUT = require("code.data.ui.layout")
 
@@ -13,8 +11,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
 
@@ -26,8 +24,8 @@ return {
 
         type = "text",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -40,8 +38,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y - 65,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y - 65,
 
         scaleY = .6,
 
@@ -55,8 +53,8 @@ return {
 
         type = "text",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y - 65,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y - 65,
 
         scaleX = .75,
         scaleY = .75,
@@ -83,8 +81,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x - CONSTANTS.BUTTON_HORIZONTAL_GAP,
-        y = UI_LAYOUT.SPAWN_BUTTON.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X - CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
@@ -99,8 +97,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x,
-        y = UI_LAYOUT.SPAWN_BUTTON.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
@@ -115,8 +113,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SPAWN_BUTTON.x + CONSTANTS.BUTTON_HORIZONTAL_GAP,
-        y = UI_LAYOUT.SPAWN_BUTTON.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,

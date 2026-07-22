@@ -1,11 +1,6 @@
 -- ~/code/data/ui/scenes/upgradeShop.lua
 
---// ENGINE \\--
-local RenderModule = require("code.engine.render")
-
---// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
-local UI_LAYOUT = require("code.data.ui.layout")
 
 return {
     background = {

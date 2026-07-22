@@ -1,13 +1,10 @@
 -- ~/code/game/box/scaleTween.lua
 
---// SAVES \\--
 local SettingsModule = require("code.engine.saves.settings")
 
---// HELPERS \\--
 local easing = require("code.engine.helpers.easing")
 local math = require("code.engine.helpers.math")
 
---// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 
 local Module = {}

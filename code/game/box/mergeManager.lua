@@ -1,26 +1,20 @@
 -- ~/code/game/box/mergeManager.lua
 
---/// ENGINE \\\--
 local QuadtreesModule = require("code.engine.quadtrees")
 local SoundModule = require("code.engine.sound")
 
---// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 local SettingsModule = require("code.engine.saves.settings")
 
---// HELPERS \\--
 local easing = require("code.engine.helpers.easing")
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
---// BOX \\--
 local CONSTANTS = require("code.game.box.constants")
 local BoxesObjectModule = require("code.game.box.object")
 
---// VFX \\--
 local ScreenFlashModule = require("code.game.vfx.screenFlash")
 
---/// DATA \\\--
 local BoxesData = require("code.data.boxes")
 
 local Module = {}

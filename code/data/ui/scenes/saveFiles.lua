@@ -1,9 +1,7 @@
 -- ~/code/data/ui/scenes/saveFiles.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// UI \\--
 local CONSTANTS = require("code.game.ui.constants")
 local UI_LAYOUT = require("code.data.ui.layout")
 
@@ -25,7 +23,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -38,7 +36,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -52,7 +50,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER,
 
         rotation = UI_LAYOUT.SAVE_FILES.TEMPLATE_ROTATION,
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SCALE_X,
@@ -74,7 +72,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -88,7 +86,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
 
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
@@ -104,7 +102,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
 
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
@@ -121,7 +119,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
 
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
@@ -137,7 +135,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
 
         scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
         scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
@@ -152,7 +150,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
 
         scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
         scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
@@ -166,7 +164,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
 
         scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
         scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
@@ -180,7 +178,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + 40,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + 40,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_SMALL),
@@ -194,7 +192,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.BUTTON_Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + 65,
+        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + 65,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_MEDIUM),

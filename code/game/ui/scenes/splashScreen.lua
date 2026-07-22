@@ -1,25 +1,16 @@
 -- ~/code/game/ui/scenes/mainMenu.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 local SoundModule = require("code.engine.sound")
-
---// SAVES \\--
-local SettingsModule = require("code.engine.saves.settings")
-
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 
---/// GAME \\\--
+local SettingsModule = require("code.engine.saves.settings")
+
 local MusicHandlerModule = require("code.game.musicHandler")
 
---// UI \\--
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
-
---// VFX \\--
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
---/// DATA \\\--
 local SceneData = require("code.data.ui.scenes.splashScreen")
 
 local Module = {}

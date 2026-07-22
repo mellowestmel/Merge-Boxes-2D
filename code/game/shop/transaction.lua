@@ -1,6 +1,5 @@
 -- ~/code/game/shop/transaction.lua
 
---// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 
 local Module = {}

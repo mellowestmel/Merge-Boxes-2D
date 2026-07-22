@@ -1,36 +1,25 @@
 -- ~/code/game/ui/scenes/settings.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// SAVES \\--
 local SaveFilesModule = require("code.engine.saves.files")
 local SettingsModule = require("code.engine.saves.settings")
 
 local SAVES_CONSTANTS = require("code.engine.saves.constants")
 
---// HELPERS \\--
 local table = require("code.engine.helpers.table")
 
---/// GAME \\\--
 local MusicHandlerModule = require("code.game.musicHandler")
 
---// BOX \\--
 local BoxesObjectModule = require("code.game.box.object")
 
---// UI \\--
+local CONSTANTS = require("code.game.ui.constants")
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
-
-local UI_CONSTANTS = require("code.game.ui.constants")
-
---/ UI OBJECTS \--
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
---// VFX \\--
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
---/// DATA \\\--
 local SceneData = require("code.data.ui.scenes.settings")
 
 local ENUM_SETTING_OPTIONS = {
@@ -166,8 +155,7 @@ local function clearSettingValueControls(self)
     settingValueControls = {}
 end
 
---/// BOOLEAN SETTINGS \\\--
-
+-- BOOLEAN SETTINGS
 -- Forces an image into RenderModule.imageCache without leaving a live
 -- element behind, so both toggle sprites are ready before any toggle
 -- is clicked (avoids a load stutter on first use of the "other" state).
@@ -179,7 +167,7 @@ local function preloadSprite(spritePath)
 end
 
 local function booleanToggleImage(value)
-    return RenderModule.imageCache[value and UI_CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH or UI_CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH]
+    return RenderModule.imageCache[value and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH]
 end
 
 local function toggleBooleanSetting(category, settingKey)
@@ -192,14 +180,14 @@ local function toggleBooleanSetting(category, settingKey)
 end
 
 local function setupBooleanSettingControl(self, category, setting, rowY)
-    preloadSprite(UI_CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH)
-    preloadSprite(UI_CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH)
+    preloadSprite(CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH)
+    preloadSprite(CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH)
 
     local currentValue = SettingsModule.loadedFile[category][setting.key]
     local toggleData = copyWithOverrides(SceneData.booleanSettingToggleHitbox, {
         y = rowY,
         type = "sprite",
-        spritePath = currentValue and UI_CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH or UI_CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
+        spritePath = currentValue and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
     })
 
     local toggleHitbox = RenderModule:createElement(toggleData)
@@ -226,7 +214,7 @@ local function setupBooleanSettingControl(self, category, setting, rowY)
     })
 end
 
---/// STEPPER SETTINGS (NUMBER + ENUM) \\\--
+-- STEPPER SETTINGS (NUMBER/ENUM)
 local function clampNumberSetting(value, range)
     if not range then return value end
     if value < range.min then return range.min end
@@ -237,7 +225,7 @@ end
 local function adjustNumericSetting(category, settingKey, direction)
     local range = SAVES_CONSTANTS.NUMBER_SETTING_RANGES[settingKey]
     local currentValue = SettingsModule.loadedFile[category][settingKey]
-    local newValue = clampNumberSetting(currentValue + direction * UI_CONSTANTS.NUMBER_SETTING_CHANGE_INCREMENT, range)
+    local newValue = clampNumberSetting(currentValue + direction * CONSTANTS.NUMBER_SETTING_CHANGE_INCREMENT, range)
 
     SettingsModule.loadedFile[category][settingKey] = newValue
     if SettingsModule.save then SettingsModule:save() end
@@ -318,11 +306,11 @@ local function setupStepperControl(self, category, setting, rowY, decreaseSprite
 end
 
 local function setupNumericSettingControl(self, category, setting, rowY)
-    setupStepperControl(self, category, setting, rowY, UI_CONSTANTS.NUMBER_DECREASE_BUTTON_PATH, UI_CONSTANTS.NUMBER_INCREASE_BUTTON_PATH, adjustNumericSetting, formatPercent)
+    setupStepperControl(self, category, setting, rowY, CONSTANTS.NUMBER_DECREASE_BUTTON_PATH, CONSTANTS.NUMBER_INCREASE_BUTTON_PATH, adjustNumericSetting, formatPercent)
 end
 
 local function setupEnumSettingControl(self, category, setting, rowY)
-    setupStepperControl(self, category, setting, rowY, UI_CONSTANTS.ENUM_DECREASE_BUTTON_PATH, UI_CONSTANTS.ENUM_INCREASE_BUTTON_PATH, cycleEnumSetting, capitalizeFirstLetter)
+    setupStepperControl(self, category, setting, rowY, CONSTANTS.ENUM_DECREASE_BUTTON_PATH, CONSTANTS.ENUM_INCREASE_BUTTON_PATH, cycleEnumSetting, capitalizeFirstLetter)
 end
 
 -- The control type is inferred from the setting's current Lua value
@@ -340,8 +328,7 @@ local function setupSettingValueControl(self, category, setting, rowY)
     end
 end
 
---/// CATEGORY + SCENE SETUP \\\--
-
+-- CATEGORY + SCENE SETUP
 -- Rebuilds every name label + value control for the current category.
 -- Called on init and again on every scroll, since switching category
 -- means a different settings list (different count, different types).
@@ -354,7 +341,7 @@ local function setupSettingNameLabels(self)
 
     for index, setting in ipairs(categorySchema.settings) do
         -- stacks rows below the label's base y, in schema order
-        local rowY = (SceneData.settingNameLabel.y or 0) + (index - 1) * UI_CONSTANTS.BUTTON_HORIZONTAL_GAP
+        local rowY = (SceneData.settingNameLabel.y or 0) + (index - 1) * CONSTANTS.BUTTON_HORIZONTAL_GAP
 
         local label = RenderModule:createElement(
             copyWithOverrides(SceneData.settingNameLabel, { y = rowY })

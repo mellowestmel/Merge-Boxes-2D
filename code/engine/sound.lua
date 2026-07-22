@@ -1,12 +1,8 @@
 -- ~/code/engine/sound.lua
 
---// SAVES \\--
 local SettingsModule = require("code.engine.saves.settings")
 
---// ENGINE \\--
 local IdManagerModule = require("code.engine.idManager")
-
---// HELPERS \\--
 local math = require("code.engine.helpers.math")
 
 local Sound = {

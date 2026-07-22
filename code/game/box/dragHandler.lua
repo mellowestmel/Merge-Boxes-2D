@@ -1,9 +1,7 @@
 -- ~/code/game/box/dragHandler.lua
 
---/// ENGINE \\\--
 local RenderModule = require("code.engine.render")
 
---// BOX \\--
 local CONSTANTS = require("code.game.box.constants")
 local BoxesObjectModule = require("code.game.box.object")
 
