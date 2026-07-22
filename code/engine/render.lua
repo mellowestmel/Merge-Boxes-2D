@@ -322,6 +322,14 @@ function Module:drawAll()
     love.graphics.setShader()
 end
 
+function Module:update()
+    local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
+    local vsync = SettingsModule.loadedFile.graphics.vsync
+
+    love.window.setFullscreen(fullscreen)
+    love.window.setVSync(vsync)
+end
+
 function Module:init()
     ShaderModule:load(
         "accessibility",

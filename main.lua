@@ -24,18 +24,14 @@ function love.load()
     SettingsModule:loadFile()
     RenderModule:init()
 
-    local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
-    local vsync = SettingsModule.loadedFile.graphics.vsync
-
-    love.window.setFullscreen(fullscreen)
-    love.window.setVSync(vsync)
-
     MusicHandlerModule.init()
     VFXHandlerModule.init()
     UIHandlerModule.init()
 end
 
-function love.update(deltaTime)                                                                                                                                                                                                  _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
+function love.update(deltaTime)                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
+    RenderModule:update()
+
     BoxHandlerModule:update(deltaTime)
     VFXHandlerModule:update(deltaTime)
     UIHandlerModule:update(deltaTime)
