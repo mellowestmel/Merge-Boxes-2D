@@ -155,10 +155,9 @@ function Module:decode(file)
 
         currencies = self:decodeSimple(sections[2]),
         stats = self:decodeSimple(sections[3]),
+        upgrades = self:decodeSimple(sections[4]),
 
-        boxes = self:decodeBoxes(sections[4]),
-
-        upgrades = self:decodeSimple(sections[5])
+        boxes = self:decodeBoxes(sections[5]),
     }
 
     finalOutput = normalizeTable(finalOutput, CONSTANTS.DEFAULT_DATA, {boxes = true})

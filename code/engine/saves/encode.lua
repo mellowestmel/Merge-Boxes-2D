@@ -87,10 +87,9 @@ function Module:encode(file)
 
         self:encodeSimple(file.currencies),
         self:encodeSimple(file.stats),
+        self:encodeSimple(file.upgrades),
 
-        self:encodeBoxes(file.boxes),
-
-        self:encodeSimple(file.upgrades)
+        self:encodeBoxes(file.boxes)
     )
 
     finalOutput = encryptBase64(finalOutput)
