@@ -6,7 +6,10 @@ local RenderModule = require("code.engine.render")
 --// HELPERS \\--
 local color = require("code.engine.helpers.color")
 
-return {
+--// CONSTRUCTORS \\--
+local BoxConstructor = require("code.data.constructors.boxConstructor")
+
+local rawBoxes = {
     {
         spritePath = "assets/sprites/boxes/box1.png",
 
@@ -116,7 +119,7 @@ return {
         scale = 1.3,
         tier = 8,
     },
-        {
+    {
         spritePath = "assets/sprites/boxes/box9.png",
 
         description = "Goodness gracious!! Is this thing okay!?!? Its eyes are bloodshot!!",
@@ -239,7 +242,7 @@ return {
         scale = 2.1,
         tier = 16,
     },
-        {
+    {
         spritePath = "assets/sprites/boxes/box17.png",
 
         description = "A sinister and unstable box. It has become so big that its weight is in the negatives.",
@@ -343,3 +346,11 @@ return {
         tier = 23,
     }
 }
+
+local boxes = {}
+
+for index, boxData in ipairs(rawBoxes) do
+    boxes[index] = BoxConstructor.new(boxData)
+end
+
+return boxes

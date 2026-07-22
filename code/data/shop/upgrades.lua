@@ -1,4 +1,8 @@
-return {
+-- ~/code/data/upgrades.lua
+
+local UpgradeConstructor = require("code.data.constructors.upgradeConstructor")
+
+local rawUpgrades = {
     spawnCooldown = {
         name = "Spawn Cooldown",
         description = "Decrease spawn cooldown by 0.1 seconds per stack.",
@@ -74,3 +78,11 @@ return {
         end
     }
 }
+
+local upgrades = {}
+
+for key, upgradeData in pairs(rawUpgrades) do
+    upgrades[key] = UpgradeConstructor.new(upgradeData)
+end
+
+return upgrades
