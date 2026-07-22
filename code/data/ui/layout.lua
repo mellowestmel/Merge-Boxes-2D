@@ -10,11 +10,6 @@ return {
         LOGO_SECONDARY_OFFSET_Y = 100,
     },
 
-    SETTINGS_BUTTON = {
-        x = _G.WINDOW_WIDTH - 35,
-        y = 35,
-    },
-
     DISCORD_BUTTON = {
         x = _G.WINDOW_WIDTH - 35,
         y = _G.WINDOW_HEIGHT - 35,
@@ -32,6 +27,9 @@ return {
         SETTING_INCREASE_OFFSET_X = 300,
 
         SETTING_VALUE_LABEL_OFFSET_X = 200,
+
+        SETTINGS_BUTTON_X = _G.WINDOW_WIDTH - 35,
+        SETTINGS_BUTTON_Y = 35,
     },
 
     SPAWN_BUTTON = {
@@ -49,11 +47,8 @@ return {
         TEMPLATE_SMALL_SCALE = 0.55,
     },
 
-    SHOP = {
-        SHOPKEEPER_X = 25,
-        SHOPKEEPER_Y = 425,
-
-        SHOPKEEPER_ANCHOR_X = 0,
-        SHOPKEEPER_ANCHOR_Y = 1,
+    DIALOGUE = {
+        PORTRAIT_X = 400,
+        PORTRAIT_Y = 425,
     }
 }

@@ -24,8 +24,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SETTINGS_BUTTON.x,
-        y = UI_LAYOUT.SETTINGS_BUTTON.y,
+        x = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_X,
+        y = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -55,7 +55,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_NAME_LABEL_OFFSET_X,
-        y = CONSTANTS.MASSIVE_PADDING,
+        y = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_Y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
 

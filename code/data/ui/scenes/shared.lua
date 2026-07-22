@@ -13,8 +13,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SETTINGS_BUTTON.x,
-        y = UI_LAYOUT.SETTINGS_BUTTON.y,
+        x = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_X,
+        y = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -135,8 +135,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SETTINGS_BUTTON.x - 55,
-        y = UI_LAYOUT.SETTINGS_BUTTON.y,
+        x = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_X - 55,
+        y = UI_LAYOUT.SETTINGS.SETTINGS_BUTTON_Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -144,6 +144,23 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    dialoguePortrait = {
+        type = "sprite",
+
+        anchorX = 0,
+        anchorY = 1,
+
+        x = UI_LAYOUT.DIALOGUE.PORTRAIT_X,
+        y = UI_LAYOUT.DIALOGUE.PORTRAIT_Y,
+
+        scaleX = 2,
+        scaleY = 2,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+
+        zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
 
     dialogueBox = {
