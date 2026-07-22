@@ -311,7 +311,7 @@ function Module:drawAll()
 
     love.graphics.setShader(shader)
 
-    for _, element in ipairs(self._sortedCache) do
+    for _, element in pairs(self._sortedCache) do
         if not element.render then goto continue end
         element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
 

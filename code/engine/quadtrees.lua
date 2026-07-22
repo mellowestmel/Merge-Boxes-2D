@@ -76,7 +76,7 @@ function Quadtree:queryRadius(center, radius)
 
     if not self:isInRadius(center, radius) then return found end
 
-    for _, point in ipairs(self.points) do
+    for _, point in pairs(self.points) do
         if not isPointInRadius(point, center, radius) then goto continue end
         table.insert(found, point)
 
@@ -85,10 +85,10 @@ function Quadtree:queryRadius(center, radius)
 
     if self.subdivided then
 
-        for _, child in ipairs(self.children) do
+        for _, child in pairs(self.children) do
 
             local results = child:queryRadius(center, radius)
-            for _, point in ipairs(results) do
+            for _, point in pairs(results) do
                 table.insert(found, point)
             end
 
@@ -116,7 +116,7 @@ function Quadtree:queryRect(rect)
 
     if not self:isInRect(rect) then return found end
 
-    for _, point in ipairs(self.points) do
+    for _, point in pairs(self.points) do
         if not contains(rect, point) then goto continue end
         table.insert(found, point)
 
@@ -125,10 +125,10 @@ function Quadtree:queryRect(rect)
 
     if self.subdivided then
 
-        for _, child in ipairs(self.children) do
+        for _, child in pairs(self.children) do
 
             local results = child:queryRect(rect)
-            for _, point in ipairs(results) do
+            for _, point in pairs(results) do
                 table.insert(found, point)
             end
 
@@ -177,7 +177,7 @@ function Quadtree:insert(point)
         self:subdivide()
     end
 
-    for _, child in ipairs(self.children) do
+    for _, child in pairs(self.children) do
         if child:insert(point) then
             return true
         end
@@ -198,7 +198,7 @@ function Quadtree:subdivide()
         {halfX, halfY}
     }
 
-    for _, offset in ipairs(offsets) do
+    for _, offset in pairs(offsets) do
         local child = Module:createQuadtree({
             width = halfX,
             height = halfY,
@@ -215,9 +215,9 @@ function Quadtree:subdivide()
     end
 
     -- Redistribute points between new children
-    for _, point in ipairs(self.points) do
+    for _, point in pairs(self.points) do
 
-        for _, child in ipairs(self.children) do
+        for _, child in pairs(self.children) do
 
             if child:insert(point) then
                 break
@@ -237,7 +237,7 @@ function Quadtree:mergeEmpty()
 
     local allEmpty = true
 
-    for _, child in ipairs(self.children) do
+    for _, child in pairs(self.children) do
 
         if #child.points > 0 or child.subdivided then
             allEmpty = false
@@ -254,7 +254,7 @@ end
 
 -- Removes a point from the quadtree and merges empty children automatically
 function Quadtree:remove(point)
-    for index, value in ipairs(self.points) do
+    for index, value in pairs(self.points) do
 
         if pointsEqual(value, point) then
             table.remove(self.points, index)
@@ -263,7 +263,7 @@ function Quadtree:remove(point)
 
     end
 
-    for _, child in ipairs(self.children) do
+    for _, child in pairs(self.children) do
 
         local success = child:remove(point)
         if success then
@@ -291,10 +291,10 @@ end
 function Quadtree:getAllPoints()
     local found = table.shallowClone(self.points)
 
-    for _, child in ipairs(self.children) do
+    for _, child in pairs(self.children) do
 
         local childPoints = child:getAllPoints()
-        for _, point in ipairs(childPoints) do
+        for _, point in pairs(childPoints) do
             table.insert(found, point)
         end
 
@@ -322,7 +322,7 @@ function Module:createQuadtree(data)
         points = {}
     }, Quadtree)
 
-    for _, point in ipairs(data.points or {}) do
+    for _, point in pairs(data.points or {}) do
         quadtree:insert(point)
     end
 

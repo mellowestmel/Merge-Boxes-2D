@@ -303,9 +303,9 @@ return {
     {
         spritePath = "assets/sprites/boxes/box21.png",
 
-        description = "A box that loves to collect little stickers and trinkets. It's covered in them. They're everywhere. How is that thing still breathing?",
-        quote = "A little bit of everything, all of the time!",
-        name = "The Collector",
+        description = "A carefree little box who doesn't care what happens around her. Bears a striking resemblance to the creator of this game.",
+        quote = "yea",
+        name = "Mellow Box",
 
         mergeReward = 3000000,
 
@@ -316,9 +316,9 @@ return {
     {
         spritePath = "assets/sprites/boxes/box22.png",
 
-        description = "A carefree little box who doesn't care what happens around her. Bears a striking resemblance to the creator of this game.",
-        quote = "yea",
-        name = "Mellow Box",
+        description = "A box that loves to collect little stickers and trinkets. It's covered in them. They're everywhere. How is that thing still breathing?",
+        quote = "A little bit of everything, all of the time!",
+        name = "The Collector",
 
         mergeReward = 6000000,
 

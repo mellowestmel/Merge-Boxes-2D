@@ -15,6 +15,20 @@ return {
         y = 35,
     },
 
+    SETTINGS = {
+        CATEGORY_ROW_Y = 500,
+        CATEGORY_SCROLL_OFFSET_X = 125,
+
+        SETTING_NAME_LABEL_OFFSET_X = -225,
+
+        SETTING_TOGGLE_OFFSET_X = 200,
+
+        SETTING_DECREASE_OFFSET_X = 100,
+        SETTING_INCREASE_OFFSET_X = 300,
+
+        SETTING_VALUE_LABEL_OFFSET_X = 200,
+    },
+
     SPAWN_BUTTON = {
         x = BOX_CONSTANTS.AREA_WIDTH + (_G.WINDOW_WIDTH - BOX_CONSTANTS.AREA_WIDTH) / 2,
         y = 475,

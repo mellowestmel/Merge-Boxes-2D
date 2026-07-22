@@ -109,6 +109,7 @@ function Module:update()
     for _, sound in pairs(self._sounds) do
         if not sound.source:isPlaying() then goto continue end
 
+        sound.source:setVolume(computeVolume(sound))
         sound.source:setLooping(sound.loop)
         sound.source:setPitch(sound.pitch)
 

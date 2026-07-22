@@ -39,7 +39,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = 550,
+        y = UI_LAYOUT.SETTINGS.CATEGORY_ROW_Y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
 
@@ -51,13 +51,60 @@ return {
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
 
-    scrollRightButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttonarrowr74x74.png",
+    settingNameLabel = {
+        type = "text",
+
+        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_NAME_LABEL_OFFSET_X,
+        y = CONSTANTS.MASSIVE_PADDING,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+
+        anchorX = 0,
+
+        font = love.graphics.newFont(
+            CONSTANTS.STANBERRY_FONT_PATH,
+            CONSTANTS.FONT_LARGE
+        ),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    booleanSettingToggleHitbox = {
+        spritePath = "assets/sprites/ui/button74x74.png",
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + 125,
-        y = 550,
+        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_TOGGLE_OFFSET_X,
+
+        scaleX = CONSTANTS.ICON_SMALL_SCALE,
+        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    decreaseSettingHitbox = {
+        spritePath = "assets/sprites/ui/button74x74.png",
+
+        type = "sprite",
+
+        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_DECREASE_OFFSET_X,
+
+        scaleX = CONSTANTS.ICON_SMALL_SCALE,
+        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    increaseSettingHitbox = {
+        spritePath = "assets/sprites/ui/button74x74.png",
+
+        type = "sprite",
+
+        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_INCREASE_OFFSET_X,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -65,6 +112,19 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    settingValueLabel = {
+        type = "text",
+
+        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_VALUE_LABEL_OFFSET_X,
+
+        font = love.graphics.newFont(
+            CONSTANTS.STANBERRY_FONT_PATH,
+            CONSTANTS.FONT_MEDIUM
+        ),
+
+        zIndex = CONSTANTS.Z_UI_TEXT,
     },
 
     scrollLeftButtonHitbox = {
@@ -72,8 +132,24 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X - 125,
-        y = 550,
+        x = CONSTANTS.CENTER_X - UI_LAYOUT.SETTINGS.CATEGORY_SCROLL_OFFSET_X,
+        y = UI_LAYOUT.SETTINGS.CATEGORY_ROW_Y,
+
+        scaleX = CONSTANTS.ICON_SMALL_SCALE,
+        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+
+        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    scrollRightButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttonarrowr74x74.png",
+
+        type = "sprite",
+
+        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.CATEGORY_SCROLL_OFFSET_X,
+        y = UI_LAYOUT.SETTINGS.CATEGORY_ROW_Y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -81,5 +157,5 @@ return {
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
-    },
+    }
 }

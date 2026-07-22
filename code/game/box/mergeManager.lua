@@ -188,7 +188,7 @@ local function calculateMaxMergeRange()
     local baseScale = BoxesData[1].scale or 1
     local maxScale = baseScale
 
-    for _, boxData in ipairs(BoxesData) do
+    for _, boxData in pairs(BoxesData) do
         if (boxData.scale or 1) > maxScale then
             maxScale = boxData.scale
         end
@@ -231,7 +231,7 @@ function Module:checkMerges()
             maxMergeQueryRadius
         )
 
-        for _, point in ipairs(nearbyPoints) do
+        for _, point in pairs(nearbyPoints) do
             local boxB = point.box
 
             if not boxB or boxA == boxB then goto continue end

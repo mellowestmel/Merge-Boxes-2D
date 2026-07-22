@@ -70,7 +70,7 @@ end
 
 -- Searches a given table for a given value and returns its index
 function Module.find(table, search)
-    for index, value in ipairs(table) do
+    for index, value in pairs(table) do
         if value == search then return index end
     end
 
