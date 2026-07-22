@@ -15,7 +15,9 @@ function Module.new(data)
 
         maxStacks = data.maxStacks,
 
+        currency = data.currency or "credits",
         cost = data.cost,
+
         effect = data.effect,
     }
 end

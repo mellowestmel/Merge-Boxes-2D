@@ -60,7 +60,7 @@ return {
             CONSTANTS.COLOR_DARK[1],
             CONSTANTS.COLOR_DARK[2],
             CONSTANTS.COLOR_DARK[3],
-            CONSTANTS.OVERLAY_ALPHA
+            CONSTANTS.HIGH_ALPHA
         ),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,

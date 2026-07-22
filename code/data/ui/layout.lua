@@ -77,6 +77,16 @@ return {
         BIRB = {
             X = 230,
             Y = 125,
-        }
+        },
+
+        BACKGROUND_FRAME = {
+            SCALE_X = 0.9,
+            SCALE_Y = 0.6,
+            OFFSET_Y = -225,
+        },
+
+        SCROLL_WHEEL = {
+            SCALE_X = 0.1,
+        },
     },
 }

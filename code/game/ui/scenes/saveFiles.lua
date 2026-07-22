@@ -17,7 +17,9 @@ local CONSTANTS = require("code.game.ui.constants")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
+
 local UIButtonObjectModule = require("code.game.ui.objects.button")
+local LayoutHelper = require("code.game.ui.helpers.layout")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
@@ -114,8 +116,10 @@ local function setupSaveFileLoadButton(self, backgroundElement, slot)
             saveFileLoadButtonHitbox,
             saveFileLoadButtonLabel
         },
+
         hitboxElement = saveFileLoadButtonHitbox,
         mouseButton = 1,
+
         onClick = function()
             ScreenTransitionModule:transition({
                 callback = function()
@@ -148,7 +152,7 @@ local function setupSaveFileResetButton(self, backgroundElement, slot)
         cooldown = 0,
         mouseButton = 1,
         onClick = function()
-            if not saveFileResetButton then return end --silence annoying warnings >:(
+            if not saveFileResetButton then return end
             if saveFileResetButton.deleting then return end
 
             if (love.timer.getTime() - saveFileResetButton.lastConfirm) >= CONSTANTS.RESET_BUTTON_WARN_TIME_OUT then
@@ -164,6 +168,7 @@ local function setupSaveFileResetButton(self, backgroundElement, slot)
                         SaveFilesModule:deleteFile(slot)
                         UISceneHandlerModule:switch("saveFiles")
                     end,
+
                     duration = 1.2
                 })
             end
@@ -186,26 +191,28 @@ local function setupSaveFileBackgrounds(self)
     local saves = SaveFilesModule:getFiles()
     local maxSlots = SAVES_CONSTANTS.MAX_SAVE_SLOTS
 
-    local firstHitbox = RenderModule:createElement(SceneData.templateSaveFileBackground)
-    local buttonWidth = firstHitbox.drawable:getWidth()
-    firstHitbox:remove()
+    local slotBackgrounds = {}
+    for _ = 1, maxSlots do
+        local templateSaveFileBackground = RenderModule:createElement(SceneData.templateSaveFileBackground)
+        table.insert(self._elements, templateSaveFileBackground)
+        table.insert(slotBackgrounds, templateSaveFileBackground)
+    end
 
+    local buttonWidth = slotBackgrounds[1].drawable:getWidth()
     local totalWidth = (maxSlots * buttonWidth) + (maxSlots - 1)
-    local startX = (_G.RESOLUTION_WIDTH - totalWidth) / 2
+    local startX = (_G.RESOLUTION_WIDTH - totalWidth) / 2 + (buttonWidth / 2)
+
+    LayoutHelper.stackHorizontally(slotBackgrounds, startX, buttonWidth + 1)
 
     for index = 1, maxSlots do
         local save = saves[index]
+        local templateSaveFileBackground = slotBackgrounds[index]
 
-        local templateSaveFileBackground = RenderModule:createElement(SceneData.templateSaveFileBackground)
         local templateSaveFileLabel = RenderModule:createElement(SceneData.templateSaveFileLabel)
 
-        local x = startX + (buttonWidth / 2) + ((index - 1) * buttonWidth)
-
-        templateSaveFileBackground.x = x
-        templateSaveFileLabel.x = x
+        templateSaveFileLabel.x = templateSaveFileBackground.x
         templateSaveFileLabel.text = "Slot " .. tostring(index)
 
-        table.insert(self._elements, templateSaveFileBackground)
         table.insert(self._elements, templateSaveFileLabel)
 
         local fileExists = SaveFilesModule:readFile(index) ~= nil
@@ -217,8 +224,7 @@ local function setupSaveFileBackgrounds(self)
             setupSavePlaytime(self, templateSaveFileBackground, save)
         else
             local templateSaveFilePlusIcon = RenderModule:createElement(SceneData.templateSaveFilePlusIcon)
-            templateSaveFilePlusIcon.x = x
-
+            templateSaveFilePlusIcon.x = templateSaveFileBackground.x
             table.insert(self._elements, templateSaveFilePlusIcon)
 
             local createSaveFileButton = UIButtonObjectModule:createButton({
@@ -226,13 +232,16 @@ local function setupSaveFileBackgrounds(self)
                     templateSaveFileBackground,
                     templateSaveFilePlusIcon
                 },
+
                 hitboxElement = templateSaveFileBackground,
                 mouseButton = 1,
+
                 onClick = function()
                     ScreenTransitionModule:transition({
                         callback = function()
                             startGame(index)
                         end,
+
                         duration = 1.2
                     })
                 end
@@ -255,8 +264,10 @@ local function setupBackToMenuButton(self)
             backToMenuButtonHitbox,
             backToMenuButtonLabel
         },
+
         hitboxElement = backToMenuButtonHitbox,
         mouseButton = 1,
+
         onClick = function()
             ScreenTransitionModule:transition({
                 callback = function()

@@ -42,8 +42,13 @@ function love.mousepressed(_, _, button)
     UIHandlerModule:mousePressed(mouseX, mouseY, button)
 end
 
-function love.textinput(input)
-    UIHandlerModule:textInput(input)
+function love.mousereleased(_, _, button)
+    local mouseX, mouseY = RenderModule:getMousePos()
+    UIHandlerModule:mouseReleased(mouseX, mouseY, button)
+end
+
+function love.wheelmoved(x, y)
+    UIHandlerModule:wheelMoved(x, y)
 end
 
 function love.quit()

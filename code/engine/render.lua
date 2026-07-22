@@ -60,7 +60,9 @@ local Element = {
 
     reflective = false,
     render = true,
-    flip = false
+    flip = false,
+
+    scissor = nil
 }
 Element.__index = Element
 
@@ -78,7 +80,36 @@ function Element:setZIndex(value)
     Module._dirty = true
 end
 
+function Element:getHeight()
+    if self.type == "sprite" and self.drawable then
+        return self.drawable:getHeight() * self.scaleY
+    elseif self.type == "text" and self.text then
+        local font = self.font or love.graphics.getFont()
+        return font:getHeight() * self.scaleY
+    end
+    return 0
+end
+
+function Element:getWidth()
+    if self.type == "sprite" and self.drawable then
+        return self.drawable:getWidth() * self.scaleX
+    elseif self.type == "text" and self.text then
+        local font = self.font or love.graphics.getFont()
+        return font:getWidth(self.text) * self.scaleX
+    end
+    return 0
+end
+
 function Element:isPointInside(pointX, pointY)
+    if self.scissor then
+        if pointX < self.scissor.x
+        or pointX > self.scissor.x + self.scissor.width
+        or pointY < self.scissor.y
+        or pointY > self.scissor.y + self.scissor.height then
+            return false
+        end
+    end
+
     local width, height = 0, 0
 
     if self.type == "sprite" and self.drawable then
@@ -119,6 +150,16 @@ function Element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
 
     local color = self.color or Module:createColor()
     love.graphics.setColor(color.r, color.g, color.b, color.alpha)
+
+    -- Apply Scissor if defined on this element
+    if self.scissor then
+        local scissorX = self.scissor.x * windowScaleFactor + windowOffsetX
+        local scissorY = self.scissor.y * windowScaleFactor + windowOffsetY
+        local scissorWidth = self.scissor.width * windowScaleFactor
+        local scissorHeight = self.scissor.height * windowScaleFactor
+
+        love.graphics.setScissor(scissorX, scissorY, scissorWidth, scissorHeight)
+    end
 
     if self.type == "sprite" and self.drawable then
         local offsetX = self.drawable:getWidth() * self.anchorX
@@ -163,6 +204,12 @@ function Element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
         local drawY = y - font:getHeight(self.text) * scaleY * self.anchorY
         love.graphics.print(self.text, drawX, drawY, rotation, scaleX, scaleY)
     end
+
+    -- Clear/Restore global viewport scissor after drawing
+    if self.scissor then
+        local baseWindowWidth, baseWindowHeight = _G.RESOLUTION_WIDTH, _G.RESOLUTION_HEIGHT
+        love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
+    end
 end
 
 function Element:setRotation(rotation)
@@ -200,7 +247,9 @@ function Module:createElement(data)
         reflective = (data.reflective ~= nil) and data.reflective or false,
 
         render = (data.render ~= nil) and data.render or true,
-        flip = (data.flip ~= nil) and data.flip or false
+        flip = (data.flip ~= nil) and data.flip or false,
+
+        scissor = data.scissor or nil
     }, Element)
 
     self._elements[element.id] = element

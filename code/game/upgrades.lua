@@ -1,10 +1,14 @@
--- ~/code/game/box/upgrades.lua
+-- ~/code/game/upgrades.lua
 
 local SaveFilesModule = require("code.engine.saves.files")
 
 local UpgradeData = require("code.data.shop.upgrades")
 
 local Module = {}
+
+function Module:getAllUpgrades()
+    return UpgradeData
+end
 
 function Module:getStacks(id)
     return SaveFilesModule.loadedFile.upgrades[id] or 0

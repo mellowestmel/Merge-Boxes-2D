@@ -41,12 +41,20 @@ Playlist: https://www.youtube.com/playlist?list=PL4SfVAqmkT2WSjVqtZ7hU-KLh6ys-MN
   Link: https://freesound.org/people/BiORNADE/sounds/735803/
   License: As stated on Freesound
 
+- **ui/notallowed.wav**
+  Link: https://freesound.org/people/distillerystudio/sounds/327738/
+  License: As stated on Freesound
+
 - **merge/default.wav**
   Link: https://freesound.org/people/MLaudio/sounds/615100/
   License: As stated on Freesound
 
 - **merge/special.wav**
   Link: https://freesound.org/people/David819/sounds/668436/
+  License: As stated on Freesound
+
+- **shop/transaction.wav**
+  Link: https://freesound.org/people/Sabacky/sounds/766070/
   License: As stated on Freesound
 
 - **birb.wav**

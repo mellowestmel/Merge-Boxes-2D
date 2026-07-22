@@ -16,7 +16,9 @@ local BoxesObjectModule = require("code.game.box.object")
 local CONSTANTS = require("code.game.ui.constants")
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
+
 local UIButtonObjectModule = require("code.game.ui.objects.button")
+local UILayoutHelperModule = require("code.game.ui.helpers.layout")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
@@ -305,12 +307,40 @@ local function setupStepperControl(self, category, setting, rowY, decreaseSprite
     })
 end
 
+-- Wrapper
 local function setupNumericSettingControl(self, category, setting, rowY)
-    setupStepperControl(self, category, setting, rowY, CONSTANTS.NUMBER_DECREASE_BUTTON_PATH, CONSTANTS.NUMBER_INCREASE_BUTTON_PATH, adjustNumericSetting, formatPercent)
+    setupStepperControl(
+        self,
+
+        category,
+        setting,
+
+        rowY,
+
+        CONSTANTS.NUMBER_DECREASE_BUTTON_PATH,
+        CONSTANTS.NUMBER_INCREASE_BUTTON_PATH,
+
+        adjustNumericSetting,
+        formatPercent
+    )
 end
 
+-- Wrapper
 local function setupEnumSettingControl(self, category, setting, rowY)
-    setupStepperControl(self, category, setting, rowY, CONSTANTS.ENUM_DECREASE_BUTTON_PATH, CONSTANTS.ENUM_INCREASE_BUTTON_PATH, cycleEnumSetting, capitalizeFirstLetter)
+    setupStepperControl(
+        self,
+
+        category,
+        setting,
+
+        rowY,
+
+        CONSTANTS.ENUM_DECREASE_BUTTON_PATH,
+        CONSTANTS.ENUM_INCREASE_BUTTON_PATH,
+
+        cycleEnumSetting,
+        capitalizeFirstLetter
+    )
 end
 
 -- The control type is inferred from the setting's current Lua value
@@ -340,8 +370,11 @@ local function setupSettingNameLabels(self)
     if not categorySchema then return end
 
     for index, setting in ipairs(categorySchema.settings) do
-        -- stacks rows below the label's base y, in schema order
-        local rowY = (SceneData.settingNameLabel.y or 0) + (index - 1) * CONSTANTS.BUTTON_HORIZONTAL_GAP
+        local rowY = UILayoutHelperModule.getVerticalStackY(
+            SceneData.settingNameLabel.y or 0,
+            index,
+            CONSTANTS.BUTTON_HORIZONTAL_GAP
+        )
 
         local label = RenderModule:createElement(
             copyWithOverrides(SceneData.settingNameLabel, { y = rowY })

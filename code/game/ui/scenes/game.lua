@@ -1,6 +1,7 @@
 -- ~/code/game/ui/scenes/game.lua
 
 local RenderModule = require("code.engine.render")
+local SoundModule = require("code.engine.sound")
 
 local SaveFilesModule = require("code.engine.saves.files")
 
@@ -64,6 +65,15 @@ function Module:clean()
 
     ScreenFlashModule:stop()
     UISharedFunctions:cleanUpdates()
+end
+
+local function playNotAllowedSound()
+    local notAllowedSound = SoundModule:createSound({soundPath = "assets/sounds/ui/notallowed.wav"})
+
+    if notAllowedSound then
+        notAllowedSound:play()
+        notAllowedSound:remove()
+    end
 end
 
 local function setupBackground(self)
@@ -164,7 +174,7 @@ local function setupUpgradeShopButton(scene)
 
         mouseButton = 1,
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.UPGRADE_SHOP_UNLOCK_REQUIREMENT then return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.UPGRADE_SHOP_UNLOCK_REQUIREMENT then playNotAllowedSound() return end
 
             ScreenTransitionModule:transition({
                 callback = function()
@@ -190,7 +200,7 @@ local function setupBlackMarketButton(scene)
 
         mouseButton = 1,
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.BLACK_MARKET_UNLOCK_REQUIREMENT then return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.BLACK_MARKET_UNLOCK_REQUIREMENT then playNotAllowedSound() return end
 
             ScreenTransitionModule:transition({
                 callback = function()
@@ -216,7 +226,7 @@ local function setupSacrificeButton(scene)
 
         mouseButton = 1,
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SACRIFICE_UNLOCK_REQUIREMENT then return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SACRIFICE_UNLOCK_REQUIREMENT then playNotAllowedSound() return end
 
             ScreenTransitionModule:transition({
                 callback = function()

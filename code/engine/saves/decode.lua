@@ -123,6 +123,13 @@ function Module:decodeBoxes(section)
     return boxes
 end
 
+function Module:decodeVersion(section)
+    if not section then return end
+
+    local output = string.gsub(section, "version ", "")
+    return tonumber(output)
+end
+
 function Module:decodeSlot(section)
     if not section then return end
 
@@ -151,7 +158,7 @@ function Module:decode(file)
     local sections = seperateLines(file)
 
     local finalOutput = {
-        version = self:decodeSimple(sections[1]),
+        version = self:decodeVersion(sections[1]),
         slot = self:decodeSlot(sections[2]),
 
         currencies = self:decodeSimple(sections[3]),

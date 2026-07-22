@@ -3,20 +3,32 @@
 local RenderModule = require("code.engine.render")
 local SoundModule = require("code.engine.sound")
 
-local table = require("code.engine.helpers.table")
+local StringHelper = require("code.engine.helpers.string")
+local TableHelper = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
+local UpgradesModule = require("code.game.upgrades")
+
+local PurchaseUpgradesModule = require("code.game.shop.purchaseUpgrades")
 
 local BoxesObjectModule = require("code.game.box.object")
 
 local UISharedFunctions = require("code.game.ui.shared")
 local UIButtonObjectModule = require("code.game.ui.objects.button")
+local UIScrollingFrameObjectModule = require("code.game.ui.objects.scrollingFrame")
+
+local CONSTANTS = require("code.game.ui.constants")
 
 local SceneData = require("code.data.ui.scenes.upgradeShop")
+local LayoutHelper = require("code.game.ui.helpers.layout")
+
+local MOUSE_PRIMARY_CLICK = 1
+local TEXT_OFFSET_RATIO = 0.3
 
 local Module = {}
 Module._elements = {}
 Module._objects = {}
+Module._upgradeButtons = {}
 Module.name = "upgradeShop"
 
 function Module:clean()
@@ -24,12 +36,13 @@ function Module:clean()
         element:remove()
     end
 
-    for _, button in pairs(self._objects) do
-        button:remove()
+    for _, object in pairs(self._objects) do
+        object:remove()
     end
 
     self._elements = {}
     self._objects = {}
+    self._upgradeButtons = {}
 
     UISharedFunctions:cleanUpdates()
 end
@@ -44,16 +57,11 @@ local function setupTheBirbsWord(self)
     table.insert(self._elements, birb)
 
     local birbButton = UIButtonObjectModule:createButton({
-        elements = {
-            birb
-        },
-
+        elements = { birb },
         hitboxElement = birb,
-
-        mouseButton = 1,
+        mouseButton = MOUSE_PRIMARY_CLICK,
         onClick = function()
-            local birbSound = SoundModule:createSound({soundPath = "assets/sounds/birb.wav"})
-
+            local birbSound = SoundModule:createSound({ soundPath = "assets/sounds/birb.wav" })
             if birbSound then
                 birbSound:play()
                 birbSound:remove()
@@ -64,8 +72,165 @@ local function setupTheBirbsWord(self)
     table.insert(self._objects, birbButton)
 end
 
+local function getCreditUpgradeIds()
+    local creditUpgradeList = {}
+
+    for upgradeIdentifier, upgrade in pairs(UpgradesModule:getAllUpgrades()) do
+        if (upgrade.currency or "credits") == "credits" then
+            table.insert(creditUpgradeList, upgradeIdentifier)
+        end
+    end
+
+    table.sort(creditUpgradeList)
+    return creditUpgradeList
+end
+
+local function createStackIndicators(self, buttonConfig, maximumStacks, currentStacks)
+    local indicators = {}
+    local itemSpacing = CONSTANTS.MEDIUM_PADDING
+
+    local startPositionX = buttonConfig.x - (((maximumStacks - 1) * itemSpacing) / 2)
+
+    for stackIndex = 1, maximumStacks do
+        local indicator = RenderModule:createElement(SceneData.upgradeStackCounter)
+        indicator.x = LayoutHelper.getHorizontalStackX(startPositionX, stackIndex, itemSpacing)
+        indicator.y = buttonConfig.indicatorY
+        indicator.color = (stackIndex <= currentStacks) and self._yellowColor or self._darkColor
+
+        table.insert(self._elements, indicator)
+        table.insert(buttonConfig.children, indicator)
+        table.insert(indicators, indicator)
+    end
+
+    return indicators
+end
+
+local function createUpgradeButton(self, buttonConfig)
+    local upgrade = UpgradesModule:getUpgrade(buttonConfig.id)
+
+    -- Hitbox Background
+    local hitbox = RenderModule:createElement(SceneData.upgradeBuyHitbox)
+    hitbox.x, hitbox.y = buttonConfig.x, buttonConfig.y
+
+    table.insert(self._elements, hitbox)
+    table.insert(buttonConfig.children, hitbox)
+
+    local halfHeight = hitbox:getHeight() * TEXT_OFFSET_RATIO
+    buttonConfig.indicatorY = buttonConfig.y + halfHeight
+
+    -- Upgrade Name Label
+    local nameLabel = RenderModule:createElement(SceneData.upgradeName)
+    nameLabel.text = upgrade.name or buttonConfig.id
+    nameLabel.x, nameLabel.y = buttonConfig.x, buttonConfig.y - halfHeight
+
+    table.insert(self._elements, nameLabel)
+    table.insert(buttonConfig.children, nameLabel)
+
+    -- Upgrade Cost Label
+    local currentStacks = UpgradesModule:getStacks(buttonConfig.id)
+    local maximumStacks = upgrade.maxStacks or 1
+    local isMaxedOut = UpgradesModule:isMaxed(buttonConfig.id)
+
+    local upgradeCost = PurchaseUpgradesModule:getCost(buttonConfig.id)
+    local formattedCostText = isMaxedOut and "MAX" or string.format("%s Credits", StringHelper.formatNumber(upgradeCost))
+
+    local costLabel = RenderModule:createElement(SceneData.upgradeCost)
+    costLabel.text = formattedCostText
+    costLabel.x, costLabel.y = buttonConfig.x, buttonConfig.y
+
+    table.insert(self._elements, costLabel)
+    table.insert(buttonConfig.children, costLabel)
+
+    -- Stack Indicators
+    local indicators = createStackIndicators(self, buttonConfig, maximumStacks, currentStacks)
+
+    -- Button Hitbox Assembly
+    local buttonElements = { hitbox, nameLabel, costLabel }
+    for _, indicator in ipairs(indicators) do
+        table.insert(buttonElements, indicator)
+    end
+
+    local buyButton = UIButtonObjectModule:createButton({
+        elements = buttonElements,
+        hitboxElement = hitbox,
+        mouseButton = MOUSE_PRIMARY_CLICK,
+        onClick = function()
+            local success = PurchaseUpgradesModule:buy(buttonConfig.id)
+            local sound = SoundModule:createSound(
+                {
+                    soundPath = (
+                        success and
+                        "assets/sounds/shop/transaction.wav" or
+                        "assets/sounds/ui/notallowed.wav"
+                    )
+                }
+            )
+
+            if sound then
+                sound:play()
+                sound:remove()
+            end
+        end
+    })
+
+    table.insert(self._objects, buyButton)
+
+    table.insert(self._upgradeButtons, {
+        id = buttonConfig.id,
+        costLabel = costLabel,
+        indicators = indicators,
+        maxStacks = maximumStacks
+    })
+end
+
+local function setupUpgradesScrollingFrame(self)
+    self._yellowColor = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW)
+    self._darkColor = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK)
+
+    local frameTrack = RenderModule:createElement(SceneData.upgradesFrameBackground)
+    local scrollWheel = RenderModule:createElement(SceneData.upgradesFrameScrollWheel)
+
+    table.insert(self._elements, frameTrack)
+    table.insert(self._elements, scrollWheel)
+
+    local childElements = {}
+    local startPositionY = frameTrack.y - (frameTrack:getHeight() / 2) + CONSTANTS.LARGE_PADDING
+
+    for index, upgradeIdentifier in ipairs(getCreditUpgradeIds()) do
+        createUpgradeButton(self, {
+            id = upgradeIdentifier,
+            x = frameTrack.x,
+            y = LayoutHelper.getVerticalStackY(startPositionY, index, CONSTANTS.BUTTON_VERTICAL_GAP),
+            children = childElements
+        })
+    end
+
+    local scrollingFrame = UIScrollingFrameObjectModule:createScrollingFrame({
+        hitboxElement = frameTrack,
+        scrollTrackElement = frameTrack,
+        scrollBarElement = scrollWheel,
+
+        elements = childElements,
+        padding = CONSTANTS.LARGE_PADDING
+    })
+
+    table.insert(self._objects, scrollingFrame)
+end
+
 function Module:update(deltaTime)
     UISharedFunctions:update()
+
+    for _, upgradeButton in ipairs(self._upgradeButtons) do
+        local currentStacks = UpgradesModule:getStacks(upgradeButton.id)
+        local isMaxedOut = UpgradesModule:isMaxed(upgradeButton.id)
+
+        local upgradeCost = PurchaseUpgradesModule:getCost(upgradeButton.id)
+        upgradeButton.costLabel.text = isMaxedOut and "MAX" or string.format("%s Credits", StringHelper.formatNumber(upgradeCost))
+
+        for stackIndex, indicator in ipairs(upgradeButton.indicators) do
+            indicator.color = (stackIndex <= currentStacks) and self._yellowColor or self._darkColor
+        end
+    end
 end
 
 function Module:init()
@@ -84,6 +249,7 @@ function Module:init()
 
     setupTheBirbsWord(self)
     setupBackground(self)
+    setupUpgradesScrollingFrame(self)
 end
 
 return Module

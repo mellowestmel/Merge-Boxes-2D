@@ -67,6 +67,10 @@ function Module:encodeSimple(section)
 end
 
 
+function Module:encodeVersion(version)
+    return "version " .. version .. "\n"
+end
+
 function Module:encodeSlot(slot)
     return "slot " .. slot .. "\n"
 end
@@ -83,7 +87,7 @@ end
 
 function Module:encode(file)
     local finalOutput = addStringNewLine(
-        self:encodeSimple(file.version),
+        self:encodeVersion(file.version),
         self:encodeSlot(file.slot),
 
         self:encodeSimple(file.currencies),
