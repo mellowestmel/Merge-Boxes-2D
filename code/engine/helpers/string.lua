@@ -12,29 +12,33 @@ function Module.formatTime(seconds)
 end
 
 function Module.formatNumber(number)
-	local suffixes = {
-		"", "K", "M", "B", "T",
-		"Qa", "Qi", "Sx", "Sp", "Oc", "No",
-		"Dc", "Ud", "Dd", "Td", "Qad", "Qid",
-		"Sxd", "Spd", "Ocd", "Nod", "Vg",
-	}
+    local suffixes = {
+        "", "K", "M", "B", "T",
+        "Qa", "Qi", "Sx", "Sp", "Oc", "No",
+        "Dc", "Ud", "Dd", "Td", "Qad", "Qid",
+        "Sxd", "Spd", "Ocd", "Nod", "Vg",
+    }
 
-	local abs = math.abs(number)
+    local abs = math.abs(number)
 
-	if abs < 1000 then
-		return tostring(number)
-	end
+    if abs < 1000 then
+        return tostring(number)
+    end
 
-	local index = math.floor(math.log(abs, 1000))
+    local index = math.floor(math.log(abs, 1000))
 
-	if index < #suffixes then
-		local value = number / (1000 ^ index)
+    if index < #suffixes then
+        local value = number / (1000 ^ index)
 
-		return string.format("%.3f%s", value, suffixes[index + 1])
-			:gsub("0+([A-Za-z]+)$", "%1")
-	end
+        -- Changes made:
+        -- 1. Strips whole-number decimals completely (e.g. 50.00K -> 50K)
+        -- 2. Trims trailing zero on single decimals (e.g. 1.50M -> 1.5M)
+        return string.format("%.2f%s", value, suffixes[index + 1])
+            :gsub("%.00([A-Za-z]+)$", "%1")
+            :gsub("0([A-Za-z]+)$", "%1")
+    end
 
-	return string.format("%.3e", number)
+    return string.format("%.2e", number)
 end
 
 return Module
