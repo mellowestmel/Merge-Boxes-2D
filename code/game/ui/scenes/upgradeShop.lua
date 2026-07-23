@@ -17,7 +17,7 @@ local UIButtonObjectModule = require("code.game.ui.objects.button")
 local UIScrollingFrameObjectModule = require("code.game.ui.objects.scrollingFrame")
 local UILayoutHelperModule = require("code.game.ui.helpers.layout")
 
-local UI_LAYOUT = require("code.data.ui.layout")
+local UILayoutData = require("code.data.ui.layout")
 
 local CONSTANTS = require("code.game.ui.constants")
 local SHOP_CONSTANTS = require("code.game.shop.constants")
@@ -110,7 +110,7 @@ local function createUpgradeButton(self, buttonConfig)
     table.insert(self._elements, hitbox)
     table.insert(buttonConfig.children, hitbox)
 
-    local halfHeight = hitbox:getHeight() * UI_LAYOUT.UPGRADE_SHOP.TEXT_OFFSET_RATIO
+    local halfHeight = hitbox:getHeight() * UILayoutData.upgradeShop.textOffsetRatio
     buttonConfig.indicatorY = buttonConfig.y + halfHeight
 
     -- Upgrade Name Label

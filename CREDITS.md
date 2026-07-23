@@ -47,7 +47,15 @@ Playlist: https://www.youtube.com/playlist?list=PL4SfVAqmkT2WSjVqtZ7hU-KLh6ys-MN
   License: As stated on Freesound
 
 - **merge/default.wav**
+  Link: https://freesound.org/people/MLaudio/sounds/511485/
+  License: As stated on Freesound
+
+- **merge/midsize.wav**
   Link: https://freesound.org/people/MLaudio/sounds/615100/
+  License: As stated on Freesound
+
+- **merge/largesize.wav**
+  Link: https://freesound.org/people/MLaudio/sounds/615099/
   License: As stated on Freesound
 
 - **merge/special.wav**

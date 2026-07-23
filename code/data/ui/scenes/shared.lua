@@ -5,7 +5,7 @@ local RenderModule = require("code.engine.render")
 local BOX_CONSTANTS = require("code.game.box.constants")
 local CONSTANTS = require("code.game.ui.constants")
 
-local UI_LAYOUT = require("code.data.ui.layout")
+local UILayoutData = require("code.data.ui.layout")
 
 return {
     settingsButtonHitbox = {
@@ -13,13 +13,27 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SHARED.SETTINGS_BUTTON.X,
-        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
+        x = UILayoutData.shared.settingsButton.x,
+        y = UILayoutData.shared.settingsButton.y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+
+        zIndex = CONSTANTS.Z_UI_BUTTON,
+    },
+
+    discordButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttondiscord74x74.png",
+
+        type = "sprite",
+
+        x = UILayoutData.shared.discordButton.x,
+        y = UILayoutData.shared.discordButton.y,
+
+        scaleX = CONSTANTS.ICON_SMALL_SCALE,
+        scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -44,8 +58,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y + UILayoutData.game.spawnButtonRowOffset,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -57,8 +71,8 @@ return {
 
         type = "text",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y + UILayoutData.game.spawnButtonRowOffset,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
@@ -135,8 +149,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SHARED.SETTINGS_BUTTON.X - CONSTANTS.MASSIVE_PADDING,
-        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
+        x = UILayoutData.shared.settingsButton.x - CONSTANTS.MASSIVE_PADDING,
+        y = UILayoutData.shared.settingsButton.y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -152,8 +166,8 @@ return {
         anchorX = 0,
         anchorY = 1,
 
-        x = UI_LAYOUT.SHARED.DIALOGUE.PORTRAIT_X,
-        y = UI_LAYOUT.SHARED.DIALOGUE.PORTRAIT_Y,
+        x = UILayoutData.shared.dialogue.portraitX,
+        y = UILayoutData.shared.dialogue.portraitY,
 
         scaleX = CONSTANTS.SPRITE_LARGE_SCALE,
         scaleY = CONSTANTS.SPRITE_LARGE_SCALE,

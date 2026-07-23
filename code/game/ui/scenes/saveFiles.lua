@@ -302,7 +302,10 @@ function Module:update(deltaTime)
 end
 
 function Module:init()
+    UISharedFunctions:setupHighestTierBoxes(self)
     UISharedFunctions:setupSettingsButton(self)
+    UISharedFunctions:setupDiscordButton(self)
+
     MusicHandlerModule:playTrack("mainMenu")
 
     setupSaveFileBackgrounds(self)

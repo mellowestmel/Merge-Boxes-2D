@@ -3,7 +3,7 @@
 local RenderModule = require("code.engine.render")
 
 local CONSTANTS = require("code.game.ui.constants")
-local UI_LAYOUT = require("code.data.ui.layout")
+local UILayoutData = require("code.data.ui.layout")
 
 return {
     background = {
@@ -23,7 +23,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -36,7 +36,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -50,10 +50,10 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER,
+        y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider,
 
-        rotation = UI_LAYOUT.SAVE_FILES.TEMPLATE_ROTATION,
-        scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SCALE_X,
+        rotation = UILayoutData.saveFiles.templateRotation,
+        scaleX = UILayoutData.saveFiles.templateScaleX,
         scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
 
         color = RenderModule:createColor(
@@ -72,7 +72,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -86,10 +86,10 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.loadButtonOffset,
 
-        scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
-        scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
+        scaleX = UILayoutData.saveFiles.templateSmallScale,
+        scaleY = UILayoutData.saveFiles.templateSmallScale,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
 
@@ -102,10 +102,10 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.LOAD_BUTTON_OFFSET,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.loadButtonOffset,
 
-        scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
-        scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
+        scaleX = UILayoutData.saveFiles.templateSmallScale,
+        scaleY = UILayoutData.saveFiles.templateSmallScale,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -119,10 +119,10 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.resetButtonOffset,
 
-        scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
-        scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
+        scaleX = UILayoutData.saveFiles.templateSmallScale,
+        scaleY = UILayoutData.saveFiles.templateSmallScale,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -135,10 +135,10 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.RESET_BUTTON_OFFSET,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.resetButtonOffset,
 
-        scaleX = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
-        scaleY = UI_LAYOUT.SAVE_FILES.TEMPLATE_SMALL_SCALE,
+        scaleX = UILayoutData.saveFiles.templateSmallScale,
+        scaleY = UILayoutData.saveFiles.templateSmallScale,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -150,7 +150,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
+        y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider - CONSTANTS.LARGE_PADDING,
 
         scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
         scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
@@ -164,7 +164,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y / UI_LAYOUT.SAVE_FILES.Y_DIVIDER - CONSTANTS.LARGE_PADDING,
+        y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider - CONSTANTS.LARGE_PADDING,
 
         scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
         scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
@@ -178,7 +178,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + UI_LAYOUT.SAVE_FILES.HIGHEST_TIER_LABEL_OFFSET,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.highestTierLabelOffset,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_SMALL),
@@ -192,7 +192,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.SAVE_FILES.SLOT_OFFSET + UI_LAYOUT.SAVE_FILES.PLAYTIME_LABEL_OFFSET,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.playtimeLabelOffset,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_MEDIUM),

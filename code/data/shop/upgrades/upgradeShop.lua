@@ -12,7 +12,7 @@ local rawUpgrades = {
         maxStacks = 8,
 
         cost = function(stacks)
-            return 250 * (stacks + 1)^2
+            return 250 * (stacks + 1)^3
         end,
 
         effect = function(stacks)
@@ -26,7 +26,7 @@ local rawUpgrades = {
         name = "Spawn Tier",
         description = "Increase spawn tier by 1 per stack.",
 
-        maxStacks = 4,
+        maxStacks = 9,
 
         cost = function(stacks)
             return 2000 * (stacks + 1)^5
@@ -46,7 +46,7 @@ local rawUpgrades = {
         maxStacks = 1,
 
         cost = function()
-            return 15000
+            return 12000
         end,
 
         effect = function(stacks)
@@ -77,10 +77,10 @@ local rawUpgrades = {
         name = "Multi Spawn",
         description = "Spawn an extra box per stack.",
 
-        maxStacks = 3,
+        maxStacks = 5,
 
         cost = function(stacks)
-            return 15000 * (stacks + 1)^4
+            return 15000 * (stacks + 1)^4.5
         end,
 
         effect = function(stacks)

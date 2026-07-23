@@ -1,7 +1,7 @@
 -- ~/code/engine/render.lua
 
 local IdManagerModule = require("code.engine.idManager")
-local ShaderModule = require("code.engine.shaders")
+local ShaderModule = require("code.engine.shader")
 
 local math = require("code.engine.helpers.math")
 
@@ -337,34 +337,21 @@ function Module:drawAll()
     local accessibility = SettingsModule.loadedFile.accessibility
     local graphics = SettingsModule.loadedFile.graphics
 
-    local shader = ShaderModule:get("accessibility")
-
-    shader:send("contrast", graphics.contrast)
-    shader:send("gamma", graphics.gamma)
-
-    shader:send(
-        "enableColorblind",
-        accessibility.colorblindMode ~= "none"
-    )
+    ShaderModule:send("accessibility", "contrast", graphics.contrast)
+    ShaderModule:send("accessibility", "gamma", graphics.gamma)
+    ShaderModule:send("accessibility", "enableColorblind", accessibility.colorblindMode ~= "none")
 
     if accessibility.colorblindMode ~= "none" then
-        shader:send(
-            "colorMatrix",
-            ColorblindData[accessibility.colorblindMode]
-        )
+        ShaderModule:send("accessibility", "colorMatrix", ColorblindData[accessibility.colorblindMode])
     end
 
-    love.graphics.setShader(shader)
-
-    for _, element in pairs(self._sortedCache) do
-        if not element.render then goto continue end
-        element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
-
-        :: continue ::
-    end
-
-    love.graphics.setScissor()
-    love.graphics.setShader()
+    ShaderModule:with("accessibility", function()
+        for _, element in pairs(self._sortedCache) do
+            if element.render then
+                element:draw(windowScaleFactor, windowOffsetX, windowOffsetY)
+            end
+        end
+    end)
 end
 
 function Module:update()

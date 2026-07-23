@@ -68,8 +68,6 @@ local function loadBoxes(boxesData)
     end
 end
 
--- ~/code/engine/saves/files.lua
-
 function Module:loadFile(slot)
     slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
 
@@ -89,8 +87,14 @@ function Module:loadFile(slot)
 end
 
 function Module:deleteFile(slot)
+    print("Deleting slot:", slot)
+
     slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
+
+    print("After clamp:", slot)
+
     local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
+    print("Deleting file:", fileName)
 
     if love.filesystem.getInfo(fileName) then
         love.filesystem.remove(fileName)

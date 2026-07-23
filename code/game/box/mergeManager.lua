@@ -1,6 +1,6 @@
 -- ~/code/game/box/mergeManager.lua
 
-local QuadtreesModule = require("code.engine.quadtrees")
+local QuadtreeModule = require("code.engine.quadtree")
 local SoundModule = require("code.engine.sound")
 
 local SaveFilesModule = require("code.engine.saves.files")
@@ -199,7 +199,7 @@ function Module:checkMerges()
     local boxesArray = BoxesObjectModule:getSortedArray()
     local boxesCount = #boxesArray
 
-    local tree = QuadtreesModule:createQuadtree({
+    local tree = QuadtreeModule:createQuadtree({
         x = 0,
         y = 0,
         width = CONSTANTS.AREA_WIDTH,

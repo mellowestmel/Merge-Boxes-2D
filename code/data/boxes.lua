@@ -85,6 +85,8 @@ local rawBoxes = {
 
         mergeReward = 200,
 
+        mergeSoundData = {soundPath = "assets/sounds/merge/midsize.wav"},
+
         weight = 160,
         scale = 1.1,
         tier = 6,
@@ -97,6 +99,8 @@ local rawBoxes = {
         name = "Carlos",
 
         mergeReward = 400,
+
+        mergeSoundData = {soundPath = "assets/sounds/merge/midsize.wav"},
 
         weight = 200,
         scale = 1.2,
@@ -111,6 +115,8 @@ local rawBoxes = {
 
         mergeReward = 800,
 
+        mergeSoundData = {soundPath = "assets/sounds/merge/midsize.wav"},
+
         weight = 250,
         scale = 1.3,
         tier = 8,
@@ -123,6 +129,8 @@ local rawBoxes = {
         name = "Mark",
 
         mergeReward = 1500,
+
+        mergeSoundData = {soundPath = "assets/sounds/merge/midsize.wav"},
 
         weight = 320,
         scale = 1.4,
@@ -155,6 +163,8 @@ local rawBoxes = {
 
         mergeReward = 6000,
 
+        mergeSoundData = {soundPath = "assets/sounds/merge/largesize.wav"},
+
         weight = 500,
         scale = 1.6,
         tier = 11,
@@ -167,6 +177,8 @@ local rawBoxes = {
         name = "Gochged",
 
         mergeReward = 12000,
+
+        mergeSoundData = {soundPath = "assets/sounds/merge/largesize.wav"},
 
         weight = 650,
         scale = 1.7,
@@ -181,6 +193,8 @@ local rawBoxes = {
 
         mergeReward = 20000,
 
+        mergeSoundData = {soundPath = "assets/sounds/merge/largesize.wav"},
+
         weight = 850,
         scale = 1.8,
         tier = 13,
@@ -193,6 +207,8 @@ local rawBoxes = {
         name = "Unstable",
 
         mergeReward = 35000,
+
+        mergeSoundData = {soundPath = "assets/sounds/merge/largesize.wav"},
 
         reflectionPath = "assets/sprites/reflections/box14.png",
         reflective = true,

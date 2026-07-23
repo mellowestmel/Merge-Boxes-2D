@@ -3,7 +3,7 @@
 local RenderModule = require("code.engine.render")
 
 local CONSTANTS = require("code.game.ui.constants")
-local UI_LAYOUT = require("code.data.ui.layout")
+local UILayoutData = require("code.data.ui.layout")
 
 return {
     background = {
@@ -23,12 +23,12 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.MAIN_MENU.LOGO_PRIMARY_OFFSET_Y,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.mainMenu.logoPrimaryOffsetY,
 
-        scaleX = UI_LAYOUT.MAIN_MENU.LOGO_PRIMARY_SCALE,
-        scaleY = UI_LAYOUT.MAIN_MENU.LOGO_PRIMARY_SCALE,
+        scaleX = UILayoutData.mainMenu.logoPrimaryScale,
+        scaleY = UILayoutData.mainMenu.logoPrimaryScale,
 
-        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+        zIndex = CONSTANTS.Z_UI_BUTTON,
     },
 
     logo2 = {
@@ -37,26 +37,12 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y - UI_LAYOUT.MAIN_MENU.LOGO_SECONDARY_OFFSET_Y,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.mainMenu.logoSecondaryOffsetY,
 
-        scaleX = UI_LAYOUT.MAIN_MENU.LOGO_SECONDARY_SCALE,
-        scaleY = UI_LAYOUT.MAIN_MENU.LOGO_SECONDARY_SCALE,
+        scaleX = UILayoutData.mainMenu.logoSecondaryScale,
+        scaleY = UILayoutData.mainMenu.logoSecondaryScale,
 
         zIndex = CONSTANTS.Z_UI_TEXT,
-    },
-
-    discordButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttondiscord74x74.png",
-
-        type = "sprite",
-
-        x = UI_LAYOUT.SHARED.DISCORD_BUTTON.X,
-        y = UI_LAYOUT.SHARED.DISCORD_BUTTON.Y,
-
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
-
-        zIndex = CONSTANTS.Z_UI_BUTTON,
     },
 
     playGameButtonHitbox = {
@@ -65,7 +51,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y,
+        y = UILayoutData.mainMenu.startButton.y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
 
@@ -78,7 +64,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y,
+        y = UILayoutData.mainMenu.startButton.y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
@@ -95,7 +81,7 @@ return {
         type = "sprite",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -108,7 +94,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.MAIN_MENU.START_BUTTON.Y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(

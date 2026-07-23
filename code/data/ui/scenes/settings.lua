@@ -3,7 +3,7 @@
 local RenderModule = require("code.engine.render")
 
 local CONSTANTS = require("code.game.ui.constants")
-local UI_LAYOUT = require("code.data.ui.layout")
+local UILayoutData = require("code.data.ui.layout")
 
 return {
     background = {
@@ -22,8 +22,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.SHARED.SETTINGS_BUTTON.X,
-        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
+        x = UILayoutData.shared.settingsButton.x,
+        y = UILayoutData.shared.settingsButton.y,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -37,7 +37,7 @@ return {
         type = "text",
 
         x = CONSTANTS.CENTER_X,
-        y = UI_LAYOUT.SETTINGS.CATEGORY_ROW_Y,
+        y = UILayoutData.settings.categoryRowY,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
 
@@ -52,8 +52,8 @@ return {
     settingNameLabel = {
         type = "text",
 
-        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_NAME_LABEL_OFFSET_X,
-        y = UI_LAYOUT.SHARED.SETTINGS_BUTTON.Y,
+        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingNameLabelOffsetX,
+        y = UILayoutData.shared.settingsButton.y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
 
@@ -72,7 +72,7 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_TOGGLE_OFFSET_X,
+        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingToggleOffsetX,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -87,7 +87,7 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_DECREASE_OFFSET_X,
+        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingDecreaseOffsetX,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -102,7 +102,7 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_INCREASE_OFFSET_X,
+        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingIncreaseOffsetX,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -115,7 +115,7 @@ return {
     settingValueLabel = {
         type = "text",
 
-        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.SETTING_VALUE_LABEL_OFFSET_X,
+        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingValueLabelOffsetX,
 
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
@@ -130,8 +130,8 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X - UI_LAYOUT.SETTINGS.CATEGORY_SCROLL_OFFSET_X,
-        y = UI_LAYOUT.SETTINGS.CATEGORY_ROW_Y,
+        x = CONSTANTS.CENTER_X - UILayoutData.settings.categoryScrollOffsetX,
+        y = UILayoutData.settings.categoryRowY,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
@@ -146,8 +146,8 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + UI_LAYOUT.SETTINGS.CATEGORY_SCROLL_OFFSET_X,
-        y = UI_LAYOUT.SETTINGS.CATEGORY_ROW_Y,
+        x = CONSTANTS.CENTER_X + UILayoutData.settings.categoryScrollOffsetX,
+        y = UILayoutData.settings.categoryRowY,
 
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,

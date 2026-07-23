@@ -4,6 +4,8 @@ local RenderModule = require("code.engine.render")
 
 local SaveFilesModule = require("code.engine.saves.files")
 
+local SAVES_CONSTANTS = require("code.engine.saves.constants")
+
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
@@ -16,10 +18,58 @@ local UIButtonObjectModule = require("code.game.ui.objects.button")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
+local UILayoutData = require("code.data.ui.layout")
+local CONSTANTS = require("code.game.ui.constants")
+
 local SharedData = require("code.data.ui.scenes.shared")
 
 local Module = {}
 Module._updateFunctions = {}
+
+local function getHighestTierAcrossSaves()
+    local highestTier = 0
+
+    for slot = 1, SAVES_CONSTANTS.MAX_SAVE_SLOTS do
+        local save = SaveFilesModule:readFile(slot)
+
+        if save and save.stats then
+            local tier = save.stats.highestBoxTier or 0
+
+            if tier > highestTier then
+                highestTier = tier
+            end
+        end
+    end
+
+    return highestTier
+end
+
+function Module:setupHighestTierBoxes(scene)
+    local highestTier = getHighestTierAcrossSaves()
+
+    if highestTier <= 0 then
+        return
+    end
+
+    local boxes = UILayoutData.shared.backgroundBoxes
+    for tier, data in ipairs(boxes) do
+        if tier and tier <= highestTier then
+            local element = RenderModule:createElement({
+                spritePath = UILayoutData.shared.backgroundBoxesPathPrefix .. "box" .. tier .. ".png",
+
+                anchorX = 0,
+                anchorY = 0,
+
+                x = data.x,
+                y = data.y,
+
+                zIndex = CONSTANTS.Z_WORLD + tier
+            })
+
+            table.insert(scene._elements, element)
+        end
+    end
+end
 
 function Module:setupSettingsButton(scene)
     if not scene then return end
@@ -43,6 +93,26 @@ function Module:setupSettingsButton(scene)
 
     table.insert(scene._elements, settingsButtonHitbox)
     table.insert(scene._objects, settingsButton)
+end
+
+function Module:setupDiscordButton(scene)
+    local discordButtonHitbox = RenderModule:createElement(SharedData.discordButtonHitbox)
+    table.insert(scene._elements, discordButtonHitbox)
+
+    local discordButton = UIButtonObjectModule:createButton({
+        elements = {
+            discordButtonHitbox
+        },
+        hitboxElement = discordButtonHitbox,
+
+        mouseButton = 1,
+
+        onClick = function()
+            love.system.openURL("https://www.discord.gg/pQShPG8XPf")
+        end
+    })
+
+    table.insert(scene._objects, discordButton)
 end
 
 function Module:setupSidebarBackground(scene)

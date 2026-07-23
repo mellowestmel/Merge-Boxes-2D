@@ -3,92 +3,121 @@
 local BOX_CONSTANTS = require("code.game.box.constants")
 
 return {
-    MAIN_MENU = {
-        START_BUTTON = {
-            Y = 375,
+    mainMenu = {
+        startButton = {
+            y = 375,
         },
 
-        LOGO_PRIMARY_OFFSET_Y = 225,
-        LOGO_SECONDARY_OFFSET_Y = 100,
+        logoPrimaryOffsetY = 225,
+        logoSecondaryOffsetY = 100,
 
-        LOGO_PRIMARY_SCALE = 0.5,
-        LOGO_SECONDARY_SCALE = 0.35,
+        logoPrimaryScale = 0.5,
+        logoSecondaryScale = 0.35,
     },
 
-    SHARED = {
-        SETTINGS_BUTTON = {
-            X = _G.RESOLUTION_WIDTH - 35,
-            Y = 35
+    shared = {
+        settingsButton = {
+            x = _G.RESOLUTION_WIDTH - 35,
+            y = 35
         },
 
-        DISCORD_BUTTON = {
-            X = _G.RESOLUTION_WIDTH - 35,
-            Y = _G.RESOLUTION_HEIGHT - 35
+        discordButton = {
+            x = _G.RESOLUTION_WIDTH - 35,
+            y = _G.RESOLUTION_HEIGHT - 35
         },
 
-        BACK_BUTTON_OFFSET = 50,
+        backButtonOffset = 50,
 
-        DIALOGUE = {
-            PORTRAIT_X = 400,
-            PORTRAIT_Y = 425,
+        dialogue = {
+            portraitX = 400,
+            portraitY = 425,
+        },
+
+        backgroundBoxesPathPrefix = "assets/sprites/ui/background_boxes/",
+        backgroundBoxes = {
+            { x = 372, y = 416 },
+            { x = 307, y = 431 },
+            { x = 226, y = 427 },
+            { x = 136, y = 427 },
+            { x = 28, y = 427 },
+            { x = 242, y = 323 },
+            { x = 427, y = 339 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 48, y = 112 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
+            { x = 0, y = 0 },
         }
     },
 
-    SETTINGS = {
-        CATEGORY_ROW_Y = 500,
-        CATEGORY_SCROLL_OFFSET_X = 125,
+    settings = {
+        categoryRowY = 500,
+        categoryScrollOffsetX = 125,
 
-        SETTING_NAME_LABEL_OFFSET_X = -225,
+        settingNameLabelOffsetX = -225,
 
-        SETTING_TOGGLE_OFFSET_X = 200,
+        settingToggleOffsetX = 200,
 
-        SETTING_DECREASE_OFFSET_X = 100,
-        SETTING_INCREASE_OFFSET_X = 300,
+        settingDecreaseOffsetX = 100,
+        settingIncreaseOffsetX = 300,
 
-        SETTING_VALUE_LABEL_OFFSET_X = 200,
+        settingValueLabelOffsetX = 200,
     },
 
-    GAME = {
-        SPAWN_BUTTON = {
-            X = BOX_CONSTANTS.AREA_WIDTH + (_G.RESOLUTION_WIDTH - BOX_CONSTANTS.AREA_WIDTH) / 2,
-            Y = 475,
+    game = {
+        spawnButton = {
+            x = BOX_CONSTANTS.AREA_WIDTH + (_G.RESOLUTION_WIDTH - BOX_CONSTANTS.AREA_WIDTH) / 2,
+            y = 475,
         },
 
-        SPAWN_BUTTON_ROW_OFFSET = 65,
+        spawnButtonRowOffset = 65,
 
-        AUTO_SPAWN_BUTTON_HEIGHT_SCALE = 0.6,
-        AUTO_SPAWN_LABEL_SCALE = 0.75,
+        autoSpawnButtonHeightScale = 0.6,
+        autoSpawnLabelScale = 0.75,
     },
 
-    SAVE_FILES = {
-        SLOT_OFFSET = 325,
-        Y_DIVIDER = 1.6,
-        LOAD_BUTTON_OFFSET = 60,
-        RESET_BUTTON_OFFSET = 10,
-        TEMPLATE_ROTATION = math.rad(90),
-        TEMPLATE_SCALE_X = 1.5,
-        TEMPLATE_SMALL_SCALE = 0.55,
+    saveFiles = {
+        slotOffset = 325,
+        yDivider = 1.6,
+        loadButtonOffset = 60,
+        resetButtonOffset = 10,
+        templateRotation = math.rad(90),
+        templateScaleX = 1.5,
+        templateSmallScale = 0.55,
 
-        HIGHEST_TIER_LABEL_OFFSET = 40,
-        PLAYTIME_LABEL_OFFSET = 65,
+        highestTierLabelOffset = 40,
+        playtimeLabelOffset = 65,
     },
 
-    UPGRADE_SHOP = {
-        BIRB = {
-            X = 230,
-            Y = 125,
+    upgradeShop = {
+        birb = {
+            x = 230,
+            y = 125,
         },
 
-        BACKGROUND_FRAME = {
-            SCALE_X = 0.9,
-            SCALE_Y = 0.6,
-            OFFSET_Y = -225,
+        backgroundFrame = {
+            scaleX = 0.9,
+            scaleY = 0.6,
+            offsetY = -225,
         },
 
-        SCROLL_WHEEL = {
-            SCALE_X = 0.1,
+        scrollWheel = {
+            scaleX = 0.1,
         },
 
-        TEXT_OFFSET_RATIO = 0.3
+        textOffsetRatio = 0.3
     },
 }

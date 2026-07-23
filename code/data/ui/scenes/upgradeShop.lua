@@ -3,7 +3,7 @@
 local RenderModule = require("code.engine.render")
 
 local CONSTANTS = require("code.game.ui.constants")
-local UI_LAYOUT = require("code.data.ui.layout")
+local UILayoutData = require("code.data.ui.layout")
 
 return {
     background = {
@@ -22,11 +22,11 @@ return {
 
         type = "sprite",
 
-        scaleX = UI_LAYOUT.UPGRADE_SHOP.BACKGROUND_FRAME.SCALE_X,
-        scaleY = UI_LAYOUT.UPGRADE_SHOP.BACKGROUND_FRAME.SCALE_Y,
+        scaleX = UILayoutData.upgradeShop.backgroundFrame.scaleX,
+        scaleY = UILayoutData.upgradeShop.backgroundFrame.scaleY,
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.UPGRADE_SHOP.BACKGROUND_FRAME.OFFSET_Y,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y + UILayoutData.upgradeShop.backgroundFrame.offsetY,
 
         color = RenderModule:createColorFromTable(CONSTANTS.INVISIBLE_COLOR),
 
@@ -38,7 +38,7 @@ return {
 
         type = "sprite",
 
-        scaleX = UI_LAYOUT.UPGRADE_SHOP.SCROLL_WHEEL.SCALE_X,
+        scaleX = UILayoutData.upgradeShop.scrollWheel.scaleX,
 
         x = CONSTANTS.CENTER_X,
         y = CONSTANTS.CENTER_Y,
@@ -53,7 +53,7 @@ return {
 
         type = "sprite",
 
-        scaleX = .9,
+        scaleX = 0.9,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
 
@@ -99,8 +99,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.UPGRADE_SHOP.BIRB.X,
-        y = UI_LAYOUT.UPGRADE_SHOP.BIRB.Y,
+        x = UILayoutData.upgradeShop.birb.x,
+        y = UILayoutData.upgradeShop.birb.y,
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     }

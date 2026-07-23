@@ -3,7 +3,7 @@
 local RenderModule = require("code.engine.render")
 
 local CONSTANTS = require("code.game.ui.constants")
-local UI_LAYOUT = require("code.data.ui.layout")
+local UILayoutData = require("code.data.ui.layout")
 
 return {
     spawnButtonHitbox = {
@@ -11,8 +11,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
 
@@ -24,8 +24,8 @@ return {
 
         type = "text",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -38,10 +38,10 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y - UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y - UILayoutData.game.spawnButtonRowOffset,
 
-        scaleY = UI_LAYOUT.GAME.AUTO_SPAWN_BUTTON_HEIGHT_SCALE,
+        scaleY = UILayoutData.game.autoSpawnButtonHeightScale,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
 
@@ -53,11 +53,11 @@ return {
 
         type = "text",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y - UI_LAYOUT.GAME.SPAWN_BUTTON_ROW_OFFSET,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y - UILayoutData.game.spawnButtonRowOffset,
 
-        scaleX = UI_LAYOUT.GAME.AUTO_SPAWN_LABEL_SCALE,
-        scaleY = UI_LAYOUT.GAME.AUTO_SPAWN_LABEL_SCALE,
+        scaleX = UILayoutData.game.autoSpawnLabelScale,
+        scaleY = UILayoutData.game.autoSpawnLabelScale,
 
         color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
@@ -81,8 +81,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X - CONSTANTS.BUTTON_HORIZONTAL_GAP,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        x = UILayoutData.game.spawnButton.x - CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        y = UILayoutData.game.spawnButton.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
@@ -97,8 +97,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
@@ -113,8 +113,8 @@ return {
 
         type = "sprite",
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X + CONSTANTS.BUTTON_HORIZONTAL_GAP,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        x = UILayoutData.game.spawnButton.x + CONSTANTS.BUTTON_HORIZONTAL_GAP,
+        y = UILayoutData.game.spawnButton.y + CONSTANTS.BUTTON_HORIZONTAL_GAP,
 
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,

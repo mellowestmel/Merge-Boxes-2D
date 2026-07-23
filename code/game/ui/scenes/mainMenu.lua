@@ -109,26 +109,6 @@ local function setupQuitButton(self)
     table.insert(self._objects, quitButton)
 end
 
-local function setupDiscordButton(self)
-    local discordButtonHitbox = RenderModule:createElement(SceneData.discordButtonHitbox)
-    table.insert(self._elements, discordButtonHitbox)
-
-    local discordButton = UIButtonObjectModule:createButton({
-        elements = {
-            discordButtonHitbox
-        },
-
-        hitboxElement = discordButtonHitbox,
-
-        mouseButton = 1,
-        onClick = function()
-            love.system.openURL("https://www.discord.gg/pQShPG8XPf")
-        end
-    })
-
-    table.insert(self._objects, discordButton)
-end
-
 function Module:update()
     local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
     if not animationsEnabled then return end
@@ -145,11 +125,13 @@ function Module:update()
 end
 
 function Module:init()
+    UISharedFunctions:setupHighestTierBoxes(self)
     UISharedFunctions:setupSettingsButton(self)
+    UISharedFunctions:setupDiscordButton(self)
+
     MusicHandlerModule:playTrack("mainMenu")
 
     setupPlayGameButton(self)
-    setupDiscordButton(self)
     setupQuitButton(self)
     setupBackground(self)
     setupLogo(self)
