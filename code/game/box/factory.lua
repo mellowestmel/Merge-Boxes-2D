@@ -2,7 +2,7 @@
 
 local SaveFilesModule = require("code.engine.saves.files")
 
-local UpgradeHandlerModule = require("code.game.upgradeHandler")
+local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
 local math = require("code.engine.helpers.math")
 

@@ -1,8 +1,22 @@
 -- ~/code/game/shop/constants.lua
 
 return {
-    UPGRADE_SHOP_UNLOCK_REQUIREMENT = 5,
-    BLACK_MARKET_UNLOCK_REQUIREMENT = 10,
-    SACRIFICE_UNLOCK_REQUIREMENT = 15,
-    CATNIP_SHOP_UNLOCK_REQUIREMENT = 25
+    SHOPS = {
+        UPGRADE_SHOP = {
+            UNLOCK_REQUIREMENT = 5,
+            ID = "upgradeShop"
+        },
+        BLACK_MARKET = {
+            UNLOCK_REQUIREMENT = 10,
+            ID = "blackMarket"
+        },
+        SACRIFICIAL_GROUNDS = {
+            UNLOCK_REQUIREMENT = 15,
+            ID = "sacrificialGrounds"
+        },
+        CATNIP_SHOP = {
+            UNLOCK_REQUIREMENT = 25,
+            ID = "catnipShop"
+        }
+    }
 }

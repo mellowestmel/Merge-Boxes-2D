@@ -19,7 +19,7 @@ local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
 
 local UIButtonObjectModule = require("code.game.ui.objects.button")
-local LayoutHelper = require("code.game.ui.helpers.layout")
+local UILayoutHelperModule = require("code.game.ui.helpers.layout")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
@@ -202,7 +202,7 @@ local function setupSaveFileBackgrounds(self)
     local totalWidth = (maxSlots * buttonWidth) + (maxSlots - 1)
     local startX = (_G.RESOLUTION_WIDTH - totalWidth) / 2 + (buttonWidth / 2)
 
-    LayoutHelper.stackHorizontally(slotBackgrounds, startX, buttonWidth + 1)
+    UILayoutHelperModule.stackHorizontally(slotBackgrounds, startX, buttonWidth + 1)
 
     for index = 1, maxSlots do
         local save = saves[index]

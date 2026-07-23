@@ -88,5 +88,7 @@ return {
         SCROLL_WHEEL = {
             SCALE_X = 0.1,
         },
+
+        TEXT_OFFSET_RATIO = 0.3
     },
 }

@@ -1,13 +1,16 @@
--- ~/code/game/upgradeHandler.lua
+-- ~/code/game/shop/upgrades/handler.lua
 
 local SaveFilesModule = require("code.engine.saves.files")
-
-local UpgradeData = require("code.data.shop.upgrades")
+local UpgradesData = require("code.data.shop.upgrades")
 
 local Module = {}
 
 function Module:getAllUpgrades()
-    return UpgradeData
+    return UpgradesData.all
+end
+
+function Module:getUpgradesByShop(shopId)
+    return UpgradesData.byShop[shopId] or {}
 end
 
 function Module:getStacks(id)
@@ -15,10 +18,13 @@ function Module:getStacks(id)
 end
 
 function Module:getUpgrade(id)
-    return UpgradeData[id]
+    return UpgradesData.all[id]
 end
 
 function Module:getEffect(id)
+    for index, key in pairs(UpgradesData.all) do
+        print(index, key)
+    end
     local upgrade = self:getUpgrade(id)
 
     return upgrade.effect(self:getStacks(id))

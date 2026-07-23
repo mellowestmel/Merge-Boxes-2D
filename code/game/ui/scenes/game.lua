@@ -9,7 +9,7 @@ local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
-local UpgradeHandlerModule = require("code.game.upgradeHandler")
+local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
 local BoxesObjectModule = require("code.game.box.object")
 local BoxFactoryModule = require("code.game.box.factory")
@@ -135,13 +135,18 @@ local function setupSpawnButton(self)
 end
 
 local function setupAutoSpawnButton(self)
-    autoSpawnEnabled = false
-
     local autoSpawnButtonHitbox = RenderModule:createElement(SceneData.autoSpawnButtonHitbox)
     local autoSpawnButtonLabel = RenderModule:createElement(SceneData.autoSpawnButtonLabel)
 
     table.insert(self._elements, autoSpawnButtonHitbox)
     table.insert(self._elements, autoSpawnButtonLabel)
+
+    local function set()
+        autoSpawnButtonLabel.text = "Auto Spawn (" .. (autoSpawnEnabled and "ON" or "OFF") .. ")"
+        autoSpawnButtonHitbox.color = RenderModule:createColorFromTable((autoSpawnEnabled and CONSTANTS.COLOR_GREEN or CONSTANTS.COLOR_RED))
+    end
+
+    set()
 
     local autoSpawnButton = UIButtonObjectModule:createButton({
         elements = {
@@ -154,9 +159,7 @@ local function setupAutoSpawnButton(self)
         mouseButton = 1,
         onClick = function()
             autoSpawnEnabled = not autoSpawnEnabled
-
-            autoSpawnButtonLabel.text = "Auto Spawn (" .. (autoSpawnEnabled and "ON" or "OFF") .. ")"
-            autoSpawnButtonHitbox.color = RenderModule:createColorFromTable((autoSpawnEnabled and CONSTANTS.COLOR_GREEN or CONSTANTS.COLOR_RED))
+            set()
         end
     })
 
@@ -176,7 +179,7 @@ local function setupUpgradeShopButton(scene)
 
         mouseButton = 1,
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.UPGRADE_SHOP_UNLOCK_REQUIREMENT then playNotAllowedSound() return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT then playNotAllowedSound() return end
 
             ScreenTransitionModule:transition({
                 callback = function()
@@ -202,7 +205,7 @@ local function setupBlackMarketButton(scene)
 
         mouseButton = 1,
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.BLACK_MARKET_UNLOCK_REQUIREMENT then playNotAllowedSound() return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT then playNotAllowedSound() return end
 
             ScreenTransitionModule:transition({
                 callback = function()
@@ -228,7 +231,7 @@ local function setupSacrificeButton(scene)
 
         mouseButton = 1,
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SACRIFICE_UNLOCK_REQUIREMENT then playNotAllowedSound() return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT then playNotAllowedSound() return end
 
             ScreenTransitionModule:transition({
                 callback = function()
@@ -257,19 +260,19 @@ function Module:update()
 
         upgradeShopButtonHitbox.drawable = lockedImageLogic(
             SaveFilesModule.loadedFile.stats.highestBoxTier,
-            SHOP_CONSTANTS.UPGRADE_SHOP_UNLOCK_REQUIREMENT,
+            SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT,
             SceneData.upgradeShopButtonHitbox.spritePath
         )
 
         blackMarketButtonHitbox.drawable = lockedImageLogic(
             SaveFilesModule.loadedFile.stats.highestBoxTier,
-            SHOP_CONSTANTS.BLACK_MARKET_UNLOCK_REQUIREMENT,
+            SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT,
             SceneData.blackMarketButtonHitbox.spritePath
         )
 
         sacrificeButtonHitbox.drawable = lockedImageLogic(
             SaveFilesModule.loadedFile.stats.highestBoxTier,
-            SHOP_CONSTANTS.SACRIFICE_UNLOCK_REQUIREMENT,
+            SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT,
             SceneData.sacrificeButtonHitbox.spritePath
         )
 

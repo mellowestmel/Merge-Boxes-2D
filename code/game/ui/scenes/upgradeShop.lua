@@ -3,27 +3,27 @@
 local RenderModule = require("code.engine.render")
 local SoundModule = require("code.engine.sound")
 
-local StringHelper = require("code.engine.helpers.string")
-local TableHelper = require("code.engine.helpers.table")
+local string = require("code.engine.helpers.string")
 
 local MusicHandlerModule = require("code.game.musicHandler")
-local UpgradeHandlerModule = require("code.game.upgradeHandler")
+local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
-local PurchaseUpgradeHandlerModule = require("code.game.shop.purchaseUpgrades")
+local PurchaseUpgradeHandlerModule = require("code.game.shop.upgrade.purchase")
 
 local BoxesObjectModule = require("code.game.box.object")
 
 local UISharedFunctions = require("code.game.ui.shared")
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 local UIScrollingFrameObjectModule = require("code.game.ui.objects.scrollingFrame")
+local UILayoutHelperModule = require("code.game.ui.helpers.layout")
+
+local UI_LAYOUT = require("code.data.ui.layout")
 
 local CONSTANTS = require("code.game.ui.constants")
+local SHOP_CONSTANTS = require("code.game.shop.constants")
 
 local SceneData = require("code.data.ui.scenes.upgradeShop")
-local LayoutHelper = require("code.game.ui.helpers.layout")
-
-local MOUSE_PRIMARY_CLICK = 1
-local TEXT_OFFSET_RATIO = 0.3
+local ShopID = SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.ID
 
 local Module = {}
 Module._elements = {}
@@ -58,8 +58,10 @@ local function setupTheBirbsWord(self)
 
     local birbButton = UIButtonObjectModule:createButton({
         elements = { birb },
+
         hitboxElement = birb,
-        mouseButton = MOUSE_PRIMARY_CLICK,
+        mouseButton = 1,
+
         onClick = function()
             local birbSound = SoundModule:createSound({ soundPath = "assets/sounds/birb.wav" })
             if birbSound then
@@ -72,17 +74,8 @@ local function setupTheBirbsWord(self)
     table.insert(self._objects, birbButton)
 end
 
-local function getCreditUpgradeIds()
-    local creditUpgradeList = {}
-
-    for upgradeIdentifier, upgrade in pairs(UpgradeHandlerModule:getAllUpgrades()) do
-        if (upgrade.currency or "credits") == "credits" then
-            table.insert(creditUpgradeList, upgradeIdentifier)
-        end
-    end
-
-    table.sort(creditUpgradeList)
-    return creditUpgradeList
+local function getUpgrades()
+    return UpgradeHandlerModule:getUpgradesByShop(SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.ID)
 end
 
 local function createStackIndicators(self, buttonConfig, maximumStacks, currentStacks)
@@ -93,8 +86,10 @@ local function createStackIndicators(self, buttonConfig, maximumStacks, currentS
 
     for stackIndex = 1, maximumStacks do
         local indicator = RenderModule:createElement(SceneData.upgradeStackCounter)
-        indicator.x = LayoutHelper.getHorizontalStackX(startPositionX, stackIndex, itemSpacing)
+
+        indicator.x = UILayoutHelperModule.getHorizontalStackX(startPositionX, stackIndex, itemSpacing)
         indicator.y = buttonConfig.indicatorY
+
         indicator.color = (stackIndex <= currentStacks) and self._yellowColor or self._darkColor
 
         table.insert(self._elements, indicator)
@@ -115,7 +110,7 @@ local function createUpgradeButton(self, buttonConfig)
     table.insert(self._elements, hitbox)
     table.insert(buttonConfig.children, hitbox)
 
-    local halfHeight = hitbox:getHeight() * TEXT_OFFSET_RATIO
+    local halfHeight = hitbox:getHeight() * UI_LAYOUT.UPGRADE_SHOP.TEXT_OFFSET_RATIO
     buttonConfig.indicatorY = buttonConfig.y + halfHeight
 
     -- Upgrade Name Label
@@ -132,7 +127,7 @@ local function createUpgradeButton(self, buttonConfig)
     local isMaxedOut = UpgradeHandlerModule:isMaxed(buttonConfig.id)
 
     local upgradeCost = PurchaseUpgradeHandlerModule:getCost(buttonConfig.id)
-    local formattedCostText = isMaxedOut and "MAX" or string.format("%s Credits", StringHelper.formatNumber(upgradeCost))
+    local formattedCostText = isMaxedOut and "MAX" or string.format("%s Credits", string.formatNumber(upgradeCost))
 
     local costLabel = RenderModule:createElement(SceneData.upgradeCost)
     costLabel.text = formattedCostText
@@ -152,10 +147,12 @@ local function createUpgradeButton(self, buttonConfig)
 
     local buyButton = UIButtonObjectModule:createButton({
         elements = buttonElements,
+
         hitboxElement = hitbox,
-        mouseButton = MOUSE_PRIMARY_CLICK,
+        mouseButton = 1,
+
         onClick = function()
-            local success = PurchaseUpgradeHandlerModule:buy(buttonConfig.id)
+            local success = PurchaseUpgradeHandlerModule:buy(buttonConfig.id, ShopID)
             local sound = SoundModule:createSound(
                 {
                     soundPath = (
@@ -196,11 +193,13 @@ local function setupUpgradesScrollingFrame(self)
     local childElements = {}
     local startPositionY = frameTrack.y - (frameTrack:getHeight() / 2) + CONSTANTS.LARGE_PADDING
 
-    for index, upgradeIdentifier in ipairs(getCreditUpgradeIds()) do
+    for index, upgradeId in ipairs(getUpgrades()) do
         createUpgradeButton(self, {
-            id = upgradeIdentifier,
+            id = upgradeId,
+
             x = frameTrack.x,
-            y = LayoutHelper.getVerticalStackY(startPositionY, index, CONSTANTS.BUTTON_VERTICAL_GAP),
+            y = UILayoutHelperModule.getVerticalStackY(startPositionY, index, CONSTANTS.BUTTON_VERTICAL_GAP),
+
             children = childElements
         })
     end
@@ -225,7 +224,7 @@ function Module:update(deltaTime)
         local isMaxedOut = UpgradeHandlerModule:isMaxed(upgradeButton.id)
 
         local upgradeCost = PurchaseUpgradeHandlerModule:getCost(upgradeButton.id)
-        upgradeButton.costLabel.text = isMaxedOut and "MAX" or string.format("%s Credits", StringHelper.formatNumber(upgradeCost))
+        upgradeButton.costLabel.text = isMaxedOut and "MAX" or string.format("%s Credits", string.formatNumber(upgradeCost))
 
         for stackIndex, indicator in ipairs(upgradeButton.indicators) do
             indicator.color = (stackIndex <= currentStacks) and self._yellowColor or self._darkColor

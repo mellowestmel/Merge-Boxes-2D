@@ -122,7 +122,7 @@ function Module:setupCurrencyLabels(scene)
         local highestBoxTier = SaveFilesModule.loadedFile.stats.highestBoxTier
 
         holyCatnipLabel.text = string.formatNumber(holyCatnip) .. " Holy Catnip"
-        holyCatnipLabel.render = (highestBoxTier >= SHOP_CONSTANTS.CATNIP_SHOP_UNLOCK_REQUIREMENT)
+        holyCatnipLabel.render = (highestBoxTier >= SHOP_CONSTANTS.SHOPS.CATNIP_SHOP.UNLOCK_REQUIREMENT)
     end
 
     table.insert(scene._elements, holyCatnipLabel)

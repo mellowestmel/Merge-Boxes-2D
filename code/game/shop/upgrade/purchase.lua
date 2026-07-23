@@ -1,8 +1,8 @@
--- ~/code/game/shop/purchaseUpgrades.lua
+-- ~/code/game/shop/upgrades/purchase.lua
 
 local TransactionModule = require("code.game.shop.transaction")
 
-local UpgradeHandlerModule = require("code.game.upgradeHandler")
+local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
 local Module = {}
 
@@ -12,18 +12,18 @@ function Module:getCost(id)
     return math.floor(upgrade.cost(UpgradeHandlerModule:getStacks(id)))
 end
 
-function Module:canBuy(id)
+function Module:canBuy(id, shopId)
     local upgrade = UpgradeHandlerModule:getUpgrade(id)
 
     if not upgrade then
         return false
     end
 
-    if UpgradeHandlerModule:isMaxed(id) then
+    if shopId and upgrade.shopId ~= shopId then
         return false
     end
 
-    if upgrade.canBuy and not upgrade.canBuy(UpgradeHandlerModule:getStacks(id)) then
+    if UpgradeHandlerModule:isMaxed(id) then
         return false
     end
 
@@ -33,8 +33,8 @@ function Module:canBuy(id)
     )
 end
 
-function Module:buy(id)
-    if not self:canBuy(id) then
+function Module:buy(id, shopId)
+    if not self:canBuy(id, shopId) then
         return false
     end
 

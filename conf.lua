@@ -28,5 +28,4 @@ function love.conf(config)
     config.window.fullscreentype = "desktop"
 
     config.window.resizable = true
-    config.console = false
 end

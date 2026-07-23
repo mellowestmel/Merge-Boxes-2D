@@ -1,96 +1,31 @@
-local UpgradeConstructor = require("code.data.constructors.upgradeConstructor")
+-- ~/code/data/shop/upgrades.lua
 
-local rawUpgrades = {
-    {
-        id = "spawnCooldown",
+local UPGRADE_REQUIRE_DIRECTORY = "code.data.shop.upgrades."
+local UPGRADES_DIRECTORY = "code/data/shop/upgrades"
 
-        name = "Spawn Cooldown",
-        description = "Decrease spawn cooldown by 0.1 seconds per stack.",
-
-        maxStacks = 8,
-
-        cost = function(stacks)
-            return 250 * (stacks + 1)^3
-        end,
-
-        effect = function(stacks)
-            return stacks * 0.1
-        end
-    },
-
-    {
-        id = "spawnTier",
-
-        name = "Spawn Tier",
-        description = "Increase spawn tier by 1 per stack.",
-
-        maxStacks = 4,
-
-        cost = function(stacks)
-            return 2000 * (stacks + 1)^5
-        end,
-
-        effect = function(stacks)
-            return stacks
-        end
-    },
-
-    {
-        id = "autoSpawn",
-
-        name = "Auto Spawn",
-        description = "Automatically spawn boxes. (Doesn't work while in shops or the settings menu.)",
-
-        maxStacks = 1,
-
-        cost = function()
-            return 15000
-        end,
-
-        effect = function(stacks)
-            return stacks > 0
-        end
-    },
-
-    {
-        id = "luckyRoll",
-
-        name = "Lucky Roll",
-        description = "Each spawned box has a chance to spawn one tier higher. Each stack increases the chance by 15%.",
-
-        maxStacks = 7,
-
-        cost = function(stacks)
-            return 8000 * (stacks + 1)^2.5
-        end,
-
-        effect = function(stacks)
-            return stacks * 0.15
-        end
-    },
-
-    {
-        id = "multiSpawn",
-
-        name = "Multi Spawn",
-        description = "Spawn an extra box per stack.",
-
-        maxStacks = 3,
-
-        cost = function(stacks)
-            return 15000 * (stacks + 1)^4
-        end,
-
-        effect = function(stacks)
-            return stacks + 1
-        end
-    },
-}
-
+local upgradesByShop = {}
 local upgrades = {}
 
-for _, upgradeData in ipairs(rawUpgrades) do
-    upgrades[upgradeData.id] = UpgradeConstructor.new(upgradeData)
+for _, fileName in pairs(love.filesystem.getDirectoryItems(UPGRADES_DIRECTORY)) do
+    local shopId = fileName:match("(.+)%.lua$")
+
+    if shopId then
+        local rawUpgradeList = require(UPGRADE_REQUIRE_DIRECTORY .. shopId)
+        local shopUpgradeIds = {}
+
+        for _, upgradeData in pairs(rawUpgradeList) do
+            upgradeData.shopId = shopId
+
+            upgrades[upgradeData.id] = upgradeData
+            table.insert(shopUpgradeIds, upgradeData.id)
+        end
+
+        table.sort(shopUpgradeIds)
+        upgradesByShop[shopId] = shopUpgradeIds
+    end
 end
 
-return upgrades
+return {
+    all = upgrades,
+    byShop = upgradesByShop,
+}
