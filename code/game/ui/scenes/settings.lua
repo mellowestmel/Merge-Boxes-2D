@@ -25,7 +25,8 @@ local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 local SceneData = require("code.data.ui.scenes.settings")
 
 local ENUM_SETTING_OPTIONS = {
-    colorblindMode = SAVES_CONSTANTS.COLORBLIND_MODES
+    colorblindMode = SAVES_CONSTANTS.COLORBLIND_MODES,
+    language = SAVES_CONSTANTS.COLORBLIND_MODES
 }
 
 local Module = {}
@@ -41,9 +42,7 @@ local settingNameLabels = {}
 local settingValueControls = {}
 local categories = {}
 
--- SceneData entries are shared, static tables (one per hitbox/label type),
--- so we never mutate them directly. Each control gets its own shallow
--- copy with just the fields that differ per-row (y position, sprite, etc).
+-- Copies a table and applies new values.
 local function copyWithOverrides(base, overrides)
     local result = {}
 
@@ -58,10 +57,7 @@ local function copyWithOverrides(base, overrides)
     return result
 end
 
--- "items" are the elements/objects to tear down; "list" is whichever
--- scene-level table (self._elements or self._objects) they were
--- registered in. Since ids/order in "list" aren't stable across
--- rebuilds, removal is by identity rather than index.
+-- Removes objects and their references from a list.
 local function removeAndPrune(items, list)
     for _, item in pairs(items) do
         item:Remove()
@@ -74,9 +70,7 @@ local function removeAndPrune(items, list)
     end
 end
 
--- Not using removeAndPrune here: it prunes "list" while iterating
--- "items", which is unsafe in Lua when they're the same table. Since
--- everything gets reset to {} right after anyway, pruning is pointless.
+-- Removes all scene elements and objects.
 function Module:Clean()
     for _, element in pairs(self._elements) do
         element:Remove()
@@ -130,9 +124,7 @@ local function updateCategoryLabel()
     end
 end
 
--- SETTINGS_SCHEMA (in saves/constants.lua) is the single source of
--- truth for both category/setting order and display names, pairs()
--- over the save file itself would give no ordering guarantee at all.
+-- Gets the schema for the current category.
 local function getCurrentCategorySchema()
     local currentCategory = categories[currentCategoryIndex]
 
@@ -157,26 +149,23 @@ local function clearSettingValueControls(self)
     settingValueControls = {}
 end
 
--- BOOLEAN SETTINGS
--- Forces an image into RenderModule.imageCache without leaving a live
--- element behind, so both toggle sprites are ready before any toggle
--- is clicked (avoids a load stutter on first use of the "other" state).
+-- Loads a sprite into the cache.
 local function preloadSprite(spritePath)
-    if RenderModule.imageCache[spritePath] then return end
+    if RenderElementModule.imageCache[spritePath] then return end
 
     local temp = RenderElementModule.new({ type = "sprite", spritePath = spritePath })
     temp:Remove()
 end
 
 local function booleanToggleImage(value)
-    return RenderModule.imageCache[value and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH]
+    return RenderElementModule.imageCache[value and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH]
 end
 
 local function toggleBooleanSetting(category, settingKey)
     local newValue = not SettingsModule.loadedFile[category][settingKey]
     SettingsModule.loadedFile[category][settingKey] = newValue
 
-    if SettingsModule.save then SettingsModule:save() end
+    if SettingsModule.save then SettingsModule:Save() end
 
     return newValue
 end
@@ -201,10 +190,7 @@ local function setupBooleanSettingControl(self, category, setting, rowY)
 
         mouseButton = 1,
         onClick = function()
-            -- toggleBooleanSetting flips + saves the value and returns
-            -- it; we swap .drawable directly rather than recreating the
-            -- element, since only the sprite (not position/scale/etc)
-            -- needs to change.
+            -- Toggle the value and update the sprite.
             toggleHitbox.drawable = booleanToggleImage(toggleBooleanSetting(category, setting.key))
         end
     })
@@ -216,7 +202,7 @@ local function setupBooleanSettingControl(self, category, setting, rowY)
     })
 end
 
--- STEPPER SETTINGS (NUMBER/ENUM)
+-- NUMBER / ENUM SETTINGS
 local function clampNumberSetting(value, range)
     if not range then return value end
     if value < range.min then return range.min end
@@ -230,7 +216,7 @@ local function adjustNumericSetting(category, settingKey, direction)
     local newValue = clampNumberSetting(currentValue + direction * CONSTANTS.NUMBER_SETTING_CHANGE_INCREMENT, range)
 
     SettingsModule.loadedFile[category][settingKey] = newValue
-    if SettingsModule.save then SettingsModule:save() end
+    if SettingsModule.save then SettingsModule:Save() end
 
     return newValue
 end
@@ -247,14 +233,12 @@ local function cycleEnumSetting(category, settingKey, direction)
         end
     end
 
-    -- wraps around in either direction without a separate < 1 / > #options
-    -- branch: shifting to a 0-based index makes Lua's % behave like a
-    -- true modulo (always non-negative), then we shift back to 1-based.
+    -- Wraps around when reaching either end.
     local newIndex = ((currentIndex - 1 + direction) % #options) + 1
     local newValue = options[newIndex]
 
     SettingsModule.loadedFile[category][settingKey] = newValue
-    if SettingsModule.save then SettingsModule:save() end
+    if SettingsModule.save then SettingsModule:Save() end
 
     return newValue
 end
@@ -263,10 +247,7 @@ local function formatPercent(value)
     return math.floor(value * 100 + 0.5) .. "%"
 end
 
--- Numeric and enum settings are visually and behaviorally identical
--- two step buttons plus a value label, so both go through this one
--- control. Only the sprites, the mutation, and the display format
--- differ, which is why those are parameters rather than duplicated code.
+-- Creates the buttons and value label for a stepper setting.
 local function setupStepperControl(self, category, setting, rowY, decreaseSprite, increaseSprite, adjustValue, formatValue)
     local decreaseHitbox = RenderElementModule.new(
         copyWithOverrides(SceneData.decreaseSettingHitbox, { y = rowY, spritePath = decreaseSprite })
@@ -284,8 +265,6 @@ local function setupStepperControl(self, category, setting, rowY, decreaseSprite
 
     valueLabel.text = formatValue(SettingsModule.loadedFile[category][setting.key])
 
-    -- step(-1)/step(1) bake the direction into each button's onClick,
-    -- so both buttons share the same apply-then-redraw-label logic.
     local function step(direction)
         return function()
             valueLabel.text = formatValue(adjustValue(category, setting.key, direction))
@@ -307,7 +286,7 @@ local function setupStepperControl(self, category, setting, rowY, decreaseSprite
     })
 end
 
--- Wrapper
+-- Creates a numeric setting control.
 local function setupNumericSettingControl(self, category, setting, rowY)
     setupStepperControl(
         self,
@@ -325,7 +304,7 @@ local function setupNumericSettingControl(self, category, setting, rowY)
     )
 end
 
--- Wrapper
+-- Creates an enum setting control.
 local function setupEnumSettingControl(self, category, setting, rowY)
     setupStepperControl(
         self,
@@ -343,9 +322,7 @@ local function setupEnumSettingControl(self, category, setting, rowY)
     )
 end
 
--- The control type is inferred from the setting's current Lua value
--- type rather than something declared in the schema, booleans get a
--- toggle, numbers get a percentage stepper, strings get an enum stepper.
+-- Creates the right control based on the setting type.
 local function setupSettingValueControl(self, category, setting, rowY)
     local valueType = type(SettingsModule.loadedFile[category][setting.key])
 
@@ -358,10 +335,7 @@ local function setupSettingValueControl(self, category, setting, rowY)
     end
 end
 
--- CATEGORY + SCENE SETUP
--- Rebuilds every name label + value control for the current category.
--- Called on init and again on every scroll, since switching category
--- means a different settings list (different count, different types).
+-- Rebuilds the setting labels and controls for the current category.
 local function setupSettingNameLabels(self)
     clearSettingNameLabels(self)
     clearSettingValueControls(self)
@@ -370,7 +344,7 @@ local function setupSettingNameLabels(self)
     if not categorySchema then return end
 
     for index, setting in ipairs(categorySchema.settings) do
-        local rowY = UILayoutHelperModule.getVerticalStackY(
+        local rowY = UILayoutHelperModule.GetVerticalStackY(
             SceneData.settingNameLabel.y or 0,
             index,
             CONSTANTS.BUTTON_HORIZONTAL_GAP
@@ -388,7 +362,7 @@ local function setupSettingNameLabels(self)
     end
 end
 
--- same 0-based wraparound as cycleEnumSetting, applied to category scrolling
+-- Changes the current category.
 local function scrollCategory(self, increment)
     currentCategoryIndex = ((currentCategoryIndex - 1 + increment) % #categories) + 1
 
@@ -448,14 +422,14 @@ function Module:Update()
     UISharedFunctions:Update()
 end
 
-function Module:init()
-    MusicHandlerModule:playTrack("settings")
+function Module:Init()
+    MusicHandlerModule:PlayTrack("settings")
 
     BoxesObjectModule.renderBoxes = false
 
     if SaveFilesModule.loadedFile then
-        UISharedFunctions:setupSessionPlaytimeLabel(self)
-        UISharedFunctions:setupCurrencyLabels(self)
+        UISharedFunctions:SetupSessionPlaytimeLabel(self)
+        UISharedFunctions:SetupCurrencyLabels(self)
     end
 
     currentCategoryIndex = 1

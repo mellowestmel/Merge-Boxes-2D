@@ -81,8 +81,8 @@ local function setupSaveFileBoxPreview(self, backgroundElement, save)
     local highestTier = (save.stats and save.stats.highestBoxTier) or 0
     if highestTier <= 0 then return end
 
-    local data = BoxesObjectModule:getBoxDataByTier(highestTier)
-    local templateSaveFileBoxPreview = BoxesObjectModule:createBoxElement(data)
+    local data = BoxesObjectModule:GetBoxDataByTier(highestTier)
+    local templateSaveFileBoxPreview = BoxesObjectModule.new(data)
 
     if templateSaveFileBoxPreview then
         templateSaveFileBoxPreview.x = backgroundElement.x
@@ -165,7 +165,7 @@ local function setupSaveFileResetButton(self, backgroundElement, slot)
 
                 ScreenTransitionModule:Transition({
                     callback = function()
-                        SaveFilesModule:deleteFile(slot)
+                        SaveFilesModule:DeleteFile(slot)
                         UISceneHandlerModule:Switch("saveFiles")
                     end,
 
@@ -202,7 +202,7 @@ local function setupSaveFileBackgrounds(self)
     local totalWidth = (maxSlots * buttonWidth) + (maxSlots - 1)
     local startX = (_G.RESOLUTION_WIDTH - totalWidth) / 2 + (buttonWidth / 2)
 
-    UILayoutHelperModule.stackHorizontally(slotBackgrounds, startX, buttonWidth + 1)
+    UILayoutHelperModule.StackHorizontally(slotBackgrounds, startX, buttonWidth + 1)
 
     for index = 1, maxSlots do
         local save = saves[index]
@@ -215,7 +215,7 @@ local function setupSaveFileBackgrounds(self)
 
         table.insert(self._elements, templateSaveFileLabel)
 
-        local fileExists = SaveFilesModule:readFile(index) ~= nil
+        local fileExists = SaveFilesModule:ReadFile(index) ~= nil
 
         if fileExists then
             setupSaveFileButtons(self, templateSaveFileBackground, index)
@@ -301,12 +301,12 @@ function Module:Update(deltaTime)
     end
 end
 
-function Module:init()
-    UISharedFunctions:setupHighestTierBoxes(self)
-    UISharedFunctions:setupSettingsButton(self)
-    UISharedFunctions:setupDiscordButton(self)
+function Module:Init()
+    UISharedFunctions:SetupHighestTierBoxes(self)
+    UISharedFunctions:SetupSettingsButton(self)
+    UISharedFunctions:SetupDiscordButton(self)
 
-    MusicHandlerModule:playTrack("mainMenu")
+    MusicHandlerModule:PlayTrack("mainMenu")
 
     setupSaveFileBackgrounds(self)
     setupBackToMenuButton(self)

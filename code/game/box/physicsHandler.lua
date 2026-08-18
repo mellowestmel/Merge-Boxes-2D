@@ -2,7 +2,7 @@
 
 local Module = {}
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 local math = require("code.engine.helpers.math")
 
 local CONSTANTS = require("code.game.box.constants")
@@ -25,7 +25,7 @@ local function applyFriction(box, deltaTime)
 end
 
 local function edgeBounceX(box)
-    local width = box.element.drawable:getWidth() * box.element.scaleX
+    local width = box.element:GetWidth() * box.element.scaleX
     local halfWidth = width * box.element.anchorX
 
     if box.element.x - halfWidth < 0 then
@@ -38,7 +38,7 @@ local function edgeBounceX(box)
 end
 
 local function edgeBounceY(box)
-    local height = box.element.drawable:getHeight() * box.element.scaleY
+    local height = box.element:GetHeight() * box.element.scaleY
     local halfHeight = height * box.element.anchorY
 
     if box.element.y - halfHeight < 0 then
@@ -52,7 +52,7 @@ end
 
 local function dragPhysics(box)
     if box.dragging then
-        local mouseX, mouseY = RenderModule:getMousePos()
+        local mouseX, mouseY = RenderUtilsModule.GetMousePos()
 
         mouseY = math.clamp(mouseY, 0, CONSTANTS.AREA_HEIGHT)
         mouseX = math.clamp(mouseX, 0, CONSTANTS.AREA_WIDTH)

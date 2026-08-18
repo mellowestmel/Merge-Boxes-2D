@@ -24,7 +24,7 @@ end
 local Module = {}
 
 -- Creates and returns a new Manager instance.
-function Module:CreateManager()
+function Module.new()
     local manager = setmetatable({
         _freeIds = {},
         _nextId = 0

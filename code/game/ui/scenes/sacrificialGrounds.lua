@@ -40,19 +40,19 @@ function Module:Update(deltaTime)
     UISharedFunctions:Update()
 end
 
-function Module:init()
-    MusicHandlerModule:playTrack("sacrificialGrounds")
+function Module:Init()
+    MusicHandlerModule:PlayTrack("sacrificialGrounds")
 
     BoxesObjectModule.renderBoxes = false
 
-    UISharedFunctions:setupSidebarBackground(self)
-    UISharedFunctions:setupSettingsButton(self)
-    UISharedFunctions:setupShopBackButton(self)
+    UISharedFunctions:SetupSidebarBackground(self)
+    UISharedFunctions:SetupSettingsButton(self)
+    UISharedFunctions:SetupShopBackButton(self)
 
-    UISharedFunctions:setupSessionPlaytimeLabel(self)
-    UISharedFunctions:setupCurrencyLabels(self)
+    UISharedFunctions:SetupSessionPlaytimeLabel(self)
+    UISharedFunctions:SetupCurrencyLabels(self)
 
-    UISharedFunctions:setupBackToMenuButton(self)
+    UISharedFunctions:SetupBackToMenuButton(self)
 
     setupBackground(self)
 end

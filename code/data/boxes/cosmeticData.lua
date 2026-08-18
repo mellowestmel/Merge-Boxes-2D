@@ -1,6 +1,6 @@
 -- ~/code/data/boxDefinitions/cosmetic.lua
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 local color = require("code.engine.helpers.color")
 
 local cosmetic = {
@@ -153,7 +153,7 @@ local cosmetic = {
 
         onUpdateCosmetic = function(element)
             local hue = (love.timer.getTime() % 5) / 5
-            element.color = RenderModule:createColor(color.HSVtoRGB(hue, 1, 1))
+            element.color = RenderUtilsModule.CreateColor(color.HSVtoRGB(hue, 1, 1))
         end,
     },
 

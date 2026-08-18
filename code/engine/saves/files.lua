@@ -54,7 +54,7 @@ local function loadBoxes(boxesData)
 
     for _, box in pairs(boxesData) do
         local boxData = BoxesObjectModule:GetBoxDataByTier(box.tier)
-        local boxObject = BoxesObjectModule:CreateBox(boxData)
+        local boxObject = BoxesObjectModule.new(boxData)
 
         if boxObject then
             boxObject.velocityX = box.velocityX

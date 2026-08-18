@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/game.lua
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 local CONSTANTS = require("code.game.ui.constants")
 local UILayoutData = require("code.data.ui.layout")
@@ -14,7 +14,7 @@ return {
         x = UILayoutData.game.spawnButton.x,
         y = UILayoutData.game.spawnButton.y,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_YELLOW),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -27,7 +27,7 @@ return {
         x = UILayoutData.game.spawnButton.x,
         y = UILayoutData.game.spawnButton.y,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
@@ -43,7 +43,7 @@ return {
 
         scaleY = UILayoutData.game.autoSpawnButtonHeightScale,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -59,7 +59,7 @@ return {
         scaleX = UILayoutData.game.autoSpawnLabelScale,
         scaleY = UILayoutData.game.autoSpawnLabelScale,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
@@ -87,7 +87,7 @@ return {
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_BLUE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_BLUE),
 
         zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
@@ -103,7 +103,7 @@ return {
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GOLD),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GOLD),
 
         zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },
@@ -119,7 +119,7 @@ return {
         scaleX = CONSTANTS.ICON_MEDIUM_SCALE,
         scaleY = CONSTANTS.ICON_MEDIUM_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
     },

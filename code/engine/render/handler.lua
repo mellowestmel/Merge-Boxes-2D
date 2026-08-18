@@ -60,6 +60,7 @@ function Module:Draw()
     ShaderModule:With("accessibility", function()
         for _, element in ipairs(self._sortedCache) do
             element:Draw(windowScaleFactor, windowOffsetX, windowOffsetY)
+            print(_)
         end
     end)
 

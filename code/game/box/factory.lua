@@ -32,7 +32,7 @@ function Module:Spawn()
         end
 
         local data = BoxesObjectModule:GetBoxDataByTier(spawnTier)
-        local box = BoxesObjectModule:CreateBox(data)
+        local box = BoxesObjectModule.new(data)
 
         if box then
             local x = math.random(0, CONSTANTS.AREA_WIDTH)

@@ -128,7 +128,7 @@ function Module:SetupSidebarBackground(scene)
     table.insert(scene._elements, sidebarBackground)
 end
 
-function Module:setupShopBackButton(scene)
+function Module:SetupShopBackButton(scene)
     local shopBackButtonHitbox = RenderElementModule.new(SharedData.shopBackButtonHitbox)
     local shopBackButtonLabel = RenderElementModule.new(SharedData.shopBackButtonLabel)
 

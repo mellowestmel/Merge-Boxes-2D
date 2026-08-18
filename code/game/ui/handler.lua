@@ -17,7 +17,7 @@ function Module:MousePressed(x, y, button)
 end
 
 function Module:MouseReleased(x, y, button)
-    UIScrollingFrameObjectModule:MouseReleased(x, y, button)
+    UIScrollingFrameObjectModule:MouseReleased(button)
 end
 
 function Module:Update(deltaTime)

@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/saveFiles.lua
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 local CONSTANTS = require("code.game.ui.constants")
 local UILayoutData = require("code.data.ui.layout")
@@ -25,7 +25,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -38,7 +38,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
@@ -56,7 +56,7 @@ return {
         scaleX = UILayoutData.saveFiles.templateScaleX,
         scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
 
-        color = RenderModule:createColor(
+        color = RenderUtilsModule.CreateColor(
             CONSTANTS.COLOR_DARK[1],
             CONSTANTS.COLOR_DARK[2],
             CONSTANTS.COLOR_DARK[3],
@@ -74,7 +74,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
@@ -91,7 +91,7 @@ return {
         scaleX = UILayoutData.saveFiles.templateSmallScale,
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GREEN),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -107,7 +107,7 @@ return {
         scaleX = UILayoutData.saveFiles.templateSmallScale,
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT_OVERLAY,
@@ -124,7 +124,7 @@ return {
         scaleX = UILayoutData.saveFiles.templateSmallScale,
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -140,7 +140,7 @@ return {
         scaleX = UILayoutData.saveFiles.templateSmallScale,
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
 
         zIndex = CONSTANTS.Z_UI_TEXT_OVERLAY,
@@ -180,7 +180,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.highestTierLabelOffset,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_SMALL),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
@@ -194,7 +194,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.playtimeLabelOffset,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_MEDIUM),
 
         zIndex = CONSTANTS.Z_UI_TEXT,

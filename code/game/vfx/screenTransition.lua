@@ -10,7 +10,7 @@ Module._screenTransitionElement = nil
 Module._currentTransition = {}
 Module.transitioning = false
 
-function Module:transition(data)
+function Module:Transition(data)
     if not data then data = {} end
 
     if not SettingsModule.loadedFile.graphics.animationsEnabled then

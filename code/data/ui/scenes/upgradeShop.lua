@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/upgradeShop.lua
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 local CONSTANTS = require("code.game.ui.constants")
 local UILayoutData = require("code.data.ui.layout")
@@ -28,7 +28,7 @@ return {
         x = UILayoutData.game.spawnButton.x,
         y = UILayoutData.game.spawnButton.y + UILayoutData.upgradeShop.backgroundFrame.offsetY,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.INVISIBLE_COLOR),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.INVISIBLE_COLOR),
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
@@ -43,7 +43,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = CONSTANTS.CENTER_Y,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
 
         zIndex = CONSTANTS.Z_UI_OVERLAY,
     },
@@ -55,7 +55,7 @@ return {
 
         scaleX = 0.9,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -79,7 +79,7 @@ return {
             CONSTANTS.FONT_SMALL
         ),
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_YELLOW),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -89,7 +89,7 @@ return {
 
         type = "sprite",
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
 
         zIndex = CONSTANTS.Z_UI_OVERLAY,
     },

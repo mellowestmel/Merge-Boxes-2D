@@ -121,7 +121,7 @@ function Module:MergeUpdate(deltaTime)
             boxA:Remove()
             boxB:Remove()
 
-            local newBox = BoxesObjectModule:CreateBox(newBoxData)
+            local newBox = BoxesObjectModule.new(newBoxData)
 
             if newBox and newBoxData then
                 if SaveFilesModule.loadedFile.stats.highestBoxTier < newBoxTier then
@@ -153,7 +153,7 @@ function Module:MergeUpdate(deltaTime)
                 newBox.element.scaleX = scale
                 newBox.element.scaleY = scale
 
-                local mergeSound = SoundModule:CreateSound(newBox.mergeSoundData)
+                local mergeSound = SoundModule.new(newBox.mergeSoundData)
                 if mergeSound then
                     mergeSound:Play()
                     mergeSound:Remove()
@@ -209,7 +209,7 @@ function Module:CheckMerges()
     for index = 1, boxesCount do
         local box = boxesArray[index]
 
-        tree:insert({
+        tree:Insert({
             x = box.element.x,
             y = box.element.y,
             box = box,

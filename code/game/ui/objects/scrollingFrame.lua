@@ -34,7 +34,7 @@ ScrollingFrame.__index = ScrollingFrame
 local Module = {}
 Module._scrollingFrames = {}
 
-local manager = IdManagerModule:CreateManager()
+local manager = IdManagerModule.new()
 
 --- Gets unscaled native height of a sprite/text element for scaling math
 local function getUnscaledHeight(element)
@@ -52,8 +52,8 @@ end
 function ScrollingFrame:_updateScrollBarScale()
     if not (self.scrollBarElement and self.scrollTrackElement and self.hitboxElement) then return end
 
-    local frameHeight = self.hitboxElement:getHeight()
-    local trackHeight = self.scrollTrackElement:getHeight()
+    local frameHeight = self.hitboxElement:GetHeight()
+    local trackHeight = self.scrollTrackElement:GetHeight()
 
     if self.contentHeight <= 0 or frameHeight <= 0 then return end
 
@@ -80,7 +80,7 @@ function ScrollingFrame:RecalculateContentHeight(padding)
 
     for _, element in pairs(self.elements) do
         if element and element.y then
-            local elemHeight = element:getHeight()
+            local elemHeight = element:GetHeight()
             local elemTop = element.y
             local elemBottom = element.y + elemHeight
 
@@ -102,12 +102,12 @@ end
 
 function ScrollingFrame:Remove()
     Module._scrollingFrames[self.id] = nil
-    manager:release(self.id)
+    manager:Release(self.id)
 end
 
 --- Clamps the target scroll offset so it stays within valid bounds [0, maxScroll].
 local function clampOffset(self, offset)
-    local frameHeight = self.hitboxElement:getHeight()
+    local frameHeight = self.hitboxElement:GetHeight()
     local maxScroll = math.max(0, self.contentHeight - frameHeight)
 
     if offset < 0 then return 0 end
@@ -120,8 +120,8 @@ function ScrollingFrame:_updatePositions()
     local delta = self._lastOffset - self.scrollOffset
 
     -- Calculate screen clipping area of the hitbox/background scrollingFrame
-    local frameWidth = self.hitboxElement:getWidth()
-    local frameHeight = self.hitboxElement:getHeight()
+    local frameWidth = self.hitboxElement:GetWidth()
+    local frameHeight = self.hitboxElement:GetHeight()
     local frameAnchorX = self.hitboxElement.anchorX or 0.5
     local frameAnchorY = self.hitboxElement.anchorY or 0.5
 
@@ -144,17 +144,17 @@ function ScrollingFrame:_updatePositions()
 
     -- Update scrollbar thumb position
     if self.scrollBarElement and self.scrollTrackElement then
-        local frameHeight = self.hitboxElement:getHeight()
+        local frameHeight = self.hitboxElement:GetHeight()
         local maxScroll = math.max(1, self.contentHeight - frameHeight)
         local progress = self.scrollOffset / maxScroll
 
         local trackX = self.scrollTrackElement.x
         local trackY = self.scrollTrackElement.y
-        local trackWidth = self.scrollTrackElement:getWidth()
-        local trackHeight = self.scrollTrackElement:getHeight()
+        local trackWidth = self.scrollTrackElement:GetWidth()
+        local trackHeight = self.scrollTrackElement:GetHeight()
 
-        local thumbWidth = self.scrollBarElement:getWidth()
-        local thumbHeight = self.scrollBarElement:getHeight()
+        local thumbWidth = self.scrollBarElement:GetWidth()
+        local thumbHeight = self.scrollBarElement:GetHeight()
 
         local trackAnchorX = self.scrollTrackElement.anchorX or 0.5
         local trackAnchorY = self.scrollTrackElement.anchorY or 0.5
@@ -193,7 +193,7 @@ function ScrollingFrame:MousePressed(x, y, button)
     end
 end
 
-function ScrollingFrame:MouseReleased(x, y, button)
+function ScrollingFrame:MouseReleased(button)
     if button == 1 then
         self._isDraggingTrack = false
     end
@@ -206,11 +206,11 @@ function ScrollingFrame:Update(deltaTime)
         local _, mouseY = RenderUtilsModule.GetMousePos()
         local dragDelta = mouseY - self._dragStartY
 
-        local _, trackHeight = self.scrollTrackElement:GetDimensions()
-        local _,  thumbHeight = self.scrollBarElement:GetDimensions()
+        local trackHeight = self.scrollTrackElement:GetHeight()
+        local thumbHeight = self.scrollBarElement:GetHeight()
         local travelDistance = math.max(1, trackHeight - thumbHeight)
 
-        local _, frameHeight = self.hitboxElement:GetDimensions()
+        local frameHeight = self.hitboxElement:GetHeight()
         local maxScroll = math.max(0, self.contentHeight - frameHeight)
 
         local scrollDelta = (dragDelta / travelDistance) * maxScroll
@@ -231,7 +231,7 @@ function ScrollingFrame:Update(deltaTime)
     self:_updatePositions()
 end
 
-function Module:CreateScrollingFrame(data)
+function Module.new(data)
     if not data or not data.hitboxElement then return end
 
     local padding = data.padding or 0
@@ -287,9 +287,9 @@ function Module:MousePressed(x, y, button)
     end
 end
 
-function Module:MouseReleased(x, y, button)
+function Module:MouseReleased(button)
     for _, scrollingFrame in pairs(self._scrollingFrames) do
-        scrollingFrame:MouseReleased(x, y, button)
+        scrollingFrame:MouseReleased(button)
     end
 end
 

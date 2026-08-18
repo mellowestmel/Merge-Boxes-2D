@@ -94,7 +94,7 @@ return {
         yDivider = 1.6,
         loadButtonOffset = 60,
         resetButtonOffset = 10,
-        templateRotation = math.rad(90),
+        templateRotation = 90,
         templateScaleX = 1.5,
         templateSmallScale = 0.55,
 

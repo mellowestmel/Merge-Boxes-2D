@@ -47,7 +47,7 @@ Module.boxes = {}
 Module._sortedCache = {}
 Module._dirty = true
 
-local manager = IdManagerModule:CreateManager()
+local manager = IdManagerModule.new()
 
 function Box:Remove()
     local id = self.id
@@ -67,7 +67,7 @@ function Module:GetBoxDataByTier(tier)
     return clonedData
 end
 
-function Module:CreateBoxElement(data)
+function Module.newElement(data)
     if not data then return end
 
     local element = RenderElementModule.new({
@@ -88,7 +88,7 @@ end
 function Module.new(data)
     if not data then return end
 
-    local element = Module:CreateBoxElement(data)
+    local element = Module.newElement(data)
 
     local box = setmetatable({
         id = manager:Get(),

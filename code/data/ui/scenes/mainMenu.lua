@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/mainMenu.lua
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 local CONSTANTS = require("code.game.ui.constants")
 local UILayoutData = require("code.data.ui.layout")
@@ -53,7 +53,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GREEN),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -66,7 +66,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
             CONSTANTS.FONT_LARGE
@@ -83,7 +83,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -96,7 +96,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
             CONSTANTS.FONT_LARGE

@@ -41,7 +41,7 @@ function Module:Update(deltaTime)
 end
 
 function Module:Init()
-    MusicHandlerModule:playTrack("blackMarket")
+    MusicHandlerModule:PlayTrack("blackMarket")
 
     BoxesObjectModule.renderBoxes = false
 

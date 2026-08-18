@@ -1,6 +1,6 @@
 -- ~/code/game/ui/objects/button.lua
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 local SoundModule = require("code.engine.sound")
 local IdManagerModule = require("code.engine.idManager")
 
@@ -35,11 +35,11 @@ Button.__index = Button
 local Module = {}
 Module._buttons = {}
 
-local manager = IdManagerModule:CreateManager()
+local manager = IdManagerModule.new()
 
 function Button:Remove()
     Module._buttons[self.id] = nil
-    manager:release(self.id)
+    manager:Release(self.id)
 end
 
 function Button:MousePressed(x, y, mouseButton)
@@ -47,7 +47,7 @@ function Button:MousePressed(x, y, mouseButton)
 
     if not self.hitboxElement.render then return end
     if (love.timer.getTime() - self.lastUsed) < self.cooldown then return end
-    if not self.hitboxElement:isPointInside(x, y) then return end
+    if not self.hitboxElement:IsPointInside(x, y) then return end
     if mouseButton ~= self.mouseButton then return end
 
     self.lastUsed = love.timer.getTime()
@@ -65,7 +65,7 @@ function Button:MousePressed(x, y, mouseButton)
     end
 
     if self.playClickSound then
-        local sound = SoundModule:CreateSound({soundPath = "assets/sounds/ui/click.wav"})
+        local sound = SoundModule.new({soundPath = "assets/sounds/ui/click.wav"})
 
         if sound then
             sound:Play(true, -100, 100, 1000)
@@ -81,7 +81,7 @@ end
 function Button:Update(deltaTime)
     if not self.hitboxElement then self:Remove() return end
 
-    local mouseX, mouseY = RenderModule:GetMousePos()
+    local mouseX, mouseY = RenderUtilsModule.GetMousePos()
     self._isHovered = self.hitboxElement:IsPointInside(mouseX, mouseY)
 
     local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
@@ -136,7 +136,7 @@ end
 
 function Module:MousePressed(x, y, mouseButton)
     for _, button in pairs(self._buttons) do
-        button:mousePressed(x, y, mouseButton)
+        button:MousePressed(x, y, mouseButton)
     end
 end
 

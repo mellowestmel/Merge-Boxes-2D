@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/settings.lua
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 local CONSTANTS = require("code.game.ui.constants")
 local UILayoutData = require("code.data.ui.layout")
@@ -28,7 +28,7 @@ return {
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -39,7 +39,7 @@ return {
         x = CONSTANTS.CENTER_X,
         y = UILayoutData.settings.categoryRowY,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
 
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
@@ -55,7 +55,7 @@ return {
         x = CONSTANTS.CENTER_X + UILayoutData.settings.settingNameLabelOffsetX,
         y = UILayoutData.shared.settingsButton.y,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
 
         anchorX = 0,
 
@@ -77,7 +77,7 @@ return {
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -92,7 +92,7 @@ return {
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -107,7 +107,7 @@ return {
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GREEN),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -136,7 +136,7 @@ return {
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -152,7 +152,7 @@ return {
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GREEN),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GREEN),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     }

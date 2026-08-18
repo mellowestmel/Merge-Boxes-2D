@@ -20,7 +20,7 @@ end
 function Module.StackVertically(elements, startPositionY, itemSpacing)
     for index, element in ipairs(elements) do
         if element then
-            element.y = Module.getVerticalStackY(startPositionY, index, itemSpacing)
+            element.y = Module.GetVerticalStackY(startPositionY, index, itemSpacing)
         end
     end
 end
@@ -29,7 +29,7 @@ end
 function Module.StackHorizontally(elements, startPositionX, itemSpacing)
     for index, element in ipairs(elements) do
         if element then
-            element.x = Module.getHorizontalStackX(startPositionX, index, itemSpacing)
+            element.x = Module.GetHorizontalStackX(startPositionX, index, itemSpacing)
         end
     end
 end

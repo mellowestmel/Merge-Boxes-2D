@@ -4,11 +4,6 @@ local math = require("code.engine.helpers.math")
 
 local Module = {}
 
--- Converts rotation from degrees to radians, because love2d uses radians for some reason.
-function Module.GetRotationInRadians(element)
-    return math.rad(element.rotation * (element.flip and -1 or 1))
-end
-
 --- Normalizes RGBA values (0-255 -> 0.0-1.0).
 function Module.CreateColor(r, g, b, alpha)
     return {
@@ -21,7 +16,7 @@ end
 
 --- Creates RGBA color object from a 1-4 index array.
 function Module.CreateColorFromTable(color)
-    return Module.createColor(color[1], color[2], color[3], color[4])
+    return Module.CreateColor(color[1], color[2], color[3], color[4])
 end
 
 --- Calculates screen scaling and letterbox offsets to preserve virtual resolution.

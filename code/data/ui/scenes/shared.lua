@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/shared.lua
 
-local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 local BOX_CONSTANTS = require("code.game.box.constants")
 local CONSTANTS = require("code.game.ui.constants")
@@ -19,7 +19,7 @@ return {
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -48,7 +48,7 @@ return {
 
         x = BOX_CONSTANTS.AREA_WIDTH,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
@@ -61,7 +61,7 @@ return {
         x = UILayoutData.game.spawnButton.x,
         y = UILayoutData.game.spawnButton.y + UILayoutData.game.spawnButtonRowOffset,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_RED),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -74,7 +74,7 @@ return {
         x = UILayoutData.game.spawnButton.x,
         y = UILayoutData.game.spawnButton.y + UILayoutData.game.spawnButtonRowOffset,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
         font = love.graphics.newFont(
             CONSTANTS.STANBERRY_FONT_PATH,
             CONSTANTS.FONT_LARGE
@@ -99,7 +99,7 @@ return {
         x = CONSTANTS.SMALL_PADDING,
         y = CONSTANTS.LARGE_PADDING,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_YELLOW),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -120,7 +120,7 @@ return {
         x = CONSTANTS.SMALL_PADDING,
         y = CONSTANTS.LARGE_PADDING * CONSTANTS.CURRENCY_LABEL_ROW_SPACING_MULTIPLIER,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_PURPLE),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_PURPLE),
 
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
@@ -155,7 +155,7 @@ return {
         scaleX = CONSTANTS.ICON_SMALL_SCALE,
         scaleY = CONSTANTS.ICON_SMALL_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
 
         zIndex = CONSTANTS.Z_UI_BUTTON,
     },
@@ -172,7 +172,7 @@ return {
         scaleX = CONSTANTS.SPRITE_LARGE_SCALE,
         scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
@@ -191,7 +191,7 @@ return {
         scaleX = CONSTANTS.SPRITE_HUGE_SCALE,
         scaleY = CONSTANTS.SPRITE_HUGE_SCALE,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },

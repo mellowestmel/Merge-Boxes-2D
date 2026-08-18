@@ -10,8 +10,9 @@ local Module = {}
 -- Shared sprite cache and active element registry.
 Module.imageCache = {}
 Module._elements = {}
+Module._dirty = true
 
-local manager = IdManagerModule:CreateManager()
+local manager = IdManagerModule.new()
 
 -- Default properties shared by all elements.
 local Element = {
@@ -36,35 +37,49 @@ local Element = {
 
     reflective = false,
     render = true,
-    flip = false,
 
     scissor = nil
 }
 
 Element.__index = Element
 
--- Removes the element and releases its ID.
+-- Removes the element and Releases its ID.
 function Element:Remove()
     Module._elements[self.id] = nil
-    manager:release(self.id)
+    manager:Release(self.id)
+    Module._dirty = true
 end
 
--- Returns the width and height of the element.
-function Element:GetDimensions()
-     if self.type == "sprite" and self.drawable then
-        local width = self.drawable:getWidth() * self.scaleX
-        local height = self.drawable:getHeight() * self.scaleY
+-- Returns the dimensions of the element.
+local function GetDimensions(element)
+    local width
+    local height
 
-        return width, height
+     if element.type == "sprite" and element.drawable then
+        width = element.drawable:getWidth() * element.scaleX
+        height = element.drawable:getHeight() * element.scaleY
+    elseif element.type == "text" and element.text then
+        local font = (element.font or love.graphics.getFont())
 
-    elseif self.type == "text" and self.text then
-        local font = (self.font or love.graphics.getFont())
-
-        local width = font:getWidth() * self.scaleX
-        local height = font:getHeight() * self.scaleY
-
-        return width, height
+        width = font:getWidth(element.text) * element.scaleX
+        height = font:getHeight() * element.scaleY
     end
+
+    return width, height
+end
+
+function Element:GetDimensions()
+    return GetDimensions(self)
+end
+
+function Element:GetWidth()
+    local width = GetDimensions(self)
+    return width
+end
+
+function Element:GetHeight()
+    local _, height = GetDimensions(self)
+    return height
 end
 
 -- Checks if a point is inside the element.
@@ -79,13 +94,13 @@ function Element:IsPointInside(x, y)
         return false
     end
 
-    local width, height = self:getDimensions()
+    local width, height = self:GetDimensions()
 
     -- Get offset from the element's position to the point.
     local deltaX = x - (self.x + self.offsetX)
     local deltaY = y - (self.y + self.offsetY)
 
-    local radians = RenderUtilsModule.GetRotationInRadians(self)
+    local radians = math.rad(self.rotation)
 
     -- Undo the rotation so we can work with a flat box.
     local cosine = math.cos(-radians)
@@ -113,9 +128,9 @@ function Element:Draw(windowScaleFactor, windowOffsetX, windowOffsetY)
     local positionX = self.x * windowScaleFactor + windowOffsetX + self.offsetX
     local positionY = self.y * windowScaleFactor + windowOffsetY + self.offsetY
 
-    local scaleX = self.scaleX * (self.flip and -1 or 1) * windowScaleFactor
+    local scaleX = self.scaleX * windowScaleFactor
     local scaleY = self.scaleY * windowScaleFactor
-    local radians = RenderUtilsModule.GetRotationInRadians(self)
+    local radians = math.rad(self.rotation)
 
     -- Set element color with fallback protection
     if self.color then love.graphics.setColor(self.color.r, self.color.g, self.color.b, self.color.alpha or self.color.a or 1)
@@ -226,14 +241,18 @@ function Module.new(data)
         reflective = data.reflective or false,
 
         render = data.render ~= false,
-        flip = data.flip or false,
 
         scissor = data.scissor
     }, Element)
 
     if element.type == "sprite" then
-        -- Fallback image
-        local path = data.spritePath or "assets/sprites/missing.png"
+        local fallbackPath = "assets/sprites/missing.png"
+        local path = data.spritePath or fallbackPath
+
+        -- Fall back if the requested image doesn't exist.
+        if not love.filesystem.getInfo(path, "file") then
+            path = fallbackPath
+        end
 
         -- Load the sprite, or take the cached drawable.
         if not Module.imageCache[path] then
@@ -252,6 +271,7 @@ function Module.new(data)
     end
 
     Module._elements[element.id] = element
+    Module._dirty = true
 
     return element
 end

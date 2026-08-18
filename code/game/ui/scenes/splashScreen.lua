@@ -53,7 +53,7 @@ local function setupSplashScreenLogo(self)
     splashLogo1.render = true
     splashLogo2.render = false
 
-    local splashScreenSound = SoundModule:createSound({
+    local splashScreenSound = SoundModule.new({
         soundPath = "/assets/sounds/ui/splashscreen.wav",
         volume = 2
     })
@@ -72,7 +72,7 @@ local function transition()
     })
 end
 
-function Module:init()
+function Module:Init()
     MusicHandlerModule:StopTrack(MusicHandlerModule.playingTrack)
 
     transitionTimer = 2

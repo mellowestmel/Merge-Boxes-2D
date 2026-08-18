@@ -149,20 +149,20 @@ function Module:Update()
     local rotation = math.sin(love.timer.getTime()) * 2
 
     if logo then
-       logo:setRotation(rotation)
+       logo.rotation = rotation
     end
 
     if logo2 then
-        logo2:setRotation(-rotation)
+        logo2.rotation = -rotation
     end
 end
 
-function Module:init()
-    UISharedFunctions:setupHighestTierBoxes(self)
-    UISharedFunctions:setupSettingsButton(self)
-    UISharedFunctions:setupDiscordButton(self)
+function Module:Init()
+    UISharedFunctions:SetupHighestTierBoxes(self)
+    UISharedFunctions:SetupSettingsButton(self)
+    UISharedFunctions:SetupDiscordButton(self)
 
-    MusicHandlerModule:playTrack("mainMenu")
+    MusicHandlerModule:PlayTrack("mainMenu")
 
     setupPlayGameButton(self)
     setupQuitButton(self)

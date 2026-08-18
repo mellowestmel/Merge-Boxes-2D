@@ -21,7 +21,7 @@ Sound.__index = Sound
 local Module = {}
 Module._sounds = {}
 
-local manager = IdManagerModule:CreateManager()
+local manager = IdManagerModule.new()
 
 local function computeVolume(sound)
     local base =
@@ -57,14 +57,14 @@ function Sound:Play(randomizePitch, min, max, divisor)
     local volume = computeVolume(self)
     self.source:setVolume(volume)
 
-    self.source:Stop()
-    self.source:Play()
+    self.source:stop()
+    self.source:play()
 
     self.pitch = defaultPitch
 end
 
 function Sound:Stop()
-    self.source:Stop()
+    self.source:stop()
 end
 
 function Sound:Remove()

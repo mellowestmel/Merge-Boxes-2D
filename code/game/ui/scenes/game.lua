@@ -70,7 +70,7 @@ function Module:Clean()
 end
 
 local function playNotAllowedSound()
-    local notAllowedSound = SoundModule:CreateSound({soundPath = "assets/sounds/ui/notallowed.wav"})
+    local notAllowedSound = SoundModule.new({soundPath = "assets/sounds/ui/notallowed.wav"})
 
     if notAllowedSound then
         notAllowedSound:Play()
@@ -129,7 +129,7 @@ local function setupSpawnButton(self)
 
         mouseButton = 1,
         onClick = function()
-            BoxFactoryModule:spawn()
+            BoxFactoryModule:Spawn()
         end
     })
 
@@ -248,9 +248,9 @@ end
 
 local function lockedImageLogic(current, requirement, originalPath)
     if current >= requirement then
-        return RenderModule.imageCache[originalPath]
+        return RenderElementModule.imageCache[originalPath]
     else
-        return RenderModule.imageCache["assets/sprites/ui/buttonlocked74x74.png"]
+        return RenderElementModule.imageCache["assets/sprites/ui/buttonlocked74x74.png"]
     end
 end
 
@@ -281,7 +281,7 @@ function Module:Update()
     end
 
     if spawnButtonHitbox and spawnButtonLabel and spawnButton then
-        local cooldown = BoxFactoryModule:getSpawnCooldown()
+        local cooldown = BoxFactoryModule:GetSpawnCooldown()
         spawnButton.cooldown = cooldown
 
         local time = (love.timer.getTime() - BoxFactoryModule.lastSpawned)
@@ -291,8 +291,8 @@ function Module:Update()
 
         spawnButtonLabel.text =  (onCooldown and string.format("%.1f", timeLeft) .. "s" or SceneData.spawnButtonLabel.text)
 
-        if not onCooldown and UpgradeHandlerModule:getEffect("autoSpawn") and autoSpawnEnabled then
-            spawnButton:mousePressed(
+        if not onCooldown and UpgradeHandlerModule:GetEffect("autoSpawn") and autoSpawnEnabled then
+            spawnButton:MousePressed(
                 spawnButtonHitbox.x,
                 spawnButtonHitbox.y,
                 1
@@ -301,9 +301,9 @@ function Module:Update()
     end
 end
 
-function Module:init(slot)
+function Module:Init(slot)
     --%note shitty preloading
-    if not RenderModule.imageCache["assets/sprites/ui/buttonlocked74x74.png"] then
+    if not RenderElementModule.imageCache["assets/sprites/ui/buttonlocked74x74.png"] then
         local temp = RenderElementModule.new({
             type = "sprite",
             spritePath = "assets/sprites/ui/buttonlocked74x74.png"
@@ -313,7 +313,7 @@ function Module:init(slot)
     end
 
     if slot then
-        SaveFilesModule:loadFile(slot)
+        SaveFilesModule:LoadFile(slot)
 
         SaveFilesModule.loadedFile.stats.playtimeAtSessionStart = SaveFilesModule.loadedFile.stats.playtime
     end
@@ -322,13 +322,13 @@ function Module:init(slot)
 
     MusicHandlerModule:StopTrack(MusicHandlerModule.playingTrack)
 
-    UISharedFunctions:setupSidebarBackground(self)
-    UISharedFunctions:setupSettingsButton(self)
+    UISharedFunctions:SetupSidebarBackground(self)
+    UISharedFunctions:SetupSettingsButton(self)
 
-    UISharedFunctions:setupSessionPlaytimeLabel(self)
-    UISharedFunctions:setupCurrencyLabels(self)
+    UISharedFunctions:SetupSessionPlaytimeLabel(self)
+    UISharedFunctions:SetupCurrencyLabels(self)
 
-    if UpgradeHandlerModule:getEffect("autoSpawn") then
+    if UpgradeHandlerModule:GetEffect("autoSpawn") then
         setupAutoSpawnButton(self)
     end
 
