@@ -1,6 +1,6 @@
 -- ~/code/game/ui/shared.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 
 local SaveFilesModule = require("code.engine.saves.files")
 
@@ -30,7 +30,7 @@ local function getHighestTierAcrossSaves()
     local highestTier = 0
 
     for slot = 1, SAVES_CONSTANTS.MAX_SAVE_SLOTS do
-        local save = SaveFilesModule:readFile(slot)
+        local save = SaveFilesModule:ReadFile(slot)
 
         if save and save.stats then
             local tier = save.stats.highestBoxTier or 0
@@ -44,7 +44,7 @@ local function getHighestTierAcrossSaves()
     return highestTier
 end
 
-function Module:setupHighestTierBoxes(scene)
+function Module:SetupHighestTierBoxes(scene)
     local highestTier = getHighestTierAcrossSaves()
 
     if highestTier <= 0 then
@@ -54,7 +54,7 @@ function Module:setupHighestTierBoxes(scene)
     local boxes = UILayoutData.shared.backgroundBoxes
     for tier, data in ipairs(boxes) do
         if tier and tier <= highestTier then
-            local element = RenderModule:createElement({
+            local element = RenderElementModule.new({
                 spritePath = UILayoutData.shared.backgroundBoxesPathPrefix .. "box" .. tier .. ".png",
 
                 anchorX = 0,
@@ -71,35 +71,39 @@ function Module:setupHighestTierBoxes(scene)
     end
 end
 
-function Module:setupSettingsButton(scene)
+function Module:SetupSettingsButton(scene)
     if not scene then return end
 
-    local settingsButtonHitbox = RenderModule:createElement(SharedData.settingsButtonHitbox)
+    local settingsButtonHitbox = RenderElementModule.new(SharedData.settingsButtonHitbox)
+    table.insert(scene._elements, settingsButtonHitbox)
 
-    local settingsButton = UIButtonObjectModule:createButton({
+    local settingsButton = UIButtonObjectModule.new({
         elements = {settingsButtonHitbox},
         hitboxElement = settingsButtonHitbox,
 
         mouseButton = 1,
 
         onClick = function()
-            ScreenTransitionModule:transition({
+            ScreenTransitionModule:Transition({
                 callback = function()
-                    UISceneHandlerModule:switch("settings")
+                    UISceneHandlerModule:Switch("settings")
                 end
             })
         end
     })
 
-    table.insert(scene._elements, settingsButtonHitbox)
     table.insert(scene._objects, settingsButton)
+
+    if scene._hideableElements then
+        table.insert(scene._hideableElements, settingsButtonHitbox)
+    end
 end
 
-function Module:setupDiscordButton(scene)
-    local discordButtonHitbox = RenderModule:createElement(SharedData.discordButtonHitbox)
+function Module:SetupDiscordButton(scene)
+    local discordButtonHitbox = RenderElementModule.new(SharedData.discordButtonHitbox)
     table.insert(scene._elements, discordButtonHitbox)
 
-    local discordButton = UIButtonObjectModule:createButton({
+    local discordButton = UIButtonObjectModule.new({
         elements = {
             discordButtonHitbox
         },
@@ -113,27 +117,31 @@ function Module:setupDiscordButton(scene)
     })
 
     table.insert(scene._objects, discordButton)
+
+    if scene._hideableElements then
+        table.insert(scene._hideableElements, discordButtonHitbox)
+    end
 end
 
-function Module:setupSidebarBackground(scene)
-    local sidebarBackground = RenderModule:createElement(SharedData.sidebarBackground)
+function Module:SetupSidebarBackground(scene)
+    local sidebarBackground = RenderElementModule.new(SharedData.sidebarBackground)
     table.insert(scene._elements, sidebarBackground)
 end
 
 function Module:setupShopBackButton(scene)
-    local shopBackButtonHitbox = RenderModule:createElement(SharedData.shopBackButtonHitbox)
-    local shopBackButtonLabel = RenderModule:createElement(SharedData.shopBackButtonLabel)
+    local shopBackButtonHitbox = RenderElementModule.new(SharedData.shopBackButtonHitbox)
+    local shopBackButtonLabel = RenderElementModule.new(SharedData.shopBackButtonLabel)
 
-    local shopBackButton = UIButtonObjectModule:createButton({
+    local shopBackButton = UIButtonObjectModule.new({
         elements = {shopBackButtonHitbox, shopBackButtonLabel},
         hitboxElement = shopBackButtonHitbox,
 
         mouseButton = 1,
 
         onClick = function()
-            ScreenTransitionModule:transition({
+            ScreenTransitionModule:Transition({
                 callback = function()
-                    UISceneHandlerModule:switch("game")
+                    UISceneHandlerModule:Switch("game")
                 end
             })
         end
@@ -144,11 +152,11 @@ function Module:setupShopBackButton(scene)
     table.insert(scene._objects, shopBackButton)
 end
 
-function Module:setupBackToMenuButton(scene)
-    local backToMenuButtonHitbox = RenderModule:createElement(SharedData.backToMenuButtonHitbox)
+function Module:SetupBackToMenuButton(scene)
+    local backToMenuButtonHitbox = RenderElementModule.new(SharedData.backToMenuButtonHitbox)
     table.insert(scene._elements, backToMenuButtonHitbox)
 
-    local backToMenuButton = UIButtonObjectModule:createButton({
+    local backToMenuButton = UIButtonObjectModule.new({
         elements = {
             backToMenuButtonHitbox,
         },
@@ -157,12 +165,12 @@ function Module:setupBackToMenuButton(scene)
 
         mouseButton = 1,
         onClick = function()
-            ScreenTransitionModule:transition({
+            ScreenTransitionModule:Transition({
                 callback = function()
-                    SaveFilesModule:unloadFile(SaveFilesModule.loadedFile)
-                    BoxesObjectModule:clearBoxes()
+                    SaveFilesModule:UnloadFile(SaveFilesModule.loadedFile)
+                    BoxesObjectModule:ClearBoxes()
 
-                    UISceneHandlerModule:switch("saveFiles")
+                    UISceneHandlerModule:Switch("saveFiles")
                 end
             })
         end
@@ -171,8 +179,8 @@ function Module:setupBackToMenuButton(scene)
     table.insert(scene._objects, backToMenuButton)
 end
 
-function Module:setupCurrencyLabels(scene)
-    local creditsLabel = RenderModule:createElement(SharedData.creditsLabel)
+function Module:SetupCurrencyLabels(scene)
+    local creditsLabel = RenderElementModule.new(SharedData.creditsLabel)
 
     self._updateFunctions.creditsLabelUpdateFunction = function()
         if not creditsLabel then return end
@@ -183,7 +191,7 @@ function Module:setupCurrencyLabels(scene)
 
     table.insert(scene._elements, creditsLabel)
 
-    local holyCatnipLabel = RenderModule:createElement(SharedData.holyCatnipLabel)
+    local holyCatnipLabel = RenderElementModule.new(SharedData.holyCatnipLabel)
 
     self._updateFunctions.holyCatnipLabelUpdateFunction = function()
         if not holyCatnipLabel then return end
@@ -198,8 +206,8 @@ function Module:setupCurrencyLabels(scene)
     table.insert(scene._elements, holyCatnipLabel)
 end
 
-function Module:setupSessionPlaytimeLabel(scene)
-    local sessionPlaytimeLabel = RenderModule:createElement(SharedData.sessionPlaytimeLabel)
+function Module:SetupSessionPlaytimeLabel(scene)
+    local sessionPlaytimeLabel = RenderElementModule.new(SharedData.sessionPlaytimeLabel)
 
     self._updateFunctions.sessionPlaytimeLabelUpdateFunction = function()
         if not sessionPlaytimeLabel then return end
@@ -216,18 +224,18 @@ function Module:setupSessionPlaytimeLabel(scene)
     table.insert(scene._elements, sessionPlaytimeLabel)
 end
 
-function Module:setupDialogueBox(scene)
-    local dialogueBox = RenderModule:createElement(SharedData.dialogueBox)
+function Module:SetupDialogueBox(scene)
+    local dialogueBox = RenderElementModule.new(SharedData.dialogueBox)
     table.insert(scene._elements, dialogueBox)
 end
 
-function Module:update()
+function Module:Update()
     for _, updateFunction in pairs(self._updateFunctions) do
         updateFunction()
     end
 end
 
-function Module:cleanUpdates()
+function Module:CleanUpdates()
     self._updateFunctions = {}
 end
 

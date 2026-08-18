@@ -73,7 +73,7 @@ local function seperateLines(file)
     return sections
 end
 
-function Module:decodeSimple(section)
+function Module:DecodeSimple(section)
     if not section then return end
 
     local result = {}
@@ -96,7 +96,7 @@ function Module:decodeSimple(section)
     return result
 end
 
-function Module:decodeBoxes(section)
+function Module:DecodeBoxes(section)
     if not section then return end
 
     local boxes = {}
@@ -123,27 +123,27 @@ function Module:decodeBoxes(section)
     return boxes
 end
 
-function Module:decodeVersion(section)
+function Module:DecodeVersion(section)
     if not section then return end
 
     local output = string.gsub(section, "version ", "")
     return tonumber(output)
 end
 
-function Module:decodeSlot(section)
+function Module:DecodeSlot(section)
     if not section then return end
 
     local output = string.gsub(section, "slot ", "")
     return tonumber(output)
 end
 
-function Module:decodeSettings(file)
+function Module:DecodeSettings(file)
     local sections = seperateLines(file)
 
     local finalOutput = {
-        audio = self:decodeSimple(sections[1]),
-        graphics = self:decodeSimple(sections[2]),
-        accessibility = self:decodeSimple(sections[3]),
+        audio = self:DecodeSimple(sections[1]),
+        graphics = self:DecodeSimple(sections[2]),
+        accessibility = self:DecodeSimple(sections[3]),
     }
 
     finalOutput = normalizeTable(finalOutput, CONSTANTS.DEFAULT_SETTINGS)
@@ -151,7 +151,7 @@ function Module:decodeSettings(file)
     return finalOutput
 end
 
-function Module:decode(file)
+function Module:Decode(file)
     file = decryptWithKey(file)
     file = decryptBase64(file)
 
@@ -159,25 +159,25 @@ function Module:decode(file)
 
     local hasMigrated = sections[6]
     local finalOutput = {
-        version = self:decodeVersion(sections[1]),
-        slot = self:decodeSlot(sections[2]),
+        version = self:DecodeVersion(sections[1]),
+        slot = self:DecodeSlot(sections[2]),
 
-        boxes = self:decodeBoxes(sections[3]),
+        boxes = self:DecodeBoxes(sections[3]),
 
-        currencies = self:decodeSimple(sections[4]),
-        stats = self:decodeSimple(sections[5]),
-        upgrades = self:decodeSimple(sections[6])
+        currencies = self:DecodeSimple(sections[4]),
+        stats = self:DecodeSimple(sections[5]),
+        upgrades = self:DecodeSimple(sections[6])
     }
 
     if not hasMigrated then
         finalOutput = {
             version = CONSTANTS.DEFAULT_DATA.version,
-            slot = self:decodeSlot(sections[1]),
+            slot = self:DecodeSlot(sections[1]),
 
-            boxes = self:decodeBoxes(sections[4]),
+            boxes = self:DecodeBoxes(sections[4]),
 
-            currencies = self:decodeSimple(sections[2]),
-            stats = self:decodeSimple(sections[3]),
+            currencies = self:DecodeSimple(sections[2]),
+            stats = self:DecodeSimple(sections[3]),
             upgrades = table.clone(CONSTANTS.DEFAULT_DATA.upgrades),
         }
     end

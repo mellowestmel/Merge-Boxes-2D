@@ -1,6 +1,6 @@
 -- ~/code/data/boxDefinitions/cosmetic.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 local color = require("code.engine.helpers.color")
 
 local cosmetic = {

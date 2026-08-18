@@ -34,7 +34,7 @@ local function addString(...)
     return table.concat(parts, " ")
 end
 
-function Module:encodeBoxes(boxes)
+function Module:EncodeBoxes(boxes)
     local output = ""
 
     for _, box in pairs(boxes) do
@@ -55,7 +55,7 @@ function Module:encodeBoxes(boxes)
     return output
 end
 
-function Module:encodeSimple(section)
+function Module:EncodeSimple(section)
     if not section then return "" end
 
     local lines = {}
@@ -67,34 +67,34 @@ function Module:encodeSimple(section)
 end
 
 
-function Module:encodeVersion(version)
+function Module:EncodeVersion(version)
     return "version " .. version .. "\n"
 end
 
-function Module:encodeSlot(slot)
+function Module:EncodeSlot(slot)
     return "slot " .. slot .. "\n"
 end
 
-function Module:encodeSettings(file)
+function Module:EncodeSettings(file)
     local finalOutput = addStringNewLine(
-        self:encodeSimple(file.audio),
-        self:encodeSimple(file.graphics),
-        self:encodeSimple(file.accessibility)
+        self:EncodeSimple(file.audio),
+        self:EncodeSimple(file.graphics),
+        self:EncodeSimple(file.accessibility)
     )
 
     return finalOutput
 end
 
-function Module:encode(file)
+function Module:Encode(file)
     local finalOutput = addStringNewLine(
-        self:encodeVersion(file.version),
-        self:encodeSlot(file.slot),
+        self:EncodeVersion(file.version),
+        self:EncodeSlot(file.slot),
 
-        self:encodeBoxes(file.boxes),
+        self:EncodeBoxes(file.boxes),
 
-        self:encodeSimple(file.currencies),
-        self:encodeSimple(file.stats),
-        self:encodeSimple(file.upgrades)
+        self:EncodeSimple(file.currencies),
+        self:EncodeSimple(file.stats),
+        self:EncodeSimple(file.upgrades)
     )
 
     finalOutput = encryptBase64(finalOutput)

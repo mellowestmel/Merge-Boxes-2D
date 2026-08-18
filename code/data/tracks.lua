@@ -11,7 +11,7 @@ local rawTracks = {
         isGameplayTrack = false
     },
     settings = {
-        trackPath = "assets/tracks/mainmenu.ogg",
+        trackPath = "assets/tracks/settingsmenu.ogg",
         author = "Orzech05",
         trackName = "Fine Tuning",
 

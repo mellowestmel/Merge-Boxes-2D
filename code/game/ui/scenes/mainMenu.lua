@@ -1,6 +1,6 @@
 -- ~/code/game/ui/scenes/mainMenu.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 
 local SettingsModule = require("code.engine.saves.settings")
 
@@ -20,47 +20,53 @@ local SceneData = require("code.data.ui.scenes.mainMenu")
 local Module = {}
 Module._elements = {}
 Module._objects = {}
+Module._hideableElements = {}
+
 Module.name = "mainMenu"
 
 local logo2 = nil
 local logo = nil
 
-function Module:clean()
+function Module:Clean()
     for _, element in pairs(self._elements) do
-        element:remove()
+        element:Remove()
     end
 
     for _, object in pairs(self._objects) do
-        object:remove()
+        object:Remove()
     end
 
+    self._hideableElements = {}
     self._elements = {}
     self._objects = {}
 
-    UISharedFunctions:cleanUpdates()
+    UISharedFunctions:CleanUpdates()
 end
 
 local function setupLogo(self)
-    logo = RenderModule:createElement(SceneData.logo)
+    logo = RenderElementModule.new(SceneData.logo)
     table.insert(self._elements, logo)
 
-    logo2 = RenderModule:createElement(SceneData.logo2)
+    logo2 = RenderElementModule.new(SceneData.logo2)
     table.insert(self._elements, logo2)
 end
 
 local function setupBackground(self)
-    local background = RenderModule:createElement(SceneData.background)
+    local background = RenderElementModule.new(SceneData.background)
     table.insert(self._elements, background)
 end
 
 local function setupPlayGameButton(self)
-    local playGameButtonHitbox = RenderModule:createElement(SceneData.playGameButtonHitbox)
-    local playGameButtonLabel = RenderModule:createElement(SceneData.playGameButtonLabel)
+    local playGameButtonHitbox = RenderElementModule.new(SceneData.playGameButtonHitbox)
+    local playGameButtonLabel = RenderElementModule.new(SceneData.playGameButtonLabel)
+
+    table.insert(self._hideableElements, playGameButtonHitbox)
+    table.insert(self._hideableElements, playGameButtonLabel)
 
     table.insert(self._elements, playGameButtonHitbox)
     table.insert(self._elements, playGameButtonLabel)
 
-    local playGameButton = UIButtonObjectModule:createButton({
+    local playGameButton = UIButtonObjectModule.new({
         elements = {
             playGameButtonHitbox,
             playGameButtonLabel
@@ -70,9 +76,9 @@ local function setupPlayGameButton(self)
 
         mouseButton = 1,
         onClick = function()
-            ScreenTransitionModule:transition({
+            ScreenTransitionModule:Transition({
                 callback = function()
-                    UISceneHandlerModule:switch("saveFiles")
+                    UISceneHandlerModule:Switch("saveFiles")
                 end
             })
         end
@@ -82,13 +88,16 @@ local function setupPlayGameButton(self)
 end
 
 local function setupQuitButton(self)
-    local quitButtonHitbox = RenderModule:createElement(SceneData.quitButtonHitbox)
-    local quitButtonLabel = RenderModule:createElement(SceneData.quitButtonLabel)
+    local quitButtonHitbox = RenderElementModule.new(SceneData.quitButtonHitbox)
+    local quitButtonLabel = RenderElementModule.new(SceneData.quitButtonLabel)
+
+    table.insert(self._hideableElements, quitButtonHitbox)
+    table.insert(self._hideableElements, quitButtonLabel)
 
     table.insert(self._elements, quitButtonHitbox)
     table.insert(self._elements, quitButtonLabel)
 
-    local quitButton = UIButtonObjectModule:createButton({
+    local quitButton = UIButtonObjectModule.new({
         elements = {
             quitButtonHitbox,
             quitButtonLabel
@@ -98,7 +107,7 @@ local function setupQuitButton(self)
 
         mouseButton = 1,
         onClick = function()
-            ScreenTransitionModule:transition({
+            ScreenTransitionModule:Transition({
                 callback = function()
                     love.event.quit()
                 end
@@ -109,7 +118,31 @@ local function setupQuitButton(self)
     table.insert(self._objects, quitButton)
 end
 
-function Module:update()
+local function setupVisibilityToggle(self)
+    local visibilityToggle = true
+
+    local visibilityToggleButton = UIButtonObjectModule.new({
+        elements = {
+            logo
+        },
+
+        hitboxElement = logo,
+
+        mouseButton = 1,
+
+        onClick = function()
+            visibilityToggle = not visibilityToggle
+
+            for _, element in pairs(self._hideableElements) do
+                element.render = visibilityToggle
+            end
+        end
+    })
+
+    table.insert(self._objects, visibilityToggleButton)
+end
+
+function Module:Update()
     local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
     if not animationsEnabled then return end
 
@@ -135,6 +168,8 @@ function Module:init()
     setupQuitButton(self)
     setupBackground(self)
     setupLogo(self)
+
+    setupVisibilityToggle(self)
 end
 
 return Module

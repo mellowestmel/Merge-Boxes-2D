@@ -5,14 +5,14 @@ local ScreenFlashModule = require("code.game.vfx.screenFlash")
 
 local Module = {}
 
-function Module:update(deltaTime)
-    ScreenTransitionModule:update(deltaTime)
-    ScreenFlashModule:update(deltaTime)
+function Module:Update(deltaTime)
+    ScreenTransitionModule:Update(deltaTime)
+    ScreenFlashModule:Update(deltaTime)
 end
 
-function Module.init()
-    ScreenTransitionModule.init()
-    ScreenFlashModule.init()
+function Module.Init()
+    ScreenTransitionModule.Init()
+    ScreenFlashModule.Init()
 end
 
 return Module

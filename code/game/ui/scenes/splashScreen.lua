@@ -1,6 +1,6 @@
 -- ~/code/game/ui/scenes/mainMenu.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 local SoundModule = require("code.engine.sound")
 local table = require("code.engine.helpers.table")
 
@@ -30,13 +30,13 @@ local logoFlipTimer = 0
 local splashLogo1
 local splashLogo2
 
-function Module:clean()
+function Module:Clean()
     for _, element in pairs(self._elements) do
-        element:remove()
+        element:Remove()
     end
 
     for _, object in pairs(self._objects) do
-        object:remove()
+        object:Remove()
     end
 
     self._elements = {}
@@ -44,8 +44,8 @@ function Module:clean()
 end
 
 local function setupSplashScreenLogo(self)
-    splashLogo1 = RenderModule:createElement(SceneData.splashScreenLogo1)
-    splashLogo2 = RenderModule:createElement(SceneData.splashScreenLogo2)
+    splashLogo1 = RenderElementModule.new(SceneData.splashScreenLogo1)
+    splashLogo2 = RenderElementModule.new(SceneData.splashScreenLogo2)
 
     table.insert(self._elements, splashLogo1)
     table.insert(self._elements, splashLogo2)
@@ -59,21 +59,21 @@ local function setupSplashScreenLogo(self)
     })
 
     if splashScreenSound then
-        splashScreenSound:play()
-        splashScreenSound:remove()
+        splashScreenSound:Play()
+        splashScreenSound:Remove()
     end
 end
 
 local function transition()
-    ScreenTransitionModule:transition({
+    ScreenTransitionModule:Transition({
         callback = function()
-            UISceneHandlerModule:switch("mainMenu")
+            UISceneHandlerModule:Switch("mainMenu")
         end
     })
 end
 
 function Module:init()
-    MusicHandlerModule:stopTrack(MusicHandlerModule.playingTrack)
+    MusicHandlerModule:StopTrack(MusicHandlerModule.playingTrack)
 
     transitionTimer = 2
     logoTimer = .5
@@ -85,7 +85,7 @@ function Module:init()
     logoFlipTimer = (animationsEnabled and 0 or 999)
 end
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     if not logoShown then
         logoTimer = logoTimer - deltaTime
 

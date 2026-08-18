@@ -12,12 +12,12 @@ local BoxesObjectModule = require("code.game.box.object")
 local Module = {}
 Module.lastSpawned = 0
 
-function Module:spawn()
+function Module:Spawn()
     local baseSpawnTier = CONSTANTS.DEFAULT_BOX_SPAWN_TIER
-    + UpgradeHandlerModule:getEffect("spawnTier")
+    + UpgradeHandlerModule:GetEffect("spawnTier")
 
-    local luckyChance = UpgradeHandlerModule:getEffect("luckyRoll")
-    local spawnAmount = UpgradeHandlerModule:getEffect("multiSpawn")
+    local luckyChance = UpgradeHandlerModule:GetEffect("luckyRoll")
+    local spawnAmount = UpgradeHandlerModule:GetEffect("multiSpawn")
 
     for _ = 1, spawnAmount do
         local spawnTier = baseSpawnTier
@@ -31,8 +31,8 @@ function Module:spawn()
             SaveFilesModule.loadedFile.stats.highestBoxTier = spawnTier
         end
 
-        local data = BoxesObjectModule:getBoxDataByTier(spawnTier)
-        local box = BoxesObjectModule:createBox(data)
+        local data = BoxesObjectModule:GetBoxDataByTier(spawnTier)
+        local box = BoxesObjectModule:CreateBox(data)
 
         if box then
             local x = math.random(0, CONSTANTS.AREA_WIDTH)
@@ -54,9 +54,9 @@ function Module:spawn()
     end
 end
 
-function Module:getSpawnCooldown()
+function Module:GetSpawnCooldown()
     return CONSTANTS.DEFAULT_BOX_SPAWN_COOLDOWN
-        - UpgradeHandlerModule:getEffect("spawnCooldown")
+        - UpgradeHandlerModule:GetEffect("spawnCooldown")
 end
 
 return Module

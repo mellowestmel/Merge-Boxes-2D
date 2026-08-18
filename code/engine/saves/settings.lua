@@ -10,18 +10,18 @@ local table = require("code.engine.helpers.table")
 local Module = {}
 Module.loadedFile = nil
 
-function Module:saveFile()
-    local finalOutput = SavesEncodeModule:encodeSettings(self.loadedFile)
+function Module:SaveFile()
+    local finalOutput = SavesEncodeModule:EncodeSettings(self.loadedFile)
     local fileName = CONSTANTS.SETTINGS_FILE_NAME
 
     love.filesystem.write(fileName, finalOutput)
 end
 
-function Module:loadFile()
+function Module:LoadFile()
     local fileName = CONSTANTS.SETTINGS_FILE_NAME
 
     local file = love.filesystem.read(fileName)
-    local decodedFile = (file and SavesDecodeModule:decodeSettings(file) or nil)
+    local decodedFile = (file and SavesDecodeModule:DecodeSettings(file) or nil)
 
     if not decodedFile then
         decodedFile = table.clone(CONSTANTS.DEFAULT_SETTINGS)

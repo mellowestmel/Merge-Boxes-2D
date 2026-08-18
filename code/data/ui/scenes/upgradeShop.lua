@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/upgradeShop.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 
 local CONSTANTS = require("code.game.ui.constants")
 local UILayoutData = require("code.data.ui.layout")

@@ -20,7 +20,7 @@ local BoxesData = require("code.data.boxes")
 local Module = {}
 Module._activeMerges = {}
 
-function Module:merge(boxA, boxB)
+function Module:Merge(boxA, boxB)
     if boxA.dragging or boxB.dragging then return end
     if boxA.merging or boxB.merging then return end
 
@@ -63,7 +63,7 @@ function Module:merge(boxA, boxB)
     })
 end
 
-function Module:mergeUpdate(deltaTime)
+function Module:MergeUpdate(deltaTime)
     for i = #self._activeMerges, 1, -1 do
         local merge = self._activeMerges[i]
         if not merge then goto continue end
@@ -107,7 +107,7 @@ function Module:mergeUpdate(deltaTime)
             end
 
             local newBoxTier = boxA.tier + 1
-            local newBoxData = BoxesObjectModule:getBoxDataByTier(newBoxTier)
+            local newBoxData = BoxesObjectModule:GetBoxDataByTier(newBoxTier)
 
             local velocityX = (boxA.velocityX + boxB.velocityX) * CONSTANTS.ELASTICITY
             local velocityY = (boxA.velocityY + boxB.velocityY) * CONSTANTS.ELASTICITY
@@ -118,10 +118,10 @@ function Module:mergeUpdate(deltaTime)
             local middleX = merge.middleX
             local middleY = merge.middleY
 
-            boxA:remove()
-            boxB:remove()
+            boxA:Remove()
+            boxB:Remove()
 
-            local newBox = BoxesObjectModule:createBox(newBoxData)
+            local newBox = BoxesObjectModule:CreateBox(newBoxData)
 
             if newBox and newBoxData then
                 if SaveFilesModule.loadedFile.stats.highestBoxTier < newBoxTier then
@@ -153,14 +153,14 @@ function Module:mergeUpdate(deltaTime)
                 newBox.element.scaleX = scale
                 newBox.element.scaleY = scale
 
-                local mergeSound = SoundModule:createSound(newBox.mergeSoundData)
+                local mergeSound = SoundModule:CreateSound(newBox.mergeSoundData)
                 if mergeSound then
-                    mergeSound:play()
-                    mergeSound:remove()
+                    mergeSound:Play()
+                    mergeSound:Remove()
                 end
 
                 if newBox.flashScreen then
-                    ScreenFlashModule:flash(newBox.screenFlashColor)
+                    ScreenFlashModule:Flash(newBox.screenFlashColor)
                 end
             end
 
@@ -195,11 +195,11 @@ end
 
 local maxMergeQueryRadius = calculateMaxMergeRange()
 
-function Module:checkMerges()
-    local boxesArray = BoxesObjectModule:getSortedArray()
+function Module:CheckMerges()
+    local boxesArray = BoxesObjectModule:GetSortedArray()
     local boxesCount = #boxesArray
 
-    local tree = QuadtreeModule:createQuadtree({
+    local tree = QuadtreeModule.new({
         x = 0,
         y = 0,
         width = CONSTANTS.AREA_WIDTH,
@@ -220,7 +220,7 @@ function Module:checkMerges()
         local boxA = boxesArray[indexA]
         if boxA.merging then goto continue end
 
-        local nearbyPoints = tree:queryRadius(
+        local nearbyPoints = tree:QueryRadius(
             { x = boxA.element.x, y = boxA.element.y },
             maxMergeQueryRadius
         )
@@ -239,7 +239,7 @@ function Module:checkMerges()
             local mergeRange = getMergeRange(boxA, boxB)
             if distance > mergeRange then goto continue end
 
-            self:merge(boxA, boxB)
+            self:Merge(boxA, boxB)
 
             :: continue ::
         end
@@ -248,9 +248,9 @@ function Module:checkMerges()
     end
 end
 
-function Module:update(deltaTime)
-    self:mergeUpdate(deltaTime)
-    self:checkMerges()
+function Module:Update(deltaTime)
+    self:MergeUpdate(deltaTime)
+    self:CheckMerges()
 end
 
 return Module

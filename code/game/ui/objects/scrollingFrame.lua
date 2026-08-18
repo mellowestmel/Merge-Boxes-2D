@@ -1,6 +1,6 @@
 -- ~/code/game/ui/objects/scrollingFrame.lua
 
-local RenderModule = require("code.engine.render")
+local RenderUtilsModule = require("code.engine.render.utils")
 local IdManagerModule = require("code.engine.idManager")
 local SettingsModule = require("code.engine.saves.settings")
 
@@ -34,7 +34,7 @@ ScrollingFrame.__index = ScrollingFrame
 local Module = {}
 Module._scrollingFrames = {}
 
-local manager = IdManagerModule:createManager()
+local manager = IdManagerModule:CreateManager()
 
 --- Gets unscaled native height of a sprite/text element for scaling math
 local function getUnscaledHeight(element)
@@ -67,7 +67,7 @@ function ScrollingFrame:_updateScrollBarScale()
 end
 
 --- Automatically calculates content height from child elements including top & bottom padding
-function ScrollingFrame:recalculateContentHeight(padding)
+function ScrollingFrame:RecalculateContentHeight(padding)
     self.padding = padding or self.padding or 0
     if #self.elements == 0 then
         self.contentHeight = 0
@@ -100,7 +100,7 @@ function ScrollingFrame:recalculateContentHeight(padding)
     return self.contentHeight
 end
 
-function ScrollingFrame:remove()
+function ScrollingFrame:Remove()
     Module._scrollingFrames[self.id] = nil
     manager:release(self.id)
 end
@@ -176,41 +176,41 @@ function ScrollingFrame:_updatePositions()
     self._lastOffset = self.scrollOffset
 end
 
-function ScrollingFrame:wheelMoved(x, y)
-    local mouseX, mouseY = RenderModule:getMousePos()
-    if not self.hitboxElement:isPointInside(mouseX, mouseY) then return end
+function ScrollingFrame:WheelMoved(x, y)
+    local mouseX, mouseY = RenderUtilsModule.GetMousePos()
+    if not self.hitboxElement:IsPointInside(mouseX, mouseY) then return end
 
     self.targetScrollOffset = clampOffset(self, self.targetScrollOffset - (y * self.scrollSpeed))
 end
 
-function ScrollingFrame:mousePressed(x, y, button)
+function ScrollingFrame:MousePressed(x, y, button)
     if button ~= 1 then return end
 
-    if self.scrollBarElement and self.scrollBarElement:isPointInside(x, y) then
+    if self.scrollBarElement and self.scrollBarElement:IsPointInside(x, y) then
         self._isDraggingTrack = true
         self._dragStartY = y
         self._initialOffsetOnDrag = self.scrollOffset
     end
 end
 
-function ScrollingFrame:mouseReleased(x, y, button)
+function ScrollingFrame:MouseReleased(x, y, button)
     if button == 1 then
         self._isDraggingTrack = false
     end
 end
 
-function ScrollingFrame:update(deltaTime)
-    if not self.hitboxElement then self:remove() return end
+function ScrollingFrame:Update(deltaTime)
+    if not self.hitboxElement then self:Remove() return end
 
     if self._isDraggingTrack and self.scrollTrackElement and self.scrollBarElement then
-        local _, mouseY = RenderModule:getMousePos()
+        local _, mouseY = RenderUtilsModule.GetMousePos()
         local dragDelta = mouseY - self._dragStartY
 
-        local trackHeight = self.scrollTrackElement:getHeight()
-        local thumbHeight = self.scrollBarElement:getHeight()
+        local _, trackHeight = self.scrollTrackElement:GetDimensions()
+        local _,  thumbHeight = self.scrollBarElement:GetDimensions()
         local travelDistance = math.max(1, trackHeight - thumbHeight)
 
-        local frameHeight = self.hitboxElement:getHeight()
+        local _, frameHeight = self.hitboxElement:GetDimensions()
         local maxScroll = math.max(0, self.contentHeight - frameHeight)
 
         local scrollDelta = (dragDelta / travelDistance) * maxScroll
@@ -231,13 +231,13 @@ function ScrollingFrame:update(deltaTime)
     self:_updatePositions()
 end
 
-function Module:createScrollingFrame(data)
+function Module:CreateScrollingFrame(data)
     if not data or not data.hitboxElement then return end
 
     local padding = data.padding or 0
 
     local scrollingFrame = setmetatable({
-        id = manager:get(),
+        id = manager:Get(),
 
         hitboxElement = data.hitboxElement,
         elements = data.elements or {},
@@ -266,7 +266,7 @@ function Module:createScrollingFrame(data)
     end
 
     if not data.contentHeight then
-        scrollingFrame:recalculateContentHeight(padding)
+        scrollingFrame:RecalculateContentHeight(padding)
     else
         scrollingFrame:_updateScrollBarScale()
     end
@@ -275,27 +275,27 @@ function Module:createScrollingFrame(data)
     return scrollingFrame
 end
 
-function Module:wheelMoved(x, y)
+function Module:WheelMoved(x, y)
     for _, scrollingFrame in pairs(self._scrollingFrames) do
-        scrollingFrame:wheelMoved(x, y)
+        scrollingFrame:WheelMoved(x, y)
     end
 end
 
-function Module:mousePressed(x, y, button)
+function Module:MousePressed(x, y, button)
     for _, scrollingFrame in pairs(self._scrollingFrames) do
-        scrollingFrame:mousePressed(x, y, button)
+        scrollingFrame:MousePressed(x, y, button)
     end
 end
 
-function Module:mouseReleased(x, y, button)
+function Module:MouseReleased(x, y, button)
     for _, scrollingFrame in pairs(self._scrollingFrames) do
-        scrollingFrame:mouseReleased(x, y, button)
+        scrollingFrame:MouseReleased(x, y, button)
     end
 end
 
-function Module:updateAll(deltaTime)
+function Module:UpdateAll(deltaTime)
     for _, scrollingFrame in pairs(self._scrollingFrames) do
-        scrollingFrame:update(deltaTime)
+        scrollingFrame:Update(deltaTime)
     end
 end
 

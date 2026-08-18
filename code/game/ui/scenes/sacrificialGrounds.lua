@@ -1,6 +1,6 @@
 -- ~/code/game/ui/scenes/sacrificialGrounds.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 local table = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
@@ -16,28 +16,28 @@ Module._elements = {}
 Module._objects = {}
 Module.name = "sacrificialGrounds"
 
-function Module:clean()
+function Module:Clean()
     for _, element in pairs(self._elements) do
-        element:remove()
+        element:Remove()
     end
 
     for _, button in pairs(self._objects) do
-        button:remove()
+        button:Remove()
     end
 
     self._elements = {}
     self._objects = {}
 
-    UISharedFunctions:cleanUpdates()
+    UISharedFunctions:CleanUpdates()
 end
 
 local function setupBackground(self)
-    local background = RenderModule:createElement(SceneData.background)
+    local background = RenderElementModule.new(SceneData.background)
     table.insert(self._elements, background)
 end
 
-function Module:update(deltaTime)
-    UISharedFunctions:update()
+function Module:Update(deltaTime)
+    UISharedFunctions:Update()
 end
 
 function Module:init()

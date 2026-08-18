@@ -10,21 +10,21 @@ local function sceneExists(name)
     return love.filesystem.getInfo(fsPath, "file") ~= nil
 end
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     if not self.currentScene then return end
 
     if self.currentScene.update then
-        self.currentScene:update(deltaTime)
+        self.currentScene:Update(deltaTime)
     end
 end
 
-function Module:switch(name, ...)
+function Module:Switch(name, ...)
     if not sceneExists(name) then return end
 
     self.lastScene = self.currentScene
 
     if self.currentScene then
-        self.currentScene:clean()
+        self.currentScene:Clean()
     end
 
     local scene = require("code.game.ui.scenes." .. name)

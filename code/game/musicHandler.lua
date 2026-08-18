@@ -27,7 +27,7 @@ local function pickRandomGameplayTrack(exclude)
     return pick
 end
 
-function Module:update()
+function Module:Update()
     local name = self.playingTrack
     if name then
         local playingTrack = Module.loadedTracks[name]
@@ -37,14 +37,14 @@ function Module:update()
         end
     end
 
-    self:playRandomGameplayTrack(name)
+    self:PlayRandomGameplayTrack(name)
 end
 
-function Module.init()
+function Module.Init()
     for name, track in pairs(TracksData) do
         local data = table.clone(track)
 
-        local soundObject = SoundModule:createSound({
+        local soundObject = SoundModule.new({
             soundPath = data.trackPath,
             volume = data.volume or 1,
             type = "track",
@@ -60,42 +60,42 @@ function Module.init()
     end
 end
 
-function Module:playTrack(name)
+function Module:PlayTrack(name)
     if name == self.playingTrack then return end
 
     if self.playingTrack then
-        self:stopTrack(self.playingTrack)
+        self:StopTrack(self.playingTrack)
     end
 
     local track = self.loadedTracks[name]
     if not track then return end
 
-    track.soundObject:play()
+    track.soundObject:Play()
 
     self.playingTrack = name
 end
 
-function Module:pauseTrack(name)
+function Module:PauseTrack(name)
     local track = self.loadedTracks[name]
     if not track then return end
 
-    track.soundObject:pause()
+    track.soundObject:Pause()
 end
 
-function Module:stopTrack(name)
+function Module:StopTrack(name)
     local track = self.loadedTracks[name]
     if not track then return end
 
-    track.soundObject:stop()
+    track.soundObject:Stop()
     self.playingTrack = nil
 end
 
-function Module:playRandomGameplayTrack(exclude)
+function Module:PlayRandomGameplayTrack(exclude)
     local track = pickRandomGameplayTrack(exclude)
-    self:playTrack(track)
+    self:PlayTrack(track)
 end
 
-function Module:getLoadedTracks()
+function Module:GetLoadedTracks()
     return self.loadedTracks
 end
 

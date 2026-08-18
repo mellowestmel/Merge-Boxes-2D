@@ -1,6 +1,6 @@
 -- ~/code/game/ui/objects/button.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 local SoundModule = require("code.engine.sound")
 local IdManagerModule = require("code.engine.idManager")
 
@@ -35,16 +35,17 @@ Button.__index = Button
 local Module = {}
 Module._buttons = {}
 
-local manager = IdManagerModule:createManager()
+local manager = IdManagerModule:CreateManager()
 
-function Button:remove()
+function Button:Remove()
     Module._buttons[self.id] = nil
     manager:release(self.id)
 end
 
-function Button:mousePressed(x, y, mouseButton)
+function Button:MousePressed(x, y, mouseButton)
     if ScreenTransitionModule.transitioning then return end
 
+    if not self.hitboxElement.render then return end
     if (love.timer.getTime() - self.lastUsed) < self.cooldown then return end
     if not self.hitboxElement:isPointInside(x, y) then return end
     if mouseButton ~= self.mouseButton then return end
@@ -64,11 +65,11 @@ function Button:mousePressed(x, y, mouseButton)
     end
 
     if self.playClickSound then
-        local sound = SoundModule:createSound({soundPath = "assets/sounds/ui/click.wav"})
+        local sound = SoundModule:CreateSound({soundPath = "assets/sounds/ui/click.wav"})
 
         if sound then
-            sound:play(true, -100, 100, 1000)
-            sound:remove()
+            sound:Play(true, -100, 100, 1000)
+            sound:Remove()
         end
     end
 
@@ -77,11 +78,11 @@ function Button:mousePressed(x, y, mouseButton)
     end
 end
 
-function Button:update(deltaTime)
-    if not self.hitboxElement then self:remove() return end
+function Button:Update(deltaTime)
+    if not self.hitboxElement then self:Remove() return end
 
-    local mouseX, mouseY = RenderModule:getMousePos()
-    self._isHovered = self.hitboxElement:isPointInside(mouseX, mouseY)
+    local mouseX, mouseY = RenderModule:GetMousePos()
+    self._isHovered = self.hitboxElement:IsPointInside(mouseX, mouseY)
 
     local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
     local scaleLerp = animationsEnabled and math.min(1, self._scaleSpeed * deltaTime * 10) or 1
@@ -103,13 +104,13 @@ function Button:update(deltaTime)
     end
 end
 
-function Module:createButton(data)
+function Module.new(data)
     if not data then return end
     if not data.hitboxElement then return end
     if #data.elements == 0 then return end
 
     local button = setmetatable({
-        id = manager:get(),
+        id = manager:Get(),
 
         elements = data.elements or {},
 
@@ -133,15 +134,15 @@ function Module:createButton(data)
     return button
 end
 
-function Module:mousePressed(x, y, mouseButton)
+function Module:MousePressed(x, y, mouseButton)
     for _, button in pairs(self._buttons) do
         button:mousePressed(x, y, mouseButton)
     end
 end
 
-function Module:updateAll(deltaTime)
+function Module:UpdateAll(deltaTime)
     for _, button in pairs(self._buttons) do
-        button:update(deltaTime)
+        button:Update(deltaTime)
     end
 end
 

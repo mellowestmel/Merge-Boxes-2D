@@ -1,8 +1,8 @@
 -- ~/code/game/vfx/constants.lua
 
-local RenderModule = require("code.engine.render")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 return {
-    BASE_SCREEN_FLASH_COLOR = RenderModule:createColor(255, 227, 17, 0),
+    BASE_SCREEN_FLASH_COLOR = RenderUtilsModule.CreateColor(255, 227, 17, 0),
     BASE_SCREEN_FLASH_SPEED = 2
 }

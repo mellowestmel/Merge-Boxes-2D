@@ -14,37 +14,37 @@ local Module = {}
 Module.lastSaveSlot = 1
 Module.loadedFile = nil
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     if not self.loadedFile then return end
 
     self.loadedFile.stats.playtime = self.loadedFile.stats.playtime + deltaTime
 end
 
-function Module:saveFile(file)
+function Module:SaveFile(file)
     if type(file) == "string" then
-        file = SavesDecodeModule:decode(file)
+        file = SavesDecodeModule:Decode(file)
     end
 
     if self.loadedFile and self.loadedFile.slot == file.slot then
-        self.loadedFile.boxes = BoxesObjectModule:getSortedArray()
+        self.loadedFile.boxes = BoxesObjectModule:GetSortedArray()
     end
 
-    local finalOutput = SavesEncodeModule:encode(file)
+    local finalOutput = SavesEncodeModule:Encode(file)
     local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(file.slot) .. CONSTANTS.SAVE_FILE_EXTENSION
 
     love.filesystem.write(fileName, finalOutput)
 end
 
-function Module:unloadFile(file)
-    Module:saveFile(file)
+function Module:UnloadFile(file)
+    Module:SaveFile(file)
     self.loadedFile = nil
 end
 
-function Module:readFile(slot)
+function Module:ReadFile(slot)
     local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
 
     local file = love.filesystem.read(fileName)
-    local decodedFile = (file and SavesDecodeModule:decode(file) or nil)
+    local decodedFile = (file and SavesDecodeModule:Decode(file) or nil)
 
     return decodedFile
 end
@@ -53,8 +53,8 @@ local function loadBoxes(boxesData)
     if not boxesData then return end
 
     for _, box in pairs(boxesData) do
-        local boxData = BoxesObjectModule:getBoxDataByTier(box.tier)
-        local boxObject = BoxesObjectModule:createBox(boxData)
+        local boxData = BoxesObjectModule:GetBoxDataByTier(box.tier)
+        local boxObject = BoxesObjectModule:CreateBox(boxData)
 
         if boxObject then
             boxObject.velocityX = box.velocityX
@@ -68,10 +68,10 @@ local function loadBoxes(boxesData)
     end
 end
 
-function Module:loadFile(slot)
+function Module:LoadFile(slot)
     slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
 
-    local decodedFile = Module:readFile(slot)
+    local decodedFile = Module:ReadFile(slot)
 
     if not decodedFile then
         decodedFile = table.clone(CONSTANTS.DEFAULT_DATA)
@@ -86,15 +86,10 @@ function Module:loadFile(slot)
     return decodedFile
 end
 
-function Module:deleteFile(slot)
-    print("Deleting slot:", slot)
-
+function Module:DeleteFile(slot)
     slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
 
-    print("After clamp:", slot)
-
     local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
-    print("Deleting file:", fileName)
 
     if love.filesystem.getInfo(fileName) then
         love.filesystem.remove(fileName)
@@ -109,7 +104,7 @@ function Module:getFiles()
     local files = {}
 
     for slot = 1, CONSTANTS.MAX_SAVE_SLOTS do
-        files[slot] = self:readFile(slot)
+        files[slot] = self:ReadFile(slot)
     end
 
     return files

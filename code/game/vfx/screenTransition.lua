@@ -1,7 +1,9 @@
 -- ~/code/game/vfx/sceneTransition.lua
 
 local SettingsModule = require("code.engine.saves.settings")
-local RenderModule = require("code.engine.render")
+
+local RenderElementModule = require("code.engine.render.element")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 local Module = {}
 Module._screenTransitionElement = nil
@@ -40,7 +42,7 @@ function Module:transition(data)
     }
 end
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     local element = self._screenTransitionElement
     if not element then return end
 
@@ -68,15 +70,15 @@ function Module:update(deltaTime)
     end
 end
 
-function Module.init()
-    Module._screenTransitionElement = RenderModule:createElement({
+function Module.Init()
+    Module._screenTransitionElement = RenderElementModule.new({
         spritePath = "assets/sprites/vfx/whitesquare.png",
         type = "sprite",
 
-        scaleX = 10,
-        scaleY = 10,
+        scaleX = 10^10,
+        scaleY = 10^10,
 
-        color = RenderModule:createColor(0, 0, 0, 0),
+        color = RenderUtilsModule.CreateColor(0, 0, 0, 0),
         zIndex = math.huge
     })
 end

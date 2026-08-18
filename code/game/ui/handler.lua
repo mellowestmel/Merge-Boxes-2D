@@ -7,28 +7,28 @@ local UIButtonObjectModule = require("code.game.ui.objects.button")
 
 local Module = {}
 
-function Module:wheelMoved(x, y)
-    UIScrollingFrameObjectModule:wheelMoved(x, y)
+function Module:WheelMoved(x, y)
+    UIScrollingFrameObjectModule:WheelMoved(x, y)
 end
 
-function Module:mousePressed(x, y, button)
-    UIScrollingFrameObjectModule:mousePressed(x, y, button)
-    UIButtonObjectModule:mousePressed(x, y, button)
+function Module:MousePressed(x, y, button)
+    UIScrollingFrameObjectModule:MousePressed(x, y, button)
+    UIButtonObjectModule:MousePressed(x, y, button)
 end
 
-function Module:mouseReleased(x, y, button)
-    UIScrollingFrameObjectModule:mouseReleased(x, y, button)
+function Module:MouseReleased(x, y, button)
+    UIScrollingFrameObjectModule:MouseReleased(x, y, button)
 end
 
-function Module:update(deltaTime)
-    UIScrollingFrameObjectModule:updateAll(deltaTime)
-    UIButtonObjectModule:updateAll(deltaTime)
+function Module:Update(deltaTime)
+    UIScrollingFrameObjectModule:UpdateAll(deltaTime)
+    UIButtonObjectModule:UpdateAll(deltaTime)
 
-    UISceneHandlerModule:update(deltaTime)
+    UISceneHandlerModule:Update(deltaTime)
 end
 
-function Module.init()
-    UISceneHandlerModule:switch("splashScreen")
+function Module.Init()
+    UISceneHandlerModule:Switch("splashScreen")
 end
 
 return Module

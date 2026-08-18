@@ -1,6 +1,6 @@
 -- ~/code/game/ui/scenes/upgradeShop.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 local SoundModule = require("code.engine.sound")
 
 local string = require("code.engine.helpers.string")
@@ -31,32 +31,32 @@ Module._objects = {}
 Module._upgradeButtons = {}
 Module.name = "upgradeShop"
 
-function Module:clean()
+function Module:Clean()
     for _, element in pairs(self._elements) do
-        element:remove()
+        element:Remove()
     end
 
     for _, object in pairs(self._objects) do
-        object:remove()
+        object:Remove()
     end
 
     self._elements = {}
     self._objects = {}
     self._upgradeButtons = {}
 
-    UISharedFunctions:cleanUpdates()
+    UISharedFunctions:CleanUpdates()
 end
 
 local function setupBackground(self)
-    local background = RenderModule:createElement(SceneData.background)
+    local background = RenderElementModule.new(SceneData.background)
     table.insert(self._elements, background)
 end
 
 local function setupTheBirbsWord(self)
-    local birb = RenderModule:createElement(SceneData.theBirbsWord)
+    local birb = RenderElementModule.new(SceneData.theBirbsWord)
     table.insert(self._elements, birb)
 
-    local birbButton = UIButtonObjectModule:createButton({
+    local birbButton = UIButtonObjectModule.new({
         elements = { birb },
 
         hitboxElement = birb,
@@ -65,8 +65,8 @@ local function setupTheBirbsWord(self)
         onClick = function()
             local birbSound = SoundModule:createSound({ soundPath = "assets/sounds/birb.wav" })
             if birbSound then
-                birbSound:play()
-                birbSound:remove()
+                birbSound:Play()
+                birbSound:Remove()
             end
         end
     })
@@ -85,7 +85,7 @@ local function createStackIndicators(self, buttonConfig, maximumStacks, currentS
     local startPositionX = buttonConfig.x - (((maximumStacks - 1) * itemSpacing) / 2)
 
     for stackIndex = 1, maximumStacks do
-        local indicator = RenderModule:createElement(SceneData.upgradeStackCounter)
+        local indicator = RenderElementModule.new(SceneData.upgradeStackCounter)
 
         indicator.x = UILayoutHelperModule.getHorizontalStackX(startPositionX, stackIndex, itemSpacing)
         indicator.y = buttonConfig.indicatorY
@@ -104,7 +104,7 @@ local function createUpgradeButton(self, buttonConfig)
     local upgrade = UpgradeHandlerModule:getUpgrade(buttonConfig.id)
 
     -- Hitbox Background
-    local hitbox = RenderModule:createElement(SceneData.upgradeBuyHitbox)
+    local hitbox = RenderElementModule.new(SceneData.upgradeBuyHitbox)
     hitbox.x, hitbox.y = buttonConfig.x, buttonConfig.y
 
     table.insert(self._elements, hitbox)
@@ -114,7 +114,7 @@ local function createUpgradeButton(self, buttonConfig)
     buttonConfig.indicatorY = buttonConfig.y + halfHeight
 
     -- Upgrade Name Label
-    local nameLabel = RenderModule:createElement(SceneData.upgradeName)
+    local nameLabel = RenderElementModule.new(SceneData.upgradeName)
     nameLabel.text = upgrade.name or buttonConfig.id
     nameLabel.x, nameLabel.y = buttonConfig.x, buttonConfig.y - halfHeight
 
@@ -129,7 +129,7 @@ local function createUpgradeButton(self, buttonConfig)
     local upgradeCost = PurchaseUpgradeHandlerModule:getCost(buttonConfig.id)
     local formattedCostText = isMaxedOut and "MAX" or string.format("%s Credits", string.formatNumber(upgradeCost))
 
-    local costLabel = RenderModule:createElement(SceneData.upgradeCost)
+    local costLabel = RenderElementModule.new(SceneData.upgradeCost)
     costLabel.text = formattedCostText
     costLabel.x, costLabel.y = buttonConfig.x, buttonConfig.y
 
@@ -145,7 +145,7 @@ local function createUpgradeButton(self, buttonConfig)
         table.insert(buttonElements, indicator)
     end
 
-    local buyButton = UIButtonObjectModule:createButton({
+    local buyButton = UIButtonObjectModule.new({
         elements = buttonElements,
 
         hitboxElement = hitbox,
@@ -164,8 +164,8 @@ local function createUpgradeButton(self, buttonConfig)
             )
 
             if sound then
-                sound:play()
-                sound:remove()
+                sound:Play()
+                sound:Remove()
             end
         end
     })
@@ -184,8 +184,8 @@ local function setupUpgradesScrollingFrame(self)
     self._yellowColor = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW)
     self._darkColor = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK)
 
-    local frameTrack = RenderModule:createElement(SceneData.upgradesFrameBackground)
-    local scrollWheel = RenderModule:createElement(SceneData.upgradesFrameScrollWheel)
+    local frameTrack = RenderElementModule.new(SceneData.upgradesFrameBackground)
+    local scrollWheel = RenderElementModule.new(SceneData.upgradesFrameScrollWheel)
 
     table.insert(self._elements, frameTrack)
     table.insert(self._elements, scrollWheel)
@@ -216,8 +216,8 @@ local function setupUpgradesScrollingFrame(self)
     table.insert(self._objects, scrollingFrame)
 end
 
-function Module:update(deltaTime)
-    UISharedFunctions:update()
+function Module:Update(deltaTime)
+    UISharedFunctions:Update()
 
     for _, upgradeButton in ipairs(self._upgradeButtons) do
         local currentStacks = UpgradeHandlerModule:getStacks(upgradeButton.id)

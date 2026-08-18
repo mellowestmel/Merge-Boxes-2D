@@ -6,14 +6,14 @@ local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
 local Module = {}
 
-function Module:getCost(id)
-    local upgrade = UpgradeHandlerModule:getUpgrade(id)
+function Module:GetCost(id)
+    local upgrade = UpgradeHandlerModule:GetUpgrade(id)
 
-    return math.floor(upgrade.cost(UpgradeHandlerModule:getStacks(id)))
+    return math.floor(upgrade.cost(UpgradeHandlerModule:GetStacks(id)))
 end
 
-function Module:canBuy(id, shopId)
-    local upgrade = UpgradeHandlerModule:getUpgrade(id)
+function Module:CanBuy(id, shopId)
+    local upgrade = UpgradeHandlerModule:GetUpgrade(id)
 
     if not upgrade then
         return false
@@ -23,28 +23,28 @@ function Module:canBuy(id, shopId)
         return false
     end
 
-    if UpgradeHandlerModule:isMaxed(id) then
+    if UpgradeHandlerModule:IsMaxed(id) then
         return false
     end
 
-    return TransactionModule:canAfford(
+    return TransactionModule:CanAfford(
         upgrade.currency or "credits",
-        self:getCost(id)
+        self:GetCost(id)
     )
 end
 
-function Module:buy(id, shopId)
-    if not self:canBuy(id, shopId) then
+function Module:Buy(id, shopId)
+    if not self:CanBuy(id, shopId) then
         return false
     end
 
-    local upgrade = UpgradeHandlerModule:getUpgrade(id)
+    local upgrade = UpgradeHandlerModule:GetUpgrade(id)
 
-    return TransactionModule:purchase(
+    return TransactionModule:Purchase(
         upgrade.currency or "credits",
-        self:getCost(id),
+        self:GetCost(id),
         function()
-            UpgradeHandlerModule:addStack(id)
+            UpgradeHandlerModule:AddStack(id)
         end
     )
 end

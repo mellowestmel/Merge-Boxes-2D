@@ -1,6 +1,6 @@
 -- ~/code/game/box/object.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 local IdManagerModule = require("code.engine.idManager")
 
 local table = require("code.engine.helpers.table")
@@ -47,19 +47,19 @@ Module.boxes = {}
 Module._sortedCache = {}
 Module._dirty = true
 
-local manager = IdManagerModule:createManager()
+local manager = IdManagerModule:CreateManager()
 
-function Box:remove()
+function Box:Remove()
     local id = self.id
 
     Module.boxes[id] = nil
     Module._dirty = true
-    manager:release(id)
+    manager:Release(id)
 
-    self.element:remove()
+    self.element:Remove()
 end
 
-function Module:getBoxDataByTier(tier)
+function Module:GetBoxDataByTier(tier)
     local data = BoxesData[tier]
     if not BoxesData[tier] then return end
 
@@ -67,10 +67,10 @@ function Module:getBoxDataByTier(tier)
     return clonedData
 end
 
-function Module:createBoxElement(data)
+function Module:CreateBoxElement(data)
     if not data then return end
 
-    local element = RenderModule:createElement({
+    local element = RenderElementModule.new({
         x = data.x or 0,
         y = data.y or 0,
         spritePath = data.spritePath,
@@ -85,13 +85,13 @@ function Module:createBoxElement(data)
     return element
 end
 
-function Module:createBox(data)
+function Module.new(data)
     if not data then return end
 
-    local element = self:createBoxElement(data)
+    local element = Module:CreateBoxElement(data)
 
     local box = setmetatable({
-        id = manager:get(),
+        id = manager:Get(),
         element = element,
 
         dragging = false,
@@ -119,8 +119,8 @@ function Module:createBox(data)
         velocityY = 0,
     }, Box)
 
-    self.boxes[box.id] = box
-    self._dirty = true
+    Module.boxes[box.id] = box
+    Module._dirty = true
 
     box._scaleTween = {
         startX = data.scale * CONSTANTS.SPAWN_SCALE_MULTIPLIER,
@@ -134,7 +134,7 @@ function Module:createBox(data)
     return box
 end
 
-function Module:getSortedArray()
+function Module:GetSortedArray()
     if not self._dirty then return self._sortedCache end
 
     local array = {}
@@ -153,19 +153,19 @@ function Module:getSortedArray()
     return array
 end
 
-function Module:clearBoxes()
-    for _, box in pairs(self:getSortedArray()) do
-        box:remove()
+function Module:ClearBoxes()
+    for _, box in pairs(self:GetSortedArray()) do
+        box:Remove()
     end
 end
 
-function Module:update(deltaTime)
-    local array = self:getSortedArray()
+function Module:Update(deltaTime)
+    local array = self:GetSortedArray()
 
     for _, box in pairs(array) do
         if box.onUpdateCosmetic then box.onUpdateCosmetic(box.element, deltaTime) end
         if box.onUpdate then box.onUpdate(box, deltaTime) end
-        
+
         box.element.render = self.renderBoxes
     end
 end

@@ -1,9 +1,9 @@
 -- ~/code/data/boxes.lua
 --
 -- Assembles per-tier box definitions out of three separate data files:
---   boxDefinitions/flavor.lua   -> name, description, quote
---   boxDefinitions/cosmetic.lua -> sprite, scale, sound, flash, reflections, onUpdateCosmetic
---   boxDefinitions/gameplay.lua -> mergeReward, weight, craftingMaterial, trinketChance
+--   boxes/flavor.lua   -> name, description, quote
+--   boxes/cosmetic.lua -> sprite, scale, sound, flash, reflections, onUpdateCosmetic
+--   boxes/gameplay.lua -> mergeReward, weight, craftingMaterial, trinketChance
 
 -- This file's only job is to zip those three by tier and hand the merged
 -- table over to BoxConstructor, so the rest of the game keeps seeing the same
@@ -11,9 +11,9 @@
 
 local BoxConstructor = require("code.data.constructors.boxConstructor")
 
-local flavor = require("code.data.boxDefinitions.flavor")
-local cosmetic = require("code.data.boxDefinitions.cosmetic")
-local gameplay = require("code.data.boxDefinitions.gameplay")
+local flavor = require("code.data.boxes.flavorData")
+local cosmetic = require("code.data.boxes.cosmeticData")
+local gameplay = require("code.data.boxes.gameplayData")
 
 local function indexByTier(list, label)
     local byTier = {}

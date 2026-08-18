@@ -3,21 +3,21 @@
 local Module = {}
 
 --- Calculates a vertical stack coordinate based on an index and item spacing.
-function Module.getVerticalStackY(basePositionY, index, itemSpacing)
+function Module.GetVerticalStackY(basePositionY, index, itemSpacing)
     basePositionY = basePositionY or 0
     itemSpacing = itemSpacing or 0
     return basePositionY + ((index - 1) * itemSpacing)
 end
 
 --- Calculates a horizontal stack coordinate based on an index and item spacing.
-function Module.getHorizontalStackX(basePositionX, index, itemSpacing)
+function Module.GetHorizontalStackX(basePositionX, index, itemSpacing)
     basePositionX = basePositionX or 0
     itemSpacing = itemSpacing or 0
     return basePositionX + ((index - 1) * itemSpacing)
 end
 
 --- Positions a list of elements vertically with consistent spacing.
-function Module.stackVertically(elements, startPositionY, itemSpacing)
+function Module.StackVertically(elements, startPositionY, itemSpacing)
     for index, element in ipairs(elements) do
         if element then
             element.y = Module.getVerticalStackY(startPositionY, index, itemSpacing)
@@ -26,7 +26,7 @@ function Module.stackVertically(elements, startPositionY, itemSpacing)
 end
 
 --- Positions a list of elements horizontally with consistent spacing.
-function Module.stackHorizontally(elements, startPositionX, itemSpacing)
+function Module.StackHorizontally(elements, startPositionX, itemSpacing)
     for index, element in ipairs(elements) do
         if element then
             element.x = Module.getHorizontalStackX(startPositionX, index, itemSpacing)
@@ -35,7 +35,7 @@ function Module.stackHorizontally(elements, startPositionX, itemSpacing)
 end
 
 --- Lays out elements in a centered row within given bounds.
-function Module:layoutRow(elements, options)
+function Module:LayoutRow(elements, options)
     options = options or {}
     local itemSpacing = options.spacing or 0
     local layoutBounds = options.bounds or {
@@ -73,7 +73,7 @@ function Module:layoutRow(elements, options)
 end
 
 --- Calculates 2D grid coordinates for a given item index.
-function Module.getGridPosition(index, columnCount, startPositionX, startPositionY, cellWidth, cellHeight)
+function Module.GetGridPosition(index, columnCount, startPositionX, startPositionY, cellWidth, cellHeight)
     local column = (index - 1) % columnCount
     local row = math.floor((index - 1) / columnCount)
 
@@ -84,7 +84,7 @@ function Module.getGridPosition(index, columnCount, startPositionX, startPositio
 end
 
 --- Wraps array index looping cleanly in both directions.
-function Module.wrapIndex(currentIndex, stepDirection, maximumItems)
+function Module.WrapIndex(currentIndex, stepDirection, maximumItems)
     if maximumItems <= 0 then return 1 end
     return ((currentIndex - 1 + stepDirection) % maximumItems) + 1
 end

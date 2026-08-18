@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/shared.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 
 local BOX_CONSTANTS = require("code.game.box.constants")
 local CONSTANTS = require("code.game.ui.constants")

@@ -11,16 +11,16 @@ local BoxScaleTweenModule = require("code.game.box.scaleTween")
 
 local Module = {}
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     if BoxesObjectModule.renderBoxes then
-        BoxPhysicsHandlerModule:update(deltaTime)
-        BoxMergeManagerModule:update(deltaTime)
-        BoxScaleTweenModule:update(deltaTime)
-        BoxRotationHandlerModule:update()
-        BoxDragHandlerModule:update()
+        BoxPhysicsHandlerModule:Update(deltaTime)
+        BoxMergeManagerModule:Update(deltaTime)
+        BoxScaleTweenModule:Update(deltaTime)
+        BoxRotationHandlerModule:Update()
+        BoxDragHandlerModule:Update()
     end
 
-    BoxesObjectModule:update(deltaTime)
+    BoxesObjectModule:Update(deltaTime)
 end
 
 return Module

@@ -21,7 +21,7 @@ Sound.__index = Sound
 local Module = {}
 Module._sounds = {}
 
-local manager = IdManagerModule:createManager()
+local manager = IdManagerModule:CreateManager()
 
 local function computeVolume(sound)
     local base =
@@ -38,11 +38,11 @@ local function computeVolume(sound)
     return sound.volume * base * SettingsModule.loadedFile.audio.masterVolume
 end
 
-function Sound:pause()
+function Sound:Pause()
     self.source:pause()
 end
 
-function Sound:play(randomizePitch, min, max, divisor)
+function Sound:Play(randomizePitch, min, max, divisor)
     local defaultPitch = self.pitch
 
     if randomizePitch then
@@ -57,32 +57,32 @@ function Sound:play(randomizePitch, min, max, divisor)
     local volume = computeVolume(self)
     self.source:setVolume(volume)
 
-    self.source:stop()
-    self.source:play()
+    self.source:Stop()
+    self.source:Play()
 
     self.pitch = defaultPitch
 end
 
-function Sound:stop()
-    self.source:stop()
+function Sound:Stop()
+    self.source:Stop()
 end
 
-function Sound:remove()
+function Sound:Remove()
     local id = self.id
     self.source = nil
 
     Module._sounds[id] = nil
-    manager:release(id)
+    manager:Release(id)
 end
 
-function Module:createSound(data)
+function Module.new(data)
     if not data.soundPath then return end
 
     local sourceType = ((data.type or "sound") == "sound" and "static" or "stream")
     local source = love.audio.newSource(data.soundPath, sourceType)
 
     local sound = setmetatable({
-        id = manager:get(),
+        id = manager:Get(),
 
         type = data.type or "sound",
         soundPath = data.soundPath,
@@ -94,14 +94,12 @@ function Module:createSound(data)
         volume = data.volume or 1,
         pitch = data.pitch or 1
     }, Sound)
-    self._sounds[sound.id] = sound
-
-    source:setVolume(sound.volume)
+    Module._sounds[sound.id] = sound
 
     return sound
 end
 
-function Module:update()
+function Module:Update()
     for _, sound in pairs(self._sounds) do
         if not sound.source:isPlaying() then goto continue end
 

@@ -2,7 +2,7 @@
 
 local Module = {}
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 local math = require("code.engine.helpers.math")
 
 local CONSTANTS = require("code.game.box.constants")
@@ -75,12 +75,12 @@ local function changePosition(box, deltaTime)
     box.element.y = box.element.y + box.velocityY * fpsFactor
 end
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     if BoxDragHandlerModule.draggedBox then
         dragPhysics(BoxDragHandlerModule.draggedBox)
     end
 
-    local boxesArray = BoxesObjectModule:getSortedArray()
+    local boxesArray = BoxesObjectModule:GetSortedArray()
     local boxesCount = #boxesArray
 
     for index = 1, boxesCount do

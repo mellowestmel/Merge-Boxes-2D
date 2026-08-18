@@ -5,7 +5,7 @@ local Manager = {
 Manager.__index = Manager
 
 -- Gets a new unique ID. Reuses IDs from the free pool if available.
-function Manager:get()
+function Manager:Get()
     if #self._freeIds > 0 then
         return table.remove(self._freeIds)
     end
@@ -17,14 +17,14 @@ function Manager:get()
 end
 
 -- Releases an ID back into the free pool for reuse.
-function Manager:release(id)
+function Manager:Release(id)
     table.insert(self._freeIds, id)
 end
 
 local Module = {}
 
 -- Creates and returns a new Manager instance.
-function Module:createManager()
+function Module:CreateManager()
     local manager = setmetatable({
         _freeIds = {},
         _nextId = 0

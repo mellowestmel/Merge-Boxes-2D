@@ -206,7 +206,7 @@ local flavor = {
         name = "Glitcherson",
         description = "A funky-looking box with a weird typing quirk. Staring at it for too long may cause a migraine.",
 
-        quote = "H4H4H4H4HH4H4H4H4H4HH4H4H4H4H44444!!!!! 1 L0V3 B31NG 1N5UFF3R1BL3!!!!",
+        quote = "H4H4H4H4HH4H4H4H4H4HH4H4H4H4H44444!!!!! 1 L0V3 B31NG 1N5UFF3R1BL3!!!! W00H000!!!",
     },
 }
 

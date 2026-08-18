@@ -5,40 +5,40 @@ local UpgradesData = require("code.data.shop.upgrades")
 
 local Module = {}
 
-function Module:getAllUpgrades()
+function Module:GetAllUpgrades()
     return UpgradesData.all
 end
 
-function Module:getUpgradesByShop(shopId)
+function Module:GetUpgradesByShop(shopId)
     return UpgradesData.byShop[shopId] or {}
 end
 
-function Module:getStacks(id)
+function Module:GetStacks(id)
     return SaveFilesModule.loadedFile.upgrades[id] or 0
 end
 
-function Module:getUpgrade(id)
+function Module:GetUpgrade(id)
     return UpgradesData.all[id]
 end
 
-function Module:getEffect(id)
+function Module:GetEffect(id)
     for index, key in pairs(UpgradesData.all) do
         print(index, key)
     end
-    local upgrade = self:getUpgrade(id)
+    local upgrade = self:GetUpgrade(id)
 
-    return upgrade.effect(self:getStacks(id))
+    return upgrade.effect(self:GetStacks(id))
 end
 
-function Module:addStack(id)
+function Module:AddStack(id)
     SaveFilesModule.loadedFile.upgrades[id] =
-        self:getStacks(id) + 1
+        self:GetStacks(id) + 1
 end
 
-function Module:isMaxed(id)
-    local upgrade = self:getUpgrade(id)
+function Module:IsMaxed(id)
+    local upgrade = self:GetUpgrade(id)
 
-    return self:getStacks(id) >= upgrade.maxStacks
+    return self:GetStacks(id) >= upgrade.maxStacks
 end
 
 return Module

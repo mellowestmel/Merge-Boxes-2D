@@ -4,12 +4,12 @@ local SaveFilesModule = require("code.engine.saves.files")
 
 local Module = {}
 
-function Module:canAfford(currency, amount)
+function Module:CanAfford(currency, amount)
     return (SaveFilesModule.loadedFile.currencies[currency] or 0) >= amount
 end
 
-function Module:purchase(currency, amount, callback)
-    if not self:canAfford(currency, amount) then
+function Module:Purchase(currency, amount, callback)
+    if not self:CanAfford(currency, amount) then
         return false
     end
 

@@ -26,15 +26,6 @@ function Module.sign(x)
     if x > 0 then return 1 elseif x < 0 then return -1 else return 0 end
 end
 
--- Get distance between two points in a 3D space
-function Module.distance3D(x1, y1, z1, x2, y2, z2)
-    x2 = x2 or 0
-    y2 = y2 or 0
-    z2 = z2 or 0
-
-    return math.sqrt((x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2)
-end
-
 -- Get distance between two points in a 2D space
 function Module.distance2D(x1, y1, x2, y2)
     y2 = y2 or 0

@@ -1,6 +1,6 @@
 -- ~/code/game/ui/scenes/settings.lua
 
-local RenderModule = require("code.engine.render")
+local RenderElementModule = require("code.engine.render.element")
 
 local SaveFilesModule = require("code.engine.saves.files")
 local SettingsModule = require("code.engine.saves.settings")
@@ -64,7 +64,7 @@ end
 -- rebuilds, removal is by identity rather than index.
 local function removeAndPrune(items, list)
     for _, item in pairs(items) do
-        item:remove()
+        item:Remove()
 
         for index, existing in pairs(list) do
             if existing == item then
@@ -77,13 +77,13 @@ end
 -- Not using removeAndPrune here: it prunes "list" while iterating
 -- "items", which is unsafe in Lua when they're the same table. Since
 -- everything gets reset to {} right after anyway, pruning is pointless.
-function Module:clean()
+function Module:Clean()
     for _, element in pairs(self._elements) do
-        element:remove()
+        element:Remove()
     end
 
     for _, object in pairs(self._objects) do
-        object:remove()
+        object:Remove()
     end
 
     self._elements = {}
@@ -91,27 +91,27 @@ function Module:clean()
     settingNameLabels = {}
     settingValueControls = {}
 
-    UISharedFunctions:cleanUpdates()
+    UISharedFunctions:CleanUpdates()
 end
 
 local function setupBackground(self)
-    local background = RenderModule:createElement(SceneData.background)
+    local background = RenderElementModule.new(SceneData.background)
     table.insert(self._elements, background)
 end
 
 local function setupCancelButton(self)
-    local cancelButtonHitbox = RenderModule:createElement(SceneData.cancelButtonHitbox)
+    local cancelButtonHitbox = RenderElementModule.new(SceneData.cancelButtonHitbox)
     table.insert(self._elements, cancelButtonHitbox)
 
-    local cancelButton = UIButtonObjectModule:createButton({
+    local cancelButton = UIButtonObjectModule.new({
         elements = { cancelButtonHitbox },
         hitboxElement = cancelButtonHitbox,
 
         mouseButton = 1,
         onClick = function()
-            ScreenTransitionModule:transition({
+            ScreenTransitionModule:Transition({
                 callback = function()
-                    UISceneHandlerModule:switch(UISceneHandlerModule.lastScene.name)
+                    UISceneHandlerModule:Switch(UISceneHandlerModule.lastScene.name)
                 end
             })
         end
@@ -164,8 +164,8 @@ end
 local function preloadSprite(spritePath)
     if RenderModule.imageCache[spritePath] then return end
 
-    local temp = RenderModule:createElement({ type = "sprite", spritePath = spritePath })
-    temp:remove()
+    local temp = RenderElementModule.new({ type = "sprite", spritePath = spritePath })
+    temp:Remove()
 end
 
 local function booleanToggleImage(value)
@@ -192,10 +192,10 @@ local function setupBooleanSettingControl(self, category, setting, rowY)
         spritePath = currentValue and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
     })
 
-    local toggleHitbox = RenderModule:createElement(toggleData)
+    local toggleHitbox = RenderElementModule.new(toggleData)
     table.insert(self._elements, toggleHitbox)
 
-    local toggleButton = UIButtonObjectModule:createButton({
+    local toggleButton = UIButtonObjectModule.new({
         elements = { toggleHitbox },
         hitboxElement = toggleHitbox,
 
@@ -268,13 +268,13 @@ end
 -- control. Only the sprites, the mutation, and the display format
 -- differ, which is why those are parameters rather than duplicated code.
 local function setupStepperControl(self, category, setting, rowY, decreaseSprite, increaseSprite, adjustValue, formatValue)
-    local decreaseHitbox = RenderModule:createElement(
+    local decreaseHitbox = RenderElementModule.new(
         copyWithOverrides(SceneData.decreaseSettingHitbox, { y = rowY, spritePath = decreaseSprite })
     )
-    local increaseHitbox = RenderModule:createElement(
+    local increaseHitbox = RenderElementModule.new(
         copyWithOverrides(SceneData.increaseSettingHitbox, { y = rowY, spritePath = increaseSprite })
     )
-    local valueLabel = RenderModule:createElement(
+    local valueLabel = RenderElementModule.new(
         copyWithOverrides(SceneData.settingValueLabel, { y = rowY })
     )
 
@@ -292,10 +292,10 @@ local function setupStepperControl(self, category, setting, rowY, decreaseSprite
         end
     end
 
-    local decreaseButton = UIButtonObjectModule:createButton({
+    local decreaseButton = UIButtonObjectModule.new({
         elements = { decreaseHitbox }, hitboxElement = decreaseHitbox, mouseButton = 1, onClick = step(-1)
     })
-    local increaseButton = UIButtonObjectModule:createButton({
+    local increaseButton = UIButtonObjectModule.new({
         elements = { increaseHitbox }, hitboxElement = increaseHitbox, mouseButton = 1, onClick = step(1)
     })
 
@@ -376,7 +376,7 @@ local function setupSettingNameLabels(self)
             CONSTANTS.BUTTON_HORIZONTAL_GAP
         )
 
-        local label = RenderModule:createElement(
+        local label = RenderElementModule.new(
             copyWithOverrides(SceneData.settingNameLabel, { y = rowY })
         )
         label.text = setting.name
@@ -397,27 +397,27 @@ local function scrollCategory(self, increment)
 end
 
 local function setupCurrentCategoryLabel(self)
-    currentCategoryLabel = RenderModule:createElement(SceneData.currentCategoryLabel)
+    currentCategoryLabel = RenderElementModule.new(SceneData.currentCategoryLabel)
     table.insert(self._elements, currentCategoryLabel)
 
     updateCategoryLabel()
 end
 
 local function setupScrollButtons(self)
-    local scrollRightButtonHitbox = RenderModule:createElement(SceneData.scrollRightButtonHitbox)
-    local scrollLeftButtonHitbox = RenderModule:createElement(SceneData.scrollLeftButtonHitbox)
+    local scrollRightButtonHitbox = RenderElementModule.new(SceneData.scrollRightButtonHitbox)
+    local scrollLeftButtonHitbox = RenderElementModule.new(SceneData.scrollLeftButtonHitbox)
 
     table.insert(self._elements, scrollRightButtonHitbox)
     table.insert(self._elements, scrollLeftButtonHitbox)
 
-    local scrollRightButton = UIButtonObjectModule:createButton({
+    local scrollRightButton = UIButtonObjectModule.new({
         elements = { scrollRightButtonHitbox },
         hitboxElement = scrollRightButtonHitbox,
         mouseButton = 1,
         onClick = function() scrollCategory(self, 1) end
     })
 
-    local scrollLeftButton = UIButtonObjectModule:createButton({
+    local scrollLeftButton = UIButtonObjectModule.new({
         elements = { scrollLeftButtonHitbox },
         hitboxElement = scrollLeftButtonHitbox,
         mouseButton = 1,
@@ -444,8 +444,8 @@ local function buildCategories()
     end
 end
 
-function Module:update()
-    UISharedFunctions:update()
+function Module:Update()
+    UISharedFunctions:Update()
 end
 
 function Module:init()

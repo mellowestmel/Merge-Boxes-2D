@@ -9,17 +9,17 @@ local BoxesObjectModule = require("code.game.box.object")
 
 local Module = {}
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
     if not animationsEnabled then return end
 
-    local boxesArray = BoxesObjectModule:getSortedArray()
+    local boxesArray = BoxesObjectModule:GetSortedArray()
     local boxesCount = #boxesArray
 
     for index = 1, boxesCount do
         local box = boxesArray[index]
         local tween = box._scaleTween
-        
+
         if tween then
             tween.timeSinceStart = tween.timeSinceStart + deltaTime
 

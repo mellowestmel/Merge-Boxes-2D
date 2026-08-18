@@ -2,32 +2,32 @@ local Module = {}
 
 Module.shaders = {}
 
-function Module:load(name, path)
+function Module:Load(name, path)
     local shader = love.graphics.newShader(path)
     self.shaders[name] = shader
 
     return shader
 end
 
-function Module:get(name)
+function Module:Get(name)
     return self.shaders[name]
 end
 
-function Module:send(name, uniform, value, ...)
+function Module:Send(name, uniform, value, ...)
     local shader = self.shaders[name]
     if shader then
         shader:send(uniform, value, ...)
     end
 end
 
-function Module:apply(name)
+function Module:Apply(name)
     local shader = self.shaders[name]
     if shader then
         love.graphics.setShader(shader)
     end
 end
 
-function Module:with(name, callback)
+function Module:With(name, callback)
     local shader = self.shaders[name]
 
     if shader then
@@ -39,7 +39,7 @@ function Module:with(name, callback)
     love.graphics.setShader()
 end
 
-function Module:clear()
+function Module:Clear()
     love.graphics.setShader()
 end
 
