@@ -24,7 +24,7 @@ local rawUpgrades = {
 
 local upgrades = {}
 
-for _, upgradeData in ipairs(rawUpgrades) do
+for _, upgradeData in pairs(rawUpgrades) do
     upgrades[upgradeData.id] = UpgradeConstructor.new(upgradeData)
 end
 

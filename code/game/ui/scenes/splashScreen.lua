@@ -1,6 +1,5 @@
--- ~/code/game/ui/scenes/mainMenu.lua
+-- ~/code/game/ui/scenes/splashScreen.lua
 
-local RenderElementModule = require("code.engine.render.element")
 local SoundHandlerModule = require("code.engine.soundHandler")
 local table = require("code.engine.helpers.table")
 
@@ -10,6 +9,8 @@ local MusicHandlerModule = require("code.game.musicHandler")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
+
+local UISharedFunctions = require("code.game.ui.shared")
 
 local SceneData = require("code.data.ui.scenes.splashScreen")
 
@@ -44,11 +45,15 @@ function Module:Clean()
 end
 
 local function setupSplashScreenLogo(self)
-    splashLogo1 = RenderElementModule.new(SceneData.splashScreenLogo1)
-    splashLogo2 = RenderElementModule.new(SceneData.splashScreenLogo2)
+    splashLogo1 = UISharedFunctions:CreateElement(
+        SceneData.splashScreenLogo1,
+        self
+    )
 
-    table.insert(self._elements, splashLogo1)
-    table.insert(self._elements, splashLogo2)
+    splashLogo2 = UISharedFunctions:CreateElement(
+        SceneData.splashScreenLogo2,
+        self
+    )
 
     splashLogo1.render = true
     splashLogo2.render = false
@@ -100,7 +105,6 @@ function Module:Update(deltaTime)
     logoFlipTimer = logoFlipTimer - deltaTime
 
     if logoFlipTimer <= 0 then
-
         logoFlipTimer = logoFlipSpeed
 
         splashLogo1.render = not splashLogo1.render

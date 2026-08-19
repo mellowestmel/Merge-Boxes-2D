@@ -5,7 +5,7 @@ local SettingsModule = require("code.engine.saves.settings")
 local easing = require("code.engine.helpers.easing")
 local math = require("code.engine.helpers.math")
 
-local BoxesObjectModule = require("code.game.box.object")
+local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
 

@@ -14,7 +14,7 @@ Module.loadedTracks = {}
 
 Module.playingTrack = nil
 
-local function pickRandomGameplayTrack(exclude)
+local function _pickRandomGameplayTrack(exclude)
     local list = Module.gameplayTracks
     if #list == 0 then return nil end
     if #list == 1 then return list[1] end
@@ -91,7 +91,7 @@ function Module:StopTrack(name)
 end
 
 function Module:PlayRandomGameplayTrack(exclude)
-    local track = pickRandomGameplayTrack(exclude)
+    local track = _pickRandomGameplayTrack(exclude)
     self:PlayTrack(track)
 end
 

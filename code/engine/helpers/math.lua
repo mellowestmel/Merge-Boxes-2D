@@ -28,8 +28,10 @@ end
 
 -- Get distance between two points in a 2D space
 function Module.distance2D(x1, y1, x2, y2)
-    y2 = y2 or 0
+    x1 = x1 or 0
+    y1 = y1 or 0
     x2 = x2 or 0
+    y2 = y2 or 0
 
     return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
 end

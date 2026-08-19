@@ -12,7 +12,7 @@ local SaveFilesModule = require("code.engine.saves.files")
 
 local MusicHandlerModule = require("code.game.musicHandler")
 
-local BoxHandlerModule = require("code.game.box.handler")
+local BoxHandlerModule = require("code.game.boxes.handler")
 
 local VFXHandlerModule = require("code.game.vfx.handler")
 local UIHandlerModule = require("code.game.ui.handler")

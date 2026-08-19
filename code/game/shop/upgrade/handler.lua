@@ -22,9 +22,6 @@ function Module:GetUpgrade(id)
 end
 
 function Module:GetEffect(id)
-    for index, key in pairs(UpgradesData.all) do
-        print(index, key)
-    end
     local upgrade = self:GetUpgrade(id)
 
     return upgrade.effect(self:GetStacks(id))

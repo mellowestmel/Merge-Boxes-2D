@@ -1,5 +1,7 @@
 -- ~/code/game/ui/objects/button.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local RenderUtilsModule = require("code.engine.render.utils")
 local SoundHandlerModule = require("code.engine.soundHandler")
 local IdManagerModule = require("code.engine.idManager")
@@ -72,6 +74,8 @@ function Button:MousePressed(x, y, mouseButton)
             sound:Remove()
         end
     end
+
+    SignalHandlerModule.Get("ui.button.clicked"):Fire(self)
 
     if self.onClick then
         self:onClick()

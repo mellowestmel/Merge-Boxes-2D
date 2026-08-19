@@ -1,11 +1,12 @@
 -- ~/code/game/ui/sceneHandler.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local Module = {}
-Module._activeTransition = nil
 Module.currentScene = nil
 Module.lastScene = nil
 
-local function sceneExists(name)
+local function _sceneExists(name)
     local fsPath = "code/game/ui/scenes/" .. name .. ".lua"
     return love.filesystem.getInfo(fsPath, "file") ~= nil
 end
@@ -19,18 +20,33 @@ function Module:Update(deltaTime)
 end
 
 function Module:Switch(name, ...)
-    if not sceneExists(name) then return end
+	if not _sceneExists(name) then
+		return
+	end
 
-    self.lastScene = self.currentScene
+	local oldScene = self.currentScene
+	local scene = require("code.game.ui.scenes." .. name)
 
-    if self.currentScene then
-        self.currentScene:Clean()
-    end
+	SignalHandlerModule.Get("ui.scenechanging"):Fire(
+		name,
+		oldScene
+	)
 
-    local scene = require("code.game.ui.scenes." .. name)
-    scene:Init(...)
+	self.lastScene = oldScene
 
-    self.currentScene = scene
+	if oldScene then
+		oldScene:Clean()
+	end
+
+	scene:Init(...)
+
+	self.currentScene = scene
+
+	SignalHandlerModule.Get("game.ui.scenechanged"):Fire(
+		name,
+		scene,
+		oldScene
+	)
 end
 
 return Module

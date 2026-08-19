@@ -6,8 +6,8 @@ local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
 local math = require("code.engine.helpers.math")
 
-local CONSTANTS = require("code.game.box.constants")
-local BoxesObjectModule = require("code.game.box.object")
+local CONSTANTS = require("code.game.boxes.constants")
+local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
 Module.lastSpawned = 0
@@ -31,7 +31,7 @@ function Module:Spawn()
             SaveFilesModule.loadedFile.stats.highestBoxTier = spawnTier
         end
 
-        local data = BoxesObjectModule:GetBoxDataByTier(spawnTier)
+        local data = BoxesObjectModule.GetBoxDataByTier(spawnTier)
         local box = BoxesObjectModule.new(data)
 
         if box then

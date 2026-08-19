@@ -2,8 +2,8 @@
 
 local RenderUtilsModule = require("code.engine.render.utils")
 
-local CONSTANTS = require("code.game.box.constants")
-local BoxesObjectModule = require("code.game.box.object")
+local CONSTANTS = require("code.game.boxes.constants")
+local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
 Module._wasMouseDown = false

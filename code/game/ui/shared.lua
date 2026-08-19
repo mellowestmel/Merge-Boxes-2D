@@ -9,7 +9,7 @@ local SAVES_CONSTANTS = require("code.engine.saves.constants")
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
-local BoxesObjectModule = require("code.game.box.object")
+local BoxesObjectModule = require("code.game.boxes.object")
 
 local SHOP_CONSTANTS = require("code.game.shop.constants")
 
@@ -26,217 +26,272 @@ local SharedData = require("code.data.ui.scenes.shared")
 local Module = {}
 Module._updateFunctions = {}
 
-local function getHighestTierAcrossSaves()
-    local highestTier = 0
+local function _getHighestTierAcrossSaves()
+	local highestTier = 0
 
-    for slot = 1, SAVES_CONSTANTS.MAX_SAVE_SLOTS do
-        local save = SaveFilesModule:ReadFile(slot)
+	for slot = 1, SAVES_CONSTANTS.MAX_SAVE_SLOTS do
+		local save = SaveFilesModule:ReadFile(slot)
 
-        if save and save.stats then
-            local tier = save.stats.highestBoxTier or 0
+		if save and save.stats then
+			local tier = save.stats.highestBoxTier or 0
 
-            if tier > highestTier then
-                highestTier = tier
-            end
-        end
-    end
+			if tier > highestTier then
+				highestTier = tier
+			end
+		end
+	end
 
-    return highestTier
+	return highestTier
+end
+
+function Module:CreateElement(elementData, scene)
+	if not elementData then return end
+	if not scene then return end
+
+	local data = {}
+
+	for key, value in pairs(elementData) do
+		data[key] = value
+	end
+
+	local element = RenderElementModule.new(data)
+
+	table.insert(scene._elements, element)
+
+	return element
 end
 
 function Module:SetupHighestTierBoxes(scene)
-    local highestTier = getHighestTierAcrossSaves()
+	local highestTier = _getHighestTierAcrossSaves()
 
-    if highestTier <= 0 then
-        return
-    end
+	if highestTier <= 0 then return end
 
-    local boxes = UILayoutData.shared.backgroundBoxes
-    for tier, data in ipairs(boxes) do
-        if tier and tier <= highestTier then
-            local element = RenderElementModule.new({
-                spritePath = UILayoutData.shared.backgroundBoxesPathPrefix .. "box" .. tier .. ".png",
+	for tier, data in pairs(UILayoutData.shared.backgroundBoxes) do
+		if tier <= highestTier then
+			local boxElement = RenderElementModule.new({
+				name = "backgroundBox" .. tier,
 
-                anchorX = 0,
-                anchorY = 0,
+				spritePath = UILayoutData.shared.backgroundBoxesPathPrefix
+					.. "box"
+					.. tier
+					.. ".png",
 
-                x = data.x,
-                y = data.y,
+				anchorX = 0,
+				anchorY = 0,
 
-                zIndex = CONSTANTS.Z_WORLD + tier
-            })
+				x = data.x,
+				y = data.y,
 
-            table.insert(scene._elements, element)
-        end
-    end
+				zIndex = CONSTANTS.Z_WORLD + tier
+			})
+
+			table.insert(scene._elements, boxElement)
+		end
+	end
 end
 
 function Module:SetupSettingsButton(scene)
-    if not scene then return end
+	if not scene then return end
 
-    local settingsButtonHitbox = RenderElementModule.new(SharedData.settingsButtonHitbox)
-    table.insert(scene._elements, settingsButtonHitbox)
+	local settingsButtonHitbox = self:CreateElement(
+		SharedData.settingsButtonHitbox,
+		scene
+	)
 
-    local settingsButton = UIButtonObjectModule.new({
-        elements = {settingsButtonHitbox},
-        hitboxElement = settingsButtonHitbox,
+	local settingsButton = UIButtonObjectModule.new({
+		elements = {settingsButtonHitbox},
+		hitboxElement = settingsButtonHitbox,
 
-        mouseButton = 1,
+		mouseButton = 1,
 
-        onClick = function()
-            ScreenTransitionModule:Transition({
-                callback = function()
-                    UISceneHandlerModule:Switch("settings")
-                end
-            })
-        end
-    })
+		onClick = function()
+			ScreenTransitionModule:Transition({
+				callback = function()
+					UISceneHandlerModule:Switch("settings")
+				end
+			})
+		end
+	})
 
-    table.insert(scene._objects, settingsButton)
+	table.insert(scene._objects, settingsButton)
 
-    if scene._hideableElements then
-        table.insert(scene._hideableElements, settingsButtonHitbox)
-    end
+	if scene._hideableElements then
+		table.insert(scene._hideableElements, settingsButtonHitbox)
+	end
 end
 
 function Module:SetupDiscordButton(scene)
-    local discordButtonHitbox = RenderElementModule.new(SharedData.discordButtonHitbox)
-    table.insert(scene._elements, discordButtonHitbox)
+	if not scene then return end
 
-    local discordButton = UIButtonObjectModule.new({
-        elements = {
-            discordButtonHitbox
-        },
-        hitboxElement = discordButtonHitbox,
+	local discordButtonHitbox = self:CreateElement(
+		SharedData.discordButtonHitbox,
+		scene
+	)
 
-        mouseButton = 1,
+	local discordButton = UIButtonObjectModule.new({
+		elements = {discordButtonHitbox},
+		hitboxElement = discordButtonHitbox,
 
-        onClick = function()
-            love.system.openURL("https://www.discord.gg/pQShPG8XPf")
-        end
-    })
+		mouseButton = 1,
 
-    table.insert(scene._objects, discordButton)
+		onClick = function()
+			love.system.openURL("https://www.discord.gg/pQShPG8XPf")
+		end
+	})
 
-    if scene._hideableElements then
-        table.insert(scene._hideableElements, discordButtonHitbox)
-    end
+	table.insert(scene._objects, discordButton)
+
+	if scene._hideableElements then
+		table.insert(scene._hideableElements, discordButtonHitbox)
+	end
 end
 
 function Module:SetupSidebarBackground(scene)
-    local sidebarBackground = RenderElementModule.new(SharedData.sidebarBackground)
-    table.insert(scene._elements, sidebarBackground)
+	self:CreateElement(
+		SharedData.sidebarBackground,
+		scene
+	)
 end
 
 function Module:SetupShopBackButton(scene)
-    local shopBackButtonHitbox = RenderElementModule.new(SharedData.shopBackButtonHitbox)
-    local shopBackButtonLabel = RenderElementModule.new(SharedData.shopBackButtonLabel)
+	local shopBackButtonHitbox = self:CreateElement(
+		SharedData.shopBackButtonHitbox,
+		scene
+	)
 
-    local shopBackButton = UIButtonObjectModule.new({
-        elements = {shopBackButtonHitbox, shopBackButtonLabel},
-        hitboxElement = shopBackButtonHitbox,
+	local shopBackButtonLabel = self:CreateElement(
+		SharedData.shopBackButtonLabel,
+		scene
+	)
 
-        mouseButton = 1,
+	local shopBackButton = UIButtonObjectModule.new({
+		elements = {
+			shopBackButtonHitbox,
+			shopBackButtonLabel
+		},
 
-        onClick = function()
-            ScreenTransitionModule:Transition({
-                callback = function()
-                    UISceneHandlerModule:Switch("game")
-                end
-            })
-        end
-    })
+		hitboxElement = shopBackButtonHitbox,
 
-    table.insert(scene._elements, shopBackButtonHitbox)
-    table.insert(scene._elements, shopBackButtonLabel)
-    table.insert(scene._objects, shopBackButton)
+		mouseButton = 1,
+
+		onClick = function()
+			ScreenTransitionModule:Transition({
+				callback = function()
+					UISceneHandlerModule:Switch("game")
+				end
+			})
+		end
+	})
+
+	table.insert(scene._objects, shopBackButton)
 end
 
 function Module:SetupBackToMenuButton(scene)
-    local backToMenuButtonHitbox = RenderElementModule.new(SharedData.backToMenuButtonHitbox)
-    table.insert(scene._elements, backToMenuButtonHitbox)
+	local backToMenuButtonHitbox = self:CreateElement(
+		SharedData.backToMenuButtonHitbox,
+		scene
+	)
 
-    local backToMenuButton = UIButtonObjectModule.new({
-        elements = {
-            backToMenuButtonHitbox,
-        },
+	local backToMenuButton = UIButtonObjectModule.new({
+		elements = {backToMenuButtonHitbox},
+		hitboxElement = backToMenuButtonHitbox,
 
-        hitboxElement = backToMenuButtonHitbox,
+		mouseButton = 1,
 
-        mouseButton = 1,
-        onClick = function()
-            ScreenTransitionModule:Transition({
-                callback = function()
-                    SaveFilesModule:UnloadFile(SaveFilesModule.loadedFile)
-                    BoxesObjectModule:ClearBoxes()
+		onClick = function()
+			ScreenTransitionModule:Transition({
+				callback = function()
+					SaveFilesModule:UnloadFile(SaveFilesModule.loadedFile)
+					BoxesObjectModule:ClearBoxes()
 
-                    UISceneHandlerModule:Switch("saveFiles")
-                end
-            })
-        end
-    })
+					UISceneHandlerModule:Switch("saveFiles")
+				end
+			})
+		end
+	})
 
-    table.insert(scene._objects, backToMenuButton)
+	table.insert(scene._objects, backToMenuButton)
 end
 
 function Module:SetupCurrencyLabels(scene)
-    local creditsLabel = RenderElementModule.new(SharedData.creditsLabel)
+	local creditsLabel = self:CreateElement(
+		SharedData.creditsLabel,
+		scene
+	)
 
-    self._updateFunctions.creditsLabelUpdateFunction = function()
-        if not creditsLabel then return end
+	self._updateFunctions.creditsLabelUpdateFunction = function()
+		if not creditsLabel then return end
+		if not SaveFilesModule.loadedFile then return end
 
-        local credits = SaveFilesModule.loadedFile.currencies.credits
-        creditsLabel.text = string.formatNumber(credits) .. " C$"
-    end
+		local credits = SaveFilesModule.loadedFile.currencies.credits
+		creditsLabel.text = string.formatNumber(credits) .. " C$"
+	end
 
-    table.insert(scene._elements, creditsLabel)
+	local holyCatnipLabel = self:CreateElement(
+		SharedData.holyCatnipLabel,
+		scene
+	)
 
-    local holyCatnipLabel = RenderElementModule.new(SharedData.holyCatnipLabel)
+	self._updateFunctions.holyCatnipLabelUpdateFunction = function()
+		if not holyCatnipLabel then return end
+		if not SaveFilesModule.loadedFile then return end
 
-    self._updateFunctions.holyCatnipLabelUpdateFunction = function()
-        if not holyCatnipLabel then return end
+		local holyCatnip = SaveFilesModule.loadedFile.currencies.holyCatnip
+		local highestBoxTier = SaveFilesModule.loadedFile.stats.highestBoxTier
 
-        local holyCatnip = SaveFilesModule.loadedFile.currencies.holyCatnip
-        local highestBoxTier = SaveFilesModule.loadedFile.stats.highestBoxTier
+		holyCatnipLabel.text =
+			string.formatNumber(holyCatnip) .. " Holy Catnip"
 
-        holyCatnipLabel.text = string.formatNumber(holyCatnip) .. " Holy Catnip"
-        holyCatnipLabel.render = (highestBoxTier >= SHOP_CONSTANTS.SHOPS.CATNIP_SHOP.UNLOCK_REQUIREMENT)
-    end
-
-    table.insert(scene._elements, holyCatnipLabel)
+		holyCatnipLabel.render =
+			highestBoxTier >= SHOP_CONSTANTS.SHOPS.CATNIP_SHOP.UNLOCK_REQUIREMENT
+	end
 end
 
 function Module:SetupSessionPlaytimeLabel(scene)
-    local sessionPlaytimeLabel = RenderElementModule.new(SharedData.sessionPlaytimeLabel)
+	local sessionPlaytimeLabel = self:CreateElement(
+		SharedData.sessionPlaytimeLabel,
+		scene
+	)
 
-    self._updateFunctions.sessionPlaytimeLabelUpdateFunction = function()
-        if not sessionPlaytimeLabel then return end
+	self._updateFunctions.sessionPlaytimeLabelUpdateFunction = function()
+		if not sessionPlaytimeLabel then return end
+		if not SaveFilesModule.loadedFile then return end
 
-        sessionPlaytimeLabel.text =
-        "Session Time: " .. string.formatTime(
-            SaveFilesModule.loadedFile.stats.playtime
-            -
-            SaveFilesModule.loadedFile.stats.playtimeAtSessionStart
-        )
-
-    end
-
-    table.insert(scene._elements, sessionPlaytimeLabel)
+		sessionPlaytimeLabel.text =
+			"Session Time: "
+			.. string.formatTime(
+				SaveFilesModule.loadedFile.stats.playtime
+				- SaveFilesModule.loadedFile.stats.playtimeAtSessionStart
+			)
+	end
 end
 
 function Module:SetupDialogueBox(scene)
-    local dialogueBox = RenderElementModule.new(SharedData.dialogueBox)
-    table.insert(scene._elements, dialogueBox)
+	self:CreateElement(
+		SharedData.dialogueBox,
+		scene
+	)
+end
+
+function Module:SetupBackground(scene)
+	local sceneData = require(
+		"code.data.ui.scenes." .. scene.name
+	)
+
+	self:CreateElement(
+		sceneData.background,
+		scene
+	)
 end
 
 function Module:Update()
-    for _, updateFunction in pairs(self._updateFunctions) do
-        updateFunction()
-    end
+	for _, updateFunction in pairs(self._updateFunctions) do
+		updateFunction()
+	end
 end
 
 function Module:CleanUpdates()
-    self._updateFunctions = {}
+	self._updateFunctions = {}
 end
 
 return Module

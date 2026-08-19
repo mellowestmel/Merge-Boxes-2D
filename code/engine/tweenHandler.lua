@@ -1,6 +1,6 @@
--- ~/code/engine/tween.lua
--- Generic tween system, works on any table with numbers.
+-- ~/code/engine/tweenHandler.lua
 
+-- Generic tween system, works on any table with numbers.
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
 local easing = require("code.engine.helpers.easing")

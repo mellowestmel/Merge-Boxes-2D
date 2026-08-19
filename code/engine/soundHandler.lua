@@ -25,7 +25,7 @@ Module._sounds = {}
 
 local manager = IdManagerModule.new()
 
-local function computeVolume(sound)
+local function _computeVolume(sound)
     local base =
     (
         sound.type == "sound"
@@ -56,7 +56,7 @@ function Sound:Play(randomizePitch, min, max, divisor)
 
     self.source:setPitch(self.pitch)
 
-    local volume = computeVolume(self)
+    local volume = _computeVolume(self)
     self.source:setVolume(volume)
 
     self.source:stop()
@@ -105,7 +105,7 @@ function Module:Update()
     for _, sound in pairs(self._sounds) do
         if not sound.source:isPlaying() then goto continue end
 
-        sound.source:setVolume(computeVolume(sound))
+        sound.source:setVolume(_computeVolume(sound))
         sound.source:setLooping(sound.loop)
         sound.source:setPitch(sound.pitch)
 

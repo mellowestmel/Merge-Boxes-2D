@@ -413,7 +413,7 @@ local rawTrinkets = {
 
 local trinkets = {}
 
-for key, trinketData in ipairs(rawTrinkets) do
+for key, trinketData in pairs(rawTrinkets) do
     trinkets[key] = TrinketConstructor.new(trinketData)
 end
 

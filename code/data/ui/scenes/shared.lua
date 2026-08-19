@@ -2,7 +2,7 @@
 
 local RenderUtilsModule = require("code.engine.render.utils")
 
-local BOX_CONSTANTS = require("code.game.box.constants")
+local BOX_CONSTANTS = require("code.game.boxes.constants")
 local CONSTANTS = require("code.game.ui.constants")
 
 local UILayoutData = require("code.data.ui.layout")

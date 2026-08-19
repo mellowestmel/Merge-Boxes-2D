@@ -2,8 +2,8 @@
 
 local math = require("code.engine.helpers.math")
 
-local CONSTANTS = require("code.game.box.constants")
-local BoxesObjectModule = require("code.game.box.object")
+local CONSTANTS = require("code.game.boxes.constants")
+local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
 

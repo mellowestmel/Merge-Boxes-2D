@@ -33,30 +33,30 @@ Quadtree.__index = Quadtree
 local Module = {}
 
 -- Check if two points are the same
-local function pointsEqual(a, b)
+local function _pointsEqual(a, b)
     return a.x == b.x and a.y == b.y
 end
 
 -- Calculates distance between two points
-local function getDistanceXY(a, b)
+local function _getDistanceXY(a, b)
     local dx = a.x - b.x
     local dy = a.y - b.y
 
     return dx, dy
 end
 
-local function isDistanceInRadius(dx, dy, radius)
+local function _isDistanceInRadius(dx, dy, radius)
     return dx * dx + dy * dy <= radius * radius
 end
 
 -- Check if a point is inside a radius
-local function isPointInRadius(point, center, radius)
-    local dx, dy = getDistanceXY(point, center)
-    return isDistanceInRadius(dx, dy, radius)
+local function _isPointInRadius(point, center, radius)
+    local dx, dy = _getDistanceXY(point, center)
+    return _isDistanceInRadius(dx, dy, radius)
 end
 
 -- Check if a range has a point inside
-local function contains(range, point)
+local function _contains(range, point)
     return point.x >= range.x
         and point.x <= range.x + range.width
         and point.y >= range.y
@@ -76,7 +76,7 @@ function Quadtree:QueryRadius(center, radius)
     if not self:IsInRadius(center, radius) then return found end
 
     for _, point in pairs(self.points) do
-        if not isPointInRadius(point, center, radius) then goto continue end
+        if not _isPointInRadius(point, center, radius) then goto continue end
         table.insert(found, point)
 
         :: continue ::
@@ -116,7 +116,7 @@ function Quadtree:QueryRect(rect)
     if not self:IsInRect(rect) then return found end
 
     for _, point in pairs(self.points) do
-        if not contains(rect, point) then goto continue end
+        if not _contains(rect, point) then goto continue end
         table.insert(found, point)
 
         :: continue ::
@@ -140,7 +140,7 @@ end
 
 -- A wrapper for contains(quadtree, point)
 function Quadtree:Contains(point)
-    return contains(self, point)
+    return _contains(self, point)
 end
 
 -- Check if the quadtree node intersects a circle with a given center and radius
@@ -148,12 +148,12 @@ function Quadtree:IsInRadius(center, radius)
     local closestX = math.max(self.x, math.min(center.x, self.x + self.width))
     local closestY = math.max(self.y, math.min(center.y, self.y + self.height))
 
-    local dx, dy = getDistanceXY({
+    local dx, dy = _getDistanceXY({
         x = closestX,
         y = closestY
     }, center)
 
-    return isDistanceInRadius(dx, dy, radius)
+    return _isDistanceInRadius(dx, dy, radius)
 end
 
 -- Check if the quadtree intersects a range
@@ -255,7 +255,7 @@ end
 function Quadtree:Remove(point)
     for index, value in pairs(self.points) do
 
-        if pointsEqual(value, point) then
+        if _pointsEqual(value, point) then
             table.remove(self.points, index)
             return true
         end

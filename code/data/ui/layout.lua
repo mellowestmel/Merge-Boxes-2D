@@ -1,6 +1,6 @@
 -- ~/code/data/ui/layout.lua
 
-local BOX_CONSTANTS = require("code.game.box.constants")
+local BOX_CONSTANTS = require("code.game.boxes.constants")
 
 return {
     mainMenu = {

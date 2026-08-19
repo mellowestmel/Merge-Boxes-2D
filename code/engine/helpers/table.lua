@@ -6,7 +6,7 @@ for key, value in pairs(table) do
 end
 
 -- Deep clone with cyclic reference handling
-local function deepClone(original, seen)
+local function _deepClone(original, seen)
     if type(original) ~= "table" then
         return original
     end
@@ -21,14 +21,14 @@ local function deepClone(original, seen)
     seen[original] = clone
 
     for key, value in pairs(original) do
-        local clonedKey = deepClone(key, seen)
-        local clonedValue = deepClone(value, seen)
+        local clonedKey = _deepClone(key, seen)
+        local clonedValue = _deepClone(value, seen)
         clone[clonedKey] = clonedValue
     end
 
     local metatable = getmetatable(original)
     if metatable then
-        setmetatable(clone, deepClone(metatable, seen))
+        setmetatable(clone, _deepClone(metatable, seen))
     end
 
     return clone
@@ -47,7 +47,7 @@ end
 
 -- Deep clone wrapper
 function Module.clone(original)
-    return deepClone(original)
+    return _deepClone(original)
 end
 
 -- Reverse an array-like table, handles sparse arrays

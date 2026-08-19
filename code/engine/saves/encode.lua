@@ -5,11 +5,11 @@ local math = require("code.engine.helpers.math")
 
 local Module = {}
 
-local function encryptBase64(string)
+local function _encryptBase64(string)
     return love.data.encode("string", "base64", string)
 end
 
-local function encryptWithKey(string)
+local function _encryptWithKey(string)
     local key = SAVE_FILE_ENCRYPTION_KEY
     local keyLength = #key
 
@@ -24,12 +24,12 @@ local function encryptWithKey(string)
     return table.concat(output)
 end
 
-local function addStringNewLine(...)
+local function _addStringNewLine(...)
     local parts = {...}
     return table.concat(parts, "\n")
 end
 
-local function addString(...)
+local function _addString(...)
     local parts = {...}
     return table.concat(parts, " ")
 end
@@ -38,8 +38,8 @@ function Module:EncodeBoxes(boxes)
     local output = ""
 
     for _, box in pairs(boxes) do
-        local line = addString(
-            box.tier,
+        local values = {
+            box.data.type,
 
             box.velocityX,
             box.velocityY,
@@ -48,8 +48,13 @@ function Module:EncodeBoxes(boxes)
             box.element.y,
 
             box.element.rotation
-        )
-        output = output .. line .. "\n"
+        }
+
+        for _, trinket in pairs(box.trinkets) do
+            table.insert(values, trinket)
+        end
+
+        output = output .. _addString(unpack(values)) .. "\n"
     end
 
     return output
@@ -76,7 +81,7 @@ function Module:EncodeSlot(slot)
 end
 
 function Module:EncodeSettings(file)
-    local finalOutput = addStringNewLine(
+    local finalOutput = _addStringNewLine(
         self:EncodeSimple(file.audio),
         self:EncodeSimple(file.graphics),
         self:EncodeSimple(file.accessibility)
@@ -86,7 +91,7 @@ function Module:EncodeSettings(file)
 end
 
 function Module:Encode(file)
-    local finalOutput = addStringNewLine(
+    local finalOutput = _addStringNewLine(
         self:EncodeVersion(file.version),
         self:EncodeSlot(file.slot),
 
@@ -97,8 +102,8 @@ function Module:Encode(file)
         self:EncodeSimple(file.upgrades)
     )
 
-    finalOutput = encryptBase64(finalOutput)
-    finalOutput = encryptWithKey(finalOutput)
+    finalOutput = _encryptBase64(finalOutput)
+    finalOutput = _encryptWithKey(finalOutput)
 
     return finalOutput
 end

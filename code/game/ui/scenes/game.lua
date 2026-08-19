@@ -13,8 +13,8 @@ local table = require("code.engine.helpers.table")
 local MusicHandlerModule = require("code.game.musicHandler")
 local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
-local BoxesObjectModule = require("code.game.box.object")
-local BoxFactoryModule = require("code.game.box.factory")
+local BoxesObjectModule = require("code.game.boxes.object")
+local BoxFactoryModule = require("code.game.boxes.factory")
 
 local SHOP_CONSTANTS = require("code.game.shop.constants")
 local CONSTANTS = require("code.game.ui.constants")
@@ -69,8 +69,10 @@ function Module:Clean()
     UISharedFunctions:CleanUpdates()
 end
 
-local function playNotAllowedSound()
-    local notAllowedSound = SoundHandlerModule.new({soundPath = "assets/sounds/ui/notallowed.wav"})
+local function _playNotAllowedSound()
+    local notAllowedSound = SoundHandlerModule.new({
+        soundPath = "assets/sounds/ui/notallowed.wav"
+    })
 
     if notAllowedSound then
         notAllowedSound:Play()
@@ -78,16 +80,13 @@ local function playNotAllowedSound()
     end
 end
 
-local function setupBackground(self)
-    local playAreaBackground = RenderElementModule.new(SceneData.playAreaBackground)
-    table.insert(self._elements, playAreaBackground)
-end
-
-local function setupBackToMenuButton(self)
+local function _setupBackToMenuButton(self)
     backButtonClicked = false
 
-    local backToMenuButtonHitbox = RenderElementModule.new(SharedData.backToMenuButtonHitbox)
-    table.insert(self._elements, backToMenuButtonHitbox)
+    local backToMenuButtonHitbox = UISharedFunctions:CreateElement(
+        SharedData.backToMenuButtonHitbox,
+        self
+    )
 
     local backToMenuButton = UIButtonObjectModule.new({
         elements = {
@@ -97,6 +96,7 @@ local function setupBackToMenuButton(self)
         hitboxElement = backToMenuButtonHitbox,
 
         mouseButton = 1,
+
         onClick = function()
             backButtonClicked = true
 
@@ -112,12 +112,16 @@ local function setupBackToMenuButton(self)
     table.insert(self._objects, backToMenuButton)
 end
 
-local function setupSpawnButton(self)
-    spawnButtonHitbox = RenderElementModule.new(SceneData.spawnButtonHitbox)
-    spawnButtonLabel = RenderElementModule.new(SceneData.spawnButtonLabel)
+local function _setupSpawnButton(self)
+    spawnButtonHitbox = UISharedFunctions:CreateElement(
+        SceneData.spawnButtonHitbox,
+        self
+    )
 
-    table.insert(self._elements, spawnButtonHitbox)
-    table.insert(self._elements, spawnButtonLabel)
+    spawnButtonLabel = UISharedFunctions:CreateElement(
+        SceneData.spawnButtonLabel,
+        self
+    )
 
     spawnButton = UIButtonObjectModule.new({
         elements = {
@@ -128,6 +132,7 @@ local function setupSpawnButton(self)
         hitboxElement = spawnButtonHitbox,
 
         mouseButton = 1,
+
         onClick = function()
             BoxFactoryModule:Spawn()
         end
@@ -136,19 +141,32 @@ local function setupSpawnButton(self)
     table.insert(self._objects, spawnButton)
 end
 
-local function setupAutoSpawnButton(self)
-    local autoSpawnButtonHitbox = RenderElementModule.new(SceneData.autoSpawnButtonHitbox)
-    local autoSpawnButtonLabel = RenderElementModule.new(SceneData.autoSpawnButtonLabel)
+local function _setupAutoSpawnButton(self)
+    local autoSpawnButtonHitbox = UISharedFunctions:CreateElement(
+        SceneData.autoSpawnButtonHitbox,
+        self
+    )
 
-    table.insert(self._elements, autoSpawnButtonHitbox)
-    table.insert(self._elements, autoSpawnButtonLabel)
+    local autoSpawnButtonLabel = UISharedFunctions:CreateElement(
+        SceneData.autoSpawnButtonLabel,
+        self
+    )
 
-    local function set()
-        autoSpawnButtonLabel.text = "Auto Spawn (" .. (autoSpawnEnabled and "ON" or "OFF") .. ")"
-        autoSpawnButtonHitbox.color = RenderUtilsModule.CreateColorFromTable((autoSpawnEnabled and CONSTANTS.COLOR_GREEN or CONSTANTS.COLOR_RED))
+    local function _set()
+        autoSpawnButtonLabel.text =
+            "Auto Spawn ("
+            .. (autoSpawnEnabled and "ON" or "OFF")
+            .. ")"
+
+        autoSpawnButtonHitbox.color =
+            RenderUtilsModule.CreateColorFromTable(
+                autoSpawnEnabled
+                    and CONSTANTS.COLOR_GREEN
+                    or CONSTANTS.COLOR_RED
+            )
     end
 
-    set()
+    _set()
 
     local autoSpawnButton = UIButtonObjectModule.new({
         elements = {
@@ -159,18 +177,21 @@ local function setupAutoSpawnButton(self)
         hitboxElement = autoSpawnButtonHitbox,
 
         mouseButton = 1,
+
         onClick = function()
             autoSpawnEnabled = not autoSpawnEnabled
-            set()
+            _set()
         end
     })
 
     table.insert(self._objects, autoSpawnButton)
 end
 
-local function setupUpgradeShopButton(scene)
-    upgradeShopButtonHitbox = RenderElementModule.new(SceneData.upgradeShopButtonHitbox)
-    table.insert(scene._elements, upgradeShopButtonHitbox)
+local function _setupUpgradeShopButton(self)
+    upgradeShopButtonHitbox = UISharedFunctions:CreateElement(
+        SceneData.upgradeShopButtonHitbox,
+        self
+    )
 
     local upgradeShopButton = UIButtonObjectModule.new({
         elements = {
@@ -180,8 +201,14 @@ local function setupUpgradeShopButton(scene)
         hitboxElement = upgradeShopButtonHitbox,
 
         mouseButton = 1,
+
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT then playNotAllowedSound() return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier
+                < SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT
+            then
+                _playNotAllowedSound()
+                return
+            end
 
             ScreenTransitionModule:Transition({
                 callback = function()
@@ -191,12 +218,14 @@ local function setupUpgradeShopButton(scene)
         end
     })
 
-    table.insert(scene._objects, upgradeShopButton)
+    table.insert(self._objects, upgradeShopButton)
 end
 
-local function setupBlackMarketButton(scene)
-    blackMarketButtonHitbox = RenderElementModule.new(SceneData.blackMarketButtonHitbox)
-    table.insert(scene._elements, blackMarketButtonHitbox)
+local function _setupBlackMarketButton(self)
+    blackMarketButtonHitbox = UISharedFunctions:CreateElement(
+        SceneData.blackMarketButtonHitbox,
+        self
+    )
 
     local blackMarketButton = UIButtonObjectModule.new({
         elements = {
@@ -206,8 +235,14 @@ local function setupBlackMarketButton(scene)
         hitboxElement = blackMarketButtonHitbox,
 
         mouseButton = 1,
+
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT then playNotAllowedSound() return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier
+                < SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT
+            then
+                _playNotAllowedSound()
+                return
+            end
 
             ScreenTransitionModule:Transition({
                 callback = function()
@@ -217,12 +252,14 @@ local function setupBlackMarketButton(scene)
         end
     })
 
-    table.insert(scene._objects, blackMarketButton)
+    table.insert(self._objects, blackMarketButton)
 end
 
-local function setupSacrificeButton(scene)
-    sacrificeButtonHitbox = RenderElementModule.new(SceneData.sacrificeButtonHitbox)
-    table.insert(scene._elements, sacrificeButtonHitbox)
+local function _setupSacrificeButton(self)
+    sacrificeButtonHitbox = UISharedFunctions:CreateElement(
+        SceneData.sacrificeButtonHitbox,
+        self
+    )
 
     local sacrificeButton = UIButtonObjectModule.new({
         elements = {
@@ -232,8 +269,14 @@ local function setupSacrificeButton(scene)
         hitboxElement = sacrificeButtonHitbox,
 
         mouseButton = 1,
+
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT then playNotAllowedSound() return end
+            if SaveFilesModule.loadedFile.stats.highestBoxTier
+                < SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT
+            then
+                _playNotAllowedSound()
+                return
+            end
 
             ScreenTransitionModule:Transition({
                 callback = function()
@@ -243,14 +286,16 @@ local function setupSacrificeButton(scene)
         end
     })
 
-    table.insert(scene._objects, sacrificeButton)
+    table.insert(self._objects, sacrificeButton)
 end
 
-local function lockedImageLogic(current, requirement, originalPath)
+local function _lockedImageLogic(current, requirement, originalPath)
     if current >= requirement then
         return RenderElementModule.imageCache[originalPath]
     else
-        return RenderElementModule.imageCache["assets/sprites/ui/buttonlocked74x74.png"]
+        return RenderElementModule.imageCache[
+            "assets/sprites/ui/buttonlocked74x74.png"
+        ]
     end
 end
 
@@ -258,40 +303,50 @@ function Module:Update()
     MusicHandlerModule:Update()
     UISharedFunctions:Update()
 
-    if upgradeShopButtonHitbox and blackMarketButtonHitbox and sacrificeButtonHitbox then
-
-        upgradeShopButtonHitbox.drawable = lockedImageLogic(
+    if upgradeShopButtonHitbox
+        and blackMarketButtonHitbox
+        and sacrificeButtonHitbox
+    then
+        upgradeShopButtonHitbox.drawable = _lockedImageLogic(
             SaveFilesModule.loadedFile.stats.highestBoxTier,
             SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT,
             SceneData.upgradeShopButtonHitbox.spritePath
         )
 
-        blackMarketButtonHitbox.drawable = lockedImageLogic(
+        blackMarketButtonHitbox.drawable = _lockedImageLogic(
             SaveFilesModule.loadedFile.stats.highestBoxTier,
             SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT,
             SceneData.blackMarketButtonHitbox.spritePath
         )
 
-        sacrificeButtonHitbox.drawable = lockedImageLogic(
+        sacrificeButtonHitbox.drawable = _lockedImageLogic(
             SaveFilesModule.loadedFile.stats.highestBoxTier,
             SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT,
             SceneData.sacrificeButtonHitbox.spritePath
         )
-
     end
 
-    if spawnButtonHitbox and spawnButtonLabel and spawnButton then
+    if spawnButtonHitbox
+        and spawnButtonLabel
+        and spawnButton
+    then
         local cooldown = BoxFactoryModule:GetSpawnCooldown()
         spawnButton.cooldown = cooldown
 
-        local time = (love.timer.getTime() - BoxFactoryModule.lastSpawned)
+        local time = love.timer.getTime() - BoxFactoryModule.lastSpawned
         local timeLeft = cooldown - time
 
         local onCooldown = time <= cooldown
 
-        spawnButtonLabel.text =  (onCooldown and string.format("%.1f", timeLeft) .. "s" or SceneData.spawnButtonLabel.text)
+        spawnButtonLabel.text =
+            onCooldown
+                and string.format("%.1f", timeLeft) .. "s"
+                or SceneData.spawnButtonLabel.text
 
-        if not onCooldown and UpgradeHandlerModule:GetEffect("autoSpawn") and autoSpawnEnabled then
+        if not onCooldown
+            and UpgradeHandlerModule:GetEffect("autoSpawn")
+            and autoSpawnEnabled
+        then
             spawnButton:MousePressed(
                 spawnButtonHitbox.x,
                 spawnButtonHitbox.y,
@@ -303,7 +358,9 @@ end
 
 function Module:Init(slot)
     --%note shitty preloading
-    if not RenderElementModule.imageCache["assets/sprites/ui/buttonlocked74x74.png"] then
+    if not RenderElementModule.imageCache[
+        "assets/sprites/ui/buttonlocked74x74.png"
+    ] then
         local temp = RenderElementModule.new({
             type = "sprite",
             spritePath = "assets/sprites/ui/buttonlocked74x74.png"
@@ -315,7 +372,8 @@ function Module:Init(slot)
     if slot then
         SaveFilesModule:LoadFile(slot)
 
-        SaveFilesModule.loadedFile.stats.playtimeAtSessionStart = SaveFilesModule.loadedFile.stats.playtime
+        SaveFilesModule.loadedFile.stats.playtimeAtSessionStart =
+            SaveFilesModule.loadedFile.stats.playtime
     end
 
     BoxesObjectModule.renderBoxes = true
@@ -328,16 +386,20 @@ function Module:Init(slot)
     UISharedFunctions:SetupSessionPlaytimeLabel(self)
     UISharedFunctions:SetupCurrencyLabels(self)
 
+    UISharedFunctions:CreateElement(
+        SceneData.playAreaBackground,
+        self
+    )
+
     if UpgradeHandlerModule:GetEffect("autoSpawn") then
-        setupAutoSpawnButton(self)
+        _setupAutoSpawnButton(self)
     end
 
-    setupUpgradeShopButton(self)
-    setupBlackMarketButton(self)
-    setupBackToMenuButton(self)
-    setupSacrificeButton(self)
-    setupSpawnButton(self)
-    setupBackground(self)
+    _setupUpgradeShopButton(self)
+    _setupBlackMarketButton(self)
+    _setupBackToMenuButton(self)
+    _setupSacrificeButton(self)
+    _setupSpawnButton(self)
 end
 
 return Module

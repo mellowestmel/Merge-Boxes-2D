@@ -18,7 +18,7 @@ end
 
 --- Positions a list of elements vertically with consistent spacing.
 function Module.StackVertically(elements, startPositionY, itemSpacing)
-    for index, element in ipairs(elements) do
+    for index, element in pairs(elements) do
         if element then
             element.y = Module.GetVerticalStackY(startPositionY, index, itemSpacing)
         end
@@ -27,7 +27,7 @@ end
 
 --- Positions a list of elements horizontally with consistent spacing.
 function Module.StackHorizontally(elements, startPositionX, itemSpacing)
-    for index, element in ipairs(elements) do
+    for index, element in pairs(elements) do
         if element then
             element.x = Module.GetHorizontalStackX(startPositionX, index, itemSpacing)
         end
@@ -65,7 +65,7 @@ function Module:LayoutRow(elements, options)
     local boundsPositionX = layoutBounds.x or 0
     local startPositionX = boundsPositionX + (boundsWidth - totalWidth) / 2 + (elementWidth / 2)
 
-    for index, element in ipairs(elements) do
+    for index, element in pairs(elements) do
         if element then
             element.x = startPositionX + ((index - 1) * (elementWidth + itemSpacing))
         end

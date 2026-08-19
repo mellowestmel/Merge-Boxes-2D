@@ -10,7 +10,7 @@ local Module = {}
 Module._sortedCache = {}
 
 -- Calculates sort order based on zIndex and element ID ties
-local function getSortOrder(element)
+local function _getSortOrder(element)
     return element.zIndex + ((element.id / 1000) % 1)
 end
 
@@ -23,7 +23,7 @@ function Module:Draw()
         end
 
         table.sort(sortedElements, function(a, b)
-            return getSortOrder(a) < getSortOrder(b)
+            return _getSortOrder(a) < _getSortOrder(b)
         end)
 
         self._sortedCache = sortedElements
@@ -58,9 +58,8 @@ function Module:Draw()
 
     -- Render scene through accessibility shader
     ShaderModule:With("accessibility", function()
-        for _, element in ipairs(self._sortedCache) do
+        for _, element in pairs(self._sortedCache) do
             element:Draw(windowScaleFactor, windowOffsetX, windowOffsetY)
-            print(_)
         end
     end)
 

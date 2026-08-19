@@ -1,15 +1,10 @@
 -- ~/code/game/ui/scenes/sacrificialGrounds.lua
 
-local RenderElementModule = require("code.engine.render.element")
-local table = require("code.engine.helpers.table")
-
 local MusicHandlerModule = require("code.game.musicHandler")
 
-local BoxesObjectModule = require("code.game.box.object")
+local BoxesObjectModule = require("code.game.boxes.object")
 
 local UISharedFunctions = require("code.game.ui.shared")
-
-local SceneData = require("code.data.ui.scenes.sacrificialGrounds")
 
 local Module = {}
 Module._elements = {}
@@ -31,12 +26,7 @@ function Module:Clean()
     UISharedFunctions:CleanUpdates()
 end
 
-local function setupBackground(self)
-    local background = RenderElementModule.new(SceneData.background)
-    table.insert(self._elements, background)
-end
-
-function Module:Update(deltaTime)
+function Module:Update()
     UISharedFunctions:Update()
 end
 
@@ -54,7 +44,7 @@ function Module:Init()
 
     UISharedFunctions:SetupBackToMenuButton(self)
 
-    setupBackground(self)
+    UISharedFunctions:SetupBackground(self)
 end
 
 return Module

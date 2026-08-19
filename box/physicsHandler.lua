@@ -5,18 +5,18 @@ local Module = {}
 local RenderUtilsModule = require("code.engine.render.utils")
 local math = require("code.engine.helpers.math")
 
-local CONSTANTS = require("code.game.box.constants")
+local CONSTANTS = require("code.game.boxes.constants")
 
-local BoxDragHandlerModule = require("code.game.box.dragHandler")
-local BoxesObjectModule = require("code.game.box.object")
+local BoxDragHandlerModule = require("code.game.boxes.dragHandler")
+local BoxesObjectModule = require("code.game.boxes.object")
 
-local function getWeightFactor(box)
+local function _getWeightFactor(box)
     return box.weight / CONSTANTS.BASE_WEIGHT
 end
 
-local function applyFriction(box, deltaTime)
+local function _applyFriction(box, deltaTime)
     local fpsFactor = deltaTime * FPS_SCALE
-    local weightFactor = getWeightFactor(box)
+    local weightFactor = _getWeightFactor(box)
 
     local friction = CONSTANTS.FRICTION * weightFactor
 
@@ -24,7 +24,7 @@ local function applyFriction(box, deltaTime)
     box.velocityY = box.velocityY * (1 - friction * fpsFactor)
 end
 
-local function edgeBounceX(box)
+local function _edgeBounceX(box)
     local width = box.element:GetWidth() * box.element.scaleX
     local halfWidth = width * box.element.anchorX
 
@@ -37,7 +37,7 @@ local function edgeBounceX(box)
     end
 end
 
-local function edgeBounceY(box)
+local function _edgeBounceY(box)
     local height = box.element:GetHeight() * box.element.scaleY
     local halfHeight = height * box.element.anchorY
 
@@ -50,14 +50,14 @@ local function edgeBounceY(box)
     end
 end
 
-local function dragPhysics(box)
+local function _dragPhysics(box)
     if box.dragging then
         local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
 
         mouseY = math.clamp(mouseY, 0, CONSTANTS.AREA_HEIGHT)
         mouseX = math.clamp(mouseX, 0, CONSTANTS.AREA_WIDTH)
 
-        local weightFactor = math.max(getWeightFactor(box), .01)
+        local weightFactor = math.max(_getWeightFactor(box), .01)
 
         box.velocityX = (mouseX - box.element.x)
             * CONSTANTS.DRAG_VELOCITY_MULTIPLIER
@@ -69,7 +69,7 @@ local function dragPhysics(box)
     end
 end
 
-local function changePosition(box, deltaTime)
+local function _changePosition(box, deltaTime)
     local fpsFactor = deltaTime * FPS_SCALE
     box.element.x = box.element.x + box.velocityX * fpsFactor
     box.element.y = box.element.y + box.velocityY * fpsFactor
@@ -77,7 +77,7 @@ end
 
 function Module:Update(deltaTime)
     if BoxDragHandlerModule.draggedBox then
-        dragPhysics(BoxDragHandlerModule.draggedBox)
+        _dragPhysics(BoxDragHandlerModule.draggedBox)
     end
 
     local boxesArray = BoxesObjectModule:GetSortedArray()
@@ -87,11 +87,11 @@ function Module:Update(deltaTime)
         local box = boxesArray[index]
         if box.merging then goto continue end
 
-        changePosition(box, deltaTime)
-        applyFriction(box, deltaTime)
+        _changePosition(box, deltaTime)
+        _applyFriction(box, deltaTime)
 
-        edgeBounceX(box)
-        edgeBounceY(box)
+        _edgeBounceX(box)
+        _edgeBounceY(box)
 
         :: continue ::
     end

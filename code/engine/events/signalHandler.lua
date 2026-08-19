@@ -55,7 +55,7 @@ end
 -- Remove a connection.
 -- Better to use connection:Disconnect().
 function Signal:_RemoveConnection(connection)
-	for index, current in ipairs(self._connections) do
+	for index, current in pairs(self._connections) do
 		if current == connection then
 			table.remove(self._connections, index)
 			return
@@ -69,7 +69,7 @@ function Signal:Fire(...)
 		return
 	end
 
-	for _, connection in ipairs(self._connections) do
+	for _, connection in pairs(self._connections) do
 		if connection.Connected then
 			connection._callback(...)
 		end
@@ -84,7 +84,7 @@ function Signal:Destroy()
 
 	self._destroyed = true
 
-	for _, connection in ipairs(self._connections) do
+	for _, connection in pairs(self._connections) do
 		connection.Connected = false
 	end
 

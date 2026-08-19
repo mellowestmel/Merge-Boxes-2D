@@ -34,13 +34,13 @@ local SETTINGS_SCHEMA = {
     }
 }
 
-local function buildDefaultSettingsFromSchema()
+local function _buildDefaultSettingsFromSchema()
     local defaults = {}
 
-    for _, category in ipairs(SETTINGS_SCHEMA) do
+    for _, category in pairs(SETTINGS_SCHEMA) do
         local categoryDefaults = {}
 
-        for _, setting in ipairs(category.settings) do
+        for _, setting in pairs(category.settings) do
             categoryDefaults[setting.key] = setting.default
         end
 
@@ -57,7 +57,7 @@ return {
     MAX_SAVE_SLOTS = 3,
 
     DEFAULT_DATA = {
-        version = 2,
+        version = 3,
         slot = 1,
 
         currencies = {
@@ -84,9 +84,9 @@ return {
     },
 
     SETTINGS_FILE_NAME = "settings.conf",
-
     SETTINGS_SCHEMA = SETTINGS_SCHEMA,
-    DEFAULT_SETTINGS = buildDefaultSettingsFromSchema(),
+
+    DEFAULT_SETTINGS = _buildDefaultSettingsFromSchema(),
 
     NUMBER_SETTING_RANGES = {
         masterVolume = { min = 0, max = 1.5 },

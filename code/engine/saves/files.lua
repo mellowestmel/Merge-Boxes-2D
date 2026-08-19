@@ -10,7 +10,7 @@ local SavesEncodeModule = require("code.engine.saves.encode")
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
-local BoxesObjectModule = require("code.game.box.object")
+local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
 Module.lastSaveSlot = 1
@@ -60,22 +60,27 @@ function Module:ReadFile(slot)
     return decodedFile
 end
 
-local function loadBoxes(boxesData)
-    if not boxesData then return end
+local function _loadBoxes(savedBoxesData)
+    if not savedBoxesData then return end
 
-    for _, box in pairs(boxesData) do
-        local boxData = BoxesObjectModule:GetBoxDataByTier(box.tier)
-        local boxObject = BoxesObjectModule.new(boxData)
+    for _, savedBoxData in pairs(savedBoxesData) do
+        local boxData = BoxesObjectModule.GetBoxDataByType(savedBoxData.type)
+        if not boxData then goto continue end
 
-        if boxObject then
-            boxObject.velocityX = box.velocityX
-            boxObject.velocityY = box.velocityY
+        local box = BoxesObjectModule.new(boxData)
+        if not box then return end
 
-            boxObject.element.x = box.x
-            boxObject.element.y = box.y
+        box.element.x = savedBoxData.x
+        box.element.y = savedBoxData.y
 
-            boxObject.element.rotation = box.rotation
-        end
+        box.element.rotation = savedBoxData.rotation
+
+        box.velocityX = savedBoxData.velocityX
+        box.velocityY = savedBoxData.velocityY
+
+        box.trinkets = savedBoxData.trinkets
+
+        :: continue ::
     end
 end
 
@@ -89,7 +94,7 @@ function Module:LoadFile(slot)
         decodedFile.slot = slot
     end
 
-    loadBoxes(decodedFile.boxes)
+    _loadBoxes(decodedFile.boxes)
 
     self.lastSaveSlot = decodedFile.slot
     self.loadedFile = decodedFile
