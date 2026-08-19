@@ -35,15 +35,6 @@ function Box:Remove()
 
 end
 
-function Box:SetZIndex(zIndex)
-    if self.element.zIndex == zIndex then
-        return
-    end
-
-    self.element.zIndex = zIndex
-    Module._dirty = true
-end
-
 function Box:SetDragging(dragging)
     self.dragging = dragging
 end

@@ -21,7 +21,7 @@ function Module:Update()
     if mouseDown and not self.draggedBox then
         for index = 1, #boxesArray do
             local box = boxesArray[index]
-            box.element.zIndex = CONSTANTS.BASE_BOX_ZINDEX
+            box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX)
 
             if box.element:IsPointInside(mouseX, mouseY) then
                 SignalHandlerModule.Get("game.boxes.dragstarted"):Fire(box)
@@ -32,7 +32,7 @@ function Module:Update()
                 lastDraggedBoxAlpha = box.element.color.alpha
                 box.element.color.alpha = CONSTANTS.DRAGGED_BOX_ALPHA
 
-                box.element.zIndex = CONSTANTS.BASE_BOX_ZINDEX + 2
+                box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 2)
                 break
             end
         end
@@ -40,7 +40,7 @@ function Module:Update()
         SignalHandlerModule.Get("game.boxes.dragended"):Fire(self.draggedBox)
 
         self.draggedBox.element.color.alpha = lastDraggedBoxAlpha
-        self.draggedBox.element.zIndex = CONSTANTS.BASE_BOX_ZINDEX + 1
+        self.draggedBox.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 1)
 
         self.draggedBox.dragging = false
         self.draggedBox = nil

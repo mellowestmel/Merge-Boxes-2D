@@ -18,7 +18,7 @@ function Module:Spawn()
     local spawnAmount = UpgradeHandlerModule:GetEffect("multiSpawn")
 
     for _ = 1, spawnAmount do
-        local spawnTier = 13--baseSpawnTier
+        local spawnTier = baseSpawnTier
 
         -- Lucky Roll
         if math.random() < luckyChance then

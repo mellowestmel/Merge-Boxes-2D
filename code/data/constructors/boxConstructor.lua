@@ -26,8 +26,7 @@ function Module.new(type, gameplayData, flavorData, cosmeticData)
         spritePath = cosmeticData.spritePath,
         scale = cosmeticData.scale or 1,
 
-        reflectionPath = cosmeticData.reflectionPath,
-        reflective = cosmeticData.reflective or false,
+        shaders = cosmeticData.shaders or {},
 
         -- Merge effects
         mergeSoundData = cosmeticData.mergeSoundData,

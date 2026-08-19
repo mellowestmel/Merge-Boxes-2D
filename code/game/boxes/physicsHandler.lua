@@ -25,7 +25,7 @@ local function _applyFriction(box, deltaTime)
 end
 
 local function _edgeBounceX(box)
-    local width = box.element:GetWidth() * box.element.scaleX
+    local width = box.element:GetWidth()
     local halfWidth = width * box.element.anchorX
 
     if box.element.x - halfWidth < 0 then
@@ -38,7 +38,7 @@ local function _edgeBounceX(box)
 end
 
 local function _edgeBounceY(box)
-    local height = box.element:GetHeight() * box.element.scaleY
+    local height = box.element:GetHeight()
     local halfHeight = height * box.element.anchorY
 
     if box.element.y - halfHeight < 0 then

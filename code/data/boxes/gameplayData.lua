@@ -17,13 +17,13 @@ local gameplay = {
     ["unstable"] = { tier = 14, mergeReward = 35000, weight = 1100 },
     ["transcended"] = { tier = 15, mergeReward = 75000, weight = 1400 },
     ["omnibox"] = { tier = 16, mergeReward = 150000, weight = 1800 },
-    ["devoided"] = { tier = 17, mergeReward = 300000, weight = 2400 },
+    ["devoided"] = { tier = 17, mergeReward = 300000, weight = -60 },
     ["boxOMatter"] = { tier = 18, mergeReward = 600000, weight = 3000 },
     ["greatOldGrumpyOne"] = { tier = 19, mergeReward = 1200000, weight = 3900 },
-    ["luckrollBox"] = { tier = 20, mergeReward = 2500000, weight = 4500 },
-    ["mellowBox"] = { tier = 21, mergeReward = 5000000, weight = 5500 },
-    ["theCollector"] = { tier = 22, mergeReward = 10000000, weight = 7000 },
-    ["glitcherson"] = { tier = 23, mergeReward = 20000000, weight = 8000 },
+    ["luckrollBox"] = { tier = 20, mergeReward = 2500000, weight = 5000 },
+    ["mellowBox"] = { tier = 21, mergeReward = 5000000, weight = 6500 },
+    ["theCollector"] = { tier = 22, mergeReward = 10000000, weight = 8500 },
+    ["glitcherson"] = { tier = 23, mergeReward = 20000000, weight = 11000 },
 }
 
 return gameplay

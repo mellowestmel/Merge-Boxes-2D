@@ -111,7 +111,7 @@ local cosmetic = {
         shaders = {
             {
                 name = "reflection",
-                texture = "assets/sprites/reflections/box14.png",
+                reflectionTexture = "assets/sprites/reflections/box14.png",
             },
         },
     },
@@ -126,19 +126,20 @@ local cosmetic = {
 		mergeSoundData = { soundPath = "assets/sounds/merge/special.wav" },
 	},
 
-	["omnibox"] = {
-		spritePath = "assets/sprites/boxes/box16.png",
-		scale = 2.1,
+    ["omnibox"] = {
+        spritePath = "assets/sprites/boxes/box16.png",
+        scale = 2.1,
 
-		mergeSoundData = { soundPath = "assets/sounds/merge/box16.wav" },
+        mergeSoundData = {
+            soundPath = "assets/sounds/merge/box16.wav"
+        },
 
-		onUpdate = function(box)
-			local hue = (love.timer.getTime() % 5) / 5
-			box.element.color = RenderUtilsModule.CreateColor(
-				color.HSVtoRGB(hue, 1, 1)
-			)
-		end,
-	},
+        shaders = {
+            {
+                name = "box16"
+            }
+        }
+    },
 
     ["devoided"] = {
         spritePath = "assets/sprites/boxes/box17.png",
@@ -149,7 +150,7 @@ local cosmetic = {
         shaders = {
             {
                 name = "reflection",
-                texture = "assets/sprites/reflections/box17.png",
+                reflectionTexture = "assets/sprites/reflections/box17.png",
             },
         },
     },
@@ -190,7 +191,7 @@ local cosmetic = {
         shaders = {
             {
                 name = "reflection",
-                texture = "assets/sprites/reflections/box23.png",
+                reflectionTexture = "assets/sprites/reflections/box23.png",
             },
         },
     },

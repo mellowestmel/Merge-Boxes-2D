@@ -192,11 +192,13 @@ function Module:MergeUpdate(deltaTime)
                 )
             end
 
-            local mergeSound = SoundHandlerModule.new(newBox.data.mergeSoundData)
+            if newBox.data.mergeSoundData then
+                local mergeSound = SoundHandlerModule.new(newBox.data.mergeSoundData)
 
-            if mergeSound then
-                mergeSound:Play()
-                mergeSound:Remove()
+                if mergeSound then
+                    mergeSound:Play()
+                    mergeSound:Remove()
+                end
             end
 
             if newBox.data.flashScreen then ScreenFlashModule:Flash(newBox.data.screenFlashColor) end

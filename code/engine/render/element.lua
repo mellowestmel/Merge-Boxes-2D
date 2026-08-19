@@ -8,10 +8,8 @@ local IdManagerModule = require("code.engine.idManager")
 local Module = {}
 
 Module.imageCache = {}
-
 Module._shaderCanvases = {}
 Module._elements = {}
-
 Module._dirty = true
 
 local manager = IdManagerModule.new()
@@ -26,19 +24,26 @@ function Element:Remove()
 end
 
 local function _getDimensions(element)
-	local width
-	local height
-
 	if element.type == "sprite" and element.drawable then
-		width = element.drawable:getWidth() * element.scaleX
-		height = element.drawable:getHeight() * element.scaleY
-	elseif element.type == "text" and element.text then
-		local font = element.font or love.graphics.getFont()
-		width = font:getWidth(element.text) * element.scaleX
-		height = font:getHeight() * element.scaleY
+		return
+			element.drawable:getWidth() * element.scaleX,
+			element.drawable:getHeight() * element.scaleY
 	end
 
-	return width, height
+	if element.type == "text" and element.text then
+		local font = element.font or love.graphics.getFont()
+
+		return
+			font:getWidth(element.text) * element.scaleX,
+			font:getHeight() * element.scaleY
+	end
+end
+
+function Element:SetZIndex(zIndex)
+	if self.zIndex == zIndex then return end
+
+	self.zIndex = zIndex
+	Module._dirty = true
 end
 
 function Element:GetDimensions()
@@ -61,7 +66,9 @@ function Element:IsPointInside(x, y)
 		x > self.scissor.x + self.scissor.width or
 		y < self.scissor.y or
 		y > self.scissor.y + self.scissor.height
-	) then return false end
+	) then
+		return false
+	end
 
 	local width, height = self:GetDimensions()
 
@@ -75,83 +82,97 @@ function Element:IsPointInside(x, y)
 	local localX = deltaX * cosine - deltaY * sine
 	local localY = deltaX * sine + deltaY * cosine
 
-	return localX >= -width * self.anchorX
+	return
+		localX >= -width * self.anchorX
 		and localX <= width * (1 - self.anchorX)
 		and localY >= -height * self.anchorY
 		and localY <= height * (1 - self.anchorY)
 end
 
 local function _drawElement(element, windowScaleFactor, windowOffsetX, windowOffsetY)
-	-- Default scale to 1 if no scaling arguments are passed.
-	windowScaleFactor = windowScaleFactor or 1
-	windowOffsetX = windowOffsetX or 0
-	windowOffsetY = windowOffsetY or 0
+	local positionX =
+		element.x * windowScaleFactor +
+		windowOffsetX +
+		element.offsetX
 
-	-- Calculate scaled screen coordinates.
-	local positionX = element.x * windowScaleFactor + windowOffsetX + element.offsetX
-	local positionY = element.y * windowScaleFactor + windowOffsetY + element.offsetY
+	local positionY =
+		element.y * windowScaleFactor +
+		windowOffsetY +
+		element.offsetY
 
 	local scaleX = element.scaleX * windowScaleFactor
 	local scaleY = element.scaleY * windowScaleFactor
 	local radians = math.rad(element.rotation)
 
-	-- Set element color.
-	if element.color then
-		love.graphics.setColor(element.color.r, element.color.g, element.color.b, element.color.alpha or element.color.a or 1)
+	local color = element.color
+
+	if color then
+		love.graphics.setColor(
+			color.r,
+			color.g,
+			color.b,
+			color.alpha or color.a or 1
+		)
 	else
 		love.graphics.setColor(1, 1, 1, 1)
 	end
 
-	-- Apply scaled scissor cropping.
 	if element.scissor then
-		local scissorX = element.scissor.x * windowScaleFactor + windowOffsetX
-		local scissorY = element.scissor.y * windowScaleFactor + windowOffsetY
-		local scissorWidth = element.scissor.width * windowScaleFactor
-		local scissorHeight = element.scissor.height * windowScaleFactor
-
-		love.graphics.setScissor(scissorX, scissorY, scissorWidth, scissorHeight)
+		love.graphics.setScissor(
+			element.scissor.x * windowScaleFactor + windowOffsetX,
+			element.scissor.y * windowScaleFactor + windowOffsetY,
+			element.scissor.width * windowScaleFactor,
+			element.scissor.height * windowScaleFactor
+		)
 	end
 
 	if element.type == "sprite" and element.drawable then
-		local originX = element.drawable:getWidth() * element.anchorX
-		local originY = element.drawable:getHeight() * element.anchorY
+		local drawable = element.drawable
 
 		love.graphics.draw(
-			element.drawable,
+			drawable,
 			positionX,
 			positionY,
 			radians,
 			scaleX,
 			scaleY,
-			originX,
-			originY
+			drawable:getWidth() * element.anchorX,
+			drawable:getHeight() * element.anchorY
 		)
-	elseif element.type == "text" and element.text and element.text ~= "" then
+
+	elseif element.type == "text" and element.text ~= "" then
 		local font = element.font or love.graphics.getFont()
+
 		love.graphics.setFont(font)
 
-		local drawX = positionX - font:getWidth(element.text) * scaleX * element.anchorX
-		local drawY = positionY - font:getHeight() * scaleY * element.anchorY
-
-		love.graphics.print(element.text, drawX, drawY, radians, scaleX, scaleY)
+		love.graphics.print(
+			element.text,
+			positionX - font:getWidth(element.text) * scaleX * element.anchorX,
+			positionY - font:getHeight() * scaleY * element.anchorY,
+			radians,
+			scaleX,
+			scaleY
+		)
 	end
 
-	-- Reset scissor.
 	if element.scissor then
-		if windowScaleFactor ~= 1 or windowOffsetX ~= 0 or windowOffsetY ~= 0 then
-			love.graphics.setScissor(windowOffsetX, windowOffsetY, RESOLUTION_WIDTH * windowScaleFactor, RESOLUTION_HEIGHT * windowScaleFactor)
-		else
-			love.graphics.setScissor()
-		end
+		love.graphics.setScissor()
 	end
 end
 
-local function _getShaderCanvases(width, height)
+local function _getShaderCanvases()
+	local width = RESOLUTION_WIDTH
+	local height = RESOLUTION_HEIGHT
 	local canvases = Module._shaderCanvases
 
-	if canvases.width ~= width or canvases.height ~= height or not canvases.canvasA or not canvases.canvasB then
+	if canvases.width ~= width
+		or canvases.height ~= height
+		or not canvases.canvasA
+		or not canvases.canvasB
+	then
 		canvases.canvasA = love.graphics.newCanvas(width, height)
 		canvases.canvasB = love.graphics.newCanvas(width, height)
+
 		canvases.width = width
 		canvases.height = height
 	end
@@ -159,11 +180,88 @@ local function _getShaderCanvases(width, height)
 	return canvases.canvasA, canvases.canvasB
 end
 
-local function _drawWithShaders(element, windowScaleFactor, windowOffsetX, windowOffsetY)
-	local width = RESOLUTION_WIDTH
-	local height = RESOLUTION_HEIGHT
+local function _loadShaderTexture(path)
+	local texture = Module.imageCache[path]
 
-	local canvasA, canvasB = _getShaderCanvases(width, height)
+	if not texture then
+		texture = love.graphics.newImage(path)
+		Module.imageCache[path] = texture
+	end
+
+	return texture
+end
+
+local function _sendUniform(shader, name, value)
+	if shader:hasUniform(name) then
+		shader:send(name, value)
+	end
+end
+
+local function _sendShaderParams(
+	shader,
+	shaderEntry,
+	element,
+	windowScaleFactor,
+	windowOffsetX,
+	windowOffsetY
+)
+	_sendUniform(shader, "time", love.timer.getTime())
+
+	_sendUniform(shader, "canvasSize", {
+		RESOLUTION_WIDTH,
+		RESOLUTION_HEIGHT
+	})
+
+	_sendUniform(shader, "texelSize", {
+		1 / RESOLUTION_WIDTH,
+		1 / RESOLUTION_HEIGHT
+	})
+
+	_sendUniform(shader, "elementCenter", {
+		element.x * windowScaleFactor +
+			windowOffsetX +
+			element.offsetX,
+
+		element.y * windowScaleFactor +
+			windowOffsetY +
+			element.offsetY
+	})
+
+	_sendUniform(shader, "elementSize", {
+		100 * element.scaleX * windowScaleFactor,
+		100 * element.scaleY * windowScaleFactor
+	})
+
+	_sendUniform(
+		shader,
+		"elementRotation",
+		math.rad(element.rotation)
+	)
+
+	if type(shaderEntry) ~= "table" then
+		return
+	end
+
+	for name, value in pairs(shaderEntry) do
+		if name ~= "name" then
+			if name == "reflectionTexture"
+				and type(value) == "string"
+			then
+				value = _loadShaderTexture(value)
+			end
+
+			_sendUniform(shader, name, value)
+		end
+	end
+end
+
+local function _drawWithShaders(
+	element,
+	windowScaleFactor,
+	windowOffsetX,
+	windowOffsetY
+)
+	local canvasA, canvasB = _getShaderCanvases()
 
 	local previousCanvas = love.graphics.getCanvas()
 	local previousShader = love.graphics.getShader()
@@ -171,51 +269,84 @@ local function _drawWithShaders(element, windowScaleFactor, windowOffsetX, windo
 	local inputCanvas = canvasA
 	local outputCanvas = canvasB
 
-	-- Draw the original element into the first canvas.
 	love.graphics.setCanvas(inputCanvas)
 	love.graphics.clear(0, 0, 0, 0)
+
 	love.graphics.setShader()
 
-	_drawElement(element, windowScaleFactor, windowOffsetX, windowOffsetY)
+	_drawElement(
+		element,
+		windowScaleFactor,
+		windowOffsetX,
+		windowOffsetY
+	)
 
-	-- Pass the result through every shader in order.
-	for _, shaderName in ipairs(element.shaders) do
+	for _, shaderEntry in ipairs(element.shaders) do
+		local shaderName =
+			type(shaderEntry) == "table"
+			and shaderEntry.name
+			or shaderEntry
+
 		local shader = ShaderHandlerModule:Get(shaderName)
 
 		if shader then
 			love.graphics.setCanvas(outputCanvas)
 			love.graphics.clear(0, 0, 0, 0)
+
 			love.graphics.setShader(shader)
 
-			shader:send("texelSize", {1 / width, 1 / height})
+			_sendShaderParams(
+				shader,
+				shaderEntry,
+				element,
+				windowScaleFactor,
+				windowOffsetX,
+				windowOffsetY
+			)
 
 			love.graphics.draw(inputCanvas, 0, 0)
 
-			inputCanvas, outputCanvas = outputCanvas, inputCanvas
+			inputCanvas, outputCanvas =
+				outputCanvas, inputCanvas
 		end
 	end
 
-	-- Restore whatever was active before the element.
 	love.graphics.setCanvas(previousCanvas)
 	love.graphics.setShader(previousShader)
 
-	-- Draw the final shader output onto the scene.
 	love.graphics.draw(inputCanvas, 0, 0)
 end
 
-function Element:Draw(windowScaleFactor, windowOffsetX, windowOffsetY)
-	if not self.render then return end
+function Element:Draw(
+	windowScaleFactor,
+	windowOffsetX,
+	windowOffsetY
+)
+	if not self.render then
+		return
+	end
 
 	windowScaleFactor = windowScaleFactor or 1
 	windowOffsetX = windowOffsetX or 0
 	windowOffsetY = windowOffsetY or 0
 
 	if #self.shaders == 0 then
-		_drawElement(self, windowScaleFactor, windowOffsetX, windowOffsetY)
+		_drawElement(
+			self,
+			windowScaleFactor,
+			windowOffsetX,
+			windowOffsetY
+		)
+
 		return
 	end
 
-	_drawWithShaders(self, windowScaleFactor, windowOffsetX, windowOffsetY)
+	_drawWithShaders(
+		self,
+		windowScaleFactor,
+		windowOffsetX,
+		windowOffsetY
+	)
 end
 
 function Module.Get(id)
@@ -231,16 +362,20 @@ function Module.new(data)
 
 	local element = setmetatable({
 		id = manager:Get(),
+
 		name = data.name,
 
-		type = data.type == "text" and "text" or "sprite",
+		type = data.type == "text"
+			and "text"
+			or "sprite",
+
 		zIndex = data.zIndex or 0,
 
 		text = data.text or "",
 		font = data.font,
 
-		anchorX = data.anchorX or .5,
-		anchorY = data.anchorY or .5,
+		anchorX = data.anchorX or 0.5,
+		anchorY = data.anchorY or 0.5,
 
 		offsetX = data.offsetX or 0,
 		offsetY = data.offsetY or 0,
@@ -251,7 +386,9 @@ function Module.new(data)
 		x = data.x or 0,
 		y = data.y or 0,
 
-		color = data.color or RenderUtilsModule.CreateColor(),
+		color = data.color
+			or RenderUtilsModule.CreateColor(),
+
 		rotation = data.rotation or 0,
 
 		render = data.render ~= false,
@@ -265,24 +402,34 @@ function Module.new(data)
 		local fallbackPath = "assets/sprites/missing.png"
 		local path = data.spritePath or fallbackPath
 
-		if not love.filesystem.getInfo(path, "file") then path = fallbackPath end
+		if not love.filesystem.getInfo(path, "file") then
+			path = fallbackPath
+		end
 
-		if not Module.imageCache[path] then
-			local drawable = love.graphics.newImage(path)
+		local drawable = Module.imageCache[path]
+
+		if not drawable then
+			drawable = love.graphics.newImage(path)
 			drawable:setFilter("nearest", "nearest")
+
 			Module.imageCache[path] = drawable
 		end
 
-		element.drawable = Module.imageCache[path]
+		element.drawable = drawable
 		element.spritePath = path
+
 	elseif not element.font then
-		element.font = love.graphics.newFont("assets/fonts/Stanberry.ttf")
+		element.font = love.graphics.newFont(
+			"assets/fonts/Stanberry.ttf"
+		)
 	end
 
 	Module._elements[element.id] = element
 	Module._dirty = true
 
-	SignalHandlerModule.Get("engine.render.elementcreated"):Fire(element)
+	SignalHandlerModule
+		.Get("engine.render.elementcreated")
+		:Fire(element)
 
 	return element
 end
