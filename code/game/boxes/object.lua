@@ -69,23 +69,22 @@ function Module.GetBoxDataByType(type)
 end
 
 function Module.newElement(data)
-    return RenderElementModule.new({
-        name = data.name,
+	return RenderElementModule.new({
+		name = data.name,
 
-        x = data.x or 0,
-        y = data.y or 0,
+		x = data.x or 0,
+		y = data.y or 0,
 
-        spritePath = data.spritePath,
-        type = "sprite",
+		spritePath = data.spritePath,
+		type = "sprite",
 
-        scaleX = data.scale or 1,
-        scaleY = data.scale or 1,
+		scaleX = data.scale or 1,
+		scaleY = data.scale or 1,
 
-        zIndex = data.zIndex or CONSTANTS.BASE_BOX_ZINDEX,
+		zIndex = data.zIndex or CONSTANTS.BASE_BOX_ZINDEX,
 
-        reflectionPath = data.reflectionPath,
-        reflective = data.reflective
-    })
+		shaders = data.shaders
+	})
 end
 
 function Module.new(data)
@@ -154,7 +153,7 @@ function Module:Update(deltaTime)
 end
 
 function Module.Init()
-    SignalHandlerModule.Get("game.saves.fileloaded"):Connect(function(loadedFile)
+    SignalHandlerModule.Get("engine.saves.fileloaded"):Connect(function(loadedFile)
         local loadedBoxesData = loadedFile.boxes
         if not loadedBoxesData then return end
 

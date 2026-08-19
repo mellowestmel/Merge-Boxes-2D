@@ -25,6 +25,8 @@ function Module.Init()
     SignalHandlerModule.Get("love.update"):Connect(function(deltaTime)
         Module:Update(deltaTime)
     end)
+
+    BoxesObjectModule.Init()
 end
 
 return Module

@@ -1,94 +1,134 @@
--- ~/code/engine/renderer/render.lua
-
 local SignalHandlerModule = require("code.engine.events.signalHandler")
-local ShaderModule = require("code.engine.shader")
+local ShaderHandlerModule = require("code.engine.shaderHandler")
 local SettingsModule = require("code.engine.saves.settings")
 local ColorblindData = require("code.data.colorblind")
 local RenderElementModule = require("code.engine.render.element")
 
 local Module = {}
+
 Module._sortedCache = {}
 
--- Calculates sort order based on zIndex and element ID ties
+Module._sceneCanvas = nil
+
 local function _getSortOrder(element)
-    return element.zIndex + ((element.id / 1000) % 1)
+	return element.zIndex + ((element.id / 1000) % 1)
+end
+
+local function _getSceneCanvas()
+	if not Module._sceneCanvas then
+		Module._sceneCanvas = love.graphics.newCanvas(
+			RESOLUTION_WIDTH,
+			RESOLUTION_HEIGHT
+		)
+	end
+
+	return Module._sceneCanvas
 end
 
 function Module:Draw()
-    -- Rebuild sorted cache only when element hierarchy changes
-    if RenderElementModule._dirty then
-        local sortedElements = {}
-        for _, element in pairs(RenderElementModule._elements) do
-            table.insert(sortedElements, element)
-        end
+	-- Rebuild sorted cache only when element hierarchy changes.
+	if RenderElementModule._dirty then
+		local sortedElements = {}
 
-        table.sort(sortedElements, function(a, b)
-            return _getSortOrder(a) < _getSortOrder(b)
-        end)
+		for _, element in pairs(RenderElementModule._elements) do
+			table.insert(sortedElements, element)
+		end
 
-        self._sortedCache = sortedElements
-        RenderElementModule._dirty = false
-    end
+		table.sort(sortedElements, function(a, b)
+			return _getSortOrder(a) < _getSortOrder(b)
+		end)
 
-    -- Compute resolution scale & letterbox offsets
-    local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
-    local baseWindowWidth, baseWindowHeight = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
+		self._sortedCache = sortedElements
+		RenderElementModule._dirty = false
+	end
 
-    local windowScaleX = currentWindowWidth / baseWindowWidth
-    local windowScaleY = currentWindowHeight / baseWindowHeight
-    local windowScaleFactor = math.min(windowScaleX, windowScaleY)
+	-- Compute resolution scale & letterbox offsets.
+	local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
 
-    local windowOffsetX = (currentWindowWidth - baseWindowWidth * windowScaleFactor) / 2
-    local windowOffsetY = (currentWindowHeight - baseWindowHeight * windowScaleFactor) / 2
+	local windowScaleX = currentWindowWidth / RESOLUTION_WIDTH
+	local windowScaleY = currentWindowHeight / RESOLUTION_HEIGHT
+	local windowScaleFactor = math.min(windowScaleX, windowScaleY)
 
-    -- Clip rendering to letterbox viewport
-    love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
+	local windowOffsetX =
+		(currentWindowWidth - RESOLUTION_WIDTH * windowScaleFactor) / 2
 
-    -- Update accessibility shaders
-    local accessibility = SettingsModule.loadedFile.accessibility
-    local graphics = SettingsModule.loadedFile.graphics
+	local windowOffsetY =
+		(currentWindowHeight - RESOLUTION_HEIGHT * windowScaleFactor) / 2
 
-    ShaderModule:Send("accessibility", "contrast", graphics.contrast)
-    ShaderModule:Send("accessibility", "gamma", graphics.gamma)
-    ShaderModule:Send("accessibility", "enableColorblind", accessibility.colorblindMode ~= "none")
+	local sceneCanvas = _getSceneCanvas()
 
-    if accessibility.colorblindMode ~= "none" then
-        ShaderModule:Send("accessibility", "colorMatrix", ColorblindData[accessibility.colorblindMode])
-    end
+	-- Render entire scene at virtual resolution.
+	local previousCanvas = love.graphics.getCanvas()
+	local previousShader = love.graphics.getShader()
 
-    -- Render scene through accessibility shader
-    ShaderModule:With("accessibility", function()
-        for _, element in pairs(self._sortedCache) do
-            element:Draw(windowScaleFactor, windowOffsetX, windowOffsetY)
-        end
-    end)
+	love.graphics.setCanvas(sceneCanvas)
+	love.graphics.clear(0, 0, 0, 0)
+	love.graphics.setShader()
+	love.graphics.setScissor()
 
-    -- Clear scissor and reset global color to default
-    love.graphics.setScissor()
-    love.graphics.setColor(1, 1, 1, 1)
+	for _, element in ipairs(self._sortedCache) do
+		element:Draw()
+	end
+
+	-- Update accessibility shaders.
+	local accessibility = SettingsModule.loadedFile.accessibility
+	local graphics = SettingsModule.loadedFile.graphics
+
+	ShaderHandlerModule:Send("accessibility", "contrast", graphics.contrast)
+	ShaderHandlerModule:Send("accessibility", "gamma", graphics.gamma)
+
+	ShaderHandlerModule:Send("accessibility", "enableColorblind", accessibility.colorblindMode ~= "none")
+
+	if accessibility.colorblindMode ~= "none" then
+		ShaderHandlerModule:Send("accessibility", "colorMatrix", ColorblindData[accessibility.colorblindMode])
+	end
+
+	-- Restore the original render target.
+	love.graphics.setCanvas(previousCanvas)
+	love.graphics.setShader(previousShader)
+	love.graphics.setScissor()
+
+	-- Draw the virtual-resolution scene into the letterboxed window.
+	love.graphics.setColor(1, 1, 1, 1)
+
+	local accessibilityShader =
+		ShaderHandlerModule:Get("accessibility")
+
+	if accessibilityShader then
+		love.graphics.setShader(accessibilityShader)
+	end
+
+	love.graphics.draw(
+		sceneCanvas,
+		windowOffsetX,
+		windowOffsetY,
+		0,
+		windowScaleFactor,
+		windowScaleFactor
+	)
+
+	love.graphics.setShader(previousShader)
+	love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Module:Update()
-    local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
-    local vsync = SettingsModule.loadedFile.graphics.vsync
+	local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
+	local vsync = SettingsModule.loadedFile.graphics.vsync
 
-    love.window.setFullscreen(fullscreen)
-    love.window.setVSync(vsync)
+	love.window.setFullscreen(fullscreen)
+	love.window.setVSync(vsync)
 end
 
 function Module.Init()
-    SignalHandlerModule.Get("love.update"):Connect(function()
-        Module:Update()
-    end)
+	SignalHandlerModule.Get("love.update"):Connect(function()
+		Module:Update()
+	end)
 
-    SignalHandlerModule.Get("love.draw"):Connect(function()
-        Module:Draw()
-    end)
+	SignalHandlerModule.Get("love.draw"):Connect(function()
+		Module:Draw()
+	end)
 
-    ShaderModule:Load(
-        "accessibility",
-        "code/data/shaders/accessibility.glsl"
-    )
+	ShaderHandlerModule.Init()
 end
 
 return Module

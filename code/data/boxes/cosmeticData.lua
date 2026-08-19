@@ -102,15 +102,19 @@ local cosmetic = {
 		mergeSoundData = { soundPath = "assets/sounds/merge/largesize.wav" },
 	},
 
-	["unstable"] = {
-		spritePath = "assets/sprites/boxes/box14.png",
-		scale = 1.9,
+    ["unstable"] = {
+        spritePath = "assets/sprites/boxes/box14.png",
+        scale = 1.9,
 
-		mergeSoundData = { soundPath = "assets/sounds/merge/largesize.wav" },
+        mergeSoundData = { soundPath = "assets/sounds/merge/largesize.wav" },
 
-		reflectionPath = "assets/sprites/reflections/box14.png",
-		reflective = true,
-	},
+        shaders = {
+            {
+                name = "reflection",
+                texture = "assets/sprites/reflections/box14.png",
+            },
+        },
+    },
 
 	["transcended"] = {
 		spritePath = "assets/sprites/boxes/box15.png",
@@ -136,14 +140,19 @@ local cosmetic = {
 		end,
 	},
 
-	["devoided"] = {
-		spritePath = "assets/sprites/boxes/box17.png",
-		scale = 2.2,
+    ["devoided"] = {
+        spritePath = "assets/sprites/boxes/box17.png",
+        scale = 2.2,
 
-		mergeSoundData = { soundPath = "assets/sounds/merge/box17.wav" },
-		reflectionPath = "assets/sprites/reflections/box17.png",
-		reflective = true,
-	},
+        mergeSoundData = { soundPath = "assets/sounds/merge/box17.wav" },
+
+        shaders = {
+            {
+                name = "reflection",
+                texture = "assets/sprites/reflections/box17.png",
+            },
+        },
+    },
 
 	["boxOMatter"] = {
 		spritePath = "assets/sprites/boxes/box18.png",
@@ -174,13 +183,17 @@ local cosmetic = {
 		scale = 2.5,
 	},
 
-	["glitcherson"] = {
-		spritePath = "assets/sprites/boxes/box23.png",
-		scale = 2.55,
+    ["glitcherson"] = {
+        spritePath = "assets/sprites/boxes/box23.png",
+        scale = 2.55,
 
-		reflectionPath = "assets/sprites/reflections/box23.png",
-		reflective = true,
-	},
+        shaders = {
+            {
+                name = "reflection",
+                texture = "assets/sprites/reflections/box23.png",
+            },
+        },
+    },
 }
 
 return cosmetic
