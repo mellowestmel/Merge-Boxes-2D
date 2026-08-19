@@ -13,7 +13,7 @@ local lastDraggedBoxAlpha = 0
 
 function Module:Update()
     local mouseDown = love.mouse.isDown(1)
-    local mouseX, mouseY = RenderUtilsModule.GetMousePos()
+    local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
 
     local boxesArray = BoxesObjectModule:GetSortedArray()
 

@@ -10,7 +10,7 @@ local function encryptBase64(string)
 end
 
 local function encryptWithKey(string)
-    local key = _G.SAVE_FILE_ENCRYPTION_KEY
+    local key = SAVE_FILE_ENCRYPTION_KEY
     local keyLength = #key
 
     local output = {}

@@ -1,7 +1,7 @@
 -- ~/code/game/ui/scenes/mainMenu.lua
 
 local RenderElementModule = require("code.engine.render.element")
-local SoundModule = require("code.engine.sound")
+local SoundHandlerModule = require("code.engine.soundHandler")
 local table = require("code.engine.helpers.table")
 
 local SettingsModule = require("code.engine.saves.settings")
@@ -53,7 +53,7 @@ local function setupSplashScreenLogo(self)
     splashLogo1.render = true
     splashLogo2.render = false
 
-    local splashScreenSound = SoundModule.new({
+    local splashScreenSound = SoundHandlerModule.new({
         soundPath = "/assets/sounds/ui/splashscreen.wav",
         volume = 2
     })

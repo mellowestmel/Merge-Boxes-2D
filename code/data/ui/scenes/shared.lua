@@ -186,7 +186,7 @@ return {
         anchorY = 1,
 
         x = 0,
-        y = _G.RESOLUTION_HEIGHT,
+        y = RESOLUTION_HEIGHT,
 
         scaleX = CONSTANTS.SPRITE_HUGE_SCALE,
         scaleY = CONSTANTS.SPRITE_HUGE_SCALE,
@@ -203,7 +203,7 @@ return {
         anchorY = 1,
 
         x = 0,
-        y = _G.RESOLUTION_HEIGHT,
+        y = RESOLUTION_HEIGHT,
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },

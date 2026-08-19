@@ -1,5 +1,7 @@
 -- ~/code/engine/saves/files.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local CONSTANTS = require("code.engine.saves.constants")
 
 local SavesDecodeModule = require("code.engine.saves.decode")
@@ -16,8 +18,17 @@ Module.loadedFile = nil
 
 function Module:Update(deltaTime)
     if not self.loadedFile then return end
-
     self.loadedFile.stats.playtime = self.loadedFile.stats.playtime + deltaTime
+end
+
+function Module.Init()
+    SignalHandlerModule.Get("love.update"):Connect(function(deltaTime)
+        Module:Update(deltaTime)
+    end)
+
+    SignalHandlerModule.Get("love.quit"):Connect(function()
+        if Module.loadedFile then Module:UnloadFile(Module.loadedFile) end
+    end)
 end
 
 function Module:SaveFile(file)
@@ -100,7 +111,7 @@ function Module:DeleteFile(slot)
     end
 end
 
-function Module:getFiles()
+function Module:GetFiles()
     local files = {}
 
     for slot = 1, CONSTANTS.MAX_SAVE_SLOTS do

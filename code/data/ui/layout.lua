@@ -17,13 +17,13 @@ return {
 
     shared = {
         settingsButton = {
-            x = _G.RESOLUTION_WIDTH - 35,
+            x = RESOLUTION_WIDTH - 35,
             y = 35
         },
 
         discordButton = {
-            x = _G.RESOLUTION_WIDTH - 35,
-            y = _G.RESOLUTION_HEIGHT - 35
+            x = RESOLUTION_WIDTH - 35,
+            y = RESOLUTION_HEIGHT - 35
         },
 
         backButtonOffset = 50,
@@ -79,7 +79,7 @@ return {
 
     game = {
         spawnButton = {
-            x = BOX_CONSTANTS.AREA_WIDTH + (_G.RESOLUTION_WIDTH - BOX_CONSTANTS.AREA_WIDTH) / 2,
+            x = BOX_CONSTANTS.AREA_WIDTH + (RESOLUTION_WIDTH - BOX_CONSTANTS.AREA_WIDTH) / 2,
             y = 475,
         },
 

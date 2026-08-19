@@ -188,7 +188,7 @@ local function setupSaveFileButtons(self, backgroundElement, slot)
 end
 
 local function setupSaveFileBackgrounds(self)
-    local saves = SaveFilesModule:getFiles()
+    local saves = SaveFilesModule:GetFiles()
     local maxSlots = SAVES_CONSTANTS.MAX_SAVE_SLOTS
 
     local slotBackgrounds = {}
@@ -200,7 +200,7 @@ local function setupSaveFileBackgrounds(self)
 
     local buttonWidth = slotBackgrounds[1].drawable:getWidth()
     local totalWidth = (maxSlots * buttonWidth) + (maxSlots - 1)
-    local startX = (_G.RESOLUTION_WIDTH - totalWidth) / 2 + (buttonWidth / 2)
+    local startX = (RESOLUTION_WIDTH - totalWidth) / 2 + (buttonWidth / 2)
 
     UILayoutHelperModule.StackHorizontally(slotBackgrounds, startX, buttonWidth + 1)
 

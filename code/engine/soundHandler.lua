@@ -1,5 +1,7 @@
 -- ~/code/engine/sound.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local SettingsModule = require("code.engine.saves.settings")
 
 local IdManagerModule = require("code.engine.idManager")
@@ -109,6 +111,12 @@ function Module:Update()
 
         :: continue ::
     end
+end
+
+function Module.Init()
+    SignalHandlerModule.Get("love.update"):Connect(function()
+        Module:Update()
+    end)
 end
 
 return Module

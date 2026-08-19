@@ -42,8 +42,8 @@ function Module:LayoutRow(elements, options)
         x = 0,
         y = 0,
 
-        width = _G.RESOLUTION_WIDTH or 800,
-        height = _G.RESOLUTION_HEIGHT or 600
+        width = RESOLUTION_WIDTH or 800,
+        height = RESOLUTION_HEIGHT or 600
     }
 
     if #elements == 0 then return end

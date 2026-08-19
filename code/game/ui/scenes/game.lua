@@ -3,7 +3,7 @@
 local RenderElementModule = require("code.engine.render.element")
 local RenderUtilsModule = require("code.engine.render.utils")
 
-local SoundModule = require("code.engine.sound")
+local SoundHandlerModule = require("code.engine.soundHandler")
 
 local SaveFilesModule = require("code.engine.saves.files")
 
@@ -70,7 +70,7 @@ function Module:Clean()
 end
 
 local function playNotAllowedSound()
-    local notAllowedSound = SoundModule.new({soundPath = "assets/sounds/ui/notallowed.wav"})
+    local notAllowedSound = SoundHandlerModule.new({soundPath = "assets/sounds/ui/notallowed.wav"})
 
     if notAllowedSound then
         notAllowedSound:Play()

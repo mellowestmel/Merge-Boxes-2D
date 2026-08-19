@@ -177,7 +177,7 @@ function ScrollingFrame:_updatePositions()
 end
 
 function ScrollingFrame:WheelMoved(x, y)
-    local mouseX, mouseY = RenderUtilsModule.GetMousePos()
+    local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
     if not self.hitboxElement:IsPointInside(mouseX, mouseY) then return end
 
     self.targetScrollOffset = clampOffset(self, self.targetScrollOffset - (y * self.scrollSpeed))
@@ -203,7 +203,7 @@ function ScrollingFrame:Update(deltaTime)
     if not self.hitboxElement then self:Remove() return end
 
     if self._isDraggingTrack and self.scrollTrackElement and self.scrollBarElement then
-        local _, mouseY = RenderUtilsModule.GetMousePos()
+        local _, mouseY = RenderUtilsModule.GetScaledMousePosition()
         local dragDelta = mouseY - self._dragStartY
 
         local trackHeight = self.scrollTrackElement:GetHeight()
@@ -293,7 +293,7 @@ function Module:MouseReleased(button)
     end
 end
 
-function Module:UpdateAll(deltaTime)
+function Module:Update(deltaTime)
     for _, scrollingFrame in pairs(self._scrollingFrames) do
         scrollingFrame:Update(deltaTime)
     end

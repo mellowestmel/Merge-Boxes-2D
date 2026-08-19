@@ -15,7 +15,7 @@ local function getWeightFactor(box)
 end
 
 local function applyFriction(box, deltaTime)
-    local fpsFactor = deltaTime * _G.FPS_SCALE
+    local fpsFactor = deltaTime * FPS_SCALE
     local weightFactor = getWeightFactor(box)
 
     local friction = CONSTANTS.FRICTION * weightFactor
@@ -52,7 +52,7 @@ end
 
 local function dragPhysics(box)
     if box.dragging then
-        local mouseX, mouseY = RenderUtilsModule.GetMousePos()
+        local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
 
         mouseY = math.clamp(mouseY, 0, CONSTANTS.AREA_HEIGHT)
         mouseX = math.clamp(mouseX, 0, CONSTANTS.AREA_WIDTH)
@@ -70,7 +70,7 @@ local function dragPhysics(box)
 end
 
 local function changePosition(box, deltaTime)
-    local fpsFactor = deltaTime * _G.FPS_SCALE
+    local fpsFactor = deltaTime * FPS_SCALE
     box.element.x = box.element.x + box.velocityX * fpsFactor
     box.element.y = box.element.y + box.velocityY * fpsFactor
 end

@@ -45,7 +45,7 @@ local function decryptBase64(string)
 end
 
 local function decryptWithKey(string)
-    local key = _G.SAVE_FILE_ENCRYPTION_KEY
+    local key = SAVE_FILE_ENCRYPTION_KEY
     local keyLength = #key
 
     local output = {}

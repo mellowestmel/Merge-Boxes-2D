@@ -1,5 +1,7 @@
 -- ~/code/game/box/handler.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local BoxRotationHandlerModule = require("code.game.box.rotationHandler")
 local BoxPhysicsHandlerModule = require("code.game.box.physicsHandler")
 local BoxDragHandlerModule = require("code.game.box.dragHandler")
@@ -21,6 +23,12 @@ function Module:Update(deltaTime)
     end
 
     BoxesObjectModule:Update(deltaTime)
+end
+
+function Module.Init()
+    SignalHandlerModule.Get("love.update"):Connect(function(deltaTime)
+        Module:Update(deltaTime)
+    end)
 end
 
 return Module

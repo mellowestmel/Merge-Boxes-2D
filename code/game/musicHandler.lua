@@ -1,6 +1,6 @@
 -- ~/code/game/musicHandler.lua
 
-local SoundModule = require("code.engine.sound")
+local SoundHandlerModule = require("code.engine.soundHandler")
 
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
@@ -44,7 +44,7 @@ function Module.Init()
     for name, track in pairs(TracksData) do
         local data = table.clone(track)
 
-        local soundObject = SoundModule.new({
+        local soundObject = SoundHandlerModule.new({
             soundPath = data.trackPath,
             volume = data.volume or 1,
             type = "track",

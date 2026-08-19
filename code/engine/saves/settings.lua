@@ -1,5 +1,7 @@
 -- ~/code/engine/saves/files.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local CONSTANTS = require("code.engine.saves.constants")
 
 local SavesDecodeModule = require("code.engine.saves.decode")
@@ -30,6 +32,14 @@ function Module:LoadFile()
     self.loadedFile = decodedFile
 
     return decodedFile
+end
+
+function Module.Init()
+    Module:LoadFile()
+
+    SignalHandlerModule.Get("love.quit"):Connect(function()
+        if Module.loadedFile then Module:SaveFile() end
+    end)
 end
 
 return Module

@@ -1,7 +1,7 @@
 -- ~/code/game/box/mergeManager.lua
 
 local QuadtreeModule = require("code.engine.quadtree")
-local SoundModule = require("code.engine.sound")
+local SoundHandlerModule = require("code.engine.soundHandler")
 
 local SaveFilesModule = require("code.engine.saves.files")
 local SettingsModule = require("code.engine.saves.settings")
@@ -153,7 +153,7 @@ function Module:MergeUpdate(deltaTime)
                 newBox.element.scaleX = scale
                 newBox.element.scaleY = scale
 
-                local mergeSound = SoundModule.new(newBox.mergeSoundData)
+                local mergeSound = SoundHandlerModule.new(newBox.mergeSoundData)
                 if mergeSound then
                     mergeSound:Play()
                     mergeSound:Remove()

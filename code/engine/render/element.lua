@@ -165,11 +165,11 @@ function Element:Draw(windowScaleFactor, windowOffsetX, windowOffsetY)
             local boxLeft = self.x - self.drawable:getWidth() * self.anchorX
             local boxTop = self.y - self.drawable:getHeight() * self.anchorY
 
-            local reflectionX = boxLeft / _G.RESOLUTION_WIDTH * imageWidth - (boxLeft / 4)
-            local reflectionY = boxTop / _G.RESOLUTION_HEIGHT * imageHeight - (boxTop / 4)
+            local reflectionX = boxLeft / RESOLUTION_WIDTH * imageWidth - (boxLeft / 4)
+            local reflectionY = boxTop / RESOLUTION_HEIGHT * imageHeight - (boxTop / 4)
 
-            local reflectionWidth = boxWidth / _G.RESOLUTION_WIDTH * imageWidth
-            local reflectionHeight = boxHeight / _G.RESOLUTION_HEIGHT * imageHeight
+            local reflectionWidth = boxWidth / RESOLUTION_WIDTH * imageWidth
+            local reflectionHeight = boxHeight / RESOLUTION_HEIGHT * imageHeight
 
             local reflectionQuad = love.graphics.newQuad(
                 reflectionX, reflectionY,
@@ -202,7 +202,7 @@ function Element:Draw(windowScaleFactor, windowOffsetX, windowOffsetY)
     -- Reset scissor back to the main viewport bounding box (or turn off if unscaled)
     if self.scissor then
         if windowScaleFactor ~= 1 or windowOffsetX ~= 0 or windowOffsetY ~= 0 then
-            local baseWindowWidth, baseWindowHeight = _G.RESOLUTION_WIDTH, _G.RESOLUTION_HEIGHT
+            local baseWindowWidth, baseWindowHeight = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
             love.graphics.setScissor(windowOffsetX, windowOffsetY, baseWindowWidth * windowScaleFactor, baseWindowHeight * windowScaleFactor)
         else
             love.graphics.setScissor()

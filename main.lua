@@ -1,9 +1,11 @@
 -- ~/main.lua
 
 local RenderHandlerModule = require("code.engine.render.handler")
-local RenderUtilsModule = require("code.engine.render.utils")
 
-local SoundModule = require("code.engine.sound")
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
+local TweenHandlerModule = require("code.engine.tweenHandler")
+local SoundHandlerModule = require("code.engine.soundHandler")
 
 local SettingsModule = require("code.engine.saves.settings")
 local SaveFilesModule = require("code.engine.saves.files")
@@ -12,50 +14,58 @@ local MusicHandlerModule = require("code.game.musicHandler")
 
 local BoxHandlerModule = require("code.game.box.handler")
 
-local UIHandlerModule = require("code.game.ui.handler")
 local VFXHandlerModule = require("code.game.vfx.handler")
+local UIHandlerModule = require("code.game.ui.handler")
 
-function love.load()
-    SettingsModule:LoadFile()
+-- Generic fire functions for Love2D's handlers
+for name, handler in pairs(love.handlers) do
+	local signal = SignalHandlerModule.Get("love." .. name)
+
+	love.handlers[name] = function(...)                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
+		signal:Fire(...)
+
+		local result = handler(...)
+		return result
+	end
+end
+
+-- Special binds for Love2D's built-in callbacks
+local function _bindCallback(name)
+	local oldCallback = love[name]
+	local signal = SignalHandlerModule.Get("love." .. name)
+
+	love[name] = function(...)
+		signal:Fire(...)
+		if oldCallback then return oldCallback(...) end
+	end
+end
+
+_bindCallback("update")
+_bindCallback("draw")
+
+_bindCallback("load")
+_bindCallback("quit")
+
+-- Callbacks to all those signals
+SignalHandlerModule.Get("love.load"):Connect(function()
+    math.randomseed(os.time())
+    math.random()
+
+    SaveFilesModule.Init()
+    SettingsModule.Init()
+
     RenderHandlerModule.Init()
+    TweenHandlerModule.Init()
 
+    BoxHandlerModule.Init()
+
+    SoundHandlerModule.Init()
     MusicHandlerModule.Init()
+
     VFXHandlerModule.Init()
     UIHandlerModule.Init()
-end
+end)
 
-function love.update(deltaTime)                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
-    RenderHandlerModule:Update()
-
-    BoxHandlerModule:Update(deltaTime)
-    VFXHandlerModule:Update(deltaTime)
-    UIHandlerModule:Update(deltaTime)
-
-    SaveFilesModule:Update(deltaTime)
-    SoundModule:Update()
-end
-
-function love.draw()
-    RenderHandlerModule:Draw()
-end
-
-function love.mousepressed(_, _, button)
-    local mouseX, mouseY = RenderUtilsModule.GetMousePos()
-    UIHandlerModule:MousePressed(mouseX, mouseY, button)
-end
-
-function love.mousereleased(_, _, button)
-    local mouseX, mouseY = RenderUtilsModule.GetMousePos()
-    UIHandlerModule:MouseReleased(mouseX, mouseY, button)
-end
-
-function love.wheelmoved(x, y)
-    UIHandlerModule:WheelMoved(x, y)
-end
-
-function love.quit()
+SignalHandlerModule.Get("love.quit"):Connect(function()
     love.window.setFullscreen(false)
-
-    if SaveFilesModule.loadedFile then SaveFilesModule:UnloadFile(SaveFilesModule.loadedFile) end
-    if SettingsModule.loadedFile then SettingsModule:SaveFile() end
-end
+end)

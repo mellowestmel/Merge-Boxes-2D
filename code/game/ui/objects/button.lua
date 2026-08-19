@@ -1,7 +1,7 @@
 -- ~/code/game/ui/objects/button.lua
 
 local RenderUtilsModule = require("code.engine.render.utils")
-local SoundModule = require("code.engine.sound")
+local SoundHandlerModule = require("code.engine.soundHandler")
 local IdManagerModule = require("code.engine.idManager")
 
 local SettingsModule = require("code.engine.saves.settings")
@@ -65,7 +65,7 @@ function Button:MousePressed(x, y, mouseButton)
     end
 
     if self.playClickSound then
-        local sound = SoundModule.new({soundPath = "assets/sounds/ui/click.wav"})
+        local sound = SoundHandlerModule.new({soundPath = "assets/sounds/ui/click.wav"})
 
         if sound then
             sound:Play(true, -100, 100, 1000)
@@ -81,7 +81,7 @@ end
 function Button:Update(deltaTime)
     if not self.hitboxElement then self:Remove() return end
 
-    local mouseX, mouseY = RenderUtilsModule.GetMousePos()
+    local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
     self._isHovered = self.hitboxElement:IsPointInside(mouseX, mouseY)
 
     local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
@@ -140,7 +140,7 @@ function Module:MousePressed(x, y, mouseButton)
     end
 end
 
-function Module:UpdateAll(deltaTime)
+function Module:Update(deltaTime)
     for _, button in pairs(self._buttons) do
         button:Update(deltaTime)
     end

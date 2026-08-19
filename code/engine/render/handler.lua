@@ -1,12 +1,12 @@
 -- ~/code/engine/renderer/render.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
 local ShaderModule = require("code.engine.shader")
 local SettingsModule = require("code.engine.saves.settings")
 local ColorblindData = require("code.data.colorblind")
 local RenderElementModule = require("code.engine.render.element")
 
 local Module = {}
-
 Module._sortedCache = {}
 
 -- Calculates sort order based on zIndex and element ID ties
@@ -32,7 +32,7 @@ function Module:Draw()
 
     -- Compute resolution scale & letterbox offsets
     local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
-    local baseWindowWidth, baseWindowHeight = _G.RESOLUTION_WIDTH, _G.RESOLUTION_HEIGHT
+    local baseWindowWidth, baseWindowHeight = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
 
     local windowScaleX = currentWindowWidth / baseWindowWidth
     local windowScaleY = currentWindowHeight / baseWindowHeight
@@ -78,6 +78,14 @@ function Module:Update()
 end
 
 function Module.Init()
+    SignalHandlerModule.Get("love.update"):Connect(function()
+        Module:Update()
+    end)
+
+    SignalHandlerModule.Get("love.draw"):Connect(function()
+        Module:Draw()
+    end)
+
     ShaderModule:Load(
         "accessibility",
         "code/data/shaders/accessibility.glsl"

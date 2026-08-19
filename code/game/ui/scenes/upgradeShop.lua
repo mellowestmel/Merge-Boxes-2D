@@ -3,7 +3,7 @@
 local RenderElementModule = require("code.engine.render.element")
 local RenderUtilsModule = require("code.engine.render.utils")
 
-local SoundModule = require("code.engine.sound")
+local SoundHandlerModule = require("code.engine.soundHandler")
 
 local string = require("code.engine.helpers.string")
 
@@ -65,7 +65,7 @@ local function setupTheBirbsWord(self)
         mouseButton = 1,
 
         onClick = function()
-            local birbSound = SoundModule.new({ soundPath = "assets/sounds/birb.wav" })
+            local birbSound = SoundHandlerModule.new({ soundPath = "assets/sounds/birb.wav" })
             if birbSound then
                 birbSound:Play()
                 birbSound:Remove()
@@ -155,7 +155,7 @@ local function createUpgradeButton(self, buttonConfig)
 
         onClick = function()
             local success = PurchaseUpgradeHandlerModule:Buy(buttonConfig.id, ShopID)
-            local sound = SoundModule.new(
+            local sound = SoundHandlerModule.new(
                 {
                     soundPath = (
                         success and
