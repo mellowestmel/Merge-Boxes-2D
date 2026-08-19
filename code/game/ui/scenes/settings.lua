@@ -2,6 +2,8 @@
 
 local RenderElementModule = require("code.engine.render.element")
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local SaveFilesModule = require("code.engine.saves.files")
 local SettingsModule = require("code.engine.saves.settings")
 
@@ -215,14 +217,22 @@ end
 
 -- Toggles a boolean setting.
 local function _toggleBooleanSetting(category, settingKey)
-	local newValue =
-		not SettingsModule.loadedFile[category][settingKey]
+	local oldValue =
+		SettingsModule.loadedFile[category][settingKey]
+
+	local newValue = not oldValue
 
 	SettingsModule.loadedFile[category][settingKey] = newValue
 
 	if SettingsModule.save then
 		SettingsModule:Save()
 	end
+
+	SignalHandlerModule.Get("game.saves.settingchanged"):Fire(
+		settingKey,
+		newValue,
+		oldValue
+	)
 
 	return newValue
 end
@@ -299,11 +309,11 @@ end
 local function _adjustNumericSetting(category, settingKey, direction)
 	local range = SAVES_CONSTANTS.NUMBER_SETTING_RANGES[settingKey]
 
-	local currentValue =
+	local oldValue =
 		SettingsModule.loadedFile[category][settingKey]
 
 	local newValue = _clampNumberSetting(
-		currentValue +
+		oldValue +
 		direction *
 		CONSTANTS.NUMBER_SETTING_CHANGE_INCREMENT,
 		range
@@ -314,6 +324,12 @@ local function _adjustNumericSetting(category, settingKey, direction)
 	if SettingsModule.save then
 		SettingsModule:Save()
 	end
+
+	SignalHandlerModule.Get("game.saves.settingchanged"):Fire(
+		settingKey,
+		newValue,
+		oldValue
+	)
 
 	return newValue
 end
@@ -326,13 +342,13 @@ local function _cycleEnumSetting(category, settingKey, direction)
 		return
 	end
 
-	local currentValue =
+	local oldValue =
 		SettingsModule.loadedFile[category][settingKey]
 
 	local currentIndex = 1
 
 	for index, option in pairs(options) do
-		if option == currentValue then
+		if option == oldValue then
 			currentIndex = index
 			break
 		end
@@ -348,6 +364,12 @@ local function _cycleEnumSetting(category, settingKey, direction)
 	if SettingsModule.save then
 		SettingsModule:Save()
 	end
+
+	SignalHandlerModule.Get("game.saves.settingchanged"):Fire(
+		settingKey,
+		newValue,
+		oldValue
+	)
 
 	return newValue
 end

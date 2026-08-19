@@ -75,7 +75,7 @@ function Button:MousePressed(x, y, mouseButton)
         end
     end
 
-    SignalHandlerModule.Get("ui.button.clicked"):Fire(self)
+    SignalHandlerModule.Get("game.ui.buttonclicked"):Fire(self)
 
     if self.onClick then
         self:onClick()

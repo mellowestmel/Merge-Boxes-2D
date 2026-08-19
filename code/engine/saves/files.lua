@@ -29,6 +29,18 @@ function Module.Init()
     SignalHandlerModule.Get("love.quit"):Connect(function()
         if Module.loadedFile then Module:UnloadFile(Module.loadedFile) end
     end)
+
+    SignalHandlerModule.Get("game.boxes.spawned"):Connect(function(box)
+        if Module.loadedFile then
+            local highestBoxTier = Module.loadedFile.stats.highestBoxTier
+            local newBoxTier = box.data.tier
+
+            if highestBoxTier < newBoxTier then
+                SignalHandlerModule.Get("game.boxes.highesttierchanged"):Fire(newBoxTier, highestBoxTier)
+                Module.loadedFile.stats.highestBoxTier = newBoxTier
+            end
+        end
+    end)
 end
 
 function Module:SaveFile(file)
@@ -44,6 +56,7 @@ function Module:SaveFile(file)
     local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(file.slot) .. CONSTANTS.SAVE_FILE_EXTENSION
 
     love.filesystem.write(fileName, finalOutput)
+    SignalHandlerModule.Get("engine.saves.filesaved"):Fire(file.slot, file)
 end
 
 function Module:UnloadFile(file)
@@ -60,30 +73,6 @@ function Module:ReadFile(slot)
     return decodedFile
 end
 
-local function _loadBoxes(savedBoxesData)
-    if not savedBoxesData then return end
-
-    for _, savedBoxData in pairs(savedBoxesData) do
-        local boxData = BoxesObjectModule.GetBoxDataByType(savedBoxData.type)
-        if not boxData then goto continue end
-
-        local box = BoxesObjectModule.new(boxData)
-        if not box then return end
-
-        box.element.x = savedBoxData.x
-        box.element.y = savedBoxData.y
-
-        box.element.rotation = savedBoxData.rotation
-
-        box.velocityX = savedBoxData.velocityX
-        box.velocityY = savedBoxData.velocityY
-
-        box.trinkets = savedBoxData.trinkets
-
-        :: continue ::
-    end
-end
-
 function Module:LoadFile(slot)
     slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
 
@@ -94,10 +83,10 @@ function Module:LoadFile(slot)
         decodedFile.slot = slot
     end
 
-    _loadBoxes(decodedFile.boxes)
-
     self.lastSaveSlot = decodedFile.slot
     self.loadedFile = decodedFile
+
+    SignalHandlerModule.Get("engine.saves.fileloaded"):Fire(decodedFile)
 
     return decodedFile
 end
@@ -114,6 +103,8 @@ function Module:DeleteFile(slot)
     if self.loadedFile and self.loadedFile.slot == slot then
         self.loadedFile = nil
     end
+
+    SignalHandlerModule.Get("engine.saves.filedeleted"):Fire(slot)
 end
 
 function Module:GetFiles()

@@ -1,7 +1,5 @@
 -- ~/code/game/box/factory.lua
 
-local SaveFilesModule = require("code.engine.saves.files")
-
 local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
 local math = require("code.engine.helpers.math")
@@ -27,10 +25,6 @@ function Module:Spawn()
             spawnTier = spawnTier + 1
         end
 
-        if SaveFilesModule.loadedFile.stats.highestBoxTier < spawnTier then
-            SaveFilesModule.loadedFile.stats.highestBoxTier = spawnTier
-        end
-
         local data = BoxesObjectModule.GetBoxDataByTier(spawnTier)
         local box = BoxesObjectModule.new(data)
 
@@ -52,6 +46,7 @@ function Module:Spawn()
             self.lastSpawned = love.timer.getTime()
         end
     end
+
 end
 
 function Module:GetSpawnCooldown()

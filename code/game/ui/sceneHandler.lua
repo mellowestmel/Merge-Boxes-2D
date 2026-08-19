@@ -27,7 +27,7 @@ function Module:Switch(name, ...)
 	local oldScene = self.currentScene
 	local scene = require("code.game.ui.scenes." .. name)
 
-	SignalHandlerModule.Get("ui.scenechanging"):Fire(
+	SignalHandlerModule.Get("game.ui.scenechanging"):Fire(
 		name,
 		oldScene
 	)

@@ -1,5 +1,7 @@
 -- ~/code/game/box/mergeManager.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local QuadtreeModule = require("code.engine.quadtree")
 
 local SoundHandlerModule = require("code.engine.soundHandler")
@@ -63,6 +65,8 @@ function Module:Merge(boxA, boxB)
 
     if not newBoxData then return end
 
+    SignalHandlerModule.Get("game.boxes.mergestarted"):Fire(boxA, boxB)
+
     boxA.merging = true
     boxB.merging = true
 
@@ -85,12 +89,16 @@ function Module:Merge(boxA, boxB)
     table.insert(self._activeMerges, {
         boxA = boxA,
         boxB = boxB,
+
         startAX = startAX,
         startAY = startAY,
+
         startBX = startBX,
         startBY = startBY,
+
         middleX = middleX,
         middleY = middleY,
+
         timeSinceStart = 0,
         duration = duration
     })
@@ -166,10 +174,6 @@ function Module:MergeUpdate(deltaTime)
             newBox.velocityX = velocityX
             newBox.velocityY = velocityY
 
-            if SaveFilesModule.loadedFile.stats.highestBoxTier < newBoxTier then
-                SaveFilesModule.loadedFile.stats.highestBoxTier = newBoxTier
-            end
-
             SaveFilesModule.loadedFile.currencies.credits = SaveFilesModule.loadedFile.currencies.credits + newBox.data.mergeReward
 
             local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
@@ -198,6 +202,7 @@ function Module:MergeUpdate(deltaTime)
             if newBox.data.flashScreen then ScreenFlashModule:Flash(newBox.data.screenFlashColor) end
         end
 
+        SignalHandlerModule.Get("game.boxes.mergecompleted"):Fire(newBox, boxA, boxB)
         table.remove(self._activeMerges, index)
 
         :: continue ::

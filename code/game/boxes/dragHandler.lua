@@ -1,5 +1,6 @@
 -- ~/code/game/box/dragHandler.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
 local RenderUtilsModule = require("code.engine.render.utils")
 
 local CONSTANTS = require("code.game.boxes.constants")
@@ -23,6 +24,8 @@ function Module:Update()
             box.element.zIndex = CONSTANTS.BASE_BOX_ZINDEX
 
             if box.element:IsPointInside(mouseX, mouseY) then
+                SignalHandlerModule.Get("game.boxes.dragstarted"):Fire(box)
+
                 self.draggedBox = box
                 self.draggedBox.dragging = true
 
@@ -34,6 +37,8 @@ function Module:Update()
             end
         end
     elseif not mouseDown and self.draggedBox then
+        SignalHandlerModule.Get("game.boxes.dragended"):Fire(self.draggedBox)
+
         self.draggedBox.element.color.alpha = lastDraggedBoxAlpha
         self.draggedBox.element.zIndex = CONSTANTS.BASE_BOX_ZINDEX + 1
 

@@ -1,5 +1,7 @@
 -- ~/code/game/box/object.lua
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
 local RenderElementModule = require("code.engine.render.element")
 local IdManagerModule = require("code.engine.idManager")
 
@@ -23,11 +25,14 @@ Module._dirty = true
 local manager = IdManagerModule.new()
 
 function Box:Remove()
+    SignalHandlerModule.Get("game.boxes.removed"):Fire(self)
+
     Module.boxes[self.id] = nil
     Module._dirty = true
 
     self.element:Remove()
     manager:Release(self.id)
+
 end
 
 function Box:SetZIndex(zIndex)
@@ -103,6 +108,8 @@ function Module.new(data)
         merging = false
     }, Box)
 
+    SignalHandlerModule.Get("game.boxes.spawned"):Fire(box)
+
     Module.boxes[box.id] = box
     Module._dirty = true
 
@@ -144,6 +151,33 @@ function Module:Update(deltaTime)
 
         box.element.render = self.renderBoxes
     end
+end
+
+function Module.Init()
+    SignalHandlerModule.Get("game.saves.fileloaded"):Connect(function(loadedFile)
+        local loadedBoxesData = loadedFile.boxes
+        if not loadedBoxesData then return end
+
+        for _, savedBoxData in pairs(loadedBoxesData) do
+            local boxData = Module.GetBoxDataByType(savedBoxData.type)
+            if not boxData then goto continue end
+
+            local box = Module.new(boxData)
+            if not box then return end
+
+            box.element.x = savedBoxData.x
+            box.element.y = savedBoxData.y
+
+            box.element.rotation = savedBoxData.rotation
+
+            box.velocityX = savedBoxData.velocityX
+            box.velocityY = savedBoxData.velocityY
+
+            box.trinkets = savedBoxData.trinkets
+
+            :: continue ::
+        end
+    end)
 end
 
 return Module

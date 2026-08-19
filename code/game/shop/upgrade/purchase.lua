@@ -1,7 +1,9 @@
 -- ~/code/game/shop/upgrades/purchase.lua
 
-local TransactionModule = require("code.game.shop.transaction")
 
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
+local TransactionModule = require("code.game.shop.transaction")
 local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
 
 local Module = {}
@@ -15,22 +17,19 @@ end
 function Module:CanBuy(id, shopId)
     local upgrade = UpgradeHandlerModule:GetUpgrade(id)
 
-    if not upgrade then
+    local currency = upgrade.currency or "credits"
+    local cost = self:GetCost(id)
+
+    local function failed()
+        SignalHandlerModule.Get("game.shop.transactionfailed"):Fire(currency, cost)
         return false
     end
 
-    if shopId and upgrade.shopId ~= shopId then
-        return false
-    end
+    if not upgrade then failed() end
+    if shopId and upgrade.shopId ~= shopId then failed() end
+    if UpgradeHandlerModule:IsMaxed(id) then failed() end
 
-    if UpgradeHandlerModule:IsMaxed(id) then
-        return false
-    end
-
-    return TransactionModule:CanAfford(
-        upgrade.currency or "credits",
-        self:GetCost(id)
-    )
+    return TransactionModule:CanAfford(currency, cost)
 end
 
 function Module:Buy(id, shopId)
@@ -39,14 +38,22 @@ function Module:Buy(id, shopId)
     end
 
     local upgrade = UpgradeHandlerModule:GetUpgrade(id)
+    SignalHandlerModule.Get("game.shop.upgradepurchased"):Fire(id, shopId, self:GetCost(id))
 
-    return TransactionModule:Purchase(
+    local result = TransactionModule:Purchase(
         upgrade.currency or "credits",
         self:GetCost(id),
+
         function()
             UpgradeHandlerModule:AddStack(id)
         end
     )
+
+    if UpgradeHandlerModule:IsMaxed(id) then
+        SignalHandlerModule.Get("game.shop.upgrademaxed"):Fire(id)
+    end
+
+    return result
 end
 
 return Module
