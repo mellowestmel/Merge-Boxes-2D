@@ -1,21 +1,22 @@
 -- ~/code/game/ui/constants.lua
 
 local CONSTANTS = {}
+
 -- SCREEN
 CONSTANTS.CENTER_X = RESOLUTION_WIDTH / 2
 CONSTANTS.CENTER_Y = RESOLUTION_HEIGHT / 2
 
 -- BUTTONS
-CONSTANTS.DEFAULT_BUTTON_PATH = "assets/sprites/ui/button220x75.png"
+CONSTANTS.DEFAULT_BUTTON_PATH = "assets/sprites/ui/buttons/button220x75.png"
 
-CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH = "assets/sprites/ui/button74x74.png"
-CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH = "assets/sprites/ui/buttoncheck74x74.png"
+CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH = "assets/sprites/ui/buttons/button74x74.png"
+CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH = "assets/sprites/ui/buttons/buttoncheck74x74.png"
 
-CONSTANTS.NUMBER_DECREASE_BUTTON_PATH = "assets/sprites/ui/buttonminus74x74.png"
-CONSTANTS.NUMBER_INCREASE_BUTTON_PATH = "assets/sprites/ui/buttonplus74x74.png"
+CONSTANTS.NUMBER_DECREASE_BUTTON_PATH = "assets/sprites/ui/buttons/buttonminus74x74.png"
+CONSTANTS.NUMBER_INCREASE_BUTTON_PATH = "assets/sprites/ui/buttons/buttonplus74x74.png"
 
-CONSTANTS.ENUM_DECREASE_BUTTON_PATH = "assets/sprites/ui/buttonarrowl74x74.png"
-CONSTANTS.ENUM_INCREASE_BUTTON_PATH = "assets/sprites/ui/buttonarrowr74x74.png"
+CONSTANTS.ENUM_DECREASE_BUTTON_PATH = "assets/sprites/ui/buttons/buttonarrowl74x74.png"
+CONSTANTS.ENUM_INCREASE_BUTTON_PATH = "assets/sprites/ui/buttons/buttonarrowr74x74.png"
 
 -- FONTS
 CONSTANTS.STANBERRY_FONT_PATH = "assets/fonts/Stanberry.ttf"
@@ -74,5 +75,8 @@ CONSTANTS.COLOR_DARK = {42, 42, 42}
 CONSTANTS.COLOR_GRAY = {117, 124, 136}
 CONSTANTS.COLOR_PURPLE = {123,104,238}
 CONSTANTS.INVISIBLE_COLOR = {0,0,0,0}
+
+-- DIALOGUE
+CONSTANTS.DIALOGUE_LETTER_INTREVAL = .01
 
 return CONSTANTS

@@ -294,7 +294,7 @@ local function _lockedImageLogic(current, requirement, originalPath)
         return RenderElementModule.imageCache[originalPath]
     else
         return RenderElementModule.imageCache[
-            "assets/sprites/ui/buttonlocked74x74.png"
+            "assets/sprites/ui/buttons/buttonlocked74x74.png"
         ]
     end
 end
@@ -359,11 +359,11 @@ end
 function Module:Init(slot)
     --%note shitty preloading
     if not RenderElementModule.imageCache[
-        "assets/sprites/ui/buttonlocked74x74.png"
+        "assets/sprites/ui/buttons/buttonlocked74x74.png"
     ] then
         local temp = RenderElementModule.new({
             type = "sprite",
-            spritePath = "assets/sprites/ui/buttonlocked74x74.png"
+            spritePath = "assets/sprites/ui/buttons/buttonlocked74x74.png"
         })
 
         temp:Remove()

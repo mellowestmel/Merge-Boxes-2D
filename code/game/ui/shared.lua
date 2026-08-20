@@ -247,33 +247,6 @@ function Module:SetupSessionPlaytimeLabel(scene)
 	end
 end
 
-function Module:SetupDialogueBox(scene)
-	local box = self:CreateElement(
-		SharedData.dialogueBox,
-		scene
-	)
-
-	local speaker = self:CreateElement(
-		SharedData.dialoguePortrait,
-		scene
-	)
-
-	local text = self:CreateElement(
-		SharedData.dialogueBoxText,
-		scene
-	)
-
-	box.render = false
-	speaker.render = false
-	text.render = false
-
-	return {
-		box = box,
-		speaker = speaker,
-		text = text
-	}
-end
-
 function Module:SetupBackground(scene)
 	local sceneData = require(
 		"code.data.ui.scenes." .. scene.name

@@ -33,7 +33,7 @@ function Module:Has(name)
     return self.shaders[name] ~= nil
 end
 
--- Sends a uniform to a loaded shader; no-op if the shader doesn't exist.
+-- Sends a uniform to a loaded shader
 function Module:Send(name, uniform, value, ...)
     local shader = self.shaders[name]
 

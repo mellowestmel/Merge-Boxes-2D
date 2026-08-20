@@ -77,7 +77,7 @@ return {
     },
 
     upgradeShopButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttoncart74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttoncart74x74.png",
 
         type = "sprite",
 
@@ -93,7 +93,7 @@ return {
     },
 
     blackMarketButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttonbm74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttonbm74x74.png",
 
         type = "sprite",
 
@@ -109,7 +109,7 @@ return {
     },
 
     sacrificeButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttonsac74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttonsac74x74.png",
 
         type = "sprite",
 

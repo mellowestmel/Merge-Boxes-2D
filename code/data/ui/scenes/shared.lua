@@ -9,7 +9,7 @@ local UILayoutData = require("code.data.ui.layout")
 
 return {
     settingsButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttoncog74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttoncog74x74.png",
 
         type = "sprite",
 
@@ -25,7 +25,7 @@ return {
     },
 
     discordButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttondiscord74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttondiscord74x74.png",
 
         type = "sprite",
 
@@ -124,7 +124,7 @@ return {
     },
 
     backToMenuButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttonmenu74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttonmenu74x74.png",
 
         type = "sprite",
 
@@ -157,7 +157,7 @@ return {
     },
 
     dialogueBox = {
-        spritePath = "assets/sprites/ui/button220x75.png",
+        spritePath = "assets/sprites/ui/buttons/button220x75.png",
 
         type = "sprite",
 

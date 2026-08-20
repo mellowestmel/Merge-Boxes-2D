@@ -25,9 +25,9 @@ function Module:CanBuy(id, shopId)
         return false
     end
 
-    if not upgrade then failed() end
-    if shopId and upgrade.shopId ~= shopId then failed() end
-    if UpgradeHandlerModule:IsMaxed(id) then failed() end
+    if not upgrade then return failed() end
+    if shopId and upgrade.shopId ~= shopId then return failed() end
+    if UpgradeHandlerModule:IsMaxed(id) then return failed() end
 
     return TransactionModule:CanAfford(currency, cost)
 end

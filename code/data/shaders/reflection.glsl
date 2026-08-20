@@ -4,6 +4,7 @@ extern vec2 canvasSize;
 extern vec2 elementCenter;
 extern vec2 elementSize;
 extern number elementRotation;
+extern number elementAlpha;
 
 vec4 effect(
     vec4 color,
@@ -44,7 +45,7 @@ vec4 effect(
 
     vec4 reflection = vec4(
         reflectionPixel.rgb,
-        1.0
+        elementAlpha
     );
 
     vec3 resultRGB = mix(
@@ -55,6 +56,6 @@ vec4 effect(
 
     return vec4(
         resultRGB,
-        1.0
+        reflection.a
     );
 }

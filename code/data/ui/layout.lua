@@ -1,6 +1,7 @@
 -- ~/code/data/ui/layout.lua
 
 local BOX_CONSTANTS = require("code.game.boxes.constants")
+local CONSTANTS = require("code.game.ui.constants")
 
 return {
     mainMenu = {
@@ -31,6 +32,12 @@ return {
         dialogue = {
             portraitX = 400,
             portraitY = 425,
+
+            textPaddingX = 20,
+            textPaddingY = 45,
+
+            arrowX = BOX_CONSTANTS.AREA_WIDTH - CONSTANTS.MASSIVE_PADDING,
+            arrowY = RESOLUTION_HEIGHT - CONSTANTS.MASSIVE_PADDING
         },
 
         backgroundBoxesPathPrefix = "assets/sprites/ui/background_boxes/",

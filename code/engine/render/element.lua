@@ -222,6 +222,11 @@ local STANDARD_UNIFORM_PROVIDERS = {
 	elementRotation = function(element)
 		return math.rad(element.rotation)
 	end,
+
+	elementAlpha = function(element)
+		local color = element.color
+		return color and (color.alpha or color.a or 1) or 1
+	end,
 }
 
 -- Sends the standard uniforms a shader declared, plus whatever

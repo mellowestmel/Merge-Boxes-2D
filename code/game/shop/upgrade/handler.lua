@@ -34,7 +34,6 @@ end
 
 function Module:IsMaxed(id)
     local upgrade = self:GetUpgrade(id)
-
     return self:GetStacks(id) >= upgrade.maxStacks
 end
 

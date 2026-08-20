@@ -34,7 +34,7 @@ return {
     },
 
     upgradesFrameScrollWheel = {
-        spritePath = "assets/sprites/ui/button74x74.png",
+        spritePath = "assets/sprites/ui/buttons/button74x74.png",
 
         type = "sprite",
 
@@ -49,7 +49,7 @@ return {
     },
 
     upgradeBuyHitbox = {
-        spritePath = "assets/sprites/ui/button220x75.png",
+        spritePath = "assets/sprites/ui/buttons/button220x75.png",
 
         type = "sprite",
 

@@ -18,7 +18,7 @@ return {
     },
 
     cancelButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttonx74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttonx74x74.png",
 
         type = "sprite",
 
@@ -68,7 +68,7 @@ return {
     },
 
     booleanSettingToggleHitbox = {
-        spritePath = "assets/sprites/ui/button74x74.png",
+        spritePath = "assets/sprites/ui/buttons/button74x74.png",
 
         type = "sprite",
 
@@ -83,7 +83,7 @@ return {
     },
 
     decreaseSettingHitbox = {
-        spritePath = "assets/sprites/ui/button74x74.png",
+        spritePath = "assets/sprites/ui/buttons/button74x74.png",
 
         type = "sprite",
 
@@ -98,7 +98,7 @@ return {
     },
 
     increaseSettingHitbox = {
-        spritePath = "assets/sprites/ui/button74x74.png",
+        spritePath = "assets/sprites/ui/buttons/button74x74.png",
 
         type = "sprite",
 
@@ -126,7 +126,7 @@ return {
     },
 
     scrollLeftButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttonarrowl74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttonarrowl74x74.png",
 
         type = "sprite",
 
@@ -142,7 +142,7 @@ return {
     },
 
     scrollRightButtonHitbox = {
-        spritePath = "assets/sprites/ui/buttonarrowr74x74.png",
+        spritePath = "assets/sprites/ui/buttons/buttonarrowr74x74.png",
 
         type = "sprite",
 

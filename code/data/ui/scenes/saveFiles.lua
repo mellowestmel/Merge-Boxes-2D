@@ -159,7 +159,7 @@ return {
     },
 
     templateSaveFilePlusIcon = {
-        spritePath = "assets/sprites/ui/buttonplus100x100.png",
+        spritePath = "assets/sprites/ui/buttons/buttonplus100x100.png",
 
         type = "sprite",
 
