@@ -44,6 +44,15 @@ local settingNameLabels = {}
 local settingValueControls = {}
 local categories = {}
 
+-- Resets category/selection state shared by Clean and Init.
+local function _resetSelectionState()
+	currentCategoryIndex = 1
+	currentCategoryLabel = nil
+
+	settingNameLabels = {}
+	settingValueControls = {}
+end
+
 function Module:Clean()
 	for _, element in pairs(self._elements) do
 		if element then
@@ -60,11 +69,7 @@ function Module:Clean()
 	self._elements = {}
 	self._objects = {}
 
-	currentCategoryIndex = 1
-	currentCategoryLabel = nil
-
-	settingNameLabels = {}
-	settingValueControls = {}
+	_resetSelectionState()
 	categories = {}
 
 	UISharedFunctions:CleanUpdates()
@@ -115,6 +120,23 @@ local function _setupBackground(self)
 	)
 end
 
+-- Creates a single-hitbox button and registers it for cleanup. Most
+-- buttons in this scene are just "one hitbox, one click handler", so
+-- this covers the cancel/toggle/stepper/scroll buttons below.
+local function _setupHitboxButton(self, hitbox, onClick)
+	local button = UIButtonObjectModule.new({
+		elements = {hitbox},
+		hitboxElement = hitbox,
+
+		mouseButton = 1,
+		onClick = onClick
+	})
+
+	table.insert(self._objects, button)
+
+	return button
+end
+
 -- Creates the cancel button.
 local function _setupCancelButton(self)
 	local cancelButtonHitbox = UISharedFunctions:CreateElement(
@@ -122,24 +144,15 @@ local function _setupCancelButton(self)
 		self
 	)
 
-	local cancelButton = UIButtonObjectModule.new({
-		elements = {cancelButtonHitbox},
-		hitboxElement = cancelButtonHitbox,
-
-		mouseButton = 1,
-
-		onClick = function()
-			ScreenTransitionModule:Transition({
-				callback = function()
-					UISceneHandlerModule:Switch(
-						UISceneHandlerModule.lastScene.name
-					)
-				end
-			})
-		end
-	})
-
-	table.insert(self._objects, cancelButton)
+	_setupHitboxButton(self, cancelButtonHitbox, function()
+		ScreenTransitionModule:Transition({
+			callback = function()
+				UISceneHandlerModule:Switch(
+					UISceneHandlerModule.lastScene.name
+				)
+			end
+		})
+	end)
 end
 
 -- Capitalizes the first letter.
@@ -215,13 +228,9 @@ local function _booleanToggleImage(value)
 	]
 end
 
--- Toggles a boolean setting.
-local function _toggleBooleanSetting(category, settingKey)
-	local oldValue =
-		SettingsModule.loadedFile[category][settingKey]
-
-	local newValue = not oldValue
-
+-- Persists a setting change, saving and firing the changed signal.
+-- Shared by every setting type below, since they all end the same way.
+local function _commitSettingChange(category, settingKey, oldValue, newValue)
 	SettingsModule.loadedFile[category][settingKey] = newValue
 
 	if SettingsModule.save then
@@ -237,50 +246,37 @@ local function _toggleBooleanSetting(category, settingKey)
 	return newValue
 end
 
+-- Toggles a boolean setting.
+local function _toggleBooleanSetting(category, settingKey)
+	local oldValue = SettingsModule.loadedFile[category][settingKey]
+
+	return _commitSettingChange(category, settingKey, oldValue, not oldValue)
+end
+
 -- Creates a boolean setting control.
 local function _setupBooleanSettingControl(self, category, setting, rowY)
 	_preloadSprite(CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH)
 	_preloadSprite(CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH)
 
-	local currentValue =
-		SettingsModule.loadedFile[category][setting.key]
+	local currentValue = SettingsModule.loadedFile[category][setting.key]
 
-	local toggleData = _copyWithOverrides(
-		SceneData.booleanSettingToggleHitbox,
-		{
-			y = rowY,
-
-			type = "sprite",
-
-			spritePath = currentValue
-				and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH
-				or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
-		}
-	)
+	local togglePath = currentValue
+		and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH
+		or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
 
 	local toggleHitbox = UISharedFunctions:CreateElement(
-		toggleData,
+		_copyWithOverrides(SceneData.booleanSettingToggleHitbox, {
+			y = rowY,
+			type = "sprite",
+			spritePath = togglePath
+		}),
 		self
 	)
 
-	local toggleButton = UIButtonObjectModule.new({
-		elements = {toggleHitbox},
-
-		hitboxElement = toggleHitbox,
-
-		mouseButton = 1,
-
-		onClick = function()
-			toggleHitbox.drawable = _booleanToggleImage(
-				_toggleBooleanSetting(
-					category,
-					setting.key
-				)
-			)
-		end
-	})
-
-	table.insert(self._objects, toggleButton)
+	local toggleButton = _setupHitboxButton(self, toggleHitbox, function()
+		toggleHitbox.drawable =
+			_booleanToggleImage(_toggleBooleanSetting(category, setting.key))
+	end)
 
 	table.insert(settingValueControls, {
 		elements = {toggleHitbox},
@@ -308,30 +304,14 @@ end
 -- Changes a numeric setting.
 local function _adjustNumericSetting(category, settingKey, direction)
 	local range = SAVES_CONSTANTS.NUMBER_SETTING_RANGES[settingKey]
-
-	local oldValue =
-		SettingsModule.loadedFile[category][settingKey]
+	local oldValue = SettingsModule.loadedFile[category][settingKey]
 
 	local newValue = _clampNumberSetting(
-		oldValue +
-		direction *
-		CONSTANTS.NUMBER_SETTING_CHANGE_INCREMENT,
+		oldValue + direction * CONSTANTS.NUMBER_SETTING_CHANGE_INCREMENT,
 		range
 	)
 
-	SettingsModule.loadedFile[category][settingKey] = newValue
-
-	if SettingsModule.save then
-		SettingsModule:Save()
-	end
-
-	SignalHandlerModule.Get("game.saves.settingchanged"):Fire(
-		settingKey,
-		newValue,
-		oldValue
-	)
-
-	return newValue
+	return _commitSettingChange(category, settingKey, oldValue, newValue)
 end
 
 -- Changes an enum setting.
@@ -342,9 +322,7 @@ local function _cycleEnumSetting(category, settingKey, direction)
 		return
 	end
 
-	local oldValue =
-		SettingsModule.loadedFile[category][settingKey]
-
+	local oldValue = SettingsModule.loadedFile[category][settingKey]
 	local currentIndex = 1
 
 	for index, option in pairs(options) do
@@ -354,24 +332,10 @@ local function _cycleEnumSetting(category, settingKey, direction)
 		end
 	end
 
-	local newIndex =
-		((currentIndex - 1 + direction) % #options) + 1
-
+	local newIndex = ((currentIndex - 1 + direction) % #options) + 1
 	local newValue = options[newIndex]
 
-	SettingsModule.loadedFile[category][settingKey] = newValue
-
-	if SettingsModule.save then
-		SettingsModule:Save()
-	end
-
-	SignalHandlerModule.Get("game.saves.settingchanged"):Fire(
-		settingKey,
-		newValue,
-		oldValue
-	)
-
-	return newValue
+	return _commitSettingChange(category, settingKey, oldValue, newValue)
 end
 
 -- Formats a value as a percentage.
@@ -438,28 +402,8 @@ local function _setupStepperControl(
 		end
 	end
 
-	local decreaseButton = UIButtonObjectModule.new({
-		elements = {decreaseHitbox},
-
-		hitboxElement = decreaseHitbox,
-
-		mouseButton = 1,
-
-		onClick = _step(-1)
-	})
-
-	local increaseButton = UIButtonObjectModule.new({
-		elements = {increaseHitbox},
-
-		hitboxElement = increaseHitbox,
-
-		mouseButton = 1,
-
-		onClick = _step(1)
-	})
-
-	table.insert(self._objects, decreaseButton)
-	table.insert(self._objects, increaseButton)
+	local decreaseButton = _setupHitboxButton(self, decreaseHitbox, _step(-1))
+	local increaseButton = _setupHitboxButton(self, increaseHitbox, _step(1))
 
 	table.insert(settingValueControls, {
 		elements = {
@@ -617,32 +561,13 @@ local function _setupScrollButtons(self)
 			self
 		)
 
-	local scrollRightButton = UIButtonObjectModule.new({
-		elements = {scrollRightButtonHitbox},
+	_setupHitboxButton(self, scrollRightButtonHitbox, function()
+		_scrollCategory(self, 1)
+	end)
 
-		hitboxElement = scrollRightButtonHitbox,
-
-		mouseButton = 1,
-
-		onClick = function()
-			_scrollCategory(self, 1)
-		end
-	})
-
-	local scrollLeftButton = UIButtonObjectModule.new({
-		elements = {scrollLeftButtonHitbox},
-
-		hitboxElement = scrollLeftButtonHitbox,
-
-		mouseButton = 1,
-
-		onClick = function()
-			_scrollCategory(self, -1)
-		end
-	})
-
-	table.insert(self._objects, scrollRightButton)
-	table.insert(self._objects, scrollLeftButton)
+	_setupHitboxButton(self, scrollLeftButtonHitbox, function()
+		_scrollCategory(self, -1)
+	end)
 end
 
 -- Creates the category scrolling UI.
@@ -672,12 +597,7 @@ function Module:Init()
 
 	BoxesObjectModule.renderBoxes = false
 
-	currentCategoryIndex = 1
-	currentCategoryLabel = nil
-
-	settingNameLabels = {}
-	settingValueControls = {}
-
+	_resetSelectionState()
 	_buildCategories()
 
 	_setupBackground(self)

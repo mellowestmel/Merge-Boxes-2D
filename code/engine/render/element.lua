@@ -89,19 +89,13 @@ function Element:IsPointInside(x, y)
 		and localY <= height * (1 - self.anchorY)
 end
 
-local function _drawElement(element, windowScaleFactor, windowOffsetX, windowOffsetY)
-	local positionX =
-		element.x * windowScaleFactor +
-		windowOffsetX +
-		element.offsetX
-
-	local positionY =
-		element.y * windowScaleFactor +
-		windowOffsetY +
-		element.offsetY
-
-	local scaleX = element.scaleX * windowScaleFactor
-	local scaleY = element.scaleY * windowScaleFactor
+-- NOTE: elements are always drawn into the virtual-resolution scene canvas
+-- (see render/handler.lua), so there is no per-element window scale/offset
+-- to account for here — that letterboxing is applied once, when the whole
+-- scene canvas is blitted to the real window.
+local function _drawElement(element)
+	local positionX = element.x + element.offsetX
+	local positionY = element.y + element.offsetY
 	local radians = math.rad(element.rotation)
 
 	local color = element.color
@@ -119,10 +113,10 @@ local function _drawElement(element, windowScaleFactor, windowOffsetX, windowOff
 
 	if element.scissor then
 		love.graphics.setScissor(
-			element.scissor.x * windowScaleFactor + windowOffsetX,
-			element.scissor.y * windowScaleFactor + windowOffsetY,
-			element.scissor.width * windowScaleFactor,
-			element.scissor.height * windowScaleFactor
+			element.scissor.x,
+			element.scissor.y,
+			element.scissor.width,
+			element.scissor.height
 		)
 	end
 
@@ -134,8 +128,8 @@ local function _drawElement(element, windowScaleFactor, windowOffsetX, windowOff
 			positionX,
 			positionY,
 			radians,
-			scaleX,
-			scaleY,
+			element.scaleX,
+			element.scaleY,
 			drawable:getWidth() * element.anchorX,
 			drawable:getHeight() * element.anchorY
 		)
@@ -147,11 +141,11 @@ local function _drawElement(element, windowScaleFactor, windowOffsetX, windowOff
 
 		love.graphics.print(
 			element.text,
-			positionX - font:getWidth(element.text) * scaleX * element.anchorX,
-			positionY - font:getHeight() * scaleY * element.anchorY,
+			positionX - font:getWidth(element.text) * element.scaleX * element.anchorX,
+			positionY - font:getHeight() * element.scaleY * element.anchorY,
 			radians,
-			scaleX,
-			scaleY
+			element.scaleX,
+			element.scaleY
 		)
 	end
 
@@ -180,7 +174,10 @@ local function _getShaderCanvases()
 	return canvases.canvasA, canvases.canvasB
 end
 
-local function _loadShaderTexture(path)
+-- Any string uniform whose name ends in "Texture" (e.g. reflectionTexture)
+-- is treated as an image path and lazily loaded/cached, so new shaders can
+-- add their own texture uniforms without engine changes.
+local function _loadTexture(path)
 	local texture = Module.imageCache[path]
 
 	if not texture then
@@ -197,46 +194,44 @@ local function _sendUniform(shader, name, value)
 	end
 end
 
-local function _sendShaderParams(
-	shader,
-	shaderEntry,
-	element,
-	windowScaleFactor,
-	windowOffsetX,
-	windowOffsetY
-)
-	_sendUniform(shader, "time", love.timer.getTime())
+-- Uniforms any shader is allowed to declare and read automatically.
+-- Each provider only runs (and only allocates) once we already know the
+-- shader declared that uniform, so shaders that don't use e.g.
+-- elementCenter never pay for computing it.
+local STANDARD_UNIFORM_PROVIDERS = {
+	time = function()
+		return love.timer.getTime()
+	end,
 
-	_sendUniform(shader, "canvasSize", {
-		RESOLUTION_WIDTH,
-		RESOLUTION_HEIGHT
-	})
+	canvasSize = function()
+		return { RESOLUTION_WIDTH, RESOLUTION_HEIGHT }
+	end,
 
-	_sendUniform(shader, "texelSize", {
-		1 / RESOLUTION_WIDTH,
-		1 / RESOLUTION_HEIGHT
-	})
+	texelSize = function()
+		return { 1 / RESOLUTION_WIDTH, 1 / RESOLUTION_HEIGHT }
+	end,
 
-	_sendUniform(shader, "elementCenter", {
-		element.x * windowScaleFactor +
-			windowOffsetX +
-			element.offsetX,
+	elementCenter = function(element)
+		return { element.x + element.offsetX, element.y + element.offsetY }
+	end,
 
-		element.y * windowScaleFactor +
-			windowOffsetY +
-			element.offsetY
-	})
+	elementSize = function(element)
+		return { _getDimensions(element) }
+	end,
 
-	_sendUniform(shader, "elementSize", {
-		100 * element.scaleX * windowScaleFactor,
-		100 * element.scaleY * windowScaleFactor
-	})
+	elementRotation = function(element)
+		return math.rad(element.rotation)
+	end,
+}
 
-	_sendUniform(
-		shader,
-		"elementRotation",
-		math.rad(element.rotation)
-	)
+-- Sends the standard uniforms a shader declared, plus whatever
+-- values were set on its entry in cosmeticData
+local function _sendShaderParams(shader, shaderEntry, element)
+	for name, getValue in pairs(STANDARD_UNIFORM_PROVIDERS) do
+		if shader:hasUniform(name) then
+			shader:send(name, getValue(element))
+		end
+	end
 
 	if type(shaderEntry) ~= "table" then
 		return
@@ -244,10 +239,8 @@ local function _sendShaderParams(
 
 	for name, value in pairs(shaderEntry) do
 		if name ~= "name" then
-			if name == "reflectionTexture"
-				and type(value) == "string"
-			then
-				value = _loadShaderTexture(value)
+			if type(value) == "string" and name:match("Texture$") then
+				value = _loadTexture(value)
 			end
 
 			_sendUniform(shader, name, value)
@@ -255,35 +248,24 @@ local function _sendShaderParams(
 	end
 end
 
-local function _drawWithShaders(
-	element,
-	windowScaleFactor,
-	windowOffsetX,
-	windowOffsetY
-)
-	local canvasA, canvasB = _getShaderCanvases()
+-- Draws the element into a scratch canvas, then pipes it through each of
+-- its shaders in order, ping-ponging between two canvases so any number
+-- of shaders can be chained without extra allocations.
+local function _drawWithShaders(element)
+	local inputCanvas, outputCanvas = _getShaderCanvases()
 
 	local previousCanvas = love.graphics.getCanvas()
 	local previousShader = love.graphics.getShader()
-
-	local inputCanvas = canvasA
-	local outputCanvas = canvasB
 
 	love.graphics.setCanvas(inputCanvas)
 	love.graphics.clear(0, 0, 0, 0)
 
 	love.graphics.setShader()
 
-	_drawElement(
-		element,
-		windowScaleFactor,
-		windowOffsetX,
-		windowOffsetY
-	)
+	_drawElement(element)
 
 	for _, shaderEntry in ipairs(element.shaders) do
-		local shaderName =
-			type(shaderEntry) == "table"
+		local shaderName = type(shaderEntry) == "table"
 			and shaderEntry.name
 			or shaderEntry
 
@@ -295,58 +277,33 @@ local function _drawWithShaders(
 
 			love.graphics.setShader(shader)
 
-			_sendShaderParams(
-				shader,
-				shaderEntry,
-				element,
-				windowScaleFactor,
-				windowOffsetX,
-				windowOffsetY
-			)
+			love.graphics.setColor(1, 1, 1, 1)
 
+			_sendShaderParams(shader, shaderEntry, element)
 			love.graphics.draw(inputCanvas, 0, 0)
 
-			inputCanvas, outputCanvas =
-				outputCanvas, inputCanvas
+			inputCanvas, outputCanvas = outputCanvas, inputCanvas
 		end
 	end
 
 	love.graphics.setCanvas(previousCanvas)
 	love.graphics.setShader(previousShader)
+	love.graphics.setColor(1, 1, 1, 1)
 
 	love.graphics.draw(inputCanvas, 0, 0)
 end
 
-function Element:Draw(
-	windowScaleFactor,
-	windowOffsetX,
-	windowOffsetY
-)
+function Element:Draw()
 	if not self.render then
 		return
 	end
 
-	windowScaleFactor = windowScaleFactor or 1
-	windowOffsetX = windowOffsetX or 0
-	windowOffsetY = windowOffsetY or 0
-
 	if #self.shaders == 0 then
-		_drawElement(
-			self,
-			windowScaleFactor,
-			windowOffsetX,
-			windowOffsetY
-		)
-
+		_drawElement(self)
 		return
 	end
 
-	_drawWithShaders(
-		self,
-		windowScaleFactor,
-		windowOffsetX,
-		windowOffsetY
-	)
+	_drawWithShaders(self)
 end
 
 function Module.Get(id)

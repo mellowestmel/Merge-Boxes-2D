@@ -1,29 +1,26 @@
 -- ~/code/engine/shaderHandler.lua
+-- Loads and caches all shaders from code/data/shaders by filename.
 
 local Module = {}
 Module.shaders = {}
 
+local SHADER_DIRECTORY = "code/data/shaders"
+
 function Module:Load(name, path)
-    if self.shaders[name] then
-        return self.shaders[name]
+    local shader = self.shaders[name]
+
+    if not shader then
+        shader = love.graphics.newShader(path)
+        self.shaders[name] = shader
     end
-
-    local shader = love.graphics.newShader(path)
-
-    self.shaders[name] = shader
 
     return shader
 end
 
 function Module:LoadAll()
-    local files = love.filesystem.getDirectoryItems("code/data/shaders")
-
-    for _, fileName in ipairs(files) do
+    for _, fileName in ipairs(love.filesystem.getDirectoryItems(SHADER_DIRECTORY)) do
         if fileName:sub(-5) == ".glsl" then
-            local name = fileName:sub(1, -6)
-            local path = "code/data/shaders/" .. fileName
-
-            self:Load(name, path)
+            self:Load(fileName:sub(1, -6), SHADER_DIRECTORY .. "/" .. fileName)
         end
     end
 end
@@ -32,84 +29,17 @@ function Module:Get(name)
     return self.shaders[name]
 end
 
-function Module:Send(name, uniform, value, ...)
-    local shader = self.shaders[name]
-
-    if shader then
-        shader:send(uniform, value, ...)
-    end
-end
-
-function Module:SendToChain(shaders, uniform, value, ...)
-    for _, name in ipairs(shaders) do
-        local shader = self.shaders[name]
-
-        if shader then
-            shader:send(uniform, value, ...)
-        end
-    end
-end
-
-function Module:Apply(name)
-    local shader = self.shaders[name]
-
-    if shader then
-        love.graphics.setShader(shader)
-    end
-end
-
-function Module:ApplyChain(shaders)
-    for _, name in ipairs(shaders) do
-        local shader = self.shaders[name]
-
-        if shader then
-            love.graphics.setShader(shader)
-            return shader
-        end
-    end
-
-    love.graphics.setShader()
-end
-
-function Module:With(name, callback)
-    local shader = self.shaders[name]
-
-    if shader then
-        love.graphics.setShader(shader)
-    end
-
-    callback()
-
-    love.graphics.setShader()
-end
-
-function Module:WithChain(shaders, callback)
-    if #shaders == 1 then
-        self:With(shaders[1], callback)
-        return
-    end
-
-    callback()
-end
-
-function Module:Clear()
-    love.graphics.setShader()
-end
-
 function Module:Has(name)
     return self.shaders[name] ~= nil
 end
 
-function Module:GetNames()
-    local names = {}
+-- Sends a uniform to a loaded shader; no-op if the shader doesn't exist.
+function Module:Send(name, uniform, value, ...)
+    local shader = self.shaders[name]
 
-    for name in pairs(self.shaders) do
-        table.insert(names, name)
+    if shader and shader:hasUniform(uniform) then
+        shader:send(uniform, value, ...)
     end
-
-    table.sort(names)
-
-    return names
 end
 
 function Module.Init()
