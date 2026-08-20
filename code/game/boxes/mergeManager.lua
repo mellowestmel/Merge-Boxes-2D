@@ -236,7 +236,7 @@ function Module:CheckMerges()
                 and not boxB.merging
                 and boxB.id >= boxA.id
                 and boxA.data.tier and boxA.data.tier == boxB.data.tier
-                and boxA.data.mergable and boxB.data.mergable
+                and boxA.data.mergeable and boxB.data.mergeable
 
             if canMerge then
                 local distance = math.distance2D(boxA.element.x, boxA.element.y, boxB.element.x, boxB.element.y)
