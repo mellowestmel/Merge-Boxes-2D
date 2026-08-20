@@ -1,6 +1,7 @@
 -- ~/code/data/boxDefinitions/cosmetic.lua
 
 local cosmetic = {
+	-- Special
     ["goldenGerald"] = {
 		spritePath = "assets/sprites/boxes/goldenGerald.png",
 		scale = 0.7,
@@ -15,6 +16,7 @@ local cosmetic = {
         },
 	},
 
+	-- Normal
 	["gerald"] = {
 		spritePath = "assets/sprites/boxes/box1.png",
 		scale = 0.7,

@@ -27,7 +27,6 @@ return {
     autoSpawn = "Automatyczne Spawnowanie!",
 
     sessionTime = "Czas sesji",
-    holyCatnip = "Święta kocimiętka",
     creditsCurrency = "Kredyty",
 
     -- MAIN MENU

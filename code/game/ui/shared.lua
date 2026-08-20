@@ -226,25 +226,6 @@ function Module:SetupCurrencyLabels(scene)
 		local credits = SaveFilesModule.loadedFile.currencies.credits
 		creditsLabel.text = string.formatNumber(credits) .. " C$"
 	end
-
-	local holyCatnipLabel = self:CreateElement(
-		SharedData.holyCatnipLabel,
-		scene
-	)
-
-	self._updateFunctions.holyCatnipLabelUpdateFunction = function()
-		if not holyCatnipLabel then return end
-		if not SaveFilesModule.loadedFile then return end
-
-		local holyCatnip = SaveFilesModule.loadedFile.currencies.holyCatnip
-		local highestBoxTier = SaveFilesModule.loadedFile.stats.highestBoxTier
-
-		holyCatnipLabel.text =
-			string.formatNumber(holyCatnip) .. " Holy Catnip"
-
-		holyCatnipLabel.render =
-			highestBoxTier >= SHOP_CONSTANTS.SHOPS.CATNIP_SHOP.UNLOCK_REQUIREMENT
-	end
 end
 
 function Module:SetupSessionPlaytimeLabel(scene)
@@ -267,10 +248,30 @@ function Module:SetupSessionPlaytimeLabel(scene)
 end
 
 function Module:SetupDialogueBox(scene)
-	self:CreateElement(
+	local box = self:CreateElement(
 		SharedData.dialogueBox,
 		scene
 	)
+
+	local speaker = self:CreateElement(
+		SharedData.dialoguePortrait,
+		scene
+	)
+
+	local text = self:CreateElement(
+		SharedData.dialogueBoxText,
+		scene
+	)
+
+	box.render = false
+	speaker.render = false
+	text.render = false
+
+	return {
+		box = box,
+		speaker = speaker,
+		text = text
+	}
 end
 
 function Module:SetupBackground(scene)

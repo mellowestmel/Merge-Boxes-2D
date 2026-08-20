@@ -1,7 +1,6 @@
 -- ~/code/data/dialogue/frigidWendyHot.lua
 
---%note Swap in expression-specific portraits here once they're drawn.
-local PORTRAIT = "assets/sprites/portraits/frigidWendyHot/default.png"
+local PORTRAIT = "assets/sprites/boxes/box10.png"
 
 local DialogueConstructor = require("code.data.constructors.dialogueConstructor")
 
@@ -19,7 +18,7 @@ return {
     BuyItem = {
         DialogueConstructor.new("Don't ask where I got it.", PORTRAIT),
         DialogueConstructor.new("Pleasure doin' business. Now scram before someone sees us.", PORTRAIT),
-        DialogueConstructor.new("Good choice. Don't go tellin' anyone where you bought it.", PORTRAIT),
+        DialogueConstructor.new("Good choice. Don't go tellin' anyone where you got it.", PORTRAIT),
         DialogueConstructor.new("Cha-ching. Now get outta here, you're makin' me nervous.", PORTRAIT)
     },
 
@@ -39,10 +38,5 @@ return {
         DialogueConstructor.new("Keep your mouth shut and we're square.", PORTRAIT),
         DialogueConstructor.new("See ya 'round. Or not. Depends who's askin'.", PORTRAIT),
         DialogueConstructor.new("Later, kid. Act normal on your way out.", PORTRAIT),
-    },
-
-    Idle = {
-        DialogueConstructor.new("You ever meet Gerald? Nice guy. Too honest for his own good.", PORTRAIT),
-        DialogueConstructor.new([[These trinkets are brand new. Just fell off the truck this morning.]], PORTRAIT)
     },
 }

@@ -52,8 +52,8 @@ function Module:EncodeBoxes(boxes)
             box.element.rotation
         }
 
-        for _, trinket in pairs(box.trinkets) do
-            table.insert(values, trinket)
+        for _, item in pairs(box.items) do
+            table.insert(values, item)
         end
 
         output = output .. _addString(unpack(values)) .. "\n"

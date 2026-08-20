@@ -92,7 +92,7 @@ function Module.new(data)
         velocityX = 0,
         velocityY = 0,
 
-        trinkets = {},
+        items = {},
 
         dragging = false,
         merging = false
@@ -163,7 +163,7 @@ function Module.Init()
             box.velocityX = savedBoxData.velocityX
             box.velocityY = savedBoxData.velocityY
 
-            box.trinkets = savedBoxData.trinkets
+            box.items = savedBoxData.items
 
             :: continue ::
         end

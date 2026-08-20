@@ -1,7 +1,6 @@
 -- ~/code/data/dialogue/gerald.lua
 
---%note Swap in expression-specific portraits here once they're drawn.
-local PORTRAIT = "assets/sprites/portraits/gerald/default.png"
+local PORTRAIT = "assets/sprites/boxes/box1.png"
 
 local DialogueConstructor = require("code.data.constructors.dialogueConstructor")
 

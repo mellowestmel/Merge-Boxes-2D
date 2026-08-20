@@ -61,7 +61,6 @@ return {
         slot = 1,
 
         currencies = {
-            holyCatnip = 0,
             credits = 50,
         },
 

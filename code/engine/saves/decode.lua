@@ -129,11 +129,11 @@ function Module:DecodeBoxes(section)
 
 				rotation = tonumber(values[6]),
 
-				trinkets = {}
+				items = {}
 			}
 
 			for index = 7, #values do
-				table.insert(box.trinkets, values[index])
+				table.insert(box.items, values[index])
 			end
 
 			table.insert(boxes, box)
@@ -173,7 +173,7 @@ function Module:DecodeLegacyBoxes(section)
 
 					rotation = tonumber(values[6]),
 
-					trinkets = {}
+					items = {}
 				})
 			end
 		end

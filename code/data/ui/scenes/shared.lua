@@ -104,27 +104,6 @@ return {
         zIndex = CONSTANTS.Z_UI_TEXT,
     },
 
-    holyCatnipLabel = {
-        text = "Holy Catnip:",
-
-        type = "text",
-
-        font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_SMALL
-        ),
-
-        anchorX = 0,
-        anchorY = 0,
-
-        x = CONSTANTS.SMALL_PADDING,
-        y = CONSTANTS.LARGE_PADDING * CONSTANTS.CURRENCY_LABEL_ROW_SPACING_MULTIPLIER,
-
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_PURPLE),
-
-        zIndex = CONSTANTS.Z_UI_TEXT,
-    },
-
     sessionPlaytimeLabel = {
         text = "Session Time: ",
 

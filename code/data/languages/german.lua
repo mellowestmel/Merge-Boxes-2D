@@ -27,7 +27,6 @@ return {
     autoSpawn = "Auto-Spawn!",
 
     sessionTime = "Spielzeit",
-    holyCatnip = "Heiliges Katzenminze",
     creditsCurrency = "Credits",
 
     -- MAIN MENU

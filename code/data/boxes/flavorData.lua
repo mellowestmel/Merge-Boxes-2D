@@ -1,6 +1,7 @@
 -- ~/code/data/boxDefinitions/flavor.lua
 
 local flavor = {
+    -- Special
     ["goldenGerald"] = {
         name = "Golden Gerald",
 
@@ -8,6 +9,7 @@ local flavor = {
         quote = "Golden Gerald.",
     },
 
+    -- Normal
     ["gerald"] = {
         name = "Gerald",
 
