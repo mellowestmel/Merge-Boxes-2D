@@ -33,7 +33,9 @@ function Module.Init()
     SignalHandlerModule.Get("game.boxes.spawned"):Connect(function(box)
         if Module.loadedFile then
             local highestBoxTier = Module.loadedFile.stats.highestBoxTier
+
             local newBoxTier = box.data.tier
+            if not newBoxTier then return end
 
             if highestBoxTier < newBoxTier then
                 SignalHandlerModule.Get("game.boxes.highesttierchanged"):Fire(newBoxTier, highestBoxTier)

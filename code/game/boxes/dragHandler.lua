@@ -21,6 +21,8 @@ function Module:Update()
     if mouseDown and not self.draggedBox then
         for index = 1, #boxesArray do
             local box = boxesArray[index]
+            if not box.data.draggable then goto continue end
+
             box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX)
 
             if box.element:IsPointInside(mouseX, mouseY) then
@@ -35,6 +37,8 @@ function Module:Update()
                 box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 2)
                 break
             end
+
+            :: continue ::
         end
     elseif not mouseDown and self.draggedBox then
         SignalHandlerModule.Get("game.boxes.dragended"):Fire(self.draggedBox)

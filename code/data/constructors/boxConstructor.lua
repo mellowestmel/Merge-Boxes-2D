@@ -20,7 +20,10 @@ function Module.new(type, gameplayData, flavorData, cosmeticData)
         mergeable = gameplayData.mergeable ~= false,
         mergeReward = gameplayData.mergeReward or 0,
 
+        draggable = gameplayData.draggable ~= false,
         weight = gameplayData.weight or 0,
+
+        saveable = gameplayData.saveable ~= false,
 
         -- Visuals
         spritePath = cosmeticData.spritePath,

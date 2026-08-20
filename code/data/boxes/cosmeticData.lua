@@ -1,10 +1,20 @@
 -- ~/code/data/boxDefinitions/cosmetic.lua
 
-local RenderUtilsModule = require("code.engine.render.utils")
-
-local color = require("code.engine.helpers.color")
-
 local cosmetic = {
+    ["goldenGerald"] = {
+		spritePath = "assets/sprites/boxes/goldenGerald.png",
+		scale = 0.7,
+
+		mergeSoundData = { soundPath = "assets/sounds/merge/default.wav" },
+
+        shaders = {
+            {
+                name = "reflection",
+                reflectionTexture = "assets/sprites/reflections/goldenGerald.png",
+            },
+        },
+	},
+
 	["gerald"] = {
 		spritePath = "assets/sprites/boxes/box1.png",
 		scale = 0.7,

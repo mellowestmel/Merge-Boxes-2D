@@ -38,6 +38,8 @@ function Module:EncodeBoxes(boxes)
     local output = ""
 
     for _, box in pairs(boxes) do
+        if not box.data.saveable then goto continue end
+
         local values = {
             box.data.type,
 
@@ -55,6 +57,8 @@ function Module:EncodeBoxes(boxes)
         end
 
         output = output .. _addString(unpack(values)) .. "\n"
+
+        :: continue ::
     end
 
     return output

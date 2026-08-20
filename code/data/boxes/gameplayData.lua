@@ -1,6 +1,8 @@
 -- ~/code/data/boxDefinitions/gameplay.lua
 
 local gameplay = {
+    ["goldenGerald"] = { mergeable = false, draggable = false, saveable = false },
+
     ["gerald"] = { tier = 1, mergeReward = 0, weight = 60 },
     ["jimbo"] = { tier = 2, mergeReward = 10, weight = 70 },
     ["glumbo"] = { tier = 3, mergeReward = 25, weight = 85 },

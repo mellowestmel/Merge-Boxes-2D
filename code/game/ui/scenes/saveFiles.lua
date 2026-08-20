@@ -92,7 +92,7 @@ local function _setupSaveFileBoxPreview(self, backgroundElement, save)
     boxElement.scaleX = SceneData.templateSaveFileBoxPreview.scaleX
     boxElement.scaleY = SceneData.templateSaveFileBoxPreview.scaleY
 
-    boxElement.zIndex = SceneData.templateSaveFileBoxPreview.zIndex
+    boxElement:SetZIndex(SceneData.templateSaveFileBoxPreview.zIndex)
 
     table.insert(self._elements, boxElement)
 end

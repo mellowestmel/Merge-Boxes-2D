@@ -1,6 +1,13 @@
 -- ~/code/data/boxDefinitions/flavor.lua
 
 local flavor = {
+    ["goldenGerald"] = {
+        name = "Golden Gerald",
+
+        description = "A quick little box who occasionally zips around in the area. Click him for a buff!",
+        quote = "Golden Gerald.",
+    },
+
     ["gerald"] = {
         name = "Gerald",
 
