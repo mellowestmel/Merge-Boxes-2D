@@ -1,5 +1,7 @@
 -- ~/code/data/boxDefinitions/flavor.lua
 
+local camouflageDescription = [[One of the camouflages Box o' Matter can become. This one is a low quality fake of ]]
+
 local flavor = {
     -- Special
     ["goldenGerald"] = {
@@ -7,6 +9,28 @@ local flavor = {
 
         description = "A quick little box who occasionally zips around in the area. Click him for a buff!",
         quote = "Golden Gerald.",
+    },
+
+    -- Box 18 fakes
+    ["geraldo"] = {
+        name = "Geraldo",
+
+        description = camouflageDescription .. "Gerald.",
+        quote = "Geraldo.",
+    },
+
+    ["jambo"] = {
+        name = "Jambo",
+
+        description = camouflageDescription .. "Jimbo.",
+        quote = "What!? You caught me!?",
+    },
+
+    ["glungus"] = {
+        name = "Glungus",
+
+        description = camouflageDescription .. "Glumbo.",
+        quote = "Hehehe, they're never going to find us THAT way!",
     },
 
     -- Normal

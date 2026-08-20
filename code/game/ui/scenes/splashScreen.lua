@@ -86,7 +86,7 @@ function Module:Init()
     transitionStarted = false
     logoShown = false
 
-    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+    local animationsEnabled = SettingsModule.loadedFile.graphics.uiAnimationsEnabled
     logoFlipTimer = (animationsEnabled and 0 or 999)
 end
 

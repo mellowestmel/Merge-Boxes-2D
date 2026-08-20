@@ -238,9 +238,7 @@ function Module:SetupSessionPlaytimeLabel(scene)
 		if not sessionPlaytimeLabel then return end
 		if not SaveFilesModule.loadedFile then return end
 
-		sessionPlaytimeLabel.text =
-			"Session Time: "
-			.. string.formatTime(
+		sessionPlaytimeLabel.text = string.formatTime(
 				SaveFilesModule.loadedFile.stats.playtime
 				- SaveFilesModule.loadedFile.stats.playtimeAtSessionStart
 			)

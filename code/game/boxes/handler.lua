@@ -13,7 +13,7 @@ local Module = {}
 function Module:Update(deltaTime)
     if BoxesObjectModule.renderBoxes then
         BoxesPhysicsHandlerModule:Update(deltaTime)
-        BoxesDragHandlerModule:Update()
+        BoxesDragHandlerModule:Update(deltaTime)
 
         BoxesMergeManagerModule:Update(deltaTime)
     end

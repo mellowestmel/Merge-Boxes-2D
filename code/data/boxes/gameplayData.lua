@@ -1,6 +1,7 @@
 -- ~/code/data/boxDefinitions/gameplay.lua
 
-local gameplay = {
+local gameplay
+gameplay = {
     -- Special
     ["goldenGerald"] = { mergeable = false, draggable = false, saveable = false },
 
@@ -32,6 +33,34 @@ local gameplay = {
     ["mellowBox"] = { tier = 21, mergeReward = 5000000, weight = 6500, next = "theCollector" },
     ["theCollector"] = { tier = 22, mergeReward = 10000000, weight = 8500, next = "glitcherson" },
     ["glitcherson"] = { tier = 23, mergeReward = 20000000, weight = 11000, next = "" },
+
+    -- Box 18 fakes
+    ["geraldo"] = {
+        tier = gameplay["boxOMatter"].tier,
+
+        mergeReward = gameplay["boxOMatter"].mergeReward,
+        weight = gameplay["gerald"].weight,
+
+        next = gameplay["boxOMatter"].next
+    },
+
+    ["jambo"] = {
+        tier = gameplay["boxOMatter"].tier,
+
+        mergeReward = gameplay["boxOMatter"].mergeReward,
+        weight = gameplay["jimbo"].weight,
+
+        next = gameplay["boxOMatter"].next
+    },
+
+    ["glungus"] = {
+        tier = gameplay["boxOMatter"].tier,
+
+        mergeReward = gameplay["boxOMatter"].mergeReward,
+        weight = gameplay["glumbo"].weight,
+
+        next = gameplay["boxOMatter"].next
+    },
 }
 
 return gameplay

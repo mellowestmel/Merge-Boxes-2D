@@ -133,16 +133,14 @@ local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
     SaveFilesModule.loadedFile.currencies.credits =
         SaveFilesModule.loadedFile.currencies.credits + newBox.data.mergeReward
 
-    if SettingsModule.loadedFile.graphics.animationsEnabled then
-        newBox.element.scaleX, newBox.element.scaleY = scaleX, scaleY
+    newBox.element.scaleX, newBox.element.scaleY = scaleX, scaleY
 
-        TweenHandlerModule.new(
-            newBox.element,
-            {scaleX = newBox.data.scale, scaleY = newBox.data.scale},
-            CONSTANTS.BASE_SCALE_TWEEN_DURATION * (1 + newBox.data.weight / CONSTANTS.WEIGHT_ANIM_DURATION_DIVISOR),
-            "easeOutQuad"
-        )
-    end
+    TweenHandlerModule.new(
+        newBox.element,
+        {scaleX = newBox.data.scale, scaleY = newBox.data.scale},
+        CONSTANTS.BASE_SCALE_TWEEN_DURATION * (1 + newBox.data.weight / CONSTANTS.WEIGHT_ANIM_DURATION_DIVISOR),
+        "easeOutQuad"
+    )
 
     if newBox.data.mergeSoundData then
         local mergeSound = SoundHandlerModule.new(newBox.data.mergeSoundData)

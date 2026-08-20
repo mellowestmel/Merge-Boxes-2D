@@ -497,7 +497,7 @@ local function _setupSettingNameLabels(self)
 		local rowY = UILayoutHelperModule.GetVerticalStackY(
 			SceneData.settingNameLabel.y or 0,
 			index,
-			CONSTANTS.BUTTON_HORIZONTAL_GAP
+			CONSTANTS.BUTTON_HORIZONTAL_GAP - CONSTANTS.MEDIUM_PADDING
 		)
 
 		local label = UISharedFunctions:CreateElement(

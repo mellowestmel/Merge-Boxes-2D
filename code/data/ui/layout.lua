@@ -71,7 +71,7 @@ return {
     },
 
     settings = {
-        categoryRowY = 500,
+        categoryRowY = 550,
         categoryScrollOffsetX = 125,
 
         settingNameLabelOffsetX = -225,

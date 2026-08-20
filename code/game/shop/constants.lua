@@ -13,10 +13,6 @@ return {
         SACRIFICIAL_GROUNDS = {
             UNLOCK_REQUIREMENT = 15,
             ID = "sacrificialGrounds"
-        },
-        CATNIP_SHOP = {
-            UNLOCK_REQUIREMENT = 25,
-            ID = "catnipShop"
         }
     }
 }

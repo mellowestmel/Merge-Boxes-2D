@@ -89,10 +89,6 @@ function Element:IsPointInside(x, y)
 		and localY <= height * (1 - self.anchorY)
 end
 
--- NOTE: elements are always drawn into the virtual-resolution scene canvas
--- (see render/handler.lua), so there is no per-element window scale/offset
--- to account for here — that letterboxing is applied once, when the whole
--- scene canvas is blitted to the real window.
 local function _drawElement(element)
 	local positionX = element.x + element.offsetX
 	local positionY = element.y + element.offsetY

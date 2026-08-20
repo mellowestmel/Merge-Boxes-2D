@@ -254,10 +254,6 @@ function Module:Decode(file)
 			upgrades = table.clone(CONSTANTS.DEFAULT_DATA.upgrades)
 		}
 	end
-	print("----------------------")
-	for index, v in pairs(self:DecodeSimple(sections[6])) do
-		print(index, v)
-	end
 
 	return _normalizeTable(
 		finalOutput,

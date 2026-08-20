@@ -9,6 +9,8 @@ local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UIScrollingFrameObjectModule = require("code.game.ui.objects.scrollingFrame")
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 
+local UICursorModule = require("code.game.ui.cursor")
+
 local Module = {}
 
 function Module:WheelMoved(x, y)
@@ -29,9 +31,13 @@ function Module:Update(deltaTime)
     UIButtonObjectModule:Update(deltaTime)
 
     UISceneHandlerModule:Update(deltaTime)
+
+    UICursorModule:Update(deltaTime)
 end
 
 function Module.Init()
+    UICursorModule.Init()
+
     SignalHandlerModule.Get("love.update"):Connect(function(deltaTime)
         Module:Update(deltaTime)
     end)

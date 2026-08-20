@@ -19,7 +19,9 @@ local SETTINGS_SCHEMA = {
             { key = "gamma", name = "Gamma", default = 1 },
             { key = "fullscreen", name = "Fullscreen?", default = true },
             { key = "vsync", name = "VSync?", default = true },
-            { key = "animationsEnabled", name = "Enable animations?", default = true },
+            { key = "uiAnimationsEnabled", name = "Enable UI animations?", default = true },
+            { key = "cursorAnimationsEnabled", name = "Enable cursor animations?", default = true },
+            { key = "transitionsEnabled", name = "Enable transitions?", default = true },
             { key = "particlesEnabled", name = "Enable particles?", default = true }
         }
     },
@@ -28,7 +30,6 @@ local SETTINGS_SCHEMA = {
 
         settings = {
             { key = "colorblindMode", name = "Colorblindness mode", default = "none" },
-            --{ key = "language", name = "Language", default = "english" },
             { key = "screenFlashEnabled", name = "Enable screen flashes?", default = true }
         }
     }

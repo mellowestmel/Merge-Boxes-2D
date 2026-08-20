@@ -199,12 +199,14 @@ function ScrollingFrame:Update(deltaTime)
 		return
 	end
 
+	local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
+
 	if self._isDraggingTrack
 		and self.scrollTrackElement
 		and self.scrollBarElement then
 
-		local _, mouseY = RenderUtilsModule.GetScaledMousePosition()
-		local dragDelta = mouseY - self._dragStartY
+		local _, currentMouseY = RenderUtilsModule.GetScaledMousePosition()
+		local dragDelta = currentMouseY - self._dragStartY
 
 		local travel = math.max(
 			1,
@@ -224,10 +226,7 @@ function ScrollingFrame:Update(deltaTime)
 		)
 	end
 
-	local animationsEnabled =
-		SettingsModule.loadedFile
-		and SettingsModule.loadedFile.graphics
-		and SettingsModule.loadedFile.graphics.animationsEnabled
+	local animationsEnabled = SettingsModule.loadedFile.graphics.uiAnimationsEnabled
 
 	if animationsEnabled then
 		local alpha = math.min(1, self.smoothness * deltaTime)
