@@ -11,8 +11,6 @@ local table = require("code.engine.helpers.table")
 
 local BoxesObjectModule = require("code.game.boxes.object")
 
-local SHOP_CONSTANTS = require("code.game.shop.constants")
-
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 

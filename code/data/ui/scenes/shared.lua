@@ -156,7 +156,7 @@ return {
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
 
-    dialogueBox = {
+    dialogueBackground = {
         spritePath = "assets/sprites/ui/buttons/button220x75.png",
 
         type = "sprite",
@@ -175,7 +175,20 @@ return {
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },
 
-    dialogueBoxText = {
+    dialogueNext = {
+        spritePath = "assets/sprites/ui/buttons/buttonarrowr74x74.png",
+
+        type = "sprite",
+
+        x = UILayoutData.shared.dialogue.arrowX,
+        y = UILayoutData.shared.dialogue.arrowY,
+
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
+
+        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+    },
+
+    dialogueText = {
         type = "text",
 
         anchorX = 0,
