@@ -41,11 +41,33 @@ local spawnButton = nil
 
 local backButtonClicked = false
 
-local upgradeShopButtonHitbox = nil
-local blackMarketButtonHitbox = nil
-local sacrificeButtonHitbox = nil
-
 local autoSpawnEnabled = false
+
+-- Every shop that's accessed from a locked/unlocked button on this scene.
+-- Add a new shop here and both setup and the locked-sprite update pick it up.
+local SHOP_BUTTONS = {
+    {
+        key = "upgradeShop",
+        hitboxData = SceneData.upgradeShopButtonHitbox,
+        requirement = SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT,
+        targetScene = "upgradeShop"
+    },
+    {
+        key = "blackMarket",
+        hitboxData = SceneData.blackMarketButtonHitbox,
+        requirement = SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT,
+        targetScene = "blackMarket"
+    },
+    {
+        key = "sacrifice",
+        hitboxData = SceneData.sacrificeButtonHitbox,
+        requirement = SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT,
+        targetScene = "sacrificialGrounds"
+    }
+}
+
+-- Populated in _setupShopButton, read back in Update() to refresh locked sprites.
+local shopButtonHitboxes = {}
 
 function Module:Clean()
     for _, element in pairs(self._elements) do
@@ -186,24 +208,22 @@ local function _setupAutoSpawnButton(self)
     table.insert(self._objects, autoSpawnButton)
 end
 
-local function _setupUpgradeShopButton(self)
-    upgradeShopButtonHitbox = UISharedFunctions:CreateElement(
-        SceneData.upgradeShopButtonHitbox,
-        self
-    )
+-- Creates one locked/unlocked shop-navigation button from a SHOP_BUTTONS entry.
+-- Below the requirement it just plays the "not allowed" sound; at or above it,
+-- transitions to the shop's own scene.
+local function _setupShopButton(self, shopButton)
+    local hitbox = UISharedFunctions:CreateElement(shopButton.hitboxData, self)
+    shopButtonHitboxes[shopButton.key] = hitbox
 
-    local upgradeShopButton = UIButtonObjectModule.new({
-        elements = {
-            upgradeShopButtonHitbox,
-        },
-
-        hitboxElement = upgradeShopButtonHitbox,
+    local button = UIButtonObjectModule.new({
+        elements = { hitbox },
+        hitboxElement = hitbox,
 
         mouseButton = 1,
 
         onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier
-                < SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT
+            if SaveFilesModule:Get("stats.highestBoxTier")
+                < shopButton.requirement
             then
                 _playNotAllowedSound()
                 return
@@ -211,81 +231,21 @@ local function _setupUpgradeShopButton(self)
 
             ScreenTransitionModule:Transition({
                 callback = function()
-                    UISceneHandlerModule:Switch("upgradeShop")
+                    UISceneHandlerModule:Switch(shopButton.targetScene)
                 end
             })
         end
     })
 
-    table.insert(self._objects, upgradeShopButton)
+    table.insert(self._objects, button)
 end
 
-local function _setupBlackMarketButton(self)
-    blackMarketButtonHitbox = UISharedFunctions:CreateElement(
-        SceneData.blackMarketButtonHitbox,
-        self
-    )
+local function _setupShopButtons(self)
+    shopButtonHitboxes = {}
 
-    local blackMarketButton = UIButtonObjectModule.new({
-        elements = {
-            blackMarketButtonHitbox,
-        },
-
-        hitboxElement = blackMarketButtonHitbox,
-
-        mouseButton = 1,
-
-        onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier
-                < SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT
-            then
-                _playNotAllowedSound()
-                return
-            end
-
-            ScreenTransitionModule:Transition({
-                callback = function()
-                    UISceneHandlerModule:Switch("blackMarket")
-                end
-            })
-        end
-    })
-
-    table.insert(self._objects, blackMarketButton)
-end
-
-local function _setupSacrificeButton(self)
-    sacrificeButtonHitbox = UISharedFunctions:CreateElement(
-        SceneData.sacrificeButtonHitbox,
-        self
-    )
-
-    local sacrificeButton = UIButtonObjectModule.new({
-        elements = {
-            sacrificeButtonHitbox,
-        },
-
-        hitboxElement = sacrificeButtonHitbox,
-
-        mouseButton = 1,
-
-        onClick = function()
-            if SaveFilesModule.loadedFile.stats.highestBoxTier
-                < SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT
-            then
-                _playNotAllowedSound()
-                return
-            end
-
-            ScreenTransitionModule:Transition({
-                callback = function()
-                    UISceneHandlerModule:Switch("sacrificialGrounds")
-                end
-            })
-        end
-    })
-
-    table.insert(self._objects, sacrificeButton)
+    for _, shopButton in ipairs(SHOP_BUTTONS) do
+        _setupShopButton(self, shopButton)
+    end
 end
 
 local function _lockedImageLogic(current, requirement, originalPath)
@@ -302,27 +262,17 @@ function Module:Update()
     MusicHandlerModule:Update()
     UISharedFunctions:Update()
 
-    if upgradeShopButtonHitbox
-        and blackMarketButtonHitbox
-        and sacrificeButtonHitbox
-    then
-        upgradeShopButtonHitbox.drawable = _lockedImageLogic(
-            SaveFilesModule.loadedFile.stats.highestBoxTier,
-            SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT,
-            SceneData.upgradeShopButtonHitbox.spritePath
+    for _, shopButton in ipairs(SHOP_BUTTONS) do
+        local hitbox = shopButtonHitboxes[shopButton.key]
+        if not hitbox then goto continue end
+
+        hitbox.drawable = _lockedImageLogic(
+            SaveFilesModule:Get("stats.highestBoxTier"),
+            shopButton.requirement,
+            shopButton.hitboxData.spritePath
         )
 
-        blackMarketButtonHitbox.drawable = _lockedImageLogic(
-            SaveFilesModule.loadedFile.stats.highestBoxTier,
-            SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT,
-            SceneData.blackMarketButtonHitbox.spritePath
-        )
-
-        sacrificeButtonHitbox.drawable = _lockedImageLogic(
-            SaveFilesModule.loadedFile.stats.highestBoxTier,
-            SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT,
-            SceneData.sacrificeButtonHitbox.spritePath
-        )
+        :: continue ::
     end
 
     if spawnButtonHitbox
@@ -370,9 +320,7 @@ function Module:Init(slot)
 
     if slot then
         SaveFilesModule:LoadFile(slot)
-
-        SaveFilesModule.loadedFile.stats.playtimeAtSessionStart =
-            SaveFilesModule.loadedFile.stats.playtime
+        SaveFilesModule:Set("stats.playtimeAtSessionStart", SaveFilesModule:Get("stats.playtime"))
     end
 
     BoxesObjectModule.renderBoxes = true
@@ -394,10 +342,8 @@ function Module:Init(slot)
         _setupAutoSpawnButton(self)
     end
 
-    _setupUpgradeShopButton(self)
-    _setupBlackMarketButton(self)
+    _setupShopButtons(self)
     _setupBackToMenuButton(self)
-    _setupSacrificeButton(self)
     _setupSpawnButton(self)
 end
 

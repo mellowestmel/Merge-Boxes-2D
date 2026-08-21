@@ -243,7 +243,7 @@ function ScrollingFrame:Update(deltaTime)
 		end
 	end
 
-	local animationsEnabled = SettingsModule.loadedFile.graphics.uiAnimationsEnabled
+	local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
 
 	if animationsEnabled then
 		local alpha = math.min(1, self.smoothness * deltaTime)

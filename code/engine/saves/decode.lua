@@ -240,7 +240,8 @@ function Module:Decode(file)
 			currencies = self:DecodeSimple(sections[4]),
 			stats = self:DecodeSimple(sections[5]),
 
-			upgrades = self:DecodeSimple(sections[6])
+			upgrades = self:DecodeSimple(sections[6]),
+			trinkets = self:DecodeSimple(sections[7])
 		}
 	else
 		finalOutput = {
@@ -252,7 +253,8 @@ function Module:Decode(file)
 			currencies = self:DecodeSimple(sections[2]),
 			stats = self:DecodeSimple(sections[3]),
 
-			upgrades = table.clone(CONSTANTS.DEFAULT_DATA.upgrades)
+			upgrades = table.clone(CONSTANTS.DEFAULT_DATA.upgrades),
+			trinkets = table.clone(CONSTANTS.DEFAULT_DATA.trinkets)
 		}
 	end
 

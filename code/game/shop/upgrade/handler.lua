@@ -14,7 +14,8 @@ function Module:GetUpgradesByShop(shopId)
 end
 
 function Module:GetStacks(id)
-    return SaveFilesModule.loadedFile.upgrades[id] or 0
+    local upgradePath = "upgrades." .. id
+    return SaveFilesModule:Get(upgradePath) or 0
 end
 
 function Module:GetUpgrade(id)
@@ -28,8 +29,8 @@ function Module:GetEffect(id)
 end
 
 function Module:AddStack(id)
-    SaveFilesModule.loadedFile.upgrades[id] =
-        self:GetStacks(id) + 1
+    local upgradePath = "upgrades." .. id
+    SaveFilesModule:Set(upgradePath, self:GetStacks(id) + 1)
 end
 
 function Module:IsMaxed(id)

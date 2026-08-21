@@ -36,7 +36,7 @@ function Button:MousePressed(x, y, mouseButton)
 	self.lastUsed = love.timer.getTime()
 
 	local animationsEnabled =
-		SettingsModule.loadedFile.graphics.uiAnimationsEnabled
+		SettingsModule:Get("graphics.uiAnimationsEnabled")
 
 	if animationsEnabled then
 		for _, element in pairs(self.elements) do
@@ -85,7 +85,7 @@ function Button:Update(deltaTime)
 		self.hitboxElement:IsPointInside(mouseX, mouseY)
 
 	local animationsEnabled =
-		SettingsModule.loadedFile.graphics.uiAnimationsEnabled
+		SettingsModule:Get("graphics.uiAnimationsEnabled")
 
 	local scaleLerp =
 		animationsEnabled

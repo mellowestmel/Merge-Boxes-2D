@@ -227,7 +227,7 @@ function Module:SetupCurrencyLabels(scene)
 		if not creditsLabel then return end
 		if not SaveFilesModule.loadedFile then return end
 
-		local credits = SaveFilesModule.loadedFile.currencies.credits
+		local credits = SaveFilesModule:Get("currencies.credits")
 		creditsLabel.text = string.formatNumber(credits) .. " C$"
 	end
 end
@@ -243,8 +243,8 @@ function Module:SetupSessionPlaytimeLabel(scene)
 		if not SaveFilesModule.loadedFile then return end
 
 		sessionPlaytimeLabel.text = string.formatTime(
-				SaveFilesModule.loadedFile.stats.playtime
-				- SaveFilesModule.loadedFile.stats.playtimeAtSessionStart
+				SaveFilesModule:Get("stats.playtime")
+				- SaveFilesModule:Get("stats.playtimeAtSessionStart")
 			)
 	end
 end

@@ -87,7 +87,7 @@ end
 function Module:Click()
 	if not self._element then return end
 
-	local animationsEnabled = SettingsModule.loadedFile.graphics.cursorAnimationsEnabled
+	local animationsEnabled = SettingsModule:Get("graphics.cursorAnimationsEnabled")
 	if not animationsEnabled then return end
 
 	if self._clickTween then
@@ -151,7 +151,7 @@ function Module:UpdateDragging(element, deltaTime)
 	if deltaX ~= 0 or deltaY ~= 0 then
 		local targetRotation = math.deg(math.atan2(deltaY, deltaX)) - 90
 		local animationsEnabled =
-			SettingsModule.loadedFile.graphics.cursorAnimationsEnabled
+			SettingsModule:Get("graphics.cursorAnimationsEnabled")
 
 		if animationsEnabled then
 			local lerpFactor = 1 - math.exp(
@@ -194,7 +194,7 @@ function Module:Update(deltaTime)
 
 	local targetX, targetY = RenderUtilsModule.GetScaledMousePosition()
 	local animationsEnabled =
-		SettingsModule.loadedFile.graphics.cursorAnimationsEnabled
+		SettingsModule:Get("graphics.cursorAnimationsEnabled")
 
 	if animationsEnabled then
 		local lerpFactor = 1 - math.exp(

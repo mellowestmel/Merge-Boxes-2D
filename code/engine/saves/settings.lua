@@ -4,6 +4,7 @@ local SignalHandlerModule = require("code.engine.events.signalHandler")
 
 local CONSTANTS = require("code.engine.saves.constants")
 
+local SavesHelpersModule = require("code.engine.saves.helpers")
 local SavesDecodeModule = require("code.engine.saves.decode")
 local SavesEncodeModule = require("code.engine.saves.encode")
 
@@ -11,6 +12,16 @@ local table = require("code.engine.helpers.table")
 
 local Module = {}
 Module.loadedFile = nil
+
+function Module:Get(path)
+    if not self.loadedFile then return nil end
+    return SavesHelpersModule.GetPath(self.loadedFile, path)
+end
+
+function Module:Set(path, value)
+    if not self.loadedFile then return end
+    SavesHelpersModule.SetPath(self.loadedFile, path, value)
+end
 
 function Module:SaveFile()
     local finalOutput = SavesEncodeModule:EncodeSettings(self.loadedFile)

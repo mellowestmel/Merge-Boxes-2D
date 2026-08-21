@@ -42,11 +42,10 @@ function Module:Spawn()
                 CONSTANTS.MIN_SPAWN_VELOCITY,
                 CONSTANTS.MAX_SPAWN_VELOCITY
             )
-
-            self.lastSpawned = love.timer.getTime()
         end
     end
 
+    self.lastSpawned = love.timer.getTime()
 end
 
 function Module:GetSpawnCooldown()

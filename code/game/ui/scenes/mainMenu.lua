@@ -149,7 +149,7 @@ local function _setupVisibilityToggle(self)
 end
 
 function Module:Update()
-    local animationsEnabled = SettingsModule.loadedFile.graphics.uiAnimationsEnabled
+    local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
     if not animationsEnabled then return end
 
     local rotation = math.sin(love.timer.getTime()) * 2

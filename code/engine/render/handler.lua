@@ -71,16 +71,14 @@ function Module:Draw()
 	end
 
 	-- Update accessibility shaders.
-	local accessibility = SettingsModule.loadedFile.accessibility
-	local graphics = SettingsModule.loadedFile.graphics
+	ShaderHandlerModule:Send("accessibility", "contrast", SettingsModule:Get("graphics.contrast"))
+	ShaderHandlerModule:Send("accessibility", "gamma", SettingsModule:Get("graphics.gamma"))
 
-	ShaderHandlerModule:Send("accessibility", "contrast", graphics.contrast)
-	ShaderHandlerModule:Send("accessibility", "gamma", graphics.gamma)
+	local colorblindMode = SettingsModule:Get("accessibility.colorblindMode")
+	ShaderHandlerModule:Send("accessibility", "enableColorblind", colorblindMode ~= "none")
 
-	ShaderHandlerModule:Send("accessibility", "enableColorblind", accessibility.colorblindMode ~= "none")
-
-	if accessibility.colorblindMode ~= "none" then
-		ShaderHandlerModule:Send("accessibility", "colorMatrix", ColorblindData[accessibility.colorblindMode])
+	if colorblindMode ~= "none" then
+		ShaderHandlerModule:Send("accessibility", "colorMatrix", ColorblindData[colorblindMode])
 	end
 
 	-- Restore the original render target.
@@ -115,8 +113,8 @@ local _lastFullscreen = nil
 local _lastVSync = nil
 
 function Module:Update()
-    local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
-    local vsync = SettingsModule.loadedFile.graphics.vsync
+    local fullscreen = SettingsModule:Get("graphics.fullscreen")
+    local vsync = SettingsModule:Get("graphics.vsync")
 
     -- Only apply if the fullscreen state changed
     if fullscreen ~= _lastFullscreen then

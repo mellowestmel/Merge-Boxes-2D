@@ -1,9 +1,9 @@
 -- ~/code/engine/saves/files.lua
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
-
 local CONSTANTS = require("code.engine.saves.constants")
 
+local SavesHelpersModule = require("code.engine.saves.helpers")
 local SavesDecodeModule = require("code.engine.saves.decode")
 local SavesEncodeModule = require("code.engine.saves.encode")
 
@@ -16,9 +16,21 @@ local Module = {}
 Module.lastSaveSlot = 1
 Module.loadedFile = nil
 
+function Module:Get(path)
+    if not self.loadedFile then return nil end
+    return SavesHelpersModule.GetPath(self.loadedFile, path)
+end
+
+function Module:Set(path, value)
+    if not self.loadedFile then return end
+    SavesHelpersModule.SetPath(self.loadedFile, path, value)
+end
+
 function Module:Update(deltaTime)
     if not self.loadedFile then return end
-    self.loadedFile.stats.playtime = self.loadedFile.stats.playtime + deltaTime
+
+    local playtime = self:Get("stats.playtime") or 0
+    self:Set("stats.playtime", playtime + deltaTime)
 end
 
 function Module.Init()
@@ -32,14 +44,14 @@ function Module.Init()
 
     SignalHandlerModule.Get("game.boxes.spawned"):Connect(function(box)
         if Module.loadedFile then
-            local highestBoxTier = Module.loadedFile.stats.highestBoxTier
+            local highestBoxTier = Module:Get("stats.highestBoxTier") or 0
 
-            local newBoxTier = box.data.tier
+            local newBoxTier = box.data and box.data.tier
             if not newBoxTier then return end
 
             if highestBoxTier < newBoxTier then
                 SignalHandlerModule.Get("game.boxes.highesttierchanged"):Fire(newBoxTier, highestBoxTier)
-                Module.loadedFile.stats.highestBoxTier = newBoxTier
+                Module:Set("stats.highestBoxTier", newBoxTier)
             end
         end
     end)
@@ -50,8 +62,8 @@ function Module:SaveFile(file)
         file = SavesDecodeModule:Decode(file)
     end
 
-    if self.loadedFile and self.loadedFile.slot == file.slot then
-        self.loadedFile.boxes = BoxesObjectModule:GetSortedArray()
+    if self.loadedFile and self:Get("slot") == file.slot then
+        self:Set("boxes", BoxesObjectModule:GetSortedArray())
     end
 
     local finalOutput = SavesEncodeModule:Encode(file)
@@ -68,16 +80,13 @@ end
 
 function Module:ReadFile(slot)
     local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
-
     local file = love.filesystem.read(fileName)
-    local decodedFile = (file and SavesDecodeModule:Decode(file) or nil)
 
-    return decodedFile
+    return file and SavesDecodeModule:Decode(file) or nil
 end
 
 function Module:LoadFile(slot)
     slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
-
     local decodedFile = Module:ReadFile(slot)
 
     if not decodedFile then
@@ -89,20 +98,18 @@ function Module:LoadFile(slot)
     self.loadedFile = decodedFile
 
     SignalHandlerModule.Get("engine.saves.fileloaded"):Fire(decodedFile)
-
     return decodedFile
 end
 
 function Module:DeleteFile(slot)
     slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
-
     local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
 
     if love.filesystem.getInfo(fileName) then
         love.filesystem.remove(fileName)
     end
 
-    if self.loadedFile and self.loadedFile.slot == slot then
+    if self.loadedFile and self:Get("slot") == slot then
         self.loadedFile = nil
     end
 

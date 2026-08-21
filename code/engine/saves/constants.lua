@@ -3,7 +3,6 @@
 local SETTINGS_SCHEMA = {
     {
         key = "audio",
-
         settings = {
             { key = "masterVolume", name = "Master volume", default = 0.5 },
             { key = "soundVolume", name = "Sound volume", default = 1 },
@@ -13,7 +12,6 @@ local SETTINGS_SCHEMA = {
     },
     {
         key = "graphics",
-
         settings = {
             { key = "contrast", name = "Contrast", default = 1 },
             { key = "gamma", name = "Gamma", default = 1 },
@@ -27,7 +25,6 @@ local SETTINGS_SCHEMA = {
     },
     {
         key = "accessibility",
-
         settings = {
             { key = "colorblindMode", name = "Colorblindness mode", default = "none" },
             { key = "screenFlashEnabled", name = "Enable screen flashes?", default = true }
@@ -35,59 +32,63 @@ local SETTINGS_SCHEMA = {
     }
 }
 
-local function _buildDefaultSettingsFromSchema()
+local function _buildDefaultsFromSchema(schema)
     local defaults = {}
 
-    for _, category in pairs(SETTINGS_SCHEMA) do
-        local categoryDefaults = {}
+    for _, category in pairs(schema) do
+        local catDefaults = {}
 
-        for _, setting in pairs(category.settings) do
-            categoryDefaults[setting.key] = setting.default
+        for _, item in pairs(category.settings or category.fields or {}) do
+            catDefaults[item.key] = item.default
         end
 
-        defaults[category.key] = categoryDefaults
+        defaults[category.key] = catDefaults
     end
 
     return defaults
 end
 
+local SAVE_SCHEMA = {
+    { key = "currencies", fields = { { key = "credits", default = 50 } } },
+    { key = "stats", fields = {
+        { key = "highestBoxTier", default = 0 },
+        { key = "playtimeAtSessionStart", default = 0 },
+        { key = "playtime", default = 0 }
+    }},
+
+    { key = "boxes", fields = {} },
+
+    { key = "upgrades", fields = {
+        { key = "spawnCooldown", default = 0 },
+        { key = "spawnTier", default = 0 },
+        { key = "autoSpawn", default = 0 },
+        { key = "luckyRoll", default = 0 },
+        { key = "multiSpawn", default = 0 },
+        { key = "pullPower", default = 0 }
+    }},
+    { key = "trinkets", fields = {}}
+}
+
+local DEFAULT_DATA = {
+    version = 3,
+    slot = 1,
+}
+-- Merge schema defaults into DEFAULT_DATA
+for key, value in pairs(_buildDefaultsFromSchema(SAVE_SCHEMA)) do
+    DEFAULT_DATA[key] = value
+end
+
 return {
     SAVE_FILE_EXTENSION = ".mbsave",
     SAVE_FILE_PREFIX = "slot-",
-
     MAX_SAVE_SLOTS = 3,
 
-    DEFAULT_DATA = {
-        version = 3,
-        slot = 1,
-
-        currencies = {
-            credits = 50,
-        },
-
-        stats = {
-            highestBoxTier = 0,
-
-            playtimeAtSessionStart = 0,
-            playtime = 0
-        },
-
-        boxes = {},
-
-        upgrades = {
-            spawnCooldown = 0,
-            spawnTier = 0,
-            autoSpawn = 0,
-            luckyRoll = 0,
-            multiSpawn = 0,
-            pullPower = 0
-        }
-    },
+    DEFAULT_DATA = DEFAULT_DATA,
+    SAVE_SCHEMA = SAVE_SCHEMA,
 
     SETTINGS_FILE_NAME = "settings.conf",
     SETTINGS_SCHEMA = SETTINGS_SCHEMA,
-
-    DEFAULT_SETTINGS = _buildDefaultSettingsFromSchema(),
+    DEFAULT_SETTINGS = _buildDefaultsFromSchema(SETTINGS_SCHEMA),
 
     NUMBER_SETTING_RANGES = {
         masterVolume = { min = 0, max = 1.5 },

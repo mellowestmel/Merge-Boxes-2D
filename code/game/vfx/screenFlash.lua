@@ -14,7 +14,7 @@ Module._screenFlashElement = nil
 Module._fadeDuration = 2
 
 function Module:Flash(color, fadeDuration)
-    local screenFlashEnabled = SettingsModule.loadedFile.accessibility.screenFlashEnabled
+    local screenFlashEnabled = SettingsModule:Get("accessibility.screenFlashEnabled")
     if not screenFlashEnabled then return end
 
     if color then color = table.clone(color) end

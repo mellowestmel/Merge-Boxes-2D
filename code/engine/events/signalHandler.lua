@@ -52,7 +52,7 @@ function Module.Get(name)
 	return Module.new(name)
 end
 
--- Adds a callback and stores its index for O(1) removal.
+-- Adds a callback and stores its index.
 function Signal:Connect(callback)
 	assert(not self._removed, "Signal is removed")
 	_typecheck(callback, "function", "Callback")

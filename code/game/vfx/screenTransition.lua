@@ -13,7 +13,7 @@ Module.transitioning = false
 function Module:Transition(data)
     if not data then data = {} end
 
-    if not SettingsModule.loadedFile.graphics.transitionsEnabled then
+    if not SettingsModule:Get("graphics.transitionsEnabled") then
         self.transitioning = true
 
         if self._screenTransitionElement then

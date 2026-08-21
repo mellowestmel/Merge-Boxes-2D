@@ -6,7 +6,7 @@ local SaveFilesModule = require("code.engine.saves.files")
 local Module = {}
 
 function Module:CanAfford(currency, cost)
-    local canAfford = (SaveFilesModule.loadedFile.currencies[currency] or 0) >= cost
+    local canAfford = (SaveFilesModule:Get("currencies." .. currency) or 0) >= cost
 
     if not canAfford then
         SignalHandlerModule.Get("game.shop.transactionfailed"):Fire(currency, cost)
@@ -16,8 +16,10 @@ function Module:CanAfford(currency, cost)
 end
 
 function Module:Purchase(currency, cost, callback)
-    SaveFilesModule.loadedFile.currencies[currency] =
-        SaveFilesModule.loadedFile.currencies[currency] - cost
+    local currencyPath = "currencies." .. currency
+    local current = SaveFilesModule:Get(currencyPath)
+
+    SaveFilesModule:Set(currencyPath, current - cost)
 
     if callback then
         callback()

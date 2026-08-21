@@ -12,6 +12,9 @@ local CONSTANTS = require("code.game.boxes.constants")
 local BoxDragHandlerModule = require("code.game.boxes.dragHandler")
 local BoxesObjectModule = require("code.game.boxes.object")
 
+-- Globals are defined in conf.lua
+local FPS_SCALE = _G.FPS_SCALE
+
 local function _getWeightFactor(box)
     return box.data.weight / CONSTANTS.BASE_WEIGHT
 end

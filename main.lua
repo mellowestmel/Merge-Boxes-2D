@@ -1,6 +1,6 @@
 -- ~/main.lua
 
-local RenderHandlerModule = require("code.engine.render.handler")
+local RenderHandlerModule = require("code.engine.render.handler")                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
@@ -21,7 +21,7 @@ local UIHandlerModule = require("code.game.ui.handler")
 for name, handler in pairs(love.handlers) do
 	local signal = SignalHandlerModule.Get("love." .. name)
 
-	love.handlers[name] = function(...)                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
+	love.handlers[name] = function(...)
 		signal:Fire(...)
 
 		local result = handler(...)

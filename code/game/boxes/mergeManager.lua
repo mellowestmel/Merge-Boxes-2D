@@ -130,8 +130,8 @@ local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
     newBox.element.x, newBox.element.y = middleX, middleY
     newBox.velocityX, newBox.velocityY = velocityX, velocityY
 
-    SaveFilesModule.loadedFile.currencies.credits =
-        SaveFilesModule.loadedFile.currencies.credits + newBox.data.mergeReward
+    local credits = SaveFilesModule:Get("currencies.credits")
+    SaveFilesModule:Set("currencies.credits", credits + newBox.data.mergeReward)
 
     newBox.element.scaleX, newBox.element.scaleY = scaleX, scaleY
 

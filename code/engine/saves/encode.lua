@@ -103,7 +103,9 @@ function Module:Encode(file)
 
         self:EncodeSimple(file.currencies),
         self:EncodeSimple(file.stats),
-        self:EncodeSimple(file.upgrades)
+
+        self:EncodeSimple(file.upgrades),
+        self:EncodeSimple(file.trinkets)
     )
 
     finalOutput = _encryptBase64(finalOutput)

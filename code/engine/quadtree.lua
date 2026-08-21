@@ -1,15 +1,6 @@
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
---[[
-What is a "point"?
-
-I think its like uhhh... idk man..
-a point is like a point in like a space
-and the point like points to a certain point
-if you get what I'm saying
-]]
-
 local MAX_DEPTH = 8
 
 local Quadtree = {
