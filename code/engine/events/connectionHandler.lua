@@ -1,25 +1,32 @@
+-- ~/code/engine/events/connectionHandler.lua
+
 local Connection = {}
 Connection.__index = Connection
 
 local Module = {}
 
-function Module.new(signal, callback)
+function Module.new(signal, callback, index)
 	return setmetatable({
-		_callback = callback,
 		_signal = signal,
+		_callback = callback,
 
-		Connected = true
+		_index = index,
+
+		connected = true
 	}, Connection)
 end
 
 function Connection:Disconnect()
-	if not self.Connected then
-		return
+	if not self.connected then return end
+
+	self.connected = false
+
+	local signal = self._signal
+
+	if signal then
+		signal:_removeConnection(self)
+		self._signal = nil
 	end
-
-	self.Connected = false
-
-	self._signal:_RemoveConnection(self)
 end
 
 return Module

@@ -28,7 +28,7 @@ return {
         x = UILayoutData.game.spawnButton.x,
         y = UILayoutData.game.spawnButton.y + UILayoutData.upgradeShop.backgroundFrame.offsetY,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.INVISIBLE_COLOR),
+        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },

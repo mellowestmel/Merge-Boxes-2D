@@ -64,8 +64,7 @@ local function setupSplashScreenLogo(self)
     })
 
     if splashScreenSound then
-        splashScreenSound:Play()
-        splashScreenSound:Remove()
+        splashScreenSound:Play() splashScreenSound:Remove()
     end
 end
 

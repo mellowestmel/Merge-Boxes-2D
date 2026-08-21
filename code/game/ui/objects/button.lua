@@ -5,6 +5,7 @@ local SignalHandlerModule = require("code.engine.events.signalHandler")
 local RenderUtilsModule = require("code.engine.render.utils")
 local SoundHandlerModule = require("code.engine.soundHandler")
 local IdManagerModule = require("code.engine.idManager")
+local UICursorModule = require("code.game.ui.cursor")
 
 local SettingsModule = require("code.engine.saves.settings")
 
@@ -27,7 +28,6 @@ end
 
 function Button:MousePressed(x, y, mouseButton)
 	if ScreenTransitionModule.transitioning then return end
-
 	if not self.hitboxElement.render then return end
 	if (love.timer.getTime() - self.lastUsed) < self.cooldown then return end
 	if not self.hitboxElement:IsPointInside(x, y) then return end
@@ -35,15 +35,22 @@ function Button:MousePressed(x, y, mouseButton)
 
 	self.lastUsed = love.timer.getTime()
 
-	local animationsEnabled = SettingsModule.loadedFile.graphics.uiAnimationsEnabled
+	local animationsEnabled =
+		SettingsModule.loadedFile.graphics.uiAnimationsEnabled
 
 	if animationsEnabled then
 		for _, element in pairs(self.elements) do
-			element._baseScaleX = element._baseScaleX or (element.scaleX or 1)
-			element._baseScaleY = element._baseScaleY or (element.scaleY or 1)
+			element._baseScaleX =
+				element._baseScaleX or (element.scaleX or 1)
 
-			element.scaleX = element._baseScaleX - self._clickScale
-			element.scaleY = element._baseScaleY - self._clickScale
+			element._baseScaleY =
+				element._baseScaleY or (element.scaleY or 1)
+
+			element.scaleX =
+				element._baseScaleX - self._clickScale
+
+			element.scaleY =
+				element._baseScaleY - self._clickScale
 		end
 	end
 
@@ -71,30 +78,45 @@ function Button:Update(deltaTime)
 		return
 	end
 
-	local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
-	local isHovered = self.hitboxElement:IsPointInside(mouseX, mouseY)
+	local mouseX, mouseY =
+		RenderUtilsModule.GetScaledMousePosition()
 
-	if isHovered ~= self._isHovered then
-		self._isHovered = isHovered
-	end
+	self._isHovered =
+		self.hitboxElement:IsPointInside(mouseX, mouseY)
 
-	local animationsEnabled = SettingsModule.loadedFile.graphics.uiAnimationsEnabled
-	local scaleLerp = animationsEnabled and math.min(1, self._scaleSpeed * deltaTime * 10) or 1
+	local animationsEnabled =
+		SettingsModule.loadedFile.graphics.uiAnimationsEnabled
+
+	local scaleLerp =
+		animationsEnabled
+		and math.min(1, self._scaleSpeed * deltaTime * 10)
+		or 1
 
 	for _, element in pairs(self.elements) do
-		element._baseScaleX = element._baseScaleX or (element.scaleX or 1)
-		element._baseScaleY = element._baseScaleY or (element.scaleY or 1)
+		element._baseScaleX =
+			element._baseScaleX or (element.scaleX or 1)
+
+		element._baseScaleY =
+			element._baseScaleY or (element.scaleY or 1)
 
 		local targetScaleX = element._baseScaleX
 		local targetScaleY = element._baseScaleY
 
 		if self._isHovered then
-			targetScaleX = targetScaleX + self._hoverScale
-			targetScaleY = targetScaleY + self._hoverScale
+			targetScaleX =
+				targetScaleX + self._hoverScale
+
+			targetScaleY =
+				targetScaleY + self._hoverScale
 		end
 
-		element.scaleX = element.scaleX + (targetScaleX - element.scaleX) * scaleLerp
-		element.scaleY = element.scaleY + (targetScaleY - element.scaleY) * scaleLerp
+		element.scaleX =
+			element.scaleX
+			+ (targetScaleX - element.scaleX) * scaleLerp
+
+		element.scaleY =
+			element.scaleY
+			+ (targetScaleY - element.scaleY) * scaleLerp
 	end
 end
 
@@ -108,20 +130,22 @@ function Module.new(data)
 
 		elements = data.elements or {},
 
-		cooldown = data.cooldown or .25,
+		cooldown = data.cooldown or 0.25,
 		lastUsed = -math.huge,
 
-		playClickSound = data.playClickSound or true,
+		playClickSound = data.playClickSound ~= false,
 
 		hitboxElement = data.hitboxElement,
 
 		mouseButton = data.mouseButton or 1,
-		onClick = data.onClick or nil,
+		onClick = data.onClick,
 
-		_clickScale = data.clickScale or .1,
-		_hoverScale = data.hoverScale or .05,
+		hoveringCursor = data.hoveringCursor or "pointer",
 
-		_scaleSpeed = data.scaleSpeed or .5,
+		_clickScale = data.clickScale or 0.1,
+		_hoverScale = data.hoverScale or 0.05,
+
+		_scaleSpeed = data.scaleSpeed or 0.5,
 
 		_isHovered = false
 	}, Button)
@@ -140,6 +164,10 @@ end
 function Module:Update(deltaTime)
 	for _, button in pairs(self._buttons) do
 		button:Update(deltaTime)
+
+		if button._isHovered then
+			UICursorModule:SetHovering(button.hoveringCursor)
+		end
 	end
 end
 

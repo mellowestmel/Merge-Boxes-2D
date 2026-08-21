@@ -26,8 +26,7 @@ local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 local SceneData = require("code.data.ui.scenes.settings")
 
 local ENUM_SETTING_OPTIONS = {
-	colorblindMode = SAVES_CONSTANTS.COLORBLIND_MODES,
-	language = SAVES_CONSTANTS.LANGUAGES
+	colorblindMode = SAVES_CONSTANTS.COLORBLIND_MODES
 }
 
 local Module = {}

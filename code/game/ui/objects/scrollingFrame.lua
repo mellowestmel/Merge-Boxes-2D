@@ -3,6 +3,7 @@
 local RenderUtilsModule = require("code.engine.render.utils")
 local IdManagerModule = require("code.engine.idManager")
 local SettingsModule = require("code.engine.saves.settings")
+local UICursorModule = require("code.game.ui.cursor")
 
 local math = require("code.engine.helpers.math")
 
@@ -89,40 +90,56 @@ local function _updatePositions(self)
 	end
 
 	if self.scrollBarElement and self.scrollTrackElement then
-		local maxScroll = math.max(
-			1,
-			self.contentHeight - frameHeight
-		)
-
+		local maxScroll = math.max(1, self.contentHeight - frameHeight)
 		local progress = self.scrollOffset / maxScroll
 
 		local track = self.scrollTrackElement
 		local thumb = self.scrollBarElement
 
-		local trackWidth = track:GetWidth()
 		local trackHeight = track:GetHeight()
-		local thumbWidth = thumb:GetWidth()
+		local trackWidth = track:GetWidth()
 		local thumbHeight = thumb:GetHeight()
+		local thumbWidth = thumb:GetWidth()
 
-		local trackAnchorX = track.anchorX or .5
-		local trackAnchorY = track.anchorY or .5
-		local thumbAnchorX = thumb.anchorX or .5
-		local thumbAnchorY = thumb.anchorY or .5
-
-		local trackTop = track.y - trackHeight * trackAnchorY
-		local trackRight = track.x + trackWidth * (1 - trackAnchorX)
-
-		thumb.x = trackRight - thumbWidth * (1 - thumbAnchorX)
+		local trackTop = track.y - trackHeight * (track.anchorY or .5)
+		local trackRight = track.x + trackWidth * (1 - (track.anchorX or .5))
 
 		local travel = math.max(0, trackHeight - thumbHeight)
 
-		thumb.y =
-			trackTop
-			+ thumbHeight * thumbAnchorY
-			+ progress * travel
+		thumb.x = trackRight - thumbWidth * (1 - (thumb.anchorX or .5))
+		thumb.y = trackTop + thumbHeight * (thumb.anchorY or .5) + progress * travel
 	end
 
 	self._lastOffset = self.scrollOffset
+
+	return delta
+end
+
+-- Puts the cursor into the grabbing state at the drag's starting point.
+local function _startDrag(self, x, y)
+	self._dragStartY = y
+	self._initialOffsetOnDrag = self.scrollOffset
+
+	self._dragCursorElement.x = x
+	self._dragCursorElement.y = y
+
+	UICursorModule:SetDragging(true, self._dragCursorElement, x, y)
+end
+
+-- Restores the cursor once dragging stops.
+local function _stopDrag(self)
+	UICursorModule:SetDragging(false)
+end
+
+-- Checks whether any child element is under (x, y).
+local function _isHoveringElement(self, x, y)
+	for _, element in pairs(self.elements) do
+		if element and element:IsPointInside(x, y) then
+			return true
+		end
+	end
+
+	return false
 end
 
 -- Calculates how much space the content takes.
@@ -144,11 +161,9 @@ function ScrollingFrame:RecalculateContentHeight()
 		end
 	end
 
-	if minY == math.huge then
-		self.contentHeight = 0
-	else
-		self.contentHeight = maxY - minY + self.padding * 2
-	end
+	self.contentHeight = (minY == math.huge)
+		and 0
+		or (maxY - minY + self.padding * 2)
 
 	_updateScrollBar(self)
 
@@ -173,24 +188,31 @@ function ScrollingFrame:WheelMoved(_, y)
 	)
 end
 
-function ScrollingFrame:MousePressed(x, y, button)
-	if button ~= 1 or not self.scrollBarElement then
+function ScrollingFrame:MousePressed(_, _, button)
+	if button ~= 1 then
 		return
 	end
 
-	if not self.scrollBarElement:IsPointInside(x, y) then
-		return
-	end
+	local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
+	local isScrollable = self.contentHeight > self.hitboxElement:GetHeight()
 
-	self._isDraggingTrack = true
-	self._dragStartY = y
-	self._initialOffsetOnDrag = self.scrollOffset
+	local canGrabBackground = isScrollable
+		and self.hitboxElement:IsPointInside(mouseX, mouseY)
+		and not _isHoveringElement(self, mouseX, mouseY)
+
+	if canGrabBackground then
+		self._isDragging = true
+		_startDrag(self, mouseX, mouseY)
+	end
 end
 
 function ScrollingFrame:MouseReleased(button)
-	if button == 1 then
-		self._isDraggingTrack = false
+	if button ~= 1 or not self._isDragging then
+		return
 	end
+
+	self._isDragging = false
+	_stopDrag(self)
 end
 
 function ScrollingFrame:Update(deltaTime)
@@ -201,29 +223,24 @@ function ScrollingFrame:Update(deltaTime)
 
 	local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
 
-	if self._isDraggingTrack
-		and self.scrollTrackElement
-		and self.scrollBarElement then
+	if self._isDragging then
+		local dragDelta = mouseY - self._dragStartY
 
-		local _, currentMouseY = RenderUtilsModule.GetScaledMousePosition()
-		local dragDelta = currentMouseY - self._dragStartY
-
-		local travel = math.max(
-			1,
-			self.scrollTrackElement:GetHeight()
-				- self.scrollBarElement:GetHeight()
-		)
-
-		local maxScroll = math.max(
-			0,
-			self.contentHeight - self.hitboxElement:GetHeight()
-		)
-
+		-- Background moves with the mouse; scroll offset follows the content.
 		self.targetScrollOffset = _clampOffset(
 			self,
-			self._initialOffsetOnDrag
-				+ dragDelta / travel * maxScroll
+			self._initialOffsetOnDrag - dragDelta
 		)
+	else
+		local isScrollable = self.contentHeight > self.hitboxElement:GetHeight()
+
+		local hoveringBackground = isScrollable
+			and self.hitboxElement:IsPointInside(mouseX, mouseY)
+			and not _isHoveringElement(self, mouseX, mouseY)
+
+		if hoveringBackground then
+			UICursorModule:SetHovering("grabable")
+		end
 	end
 
 	local animationsEnabled = SettingsModule.loadedFile.graphics.uiAnimationsEnabled
@@ -231,14 +248,19 @@ function ScrollingFrame:Update(deltaTime)
 	if animationsEnabled then
 		local alpha = math.min(1, self.smoothness * deltaTime)
 
-		self.scrollOffset =
-			self.scrollOffset
+		self.scrollOffset = self.scrollOffset
 			+ (self.targetScrollOffset - self.scrollOffset) * alpha
 	else
 		self.scrollOffset = self.targetScrollOffset
 	end
 
-	_updatePositions(self)
+	local appliedDelta = _updatePositions(self)
+
+	if self._isDragging then
+		-- Cursor follows the content directly, only moving with real scroll movement.
+		self._dragCursorElement.y = self._dragCursorElement.y + appliedDelta
+		UICursorModule:UpdateDragging(self._dragCursorElement, deltaTime)
+	end
 end
 
 function Module.new(data)
@@ -266,7 +288,9 @@ function Module.new(data)
 		scrollSpeed = data.scrollSpeed or 35,
 		smoothness = data.smoothness or 14,
 
-		_isDraggingTrack = false,
+		_isDragging = false,
+		_dragCursorElement = { x = 0, y = 0 },
+
 		_dragStartY = 0,
 		_initialOffsetOnDrag = 0,
 		_lastOffset = 0

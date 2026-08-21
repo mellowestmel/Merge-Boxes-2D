@@ -75,8 +75,7 @@ local function _playNotAllowedSound()
     })
 
     if notAllowedSound then
-        notAllowedSound:Play()
-        notAllowedSound:Remove()
+        notAllowedSound:Play() notAllowedSound:Remove()
     end
 end
 

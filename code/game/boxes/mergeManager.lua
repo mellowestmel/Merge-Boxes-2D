@@ -146,8 +146,7 @@ local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
         local mergeSound = SoundHandlerModule.new(newBox.data.mergeSoundData)
 
         if mergeSound then
-            mergeSound:Play()
-            mergeSound:Remove()
+            mergeSound:Play() mergeSound:Remove()
         end
     end
 

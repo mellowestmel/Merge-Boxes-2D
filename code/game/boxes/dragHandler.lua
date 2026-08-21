@@ -1,3 +1,5 @@
+-- ~/code/game/boxes/dragHandler.lua
+
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 local RenderUtilsModule = require("code.engine.render.utils")
 
@@ -6,81 +8,99 @@ local BoxesObjectModule = require("code.game.boxes.object")
 local UICursorModule = require("code.game.ui.cursor")
 
 local Module = {}
+
 Module._wasMouseDown = false
 Module.draggedBox = nil
 
+-- Alpha to restore to a box once it's released.
 local lastDraggedBoxAlpha = 0
+
+-- Returns the topmost draggable box under (x, y), or nil.
+local function _findDraggableBoxAt(boxesArray, x, y)
+	for index = 1, #boxesArray do
+		local box = boxesArray[index]
+
+		if box.data.draggable then
+			-- Reset stacking order before hit-testing.
+			box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX)
+
+			if box.element:IsPointInside(x, y) then
+				return box
+			end
+		end
+	end
+end
+
+-- Returns true if any draggable box is under (x, y).
+local function _isHoveringDraggableBox(boxesArray, x, y)
+	for index = 1, #boxesArray do
+		local box = boxesArray[index]
+
+		if box.data.draggable and box.element:IsPointInside(x, y) then
+			return true
+		end
+	end
+
+	return false
+end
+
+-- Begins dragging the given box.
+function Module:_StartDrag(box, mouseX, mouseY)
+	SignalHandlerModule.Get("game.boxes.dragstarted"):Fire(box)
+
+	self.draggedBox = box
+	self.draggedBox.dragging = true
+
+	lastDraggedBoxAlpha = box.element.color.alpha
+	box.element.color.alpha = CONSTANTS.DRAGGED_BOX_ALPHA
+
+	-- Bring the dragged box above everything else.
+	box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 2)
+
+	UICursorModule:SetDragging(true, box.element, mouseX, mouseY)
+end
+
+-- Ends dragging and restores the box's original state.
+function Module:_EndDrag()
+	local box = self.draggedBox
+
+	SignalHandlerModule.Get("game.boxes.dragended"):Fire(box)
+
+	box.element.color.alpha = lastDraggedBoxAlpha
+	box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 1)
+	box.dragging = false
+
+	UICursorModule:SetDragging(false)
+
+	self.draggedBox = nil
+end
 
 function Module:Update(deltaTime)
 	local mouseDown = love.mouse.isDown(1)
 	local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
-
 	local boxesArray = BoxesObjectModule:GetSortedArray()
 
+	-- Start a new drag on mouse-down over a draggable box.
 	if mouseDown and not self.draggedBox then
-		local hoveredDraggableBox = nil
+		local hoveredBox = _findDraggableBoxAt(boxesArray, mouseX, mouseY)
 
-		for index = 1, #boxesArray do
-			local box = boxesArray[index]
-
-			if box.data.draggable then
-				box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX)
-
-				if box.element:IsPointInside(mouseX, mouseY) then
-					hoveredDraggableBox = box
-					break
-				end
-			end
+		if hoveredBox then
+			self:_StartDrag(hoveredBox, mouseX, mouseY)
 		end
 
-		if hoveredDraggableBox then
-			local box = hoveredDraggableBox
-
-			SignalHandlerModule.Get("game.boxes.dragstarted"):Fire(box)
-
-			self.draggedBox = box
-			self.draggedBox.dragging = true
-
-			lastDraggedBoxAlpha = box.element.color.alpha
-			box.element.color.alpha = CONSTANTS.DRAGGED_BOX_ALPHA
-
-			box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 2)
-
-			UICursorModule:SetDragging(true, box, mouseX, mouseY)
-		end
+	-- Release the current drag on mouse-up.
 	elseif not mouseDown and self.draggedBox then
-		SignalHandlerModule.Get("game.boxes.dragended"):Fire(self.draggedBox)
-
-		self.draggedBox.element.color.alpha = lastDraggedBoxAlpha
-		self.draggedBox.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 1)
-
-		self.draggedBox.dragging = false
-
-		UICursorModule:SetDragging(false)
-
-		self.draggedBox = nil
+		self:_EndDrag()
 	end
 
 	if self.draggedBox then
-		UICursorModule:UpdateDragging(self.draggedBox, deltaTime)
+		UICursorModule:UpdateDragging(self.draggedBox.element, deltaTime)
 	else
-		local hoveringDraggableBox = false
+		-- Show a "grabable" cursor when hovering a draggable box.
+		local hovering = _isHoveringDraggableBox(boxesArray, mouseX, mouseY)
 
-		for index = 1, #boxesArray do
-			local box = boxesArray[index]
-
-			if box.data.draggable
-				and box.element:IsPointInside(mouseX, mouseY) then
-
-				hoveringDraggableBox = true
-				break
-			end
-		end
-
-		if hoveringDraggableBox then
-			UICursorModule:ChangeSprite("grabbable")
-		else
-			UICursorModule:ChangeSprite("default")
+		if hovering then
+			UICursorModule:SetHovering("grabable")
 		end
 	end
 

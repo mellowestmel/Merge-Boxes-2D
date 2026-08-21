@@ -1,7 +1,6 @@
 -- ~/code/data/boxDefinitions/cosmetic.lua
 
-local cosmetic
-cosmetic = {
+local cosmetic = {
 	-- Special
     ["goldenGerald"] = {
 		spritePath = "assets/sprites/boxes/goldenGerald.png",
@@ -208,22 +207,22 @@ cosmetic = {
             },
         },
     },
+}
 
-	-- Box 18 fakes
-	["geraldo"] = {
-		spritePath = "assets/sprites/boxes/box18.png",
-		scale = cosmetic["gerald"].scale,
-	},
+-- Box 18 fakes
+cosmetic["geraldo"] = {
+	spritePath = "assets/sprites/boxes/box18.png",
+	scale = cosmetic["gerald"].scale,
+}
 
-	["jambo"] = {
-		spritePath = "assets/sprites/boxes/box18_2.png",
-		scale = cosmetic["jimbo"].scale,
-	},
+cosmetic["jambo"] = {
+	spritePath = "assets/sprites/boxes/box18_2.png",
+	scale = cosmetic["jimbo"].scale,
+}
 
-	["glungus"] = {
-		spritePath = "assets/sprites/boxes/box18_3.png",
-		scale = cosmetic["glumbo"].scale,
-	},
+cosmetic["glungus"] = {
+	spritePath = "assets/sprites/boxes/box18_3.png",
+	scale = cosmetic["glumbo"].scale,
 }
 
 return cosmetic

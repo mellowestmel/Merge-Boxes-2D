@@ -111,12 +111,24 @@ function Module:Draw()
 	love.graphics.setColor(1, 1, 1, 1)
 end
 
-function Module:Update()
-	local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
-	local vsync = SettingsModule.loadedFile.graphics.vsync
+local _lastFullscreen = nil
+local _lastVSync = nil
 
-	love.window.setFullscreen(fullscreen)
-	love.window.setVSync(vsync)
+function Module:Update()
+    local fullscreen = SettingsModule.loadedFile.graphics.fullscreen
+    local vsync = SettingsModule.loadedFile.graphics.vsync
+
+    -- Only apply if the fullscreen state changed
+    if fullscreen ~= _lastFullscreen then
+        love.window.setFullscreen(fullscreen, "desktop")
+        _lastFullscreen = fullscreen
+    end
+
+    -- Only apply if the vsync state changed
+    if vsync ~= _lastVSync then
+        love.window.setVSync(vsync)
+        _lastVSync = vsync
+    end
 end
 
 function Module.Init()

@@ -1,14 +1,13 @@
-local ConnectionHandlerModule = require("code.engine.events.connectionHandler")
+-- ~/code/engine/events/signalHandler.lua
 
--- Main module for sending and receiving events that happen in the game,
--- such as built-in Love2D events or in-game events.
--- A useful system for modding the game.
+local ConnectionHandlerModule = require("code.engine.events.connectionHandler")
 
 local Signal = {}
 Signal.__index = Signal
 
-local Module = {}
-Module._signals = {}
+local Module = {
+	_signals = {}
+}
 
 local function _typecheck(value, expected, name)
 	local actual = type(value)
@@ -19,14 +18,19 @@ local function _typecheck(value, expected, name)
 	)
 end
 
--- Create a new signal.
+-- Creates and registers a signal, returning an existing one with the same name.
 function Module.new(name)
-    _typecheck(name, type(name), "Signal name")
-	if Module._signals[name] then return Module._signals[name] end
+	_typecheck(name, "string", "Signal name")
+
+	local existing = Module._signals[name]
+
+	if existing then
+		return existing
+	end
 
 	local signal = setmetatable({
 		_connections = {},
-		_destroyed = false,
+		_removed = false,
 		_name = name
 	}, Signal)
 
@@ -35,61 +39,94 @@ function Module.new(name)
 	return signal
 end
 
--- Get an existing signal.
+-- Returns a registered signal or creates it if it doesn't exist.
 function Module.Get(name)
-    _typecheck(name, type(name), "Signal name")
-	return Module._signals[name] or Module.new(name)
+	_typecheck(name, "string", "Signal name")
+
+	local signal = Module._signals[name]
+
+	if signal then
+		return signal
+	end
+
+	return Module.new(name)
 end
 
--- Listen for the signal.
+-- Adds a callback and stores its index for O(1) removal.
 function Signal:Connect(callback)
-	assert(not self._destroyed, "Signal is destroyed")
-    _typecheck(callback, type(callback), "Callback")
+	assert(not self._removed, "Signal is removed")
+	_typecheck(callback, "function", "Callback")
 
-	local connection = ConnectionHandlerModule.new(self, callback)
-	table.insert(self._connections, connection)
+	local connections = self._connections
+	local index = #connections + 1
+
+	local connection = ConnectionHandlerModule.new(
+		self,
+		callback,
+		index
+	)
+
+	connections[index] = connection
 
 	return connection
 end
 
--- Remove a connection.
--- Better to use connection:Disconnect().
-function Signal:_RemoveConnection(connection)
-	for index, current in pairs(self._connections) do
-		if current == connection then
-			table.remove(self._connections, index)
-			return
-		end
+-- Removes a connection by swapping it with the last entry.
+function Signal:_removeConnection(connection)
+	local connections = self._connections
+	local index = connection._index
+	local count = #connections
+
+	if index ~= count then
+		local last = connections[count]
+
+		connections[index] = last
+		last._index = index
 	end
+
+	connections[count] = nil
+	connection._index = 0
 end
 
--- Send the signal to all connections.
+-- Calls every connected callback currently in the signal.
 function Signal:Fire(...)
-	if self._destroyed then
-		return
-	end
+	if self._removed then return end
 
-	for _, connection in pairs(self._connections) do
-		if connection.Connected then
+	local connections = self._connections
+	local count = #connections
+
+	for index = 1, count do
+		local connection = connections[index]
+
+		if connection.connected then
 			connection._callback(...)
 		end
 	end
 end
 
--- Destroy the signal.
-function Signal:Destroy()
-	if self._destroyed then
-		return
+-- Invalidates all connections and unregisters the signal.
+function Signal:Remove()
+	if self._removed then return end
+	self._removed = true
+
+	local connections = self._connections
+	local count = #connections
+
+	for index = 1, count do
+		local connection = connections[index]
+
+		connection.connected = false
+		connection._signal = nil
+		connection._index = 0
 	end
 
-	self._destroyed = true
-
-	for _, connection in pairs(self._connections) do
-		connection.Connected = false
+	for index = 1, count do
+		connections[index] = nil
 	end
+
+	self._connections = nil
 
 	Module._signals[self._name] = nil
-	self._connections = {}
 end
 
 return Module

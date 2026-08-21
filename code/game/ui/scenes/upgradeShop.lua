@@ -66,8 +66,7 @@ local function _setupTheBirbsWord(self)
             })
 
             if birbSound then
-                birbSound:Play()
-                birbSound:Remove()
+                birbSound:Play() birbSound:Remove()
             end
         end
     })
@@ -224,8 +223,7 @@ local function _createUpgradeButton(self, buttonConfig)
             })
 
             if sound then
-                sound:Play()
-                sound:Remove()
+                sound:Play() sound:Remove()
             end
         end
     })
