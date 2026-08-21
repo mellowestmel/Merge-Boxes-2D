@@ -87,6 +87,9 @@ end
 function Module:Click()
 	if not self._element then return end
 
+	local animationsEnabled = SettingsModule.loadedFile.graphics.cursorAnimationsEnabled
+	if not animationsEnabled then return end
+
 	if self._clickTween then
 		self._clickTween:Cancel()
 	end
