@@ -160,8 +160,6 @@ function Module:UpdateDragging(element, deltaTime)
 				targetRotation,
 				lerpFactor
 			)
-		else
-			self._element.rotation = targetRotation
 		end
 	end
 

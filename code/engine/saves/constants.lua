@@ -7,7 +7,7 @@ local SETTINGS_SCHEMA = {
         settings = {
             { key = "masterVolume", name = "Master volume", default = 0.5 },
             { key = "soundVolume", name = "Sound volume", default = 1 },
-            { key = "trackVolume", name = "Track volume", default = 1 },
+            { key = "trackVolume", name = "Music volume", default = 1 },
             { key = "muteGame", name = "Mute game?", default = false }
         }
     },
@@ -81,7 +81,7 @@ return {
             luckyRoll = 0,
             multiSpawn = 0,
             pullPower = 0
-        },
+        }
     },
 
     SETTINGS_FILE_NAME = "settings.conf",

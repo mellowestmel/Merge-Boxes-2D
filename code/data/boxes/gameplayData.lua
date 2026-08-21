@@ -1,4 +1,4 @@
--- ~/code/data/boxDefinitions/gameplay.lua
+-- ~/code/data/boxes/gameplay.lua
 
 local gameplay
 gameplay = {

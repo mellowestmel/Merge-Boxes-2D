@@ -22,6 +22,7 @@ local UILayoutData = require("code.data.ui.layout")
 local CONSTANTS = require("code.game.ui.constants")
 
 local SharedData = require("code.data.ui.scenes.shared")
+local BoxesData = require("code.data.boxes")
 
 local Module = {}
 Module._updateFunctions = {}
@@ -62,32 +63,37 @@ function Module:CreateElement(elementData, scene)
 end
 
 function Module:SetupHighestTierBoxes(scene)
-	local highestTier = _getHighestTierAcrossSaves()
+    local highestTier = _getHighestTierAcrossSaves()
+    if highestTier <= 0 then return end
 
-	if highestTier <= 0 then return end
+    for type, data in pairs(UILayoutData.shared.backgroundBoxes) do
+        local box = BoxesData[type]
 
-	for tier, data in pairs(UILayoutData.shared.backgroundBoxes) do
-		if tier <= highestTier then
-			local boxElement = RenderElementModule.new({
-				name = "backgroundBox" .. tier,
+        if not box then goto continue end
+        if not box.tier then goto continue end
+        if box.tier > highestTier then goto continue end
 
-				spritePath = UILayoutData.shared.backgroundBoxesPathPrefix
-					.. "box"
-					.. tier
-					.. ".png",
+        local boxElement = RenderElementModule.new({
+            name = "backgroundBox" .. type,
 
-				anchorX = 0,
-				anchorY = 0,
+            spritePath = UILayoutData.shared.backgroundBoxesPathPrefix
+                .. "box"
+                .. box.tier
+                .. ".png",
 
-				x = data.x,
-				y = data.y,
+            anchorX = 0,
+            anchorY = 0,
 
-				zIndex = CONSTANTS.Z_WORLD + tier
-			})
+            x = data.x,
+            y = data.y,
 
-			table.insert(scene._elements, boxElement)
-		end
-	end
+            zIndex = CONSTANTS.Z_WORLD + box.tier
+        })
+
+        table.insert(scene._elements, boxElement)
+
+        ::continue::
+    end
 end
 
 function Module:SetupSettingsButton(scene)

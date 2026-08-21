@@ -1,4 +1,4 @@
--- ~/code/data/boxDefinitions/flavor.lua
+-- ~/code/data/boxes/flavor.lua
 
 local camouflageDescription = [[One of the camouflages Box o' Matter can become. This one is a low quality fake of ]]
 

@@ -239,6 +239,7 @@ function Module:Decode(file)
 
 			currencies = self:DecodeSimple(sections[4]),
 			stats = self:DecodeSimple(sections[5]),
+
 			upgrades = self:DecodeSimple(sections[6])
 		}
 	else
