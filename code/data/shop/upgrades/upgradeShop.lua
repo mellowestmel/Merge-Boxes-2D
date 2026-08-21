@@ -87,6 +87,23 @@ local rawUpgrades = {
             return stacks + 1
         end
     },
+
+    {
+        id = "pullPower",
+
+        name = "Pull Power",
+        description = "Increases the strength of your pull. Useful for pulling large boxes. Each stack increases power by 100%.",
+
+        maxStacks = 10,
+
+        cost = function(stacks)
+            return math.floor(150 * (stacks + 1)^2.2)
+        end,
+
+        effect = function(stacks)
+            return stacks
+        end
+    },
 }
 
 local upgrades = {}

@@ -25,6 +25,8 @@ function Module.new(type, gameplayData, flavorData, cosmeticData)
 
         saveable = gameplayData.saveable ~= false,
 
+        next = gameplayData.next,
+
         -- Visuals
         spritePath = cosmeticData.spritePath,
         scale = cosmeticData.scale or 1,

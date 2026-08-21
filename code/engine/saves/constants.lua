@@ -79,7 +79,8 @@ return {
             spawnTier = 0,
             autoSpawn = 0,
             luckyRoll = 0,
-            multiSpawn = 0
+            multiSpawn = 0,
+            pullPower = 0
         },
     },
 

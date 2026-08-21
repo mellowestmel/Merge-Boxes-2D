@@ -24,6 +24,7 @@ return {
     DRAGGING_MAX_TILT = 90,
     BASE_DRAGGING_TILT_SPEED = 1,
     DRAGGED_BOX_ALPHA = 0.8,
+    MAX_DRAG_VELOCITY = math.huge,
 
     -- Merge
     BASE_MERGE_SPEED = 400,

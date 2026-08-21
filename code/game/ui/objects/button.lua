@@ -165,7 +165,7 @@ function Module:Update(deltaTime)
 	for _, button in pairs(self._buttons) do
 		button:Update(deltaTime)
 
-		if button._isHovered then
+		if button._isHovered and button.hitboxElement.render then
 			UICursorModule:SetHovering(button.hoveringCursor)
 		end
 	end

@@ -2,6 +2,8 @@
 
 local Module = {}
 
+local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
+
 local RenderUtilsModule = require("code.engine.render.utils")
 local math = require("code.engine.helpers.math")
 
@@ -57,10 +59,20 @@ local function _dragPhysics(box)
         mouseY = math.clamp(mouseY, 0, CONSTANTS.AREA_HEIGHT)
         mouseX = math.clamp(mouseX, 0, CONSTANTS.AREA_WIDTH)
 
-        local weightFactor = math.max(_getWeightFactor(box), .01)
+        local pullPower = UpgradeHandlerModule:GetEffect("pullPower")
+        local weightFactor = math.max(math.abs(_getWeightFactor(box)), .01)
 
-        box.velocityX = (mouseX - box.element.x) * CONSTANTS.DRAG_VELOCITY_MULTIPLIER / weightFactor
-        box.velocityY = (mouseY - box.element.y) * CONSTANTS.DRAG_VELOCITY_MULTIPLIER / weightFactor
+        local currentMultiplier = CONSTANTS.DRAG_VELOCITY_MULTIPLIER * (1 + pullPower)
+
+        -- Calculate the raw desired velocity
+        local targetVelX = (mouseX - box.element.x) * currentMultiplier / weightFactor
+        local targetVelY = (mouseY - box.element.y) * currentMultiplier / weightFactor
+
+        -- Clamp it to a maximum speed to prevent jittering
+        local maxSpeed = CONSTANTS.MAX_DRAG_VELOCITY
+
+        box.velocityX = math.clamp(targetVelX, -maxSpeed, maxSpeed)
+        box.velocityY = math.clamp(targetVelY, -maxSpeed, maxSpeed)
     end
 end
 

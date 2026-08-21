@@ -187,7 +187,7 @@ function Module:MergeUpdate(deltaTime)
         if progress < 1 then goto continue end
 
         local newBoxData = SaveFilesModule.loadedFile
-            and BoxesObjectModule.GetBoxDataByTier(boxA.data.tier + 1)
+            and BoxesObjectModule.GetBoxDataByType(boxA.data.next)
 
         if not newBoxData then
             _cancelMerge(self._activeMerges, index, boxA, boxB)
