@@ -84,7 +84,7 @@ local cosmetic = {
 	},
 
 	["frigidWendyhot"] = {
-		spritePath = "assets/sprites/boxes/box1.png",
+		spritePath = "assets/sprites/boxes/box10.png",
 		scale = 1.5,
 
 		screenFlashFadeDuration = 1.2,
@@ -180,7 +180,7 @@ local cosmetic = {
 	},
 
 	["luckrollBox"] = {
-		spritePath = "assets/sprites/boxes/box2.png",
+		spritePath = "assets/sprites/boxes/box20.png",
 		scale = 2.4,
 
 		mergeSoundData = { soundPath = "assets/sounds/merge/box2.wav" },

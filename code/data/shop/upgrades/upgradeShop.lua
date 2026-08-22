@@ -17,7 +17,7 @@ local rawUpgrades = {
 
         effect = function(stacks)
             return {
-                spawnCooldown = stacks * .1
+                spawnCooldown = -(stacks * .1)
             }
         end
     },
