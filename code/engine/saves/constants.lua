@@ -4,7 +4,7 @@ local SETTINGS_SCHEMA = {
     {
         key = "audio",
         settings = {
-            { key = "masterVolume", name = "Master volume", default = 0.5 },
+            { key = "masterVolume", name = "Master volume", default = .5 },
             { key = "soundVolume", name = "Sound volume", default = 1 },
             { key = "trackVolume", name = "Music volume", default = 1 },
             { key = "muteGame", name = "Mute game?", default = false }
@@ -36,13 +36,21 @@ local function _buildDefaultsFromSchema(schema)
     local defaults = {}
 
     for _, category in pairs(schema) do
-        local catDefaults = {}
+        local values = {}
 
         for _, item in pairs(category.settings or category.fields or {}) do
-            catDefaults[item.key] = item.default
+            if item.fields then
+                local nested = _buildDefaultsFromSchema({
+                    { key = item.key, fields = item.fields }
+                })
+
+                values[item.key] = nested[item.key]
+            else
+                values[item.key] = item.default
+            end
         end
 
-        defaults[category.key] = catDefaults
+        defaults[category.key] = values
     end
 
     return defaults
@@ -52,21 +60,33 @@ local SAVE_SCHEMA = {
     { key = "currencies", fields = { { key = "credits", default = 50 } } },
     { key = "stats", fields = {
         { key = "highestBoxTier", default = 0 },
-        { key = "playtimeAtSessionStart", default = 0 },
-        { key = "playtime", default = 0 }
+        { key = "playtime", default = 0 },
+
+        { key = "upgradeable", fields = {
+            { key = "extraSpawnTierChance", default = 0 },
+
+            { key = "spawnCooldown", default = 1.4 },
+            { key = "spawnCount", default = 1 },
+            { key = "spawnTier", default = 1 },
+
+            { key = "autoSpawnUnlocked", default = false },
+            { key = "dragMultiplier", default = 1 }
+        }}
     }},
 
     { key = "boxes", fields = {} },
 
     { key = "upgrades", fields = {
-        { key = "spawnCooldown", default = 0 },
-        { key = "spawnTier", default = 0 },
-        { key = "autoSpawn", default = 0 },
         { key = "luckyRoll", default = 0 },
+
+        { key = "spawnCooldown", default = 0 },
         { key = "multiSpawn", default = 0 },
+        { key = "spawnTier", default = 0 },
+
+        { key = "autoSpawn", default = 0 },
         { key = "pullPower", default = 0 }
     }},
-    { key = "trinkets", fields = {}}
+    { key = "trinkets", fields = {} }
 }
 
 local DEFAULT_DATA = {
@@ -94,8 +114,8 @@ return {
         masterVolume = { min = 0, max = 1.5 },
         soundVolume = { min = 0, max = 1.5 },
         trackVolume = { min = 0, max = 1.5 },
-        contrast = { min = 0.5, max = 2 },
-        gamma = { min = 0.5, max = 2 }
+        contrast = { min = .5, max = 2 },
+        gamma = { min = .5, max = 2 }
     },
 
     COLORBLIND_MODES = {

@@ -2,7 +2,7 @@
 
 local RenderElementModule = require("code.engine.render.element")
 
-local SaveFilesModule = require("code.engine.saves.files")
+local SavesFilesModule = require("code.engine.saves.files")
 
 local SAVES_CONSTANTS = require("code.engine.saves.constants")
 
@@ -29,7 +29,7 @@ local function _getHighestTierAcrossSaves()
 	local highestTier = 0
 
 	for slot = 1, SAVES_CONSTANTS.MAX_SAVE_SLOTS do
-		local save = SaveFilesModule:ReadFile(slot)
+		local save = SavesFilesModule:ReadFile(slot)
 
 		if save and save.stats then
 			local tier = save.stats.highestBoxTier or 0
@@ -72,25 +72,24 @@ function Module:SetupHighestTierBoxes(scene)
         if box.tier > highestTier then goto continue end
 
         local boxElement = RenderElementModule.new({
-            name = "backgroundBox" .. type,
+            name = type .. "BackgroundBox",
 
             spritePath = UILayoutData.shared.backgroundBoxesPathPrefix
                 .. "box"
                 .. box.tier
                 .. ".png",
 
-            anchorX = 0,
-            anchorY = 0,
-
             x = data.x,
             y = data.y,
 
-            zIndex = CONSTANTS.Z_WORLD + box.tier
+            zIndex = CONSTANTS.Z_WORLD + data.zIndex,
+
+			shaders = data.shaders
         })
 
         table.insert(scene._elements, boxElement)
 
-        ::continue::
+        :: continue ::
     end
 end
 
@@ -205,7 +204,7 @@ function Module:SetupBackToMenuButton(scene)
 		onClick = function()
 			ScreenTransitionModule:Transition({
 				callback = function()
-					SaveFilesModule:UnloadFile(SaveFilesModule.loadedFile)
+					SavesFilesModule:UnloadFile(SavesFilesModule.loadedFile)
 					BoxesObjectModule:ClearBoxes()
 
 					UISceneHandlerModule:Switch("saveFiles")
@@ -225,9 +224,9 @@ function Module:SetupCurrencyLabels(scene)
 
 	self._updateFunctions.creditsLabelUpdateFunction = function()
 		if not creditsLabel then return end
-		if not SaveFilesModule.loadedFile then return end
+		if not SavesFilesModule.loadedFile then return end
 
-		local credits = SaveFilesModule:Get("currencies.credits")
+		local credits = SavesFilesModule:Get("currencies.credits")
 		creditsLabel.text = string.formatNumber(credits) .. " C$"
 	end
 end
@@ -240,11 +239,10 @@ function Module:SetupSessionPlaytimeLabel(scene)
 
 	self._updateFunctions.sessionPlaytimeLabelUpdateFunction = function()
 		if not sessionPlaytimeLabel then return end
-		if not SaveFilesModule.loadedFile then return end
+		if not SavesFilesModule.loadedFile then return end
 
 		sessionPlaytimeLabel.text = string.formatTime(
-				SaveFilesModule:Get("stats.playtime")
-				- SaveFilesModule:Get("stats.playtimeAtSessionStart")
+				SavesFilesModule:Get("stats.playtime") - SavesFilesModule.playtimeAtSessionStart
 			)
 	end
 end

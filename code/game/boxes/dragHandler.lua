@@ -13,7 +13,7 @@ Module._wasMouseDown = false
 Module.draggedBox = nil
 
 -- Alpha to restore to a box once it's released.
-local lastDraggedBoxAlpha = 0
+local _lastDraggedBoxAlpha = 0
 
 -- Returns the topmost draggable box under (x, y), or nil.
 local function _findDraggableBoxAt(boxesArray, x, y)
@@ -51,7 +51,11 @@ function Module:_StartDrag(box, mouseX, mouseY)
 	self.draggedBox = box
 	self.draggedBox.dragging = true
 
-	lastDraggedBoxAlpha = box.element.color.alpha
+	-- Preserve the exact point where the box was grabbed.
+	box.dragOffsetX = mouseX - box.element.x
+	box.dragOffsetY = mouseY - box.element.y
+
+	_lastDraggedBoxAlpha = box.element.color.alpha
 	box.element.color.alpha = CONSTANTS.DRAGGED_BOX_ALPHA
 
 	-- Bring the dragged box above everything else.
@@ -66,7 +70,7 @@ function Module:_EndDrag()
 
 	SignalHandlerModule.Get("game.boxes.dragended"):Fire(box)
 
-	box.element.color.alpha = lastDraggedBoxAlpha
+	box.element.color.alpha = _lastDraggedBoxAlpha
 	box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 1)
 	box.dragging = false
 
@@ -94,15 +98,14 @@ function Module:Update(deltaTime)
 	end
 
 	if self.draggedBox then
-		UICursorModule:UpdateDragging(self.draggedBox.element, deltaTime)
-	else
-		-- Show a "grabable" cursor when hovering a draggable box.
-		local hovering = _isHoveringDraggableBox(boxesArray, mouseX, mouseY)
+        UICursorModule:UpdateDragging(self.draggedBox.element, deltaTime)
+    else
+        local hovering = _isHoveringDraggableBox(boxesArray, mouseX, mouseY)
 
-		if hovering then
-			UICursorModule:SetHovering("grabable")
-		end
-	end
+        if hovering then
+            UICursorModule:SetHovering("grabable")
+        end
+    end
 
 	self._wasMouseDown = mouseDown
 end

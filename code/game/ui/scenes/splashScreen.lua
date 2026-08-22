@@ -9,6 +9,7 @@ local MusicHandlerModule = require("code.game.musicHandler")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
+local UICursorModule = require("code.game.ui.cursor")
 
 local UISharedFunctions = require("code.game.ui.shared")
 
@@ -25,8 +26,9 @@ local logoTimer = 1
 local transitionStarted = false
 local logoShown = false
 
-local logoFlipSpeed = 0.05
+local logoFlipSpeed = .05
 local logoFlipTimer = 0
+local cursorToggleState = false
 
 local splashLogo1
 local splashLogo2
@@ -39,6 +41,8 @@ function Module:Clean()
     for _, object in pairs(self._objects) do
         object:Remove()
     end
+
+    UICursorModule:ClearSpriteOverride()
 
     self._elements = {}
     self._objects = {}
@@ -79,11 +83,16 @@ end
 function Module:Init()
     MusicHandlerModule:StopTrack(MusicHandlerModule.playingTrack)
 
+    UICursorModule:ClearSpriteOverride()
+    UICursorModule:SetSprite()
+
     transitionTimer = 2
     logoTimer = .5
 
     transitionStarted = false
     logoShown = false
+
+    cursorToggleState = false
 
     local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
     logoFlipTimer = (animationsEnabled and 0 or 999)
@@ -97,17 +106,23 @@ function Module:Update(deltaTime)
             logoShown = true
             setupSplashScreenLogo(self)
         end
-
-        return
     end
 
     logoFlipTimer = logoFlipTimer - deltaTime
 
     if logoFlipTimer <= 0 then
         logoFlipTimer = logoFlipSpeed
+        cursorToggleState = not cursorToggleState
 
-        splashLogo1.render = not splashLogo1.render
-        splashLogo2.render = not splashLogo2.render
+        if splashLogo1 and splashLogo2 then
+            splashLogo1.render = not splashLogo1.render
+            splashLogo2.render = not splashLogo2.render
+        end
+
+        if SettingsModule:Get("graphics.cursorAnimationsEnabled") then
+            local targetCursorSprite = cursorToggleState and "splashscreen_cursor_1" or "splashscreen_cursor_2"
+            UICursorModule:SetSpriteOverride(targetCursorSprite)
+        end
     end
 
     if not transitionStarted then

@@ -18,7 +18,7 @@ function Module:Load(name, path)
 end
 
 function Module:LoadAll()
-    for _, fileName in ipairs(love.filesystem.getDirectoryItems(SHADER_DIRECTORY)) do
+    for _, fileName in pairs(love.filesystem.getDirectoryItems(SHADER_DIRECTORY)) do
         if fileName:sub(-5) == ".glsl" then
             self:Load(fileName:sub(1, -6), SHADER_DIRECTORY .. "/" .. fileName)
         end

@@ -4,7 +4,7 @@ local cosmetic = {
 	-- Special
     ["goldenGerald"] = {
 		spritePath = "assets/sprites/boxes/goldenGerald.png",
-		scale = 0.7,
+		scale = .7,
 
 		mergeSoundData = { soundPath = "assets/sounds/merge/default.wav" },
 
@@ -19,28 +19,28 @@ local cosmetic = {
 	-- Normal
 	["gerald"] = {
 		spritePath = "assets/sprites/boxes/box1.png",
-		scale = 0.7,
+		scale = .7,
 
 		mergeSoundData = { soundPath = "assets/sounds/merge/default.wav" },
 	},
 
 	["jimbo"] = {
 		spritePath = "assets/sprites/boxes/box2.png",
-		scale = 0.75,
+		scale = .75,
 
 		mergeSoundData = { soundPath = "assets/sounds/merge/default.wav" },
 	},
 
 	["glumbo"] = {
 		spritePath = "assets/sprites/boxes/box3.png",
-		scale = 0.8,
+		scale = .8,
 
 		mergeSoundData = { soundPath = "assets/sounds/merge/default.wav" },
 	},
 
 	["jeremy"] = {
 		spritePath = "assets/sprites/boxes/box4.png",
-		scale = 0.9,
+		scale = .9,
 
 		mergeSoundData = { soundPath = "assets/sounds/merge/default.wav" },
 	},
@@ -84,7 +84,7 @@ local cosmetic = {
 	},
 
 	["frigidWendyhot"] = {
-		spritePath = "assets/sprites/boxes/box10.png",
+		spritePath = "assets/sprites/boxes/box1.png",
 		scale = 1.5,
 
 		screenFlashFadeDuration = 1.2,
@@ -180,10 +180,10 @@ local cosmetic = {
 	},
 
 	["luckrollBox"] = {
-		spritePath = "assets/sprites/boxes/box20.png",
+		spritePath = "assets/sprites/boxes/box2.png",
 		scale = 2.4,
 
-		mergeSoundData = { soundPath = "assets/sounds/merge/box20.wav" },
+		mergeSoundData = { soundPath = "assets/sounds/merge/box2.wav" },
 	},
 
 	["mellowBox"] = {

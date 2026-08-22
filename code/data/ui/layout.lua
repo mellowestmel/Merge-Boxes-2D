@@ -12,8 +12,8 @@ return {
         logoPrimaryOffsetY = 225,
         logoSecondaryOffsetY = 100,
 
-        logoPrimaryScale = 0.5,
-        logoSecondaryScale = 0.35,
+        logoPrimaryScale = .5,
+        logoSecondaryScale = .35,
     },
 
     shared = {
@@ -42,31 +42,44 @@ return {
 
         backgroundBoxesPathPrefix = "assets/sprites/ui/background_boxes/",
         backgroundBoxes = {
-            ["gerald"] = { x = 372, y = 416 },
-            ["jimbo"] = { x = 307, y = 431 },
-            ["glumbo"] = { x = 226, y = 427 },
-            ["jeremy"] = { x = 136, y = 427 },
-            ["muncher"] = { x = 28, y = 427 },
-            ["dylan"] = { x = 242, y = 323 },
-            ["carlos"] = { x = 427, y = 339 },
-            ["goobsterGoobingtonIII"] = { x = 482, y = 368 },
-            ["mark"] = { x = 583, y = 302 },
-            ["frigidWendyhot"] = { x = 700, y = 308 },
-            ["dizzy"] = { x = 324, y = 305 },
-            ["gochged"] = { x = 0, y = 0 },
-            ["mtBox"] = { x = 616, y = 153 },
-            ["unstable"] = { x = 108, y = 226 },
-            ["transcended"] = { x = 0, y = 0 },
-            ["omnibox"] = { x = 0, y = 0 },
-            ["devoided"] = { x = 0, y = 0 },
-            ["boxOMatter"] = { x = 0, y = 0 },
-            ["greatOldGrumpyOne"] = { x = 0, y = 0 },
-            ["luckrollBox"] = { x = 0, y = 0 },
-            ["mellowBox"] = { x = 0, y = 0 },
-            ["theCollector"] = { x = 0, y = 0 },
-            ["glitcherson"] = { x = 0, y = 0 },
-            ["b24"] = { x = 0, y = 0 },
-            ["b25"] = { x = 0, y = 0 },
+            ["gerald"] = { x = 405, y = 445, zIndex = 8 },
+            ["jimbo"] = { x = 341, y = 463, zIndex = 2 },
+            ["glumbo"] = { x = 265, y = 465, zIndex = 3 },
+            ["jeremy"] = { x = 180, y = 466, zIndex = 4 },
+            ["muncher"] = { x = 74, y = 480, zIndex = 5 },
+            ["dylan"] = { x = 296, y = 368, zIndex = 6 },
+            ["carlos"] = { x = 487, y = 400, zIndex = 7 },
+            ["goobsterGoobingtonIII"] = { x = 544, y = 439, zIndex = 8 },
+            ["mark"] = { x = 643, y = 365, zIndex = 7 },
+            ["frigidWendyhot"] = { x = 768, y = 376, zIndex = 8 },
+            ["dizzy"] = { x = 388, y = 366, zIndex = 4 },
+            ["gochged"] = { x = 551, y = 345, zIndex = 1 },
+            ["mtBox"] = { x = 710, y = 279, zIndex = 1 },
+            ["unstable"] = { x = 96, y = 335, zIndex = 2 },
+            ["transcended"] = { x = 196, y = 326, zIndex = 3 },
+
+            ["omnibox"] = {
+                x = 331,
+                y = 318,
+
+                zIndex = 1,
+
+                shaders = {
+                    {
+                        name = "box16"
+                    }
+                }
+            },
+
+            ["devoided"] = { x = 660, y = 95, zIndex = 1 },
+            ["boxOMatter"] = { x = 0, y = 0, zIndex = 1 },
+            ["greatOldGrumpyOne"] = { x = 0, y = 0, zIndex = 1 },
+            ["luckrollBox"] = { x = 0, y = 0, zIndex = 1 },
+            ["mellowBox"] = { x = 0, y = 0, zIndex = 1 },
+            ["theCollector"] = { x = 0, y = 0, zIndex = 1 },
+            ["glitcherson"] = { x = 0, y = 0, zIndex = 1 },
+            ["b24"] = { x = 0, y = 0, zIndex = 1 },
+            ["b25"] = { x = 0, y = 0, zIndex = 1 },
         }
     },
 
@@ -92,8 +105,8 @@ return {
 
         spawnButtonRowOffset = 65,
 
-        autoSpawnButtonHeightScale = 0.6,
-        autoSpawnLabelScale = 0.75,
+        autoSpawnButtonHeightScale = .6,
+        autoSpawnLabelScale = .75,
     },
 
     saveFiles = {
@@ -103,7 +116,7 @@ return {
         resetButtonOffset = 10,
         templateRotation = 90,
         templateScaleX = 1.5,
-        templateSmallScale = 0.55,
+        templateSmallScale = .55,
 
         highestTierLabelOffset = 40,
         playtimeLabelOffset = 65,
@@ -116,15 +129,15 @@ return {
         },
 
         backgroundFrame = {
-            scaleX = 0.9,
-            scaleY = 0.6,
+            scaleX = .9,
+            scaleY = .6,
             offsetY = -225,
         },
 
         scrollWheel = {
-            scaleX = 0.1,
+            scaleX = .1,
         },
 
-        textOffsetRatio = 0.3
+        textOffsetRatio = .3
     },
 }

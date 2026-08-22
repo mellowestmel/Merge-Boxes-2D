@@ -5,13 +5,13 @@ local RenderUtilsModule = require("code.engine.render.utils")
 
 local SoundHandlerModule = require("code.engine.soundHandler")
 
-local SaveFilesModule = require("code.engine.saves.files")
+local SavesFilesModule = require("code.engine.saves.files")
 
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
-local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
+local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
 local BoxesObjectModule = require("code.game.boxes.object")
 local BoxFactoryModule = require("code.game.boxes.factory")
@@ -40,8 +40,6 @@ local spawnButtonLabel = nil
 local spawnButton = nil
 
 local backButtonClicked = false
-
-local autoSpawnEnabled = false
 
 -- Every shop that's accessed from a locked/unlocked button on this scene.
 -- Add a new shop here and both setup and the locked-sprite update pick it up.
@@ -81,9 +79,9 @@ function Module:Clean()
     self._elements = {}
     self._objects = {}
 
-    if not backButtonClicked then
-        SaveFilesModule:SaveFile(SaveFilesModule.loadedFile)
-    else
+    if not backButtonClicked and SavesFilesModule.loadedFile then
+        SavesFilesModule:SaveFile(SavesFilesModule.loadedFile)
+    elseif backButtonClicked then
         BoxesObjectModule:ClearBoxes()
     end
 
@@ -123,7 +121,7 @@ local function _setupBackToMenuButton(self)
 
             ScreenTransitionModule:Transition({
                 callback = function()
-                    SaveFilesModule:UnloadFile(SaveFilesModule.loadedFile)
+                    SavesFilesModule:UnloadFile(SavesFilesModule.loadedFile)
                     UISceneHandlerModule:Switch("saveFiles")
                 end
             })
@@ -174,14 +172,16 @@ local function _setupAutoSpawnButton(self)
     )
 
     local function _set()
+        local enabled = BoxFactoryModule.autoSpawnEnabled
+
         autoSpawnButtonLabel.text =
             "Auto Spawn ("
-            .. (autoSpawnEnabled and "ON" or "OFF")
+            .. (enabled and "ON" or "OFF")
             .. ")"
 
         autoSpawnButtonHitbox.color =
             RenderUtilsModule.CreateColorFromTable(
-                autoSpawnEnabled
+                enabled
                     and CONSTANTS.COLOR_GREEN
                     or CONSTANTS.COLOR_RED
             )
@@ -200,7 +200,7 @@ local function _setupAutoSpawnButton(self)
         mouseButton = 1,
 
         onClick = function()
-            autoSpawnEnabled = not autoSpawnEnabled
+            BoxFactoryModule.autoSpawnEnabled = not BoxFactoryModule.autoSpawnEnabled
             _set()
         end
     })
@@ -222,7 +222,7 @@ local function _setupShopButton(self, shopButton)
         mouseButton = 1,
 
         onClick = function()
-            if SaveFilesModule:Get("stats.highestBoxTier")
+            if SavesFilesModule:Get("stats.highestBoxTier")
                 < shopButton.requirement
             then
                 _playNotAllowedSound()
@@ -243,84 +243,47 @@ end
 local function _setupShopButtons(self)
     shopButtonHitboxes = {}
 
-    for _, shopButton in ipairs(SHOP_BUTTONS) do
+    for _, shopButton in pairs(SHOP_BUTTONS) do
         _setupShopButton(self, shopButton)
     end
 end
 
 local function _lockedImageLogic(current, requirement, originalPath)
-    if current >= requirement then
-        return RenderElementModule.imageCache[originalPath]
-    else
-        return RenderElementModule.imageCache[
-            "assets/sprites/ui/buttons/buttonlocked74x74.png"
-        ]
-    end
+    return (current >= requirement and originalPath or "assets/sprites/ui/buttons/buttonlocked74x74.png")
 end
 
 function Module:Update()
     MusicHandlerModule:Update()
     UISharedFunctions:Update()
 
-    for _, shopButton in ipairs(SHOP_BUTTONS) do
+    for _, shopButton in pairs(SHOP_BUTTONS) do
         local hitbox = shopButtonHitboxes[shopButton.key]
         if not hitbox then goto continue end
 
-        hitbox.drawable = _lockedImageLogic(
-            SaveFilesModule:Get("stats.highestBoxTier"),
+        hitbox:ChangeSprite(_lockedImageLogic(
+            SavesFilesModule:Get("stats.highestBoxTier"),
             shopButton.requirement,
             shopButton.hitboxData.spritePath
-        )
+        ))
 
         :: continue ::
     end
 
-    if spawnButtonHitbox
-        and spawnButtonLabel
-        and spawnButton
-    then
-        local cooldown = BoxFactoryModule:GetSpawnCooldown()
+    if spawnButtonHitbox and spawnButtonLabel and spawnButton then
+        local cooldown = SavesFilesModule:Get("stats.upgradeable.spawnCooldown")
         spawnButton.cooldown = cooldown
 
         local time = love.timer.getTime() - BoxFactoryModule.lastSpawned
         local timeLeft = cooldown - time
 
         local onCooldown = time <= cooldown
-
-        spawnButtonLabel.text =
-            onCooldown
-                and string.format("%.1f", timeLeft) .. "s"
-                or SceneData.spawnButtonLabel.text
-
-        if not onCooldown
-            and UpgradeHandlerModule:GetEffect("autoSpawn")
-            and autoSpawnEnabled
-        then
-            spawnButton:MousePressed(
-                spawnButtonHitbox.x,
-                spawnButtonHitbox.y,
-                1
-            )
-        end
+        spawnButtonLabel.text = (onCooldown and string.format("%.1f", timeLeft) .. "s" or SceneData.spawnButtonLabel.text)
     end
 end
 
 function Module:Init(slot)
-    --%note shitty preloading
-    if not RenderElementModule.imageCache[
-        "assets/sprites/ui/buttons/buttonlocked74x74.png"
-    ] then
-        local temp = RenderElementModule.new({
-            type = "sprite",
-            spritePath = "assets/sprites/ui/buttons/buttonlocked74x74.png"
-        })
-
-        temp:Remove()
-    end
-
     if slot then
-        SaveFilesModule:LoadFile(slot)
-        SaveFilesModule:Set("stats.playtimeAtSessionStart", SaveFilesModule:Get("stats.playtime"))
+        SavesFilesModule:LoadFile(slot)
     end
 
     BoxesObjectModule.renderBoxes = true
@@ -338,7 +301,7 @@ function Module:Init(slot)
         self
     )
 
-    if UpgradeHandlerModule:GetEffect("autoSpawn") then
+    if SavesFilesModule:Get("stats.upgradeable.autoSpawnUnlocked") then
         _setupAutoSpawnButton(self)
     end
 

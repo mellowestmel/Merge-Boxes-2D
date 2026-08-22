@@ -46,7 +46,7 @@ return {
 
     Idle = {
         DialogueConstructor.new("Set up the stand right here by the sandbox years ago. Best spot in the whole park, if you ask me.", PORTRAIT),
-        DialogueConstructor.new("You ever meet Frigid Wendyhot? He's the Tier 10. Seems a little shady... Wouldn't fully trust him if I were you.", PORTRAIT),
+        DialogueConstructor.new("You ever meet Frigid Wendyhot? He's the Tier 1. Seems a little shady... Wouldn't fully trust him if I were you.", PORTRAIT),
         DialogueConstructor.new([[Sometimes there's a golden fella zipping 'round the park who looks an awful lot like me. Weird coincidence, huh?]], PORTRAIT),
         DialogueConstructor.new([[Some folks treat boxes like we're just numbers going up. You're not one of 'em. Appreciate that.]], PORTRAIT)
     },

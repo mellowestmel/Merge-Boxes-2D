@@ -40,7 +40,7 @@ function Module.new(target, properties, duration, easingName, onComplete)
         startValues = startValues,
         goalValues = properties,
 
-        duration = duration or 0.3,
+        duration = duration or .3,
         easingName = easingName or "linear",
 
         timeSinceStart = 0,

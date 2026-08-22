@@ -7,7 +7,7 @@ local rawUpgrades = {
         id = "spawnCooldown",
 
         name = "Spawn Cooldown",
-        description = "Decrease spawn cooldown by 0.1 seconds per stack.",
+        description = "Decrease spawn cooldown by .1 seconds per stack.",
 
         maxStacks = 8,
 
@@ -16,7 +16,9 @@ local rawUpgrades = {
         end,
 
         effect = function(stacks)
-            return stacks * 0.1
+            return {
+                spawnCooldown = stacks * .1
+            }
         end
     },
 
@@ -29,12 +31,14 @@ local rawUpgrades = {
         maxStacks = 9,
 
         cost = function(stacks)
-            local exponent = 4 + stacks * 0.15
+            local exponent = 4 + stacks * .15
             return 2000 * (stacks + 1)^exponent
         end,
 
         effect = function(stacks)
-            return stacks
+            return {
+                spawnTier = stacks
+            }
         end
     },
 
@@ -51,7 +55,9 @@ local rawUpgrades = {
         end,
 
         effect = function(stacks)
-            return stacks > 0
+            return {
+                autoSpawnUnlocked = stacks > 0
+            }
         end
     },
 
@@ -68,7 +74,9 @@ local rawUpgrades = {
         end,
 
         effect = function(stacks)
-            return stacks * 0.1
+            return {
+                extraSpawnTierChance = stacks * .1
+            }
         end
     },
 
@@ -81,12 +89,14 @@ local rawUpgrades = {
         maxStacks = 6,
 
         cost = function(stacks)
-            local exponent = 3.5 + stacks * 0.3
+            local exponent = 3.5 + stacks * .3
             return 15000 * (stacks + 1)^exponent
         end,
 
         effect = function(stacks)
-            return stacks + 1
+            return {
+                spawnCount = stacks
+            }
         end
     },
 
@@ -103,9 +113,11 @@ local rawUpgrades = {
         end,
 
         effect = function(stacks)
-            return stacks
+            return {
+                dragMultiplier = stacks
+            }
         end
-    },
+    }
 }
 
 local upgrades = {}

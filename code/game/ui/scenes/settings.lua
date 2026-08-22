@@ -4,7 +4,7 @@ local RenderElementModule = require("code.engine.render.element")
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
-local SaveFilesModule = require("code.engine.saves.files")
+local SavesFilesModule = require("code.engine.saves.files")
 local SettingsModule = require("code.engine.saves.settings")
 
 local SAVES_CONSTANTS = require("code.engine.saves.constants")
@@ -339,7 +339,7 @@ end
 
 -- Formats a value as a percentage.
 local function _formatPercent(value)
-	return math.floor(value * 100 + 0.5) .. "%"
+	return math.floor(value * 100 + .5) .. "%"
 end
 
 -- Creates the buttons and value label for a stepper setting.
@@ -603,7 +603,7 @@ function Module:Init()
 	_setupCategoryScrolling(self)
 	_setupCancelButton(self)
 
-	if SaveFilesModule.loadedFile then
+	if SavesFilesModule.loadedFile then
 		UISharedFunctions:SetupSessionPlaytimeLabel(self)
 		UISharedFunctions:SetupCurrencyLabels(self)
 	end

@@ -56,7 +56,7 @@ function Module.Init()
         scaleY = 10^10,
 
         color = CONSTANTS.BASE_SCREEN_FLASH_COLOR,
-        zIndex = 50
+        zIndex = 99999
     })
 end
 

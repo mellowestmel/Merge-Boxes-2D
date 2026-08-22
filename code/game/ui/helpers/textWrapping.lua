@@ -17,7 +17,7 @@ function Module.Wrap(textElement, spriteElement, padding)
 	local lines = {}
 	local line = ""
 
-	for _, word in ipairs(words) do
+	for _, word in pairs(words) do
 		local candidate = line == ""
 			and word
 			or line .. " " .. word

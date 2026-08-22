@@ -1,4 +1,3 @@
-
 local BoxesObjectModule = require("code.game.boxes.object")
 
 local CONSTANTS = require("code.engine.saves.constants")
@@ -64,14 +63,29 @@ end
 local function _seperateLines(file)
 	local sections = {}
 
-	for section in file:gmatch("(.-)\n\n") do
-		table.insert(sections, section)
-	end
+	file = file:gsub("\r\n", "\n")
 
-	local last = file:match("([^\n].*)$")
+	local start = 1
 
-	if last then
-		table.insert(sections, last)
+	while true do
+		local separatorStart, separatorEnd =
+			file:find("\n\n", start, true)
+
+		if not separatorStart then
+			table.insert(
+				sections,
+				file:sub(start)
+			)
+
+			break
+		end
+
+		table.insert(
+			sections,
+			file:sub(start, separatorStart - 1)
+		)
+
+		start = separatorEnd + 1
 	end
 
 	return sections

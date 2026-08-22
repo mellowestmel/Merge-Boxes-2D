@@ -14,6 +14,8 @@ local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
 Module.lastSaveSlot = 1
+
+Module.playtimeAtSessionStart = 0
 Module.loadedFile = nil
 
 function Module:Get(path)
@@ -70,6 +72,7 @@ function Module:SaveFile(file)
     local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(file.slot) .. CONSTANTS.SAVE_FILE_EXTENSION
 
     love.filesystem.write(fileName, finalOutput)
+
     SignalHandlerModule.Get("engine.saves.filesaved"):Fire(file.slot, file)
 end
 
@@ -96,6 +99,8 @@ function Module:LoadFile(slot)
 
     self.lastSaveSlot = decodedFile.slot
     self.loadedFile = decodedFile
+
+    self.playtimeAtSessionStart = self:Get("stats.playtime")
 
     SignalHandlerModule.Get("engine.saves.fileloaded"):Fire(decodedFile)
     return decodedFile

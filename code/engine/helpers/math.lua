@@ -18,7 +18,7 @@ end
 -- Simple round
 function Module.round(x, place)
     local factor = 10 ^ (place or 0)
-    return math.floor(x * factor + 0.5) / factor
+    return math.floor(x * factor + .5) / factor
 end
 
 -- Get sign

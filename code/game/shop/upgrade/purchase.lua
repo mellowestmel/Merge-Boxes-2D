@@ -4,7 +4,7 @@
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
 local TransactionModule = require("code.game.shop.transaction")
-local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
+local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
 local Module = {}
 

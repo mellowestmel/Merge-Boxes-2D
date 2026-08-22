@@ -1,7 +1,7 @@
 -- ~/code/game/ui/scenes/saveFiles.lua
 
 local SAVES_CONSTANTS = require("code.engine.saves.constants")
-local SaveFilesModule = require("code.engine.saves.files")
+local SavesFilesModule = require("code.engine.saves.files")
 
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
@@ -53,14 +53,13 @@ local function _startGame(slot)
 end
 
 local function _setupSavePlaytime(self, backgroundElement, save)
+    local playtime = (save.stats and save.stats.playtime) or 0
     local templateSavePlaytime = UISharedFunctions:CreateElement(
         SceneData.templateSavePlaytime,
         self
     )
 
-    templateSavePlaytime.text =
-        string.formatTime((save.stats and save.stats.playtime) or 0)
-
+    templateSavePlaytime.text = string.formatTime(playtime)
     templateSavePlaytime.x = backgroundElement.x
 end
 
@@ -181,7 +180,7 @@ local function _setupSaveFileResetButton(self, backgroundElement, slot)
 
             ScreenTransitionModule:Transition({
                 callback = function()
-                    SaveFilesModule:DeleteFile(slot)
+                    SavesFilesModule:DeleteFile(slot)
                     UISceneHandlerModule:Switch("saveFiles")
                 end,
 
@@ -203,7 +202,7 @@ local function _setupSaveFileButtons(self, backgroundElement, slot)
 end
 
 local function _setupSaveFileBackgrounds(self)
-    local saves = SaveFilesModule:GetFiles()
+    local saves = SavesFilesModule:GetFiles()
     local maxSlots = SAVES_CONSTANTS.MAX_SAVE_SLOTS
 
     local slotBackgrounds = {}
@@ -240,7 +239,7 @@ local function _setupSaveFileBackgrounds(self)
         templateSaveFileLabel.x = templateSaveFileBackground.x
         templateSaveFileLabel.text = "Slot " .. tostring(index)
 
-        local fileExists = SaveFilesModule:ReadFile(index) ~= nil
+        local fileExists = SavesFilesModule:ReadFile(index) ~= nil
 
         if fileExists then
             _setupSaveFileButtons(

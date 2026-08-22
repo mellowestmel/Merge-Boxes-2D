@@ -1,6 +1,6 @@
 -- ~/code/data/dialogue/frigidWendyHot.lua
 
-local PORTRAIT = "assets/sprites/boxes/box10.png"
+local PORTRAIT = "assets/sprites/boxes/box1.png"
 
 local DialogueConstructor = require("code.data.constructors.dialogueConstructor")
 

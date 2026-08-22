@@ -24,8 +24,8 @@ vec4 effect(
         localPos.x * sine + localPos.y * cosine
     );
 
-    number halfWidth = elementSize.x * 0.5;
-    number halfHeight = elementSize.y * 0.5;
+    number halfWidth = elementSize.x * .5;
+    number halfHeight = elementSize.y * .5;
 
     bool insideReflection =
         abs(rotatedPos.x) <= halfWidth &&

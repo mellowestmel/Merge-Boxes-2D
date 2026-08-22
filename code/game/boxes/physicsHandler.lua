@@ -2,7 +2,7 @@
 
 local Module = {}
 
-local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
+local SavesFilesModule = require("code.engine.saves.files")
 
 local RenderUtilsModule = require("code.engine.render.utils")
 local math = require("code.engine.helpers.math")
@@ -21,12 +21,16 @@ end
 
 local function _applyFriction(box, deltaTime)
     local fpsFactor = deltaTime * FPS_SCALE
-    local weightFactor = _getWeightFactor(box)
+    local friction = CONSTANTS.FRICTION
 
-    local friction = CONSTANTS.FRICTION * weightFactor
+    local damping = math.max(0, 1 - friction * fpsFactor)
 
-    box.velocityX = box.velocityX * (1 - friction * fpsFactor)
-    box.velocityY = box.velocityY * (1 - friction * fpsFactor)
+    if box.data.weight < 0 then
+        damping = 1 / damping
+    end
+
+    box.velocityX = box.velocityX * damping
+    box.velocityY = box.velocityY * damping
 end
 
 local function _edgeBounceX(box)
@@ -56,27 +60,26 @@ local function _edgeBounceY(box)
 end
 
 local function _dragPhysics(box)
-    if box.dragging then
-        local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
+    if not box.dragging then return end
 
-        mouseY = math.clamp(mouseY, 0, CONSTANTS.AREA_HEIGHT)
-        mouseX = math.clamp(mouseX, 0, CONSTANTS.AREA_WIDTH)
+    local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
 
-        local pullPower = UpgradeHandlerModule:GetEffect("pullPower")
-        local weightFactor = math.max(math.abs(_getWeightFactor(box)), .01)
+    mouseY = math.clamp(mouseY, 0, CONSTANTS.AREA_HEIGHT)
+    mouseX = math.clamp(mouseX, 0, CONSTANTS.AREA_WIDTH)
 
-        local currentMultiplier = CONSTANTS.DRAG_VELOCITY_MULTIPLIER * (1 + pullPower)
+    local dragMultiplier = SavesFilesModule:Get("stats.upgradeable.dragMultiplier")
+    local weightFactor = _getWeightFactor(box)
 
-        -- Calculate the raw desired velocity
-        local targetVelX = (mouseX - box.element.x) * currentMultiplier / weightFactor
-        local targetVelY = (mouseY - box.element.y) * currentMultiplier / weightFactor
+    local currentMultiplier = CONSTANTS.DRAG_VELOCITY_MULTIPLIER * dragMultiplier
 
-        -- Clamp it to a maximum speed to prevent jittering
-        local maxSpeed = CONSTANTS.MAX_DRAG_VELOCITY
+    local targetX = mouseX - box.dragOffsetX
+    local targetY = mouseY - box.dragOffsetY
 
-        box.velocityX = math.clamp(targetVelX, -maxSpeed, maxSpeed)
-        box.velocityY = math.clamp(targetVelY, -maxSpeed, maxSpeed)
-    end
+    local targetVelocityX = (targetX - box.element.x) * currentMultiplier / weightFactor
+    local targetVelocityY = (targetY - box.element.y) * currentMultiplier / weightFactor
+
+    box.velocityX = targetVelocityX
+    box.velocityY = targetVelocityY
 end
 
 local function _changePosition(box, deltaTime)
@@ -88,13 +91,24 @@ end
 
 local function _rotationHandler(box)
     if box.dragging then
-        local targetRotation = box.velocityX * CONSTANTS.DRAG_ROTATION_MULTIPLIER
-        targetRotation = math.max(-CONSTANTS.DRAGGING_MAX_TILT, math.min(CONSTANTS.DRAGGING_MAX_TILT, targetRotation))
+        local width = box.element:GetWidth()
+        local height = box.element:GetHeight()
+
+        local offsetX = math.clamp(box.dragOffsetX / (width * .5), -1, 1)
+        local offsetY = math.clamp(box.dragOffsetY / (height * .5), -1, 1)
+
+        local horizontalRotation = box.velocityX * CONSTANTS.DRAG_ROTATION_MULTIPLIER * -offsetY
+        local verticalRotation = box.velocityY * CONSTANTS.DRAG_ROTATION_MULTIPLIER * offsetX
+
+        local targetRotation = horizontalRotation + verticalRotation
+        targetRotation = math.clamp(targetRotation, -CONSTANTS.DRAGGING_MAX_TILT, CONSTANTS.DRAGGING_MAX_TILT)
 
         box.element.rotation = box.element.rotation + (targetRotation - box.element.rotation) * CONSTANTS.BASE_DRAGGING_TILT_SPEED
     else
         local velocity = (box.velocityX + box.velocityY) / 2
-        box.element.rotation = box.element.rotation + velocity / CONSTANTS.FREE_ROTATION_VELOCITY_DIVISOR
+
+        box.element.rotation = box.element.rotation
+            + velocity / CONSTANTS.FREE_ROTATION_VELOCITY_DIVISOR
     end
 end
 

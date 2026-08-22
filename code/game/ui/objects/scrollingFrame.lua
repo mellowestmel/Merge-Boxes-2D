@@ -117,18 +117,18 @@ end
 
 -- Puts the cursor into the grabbing state at the drag's starting point.
 local function _startDrag(self, x, y)
-	self._dragStartY = y
-	self._initialOffsetOnDrag = self.scrollOffset
+    self._dragStartY = y
+    self._initialOffsetOnDrag = self.scrollOffset
 
-	self._dragCursorElement.x = x
-	self._dragCursorElement.y = y
+    self._dragCursorElement.x = x
+    self._dragCursorElement.y = y
 
-	UICursorModule:SetDragging(true, self._dragCursorElement, x, y)
+    UICursorModule:SetDragging(true, self._dragCursorElement, x, y)
 end
 
 -- Restores the cursor once dragging stops.
 local function _stopDrag(self)
-	UICursorModule:SetDragging(false)
+    UICursorModule:SetDragging(false)
 end
 
 -- Checks whether any child element is under (x, y).

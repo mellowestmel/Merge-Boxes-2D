@@ -130,7 +130,7 @@ function Module.new(data)
 
 		elements = data.elements or {},
 
-		cooldown = data.cooldown or 0.25,
+		cooldown = data.cooldown or .25,
 		lastUsed = -math.huge,
 
 		playClickSound = data.playClickSound ~= false,
@@ -142,10 +142,10 @@ function Module.new(data)
 
 		hoveringCursor = data.hoveringCursor or "pointer",
 
-		_clickScale = data.clickScale or 0.1,
-		_hoverScale = data.hoverScale or 0.05,
+		_clickScale = data.clickScale or .1,
+		_hoverScale = data.hoverScale or .05,
 
-		_scaleSpeed = data.scaleSpeed or 0.5,
+		_scaleSpeed = data.scaleSpeed or .5,
 
 		_isHovered = false
 	}, Button)
@@ -162,13 +162,13 @@ function Module:MousePressed(x, y, mouseButton)
 end
 
 function Module:Update(deltaTime)
-	for _, button in pairs(self._buttons) do
-		button:Update(deltaTime)
+    for _, button in pairs(self._buttons) do
+        button:Update(deltaTime)
 
-		if button._isHovered and button.hitboxElement.render then
-			UICursorModule:SetHovering(button.hoveringCursor)
-		end
-	end
+        if button._isHovered and button.hitboxElement.render then
+            UICursorModule:SetHovering(button.hoveringCursor)
+        end
+    end
 end
 
 return Module

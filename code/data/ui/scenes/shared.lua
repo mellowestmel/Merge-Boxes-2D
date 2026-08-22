@@ -143,15 +143,13 @@ return {
         type = "sprite",
 
         anchorX = 0,
-        anchorY = 1,
+        anchorY = 0,
 
-        x = UILayoutData.shared.dialogue.portraitX,
-        y = UILayoutData.shared.dialogue.portraitY,
+        x = 0,
+        y = RESOLUTION_HEIGHT,
 
-        scaleX = CONSTANTS.SPRITE_LARGE_SCALE,
-        scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
-
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
+        scaleX = CONSTANTS.SPRITE_HUGE_SCALE,
+        scaleY = CONSTANTS.SPRITE_HUGE_SCALE,
 
         zIndex = CONSTANTS.Z_UI_BACKGROUND,
     },

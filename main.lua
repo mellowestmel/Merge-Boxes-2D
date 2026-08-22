@@ -8,8 +8,9 @@ local TweenHandlerModule = require("code.engine.tweenHandler")
 local SoundHandlerModule = require("code.engine.soundHandler")
 
 local SettingsModule = require("code.engine.saves.settings")
-local SaveFilesModule = require("code.engine.saves.files")
+local SavesFilesModule = require("code.engine.saves.files")
 
+local UpgradesHandlerModule = require("code.game.upgradeHandler")
 local MusicHandlerModule = require("code.game.musicHandler")
 
 local BoxHandlerModule = require("code.game.boxes.handler")
@@ -51,7 +52,7 @@ SignalHandlerModule.Get("love.load"):Connect(function()
     math.randomseed(os.time())
     math.random()
 
-    SaveFilesModule.Init()
+    SavesFilesModule.Init()
     SettingsModule.Init()
 
     RenderHandlerModule.Init()
@@ -61,6 +62,8 @@ SignalHandlerModule.Get("love.load"):Connect(function()
 
     SoundHandlerModule.Init()
     MusicHandlerModule.Init()
+
+    UpgradesHandlerModule.Init()
 
     VFXHandlerModule.Init()
     UIHandlerModule.Init()

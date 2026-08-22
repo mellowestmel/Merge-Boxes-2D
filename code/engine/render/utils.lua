@@ -4,7 +4,7 @@ local math = require("code.engine.helpers.math")
 
 local Module = {}
 
---- Normalizes RGBA values (0-255 -> 0.0-1.0).
+--- Normalizes RGBA values (0-255 -> .0-1.0).
 function Module.CreateColor(r, g, b, alpha)
     return {
         r = (r or 255) / 255,

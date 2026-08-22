@@ -7,7 +7,7 @@ local SoundHandlerModule = require("code.engine.soundHandler")
 local string = require("code.engine.helpers.string")
 
 local MusicHandlerModule = require("code.game.musicHandler")
-local UpgradeHandlerModule = require("code.game.shop.upgrade.handler")
+local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
 local PurchaseUpgradeHandlerModule = require("code.game.shop.upgrade.purchase")
 

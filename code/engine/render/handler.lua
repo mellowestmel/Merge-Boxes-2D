@@ -66,7 +66,7 @@ function Module:Draw()
 	love.graphics.setShader()
 	love.graphics.setScissor()
 
-	for _, element in ipairs(self._sortedCache) do
+	for _, element in pairs(self._sortedCache) do
 		element:Draw()
 	end
 

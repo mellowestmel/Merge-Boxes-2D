@@ -30,7 +30,7 @@ return {
 
         color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
 
-        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+        zIndex = CONSTANTS.Z_UI_BACKGROUND + .1,
     },
 
     upgradesFrameScrollWheel = {
@@ -53,7 +53,7 @@ return {
 
         type = "sprite",
 
-        scaleX = 0.9,
+        scaleX = .9,
 
         color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
 

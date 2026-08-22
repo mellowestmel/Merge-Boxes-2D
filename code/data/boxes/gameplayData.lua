@@ -25,7 +25,7 @@ gameplay = {
     ["transcended"] = { tier = 15, mergeReward = 75000, weight = 1400, next = "omnibox" },
 
     ["omnibox"] = { tier = 16, mergeReward = 150000, weight = 1800, next = "devoided" },
-    ["devoided"] = { tier = 17, mergeReward = 300000, weight = -60, next = "boxOMatter" },
+    ["devoided"] = { tier = 17, mergeReward = 300000, weight = -2400, next = "boxOMatter" },
     ["boxOMatter"] = { tier = 18, mergeReward = 600000, weight = 3000, next = "greatOldGrumpyOne" },
     ["greatOldGrumpyOne"] = { tier = 19, mergeReward = 1200000, weight = 3900, next = "luckrollBox" },
     ["luckrollBox"] = { tier = 20, mergeReward = 2500000, weight = 5000, next = "mellowBox" },

@@ -1,5 +1,3 @@
--- ~/code/engine/saves/encode.lua
-
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
@@ -26,7 +24,7 @@ end
 
 local function _addStringNewLine(...)
     local parts = {...}
-    return table.concat(parts, "\n")
+    return table.concat(parts, "\n\n")
 end
 
 local function _addString(...)
@@ -61,27 +59,27 @@ function Module:EncodeBoxes(boxes)
         :: continue ::
     end
 
-    return output
+    return output:gsub("\n$", "")
 end
 
 function Module:EncodeSimple(section)
     if not section then return "" end
 
     local lines = {}
+
     for key, value in pairs(section) do
         table.insert(lines, key .. " " .. tostring(value))
     end
 
-    return table.concat(lines, "\n") .. "\n"
+    return table.concat(lines, "\n")
 end
 
-
 function Module:EncodeVersion(version)
-    return "version " .. version .. "\n"
+    return "version " .. version
 end
 
 function Module:EncodeSlot(slot)
-    return "slot " .. slot .. "\n"
+    return "slot " .. slot
 end
 
 function Module:EncodeSettings(file)
