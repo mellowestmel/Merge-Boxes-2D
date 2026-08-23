@@ -183,7 +183,7 @@ local cosmetic = {
 		spritePath = "assets/sprites/boxes/box20.png",
 		scale = 2.4,
 
-		mergeSoundData = { soundPath = "assets/sounds/merge/box2.wav" },
+		mergeSoundData = { soundPath = "assets/sounds/merge/box20.wav" },
 	},
 
 	["mellowBox"] = {

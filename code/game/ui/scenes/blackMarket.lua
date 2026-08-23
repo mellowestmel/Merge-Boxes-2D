@@ -1,11 +1,7 @@
 -- ~/code/game/ui/scenes/blackMarket.lua
 
-local table = require("code.engine.helpers.table")
-
 local MusicHandlerModule = require("code.game.musicHandler")
-
 local BoxesObjectModule = require("code.game.boxes.object")
-
 local UISharedFunctions = require("code.game.ui.shared")
 
 local SceneData = require("code.data.ui.scenes.blackMarket")

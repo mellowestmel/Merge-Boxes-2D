@@ -64,9 +64,6 @@ local function _dragPhysics(box)
 
     local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
 
-    mouseY = math.clamp(mouseY, 0, CONSTANTS.AREA_HEIGHT)
-    mouseX = math.clamp(mouseX, 0, CONSTANTS.AREA_WIDTH)
-
     local dragMultiplier = SavesFilesModule:Get("stats.upgradeable.dragMultiplier")
     local weightFactor = _getWeightFactor(box)
 

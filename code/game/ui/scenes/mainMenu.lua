@@ -17,7 +17,6 @@ local SceneData = require("code.data.ui.scenes.mainMenu")
 local Module = {}
 Module._elements = {}
 Module._objects = {}
-Module._hideableElements = {}
 
 Module.name = "mainMenu"
 
@@ -33,7 +32,6 @@ function Module:Clean()
         object:Remove()
     end
 
-    self._hideableElements = {}
     self._elements = {}
     self._objects = {}
 
@@ -62,9 +60,6 @@ local function _setupPlayGameButton(self)
         SceneData.playGameButtonLabel,
         self
     )
-
-    table.insert(self._hideableElements, playGameButtonHitbox)
-    table.insert(self._hideableElements, playGameButtonLabel)
 
     local playGameButton = UIButtonObjectModule.new({
         elements = {
@@ -99,9 +94,6 @@ local function _setupQuitButton(self)
         self
     )
 
-    table.insert(self._hideableElements, quitButtonHitbox)
-    table.insert(self._hideableElements, quitButtonLabel)
-
     local quitButton = UIButtonObjectModule.new({
         elements = {
             quitButtonHitbox,
@@ -124,59 +116,35 @@ local function _setupQuitButton(self)
     table.insert(self._objects, quitButton)
 end
 
-local function _setupVisibilityToggle(self)
-    local visibilityToggle = true
-
-    local visibilityToggleButton = UIButtonObjectModule.new({
-        elements = {
-            logo
-        },
-
-        hitboxElement = logo,
-
-        mouseButton = 1,
-
-        onClick = function()
-            visibilityToggle = not visibilityToggle
-
-            for _, element in pairs(self._hideableElements) do
-                element.render = visibilityToggle
-            end
-        end
-    })
-
-    table.insert(self._objects, visibilityToggleButton)
-end
-
 function Module:Update()
     local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
     if not animationsEnabled then return end
 
-    local rotation = math.sin(love.timer.getTime()) * 2
+    local animation = math.sin(love.timer.getTime())
 
     if logo then
-        logo.rotation = rotation
+        logo.offsetY = animation * 5
     end
 
     if logo2 then
-        logo2.rotation = -rotation
+        logo2.offsetY = animation * 8
     end
 end
 
 function Module:Init()
+    MusicHandlerModule:PlayTrack("mainMenu")
+
     UISharedFunctions:SetupHighestTierBoxes(self)
     UISharedFunctions:SetupSettingsButton(self)
     UISharedFunctions:SetupDiscordButton(self)
 
     UISharedFunctions:SetupBackground(self)
 
-    MusicHandlerModule:PlayTrack("mainMenu")
-
     _setupPlayGameButton(self)
     _setupQuitButton(self)
     _setupLogo(self)
 
-    _setupVisibilityToggle(self)
+    --UISharedFunctions:SetupVisibilityToggle(self)
 end
 
 return Module

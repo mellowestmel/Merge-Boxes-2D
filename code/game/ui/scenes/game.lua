@@ -1,6 +1,5 @@
 -- ~/code/game/ui/scenes/game.lua
 
-local RenderElementModule = require("code.engine.render.element")
 local RenderUtilsModule = require("code.engine.render.utils")
 
 local SoundHandlerModule = require("code.engine.soundHandler")
@@ -11,8 +10,6 @@ local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
-local UpgradeHandlerModule = require("code.game.upgradeHandler")
-
 local BoxesObjectModule = require("code.game.boxes.object")
 local BoxFactoryModule = require("code.game.boxes.factory")
 
@@ -149,7 +146,6 @@ local function _setupSpawnButton(self)
         },
 
         hitboxElement = spawnButtonHitbox,
-
         mouseButton = 1,
 
         onClick = function()
@@ -196,7 +192,6 @@ local function _setupAutoSpawnButton(self)
         },
 
         hitboxElement = autoSpawnButtonHitbox,
-
         mouseButton = 1,
 
         onClick = function()

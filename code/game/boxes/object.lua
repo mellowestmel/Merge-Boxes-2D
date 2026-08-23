@@ -95,6 +95,10 @@ function Module.new(data)
         items = {},
 
         dragging = false,
+
+        dragOffsetX = 0,
+        dragOffsetY = 0,
+
         merging = false
     }, Box)
 

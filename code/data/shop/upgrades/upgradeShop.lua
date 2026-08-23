@@ -31,7 +31,7 @@ local rawUpgrades = {
         maxStacks = 9,
 
         cost = function(stacks)
-            local exponent = 4 + stacks * .15
+            local exponent = 4 + stacks * .1
             return 2000 * (stacks + 1)^exponent
         end,
 

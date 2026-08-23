@@ -23,6 +23,5 @@ function love.conf(config)
     config.window.title = "Merge Boxes! 2D"
 
     config.window.fullscreentype = "desktop"
-
     config.window.resizable = true
 end

@@ -1,8 +1,6 @@
 -- ~/code/game/ui/scenes/splashScreen.lua
 
 local SoundHandlerModule = require("code.engine.soundHandler")
-local table = require("code.engine.helpers.table")
-
 local SettingsModule = require("code.engine.saves.settings")
 
 local MusicHandlerModule = require("code.game.musicHandler")
