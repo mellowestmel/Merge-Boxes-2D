@@ -307,7 +307,7 @@ local function _adjustNumericSetting(category, settingKey, direction)
 	local oldValue = SettingsModule.loadedFile[category][settingKey]
 
 	local newValue = _clampNumberSetting(
-		oldValue + direction * COMMON_VALUES.SETTINGS.NUMBER_SETTING_CHANGE_INCREMENT,
+		oldValue + direction * CONSTANTS.UI.SETTINGS.NUMBER_SETTING_CHANGE_INCREMENT,
 		range
 	)
 
