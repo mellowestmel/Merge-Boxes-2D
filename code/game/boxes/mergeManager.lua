@@ -8,13 +8,12 @@ local SoundHandlerModule = require("code.engine.soundHandler")
 local TweenHandlerModule = require("code.engine.tweenHandler")
 
 local SavesFilesModule = require("code.engine.saves.files")
-local SettingsModule = require("code.engine.saves.settings")
 
 local easing = require("code.engine.helpers.easing")
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
-local CONSTANTS = require("code.game.boxes.constants")
+local CONSTANTS = require("code.data.constants")
 local BoxesObjectModule = require("code.game.boxes.object")
 
 local ScreenFlashModule = require("code.game.vfx.screenFlash")
@@ -75,17 +74,17 @@ local BASE_SCALE, MAX_SCALE = _calculateScaleRange()
 local function _getMergeRange(boxA, boxB)
     local averageScale = (boxA.element.scaleX + boxB.element.scaleX) / 2
 
-    return CONSTANTS.BASE_MERGE_RANGE * (averageScale / BASE_SCALE)
+    return CONSTANTS.BOX.MERGE.BASE_RANGE * (averageScale / BASE_SCALE)
 end
 
-local maxMergeQueryRadius = CONSTANTS.BASE_MERGE_RANGE * ((MAX_SCALE * CONSTANTS.SPAWN_SCALE_MULTIPLIER) / BASE_SCALE)
+local maxMergeQueryRadius = CONSTANTS.BOX.MERGE.BASE_RANGE * ((MAX_SCALE * CONSTANTS.BOX.ANIMATION.SPAWN_SCALE_MULTIPLIER) / BASE_SCALE)
 local function _createQuadtree()
     return QuadtreeModule.new({
         x = 0,
         y = 0,
 
-        width = CONSTANTS.AREA_WIDTH,
-        height = CONSTANTS.AREA_HEIGHT
+        width = CONSTANTS.BOX.AREA.WIDTH,
+        height = CONSTANTS.BOX.AREA.HEIGHT
     })
 end
 
@@ -130,10 +129,10 @@ function Module:Merge(boxA, boxB)
             + boxB.velocityY ^ 2
     ) / 2
 
-    local weightDurationMultiplier = math.max(.1, 1 + averageWeight / CONSTANTS.WEIGHT_ANIM_DURATION_DIVISOR)
-    local velocityDurationMultiplier = 1 + velocityMagnitude / CONSTANTS.VELOCITY_MERGE_DURATION_FACTOR
+    local weightDurationMultiplier = math.max(.1, 1 + averageWeight / CONSTANTS.BOX.ANIMATION.WEIGHT_ANIM_DURATION_DIVISOR)
+    local velocityDurationMultiplier = 1 + velocityMagnitude / CONSTANTS.BOX..MERGE.VELOCITY_DURATION_FACTOR
 
-    local duration = (distance / CONSTANTS.BASE_MERGE_SPEED) * weightDurationMultiplier / velocityDurationMultiplier
+    local duration = (distance / CONSTANTS.BOX.BASE_MERGE_SPEED) * weightDurationMultiplier / velocityDurationMultiplier
 
     -- Make sure merge has an actual duration so it works
     duration = math.max(duration, .001)
@@ -158,8 +157,8 @@ end
 
 -- Spawns the merged box, grants rewards, and plays its merge fx.
 local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
-    local velocityX = (boxA.velocityX + boxB.velocityX) * CONSTANTS.ELASTICITY
-    local velocityY = (boxA.velocityY + boxB.velocityY) * CONSTANTS.ELASTICITY
+    local velocityX = (boxA.velocityX + boxB.velocityX) * CONSTANTS.BOX.PHYSICS.ELASTICITY
+    local velocityY = (boxA.velocityY + boxB.velocityY) * CONSTANTS.BOX.PHYSICS.ELASTICITY
 
     local scaleX, scaleY = boxA.element.scaleX, boxA.element.scaleY
 
@@ -190,7 +189,7 @@ local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
             scaleY = newBox.data.scale
         },
 
-        CONSTANTS.BASE_SCALE_TWEEN_DURATION * (1 + newBox.data.weight / CONSTANTS.WEIGHT_ANIM_DURATION_DIVISOR),
+        CONSTANTS.BOX.ANIMATION.BASE_SCALE_TWEEN_DURATION * (1 + newBox.data.weight / CONSTANTS.BOX.ANIMATION.WEIGHT_ANIM_DURATION_DIVISOR),
         "easeOutQuad"
     )
 

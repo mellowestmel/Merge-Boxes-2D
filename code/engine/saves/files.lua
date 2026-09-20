@@ -1,7 +1,7 @@
 -- ~/code/engine/saves/files.lua
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
-local CONSTANTS = require("code.engine.saves.constants")
+local CONSTANTS = require("code.data.constants")
 
 local SavesHelpersModule = require("code.engine.saves.helpers")
 local SavesDecodeModule = require("code.engine.saves.decode")
@@ -69,7 +69,7 @@ function Module:SaveFile(file)
     end
 
     local finalOutput = SavesEncodeModule:Encode(file)
-    local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(file.slot) .. CONSTANTS.SAVE_FILE_EXTENSION
+    local fileName = CONSTANTS.SAVES.SAVE_FILE_PREFIX .. tostring(file.slot) .. CONSTANTS.SAVES.SAVE_FILE_EXTENSION
 
     love.filesystem.write(fileName, finalOutput)
 
@@ -82,18 +82,18 @@ function Module:UnloadFile(file)
 end
 
 function Module:ReadFile(slot)
-    local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
+    local fileName = CONSTANTS.SAVES.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVES.SAVE_FILE_EXTENSION
     local file = love.filesystem.read(fileName)
 
     return file and SavesDecodeModule:Decode(file) or nil
 end
 
 function Module:LoadFile(slot)
-    slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
+    slot = math.clamp(slot, 1, CONSTANTS.SAVES.MAX_SAVE_SLOTS)
     local decodedFile = Module:ReadFile(slot)
 
     if not decodedFile then
-        decodedFile = table.clone(CONSTANTS.DEFAULT_DATA)
+        decodedFile = table.clone(CONSTANTS.SAVES.DEFAULT_DATA)
         decodedFile.slot = slot
     end
 
@@ -107,8 +107,8 @@ function Module:LoadFile(slot)
 end
 
 function Module:DeleteFile(slot)
-    slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
-    local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
+    slot = math.clamp(slot, 1, CONSTANTS.SAVES.MAX_SAVE_SLOTS)
+    local fileName = CONSTANTS.SAVES.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVES.SAVE_FILE_EXTENSION
 
     if love.filesystem.getInfo(fileName) then
         love.filesystem.remove(fileName)
@@ -124,7 +124,7 @@ end
 function Module:GetFiles()
     local files = {}
 
-    for slot = 1, CONSTANTS.MAX_SAVE_SLOTS do
+    for slot = 1, CONSTANTS.SAVES.MAX_SAVE_SLOTS do
         files[slot] = self:ReadFile(slot)
     end
 

@@ -1,6 +1,5 @@
 -- ~/code/game/ui/scenes/saveFiles.lua
 
-local SAVES_CONSTANTS = require("code.engine.saves.constants")
 local SavesFilesModule = require("code.engine.saves.files")
 
 local string = require("code.engine.helpers.string")
@@ -11,7 +10,7 @@ local MusicHandlerModule = require("code.game.musicHandler")
 
 local BoxesObjectModule = require("code.game.boxes.object")
 
-local CONSTANTS = require("code.game.ui.constants")
+local CONSTANTS = require("code.data.constants")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
@@ -49,7 +48,7 @@ function Module:Clean()
 end
 
 local function _startGame(slot)
-    UISceneHandlerModule:Switch("game", slot)
+    UISceneHandlerModule:Switch("boxRanch", slot)
 end
 
 local function _setupSavePlaytime(self, backgroundElement, save)
@@ -167,7 +166,7 @@ local function _setupSaveFileResetButton(self, backgroundElement, slot)
             end
 
             if (love.timer.getTime() - saveFileResetButton.lastConfirm)
-                >= CONSTANTS.RESET_BUTTON_WARN_TIME_OUT
+                >= CONSTANTS.UI.SAVES.RESET_BUTTON_WARN_TIME_OUT
             then
                 saveFileResetButtonLabel.text = "Are you sure?"
                 saveFileResetButton.lastConfirm = love.timer.getTime()
@@ -203,7 +202,7 @@ end
 
 local function _setupSaveFileBackgrounds(self)
     local saves = SavesFilesModule:GetFiles()
-    local maxSlots = SAVES_CONSTANTS.MAX_SAVE_SLOTS
+    local maxSlots = CONSTANTS.SAVES.MAX_SAVE_SLOTS
 
     local slotBackgrounds = {}
 
@@ -333,7 +332,7 @@ end
 function Module:Update()
     for _, button in pairs(self._resetButtons) do
         if (love.timer.getTime() - button.lastConfirm)
-            < CONSTANTS.RESET_BUTTON_WARN_TIME_OUT
+            < CONSTANTS.UI.SAVES.RESET_BUTTON_WARN_TIME_OUT
         then
             goto continue
         end

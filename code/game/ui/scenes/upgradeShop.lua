@@ -1,7 +1,5 @@
 -- ~/code/game/ui/scenes/upgradeShop.lua
 
-local RenderUtilsModule = require("code.engine.render.utils")
-
 local SoundHandlerModule = require("code.engine.soundHandler")
 
 local string = require("code.engine.helpers.string")
@@ -20,11 +18,11 @@ local UILayoutHelperModule = require("code.game.ui.helpers.layout")
 
 local UILayoutData = require("code.data.ui.layout")
 
-local CONSTANTS = require("code.game.ui.constants")
-local SHOP_CONSTANTS = require("code.game.shop.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
+local CONSTANTS = require("code.data.constants")
 
 local SceneData = require("code.data.ui.scenes.upgradeShop")
-local ShopID = SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.ID
+local ShopID = CONSTANTS.SHOP.UPGRADE_SHOP.ID
 
 local Module = {}
 Module._elements = {}
@@ -48,35 +46,71 @@ function Module:Clean()
     UISharedFunctions:CleanUpdates()
 end
 
-local function _setupTheBirbsWord(self)
-    local birb = UISharedFunctions:CreateElement(
-        SceneData.theBirbsWord,
+local function _setupBirdSecret(self)
+    local birdSecret = UISharedFunctions:CreateElement(
+        SceneData.birdSecret,
         self
     )
 
-    local birbButton = UIButtonObjectModule.new({
-        elements = {birb},
+    local birdButton = UIButtonObjectModule.new({
+        elements = {birdSecret},
 
-        hitboxElement = birb,
+        hitboxElement = birdSecret,
         mouseButton = 1,
 
         onClick = function()
-            local birbSound = SoundHandlerModule.new({
-                soundPath = "assets/sounds/birb.wav"
+            local birdSound = SoundHandlerModule.new({
+                soundPath = "assets/sounds/secret/chirp.wav"
             })
 
-            if birbSound then
-                birbSound:Play() birbSound:Remove()
+            if birdSound then
+                birdSound:Play() birdSound:Remove()
             end
         end
     })
 
-    table.insert(self._objects, birbButton)
+    table.insert(self._objects, birdButton)
+end
+
+local function _setupFaceSecret(self)
+    if math.random(1, 1000) ~= 1 then return end
+
+    local faceSecret = UISharedFunctions:CreateElement(
+        SceneData.faceSecret,
+        self
+    )
+
+    local faceButton = UIButtonObjectModule.new({
+        elements = {faceSecret},
+
+        hitboxElement = faceSecret,
+        mouseButton = 1,
+
+        onClick = function()
+            local clipsPath = "assets/sounds/secret/clips"
+            local files = love.filesystem.getDirectoryItems(clipsPath)
+
+            if #files == 0 then return end
+
+            local soundFile = files[math.random(1, #files)]
+
+            local faceSound = SoundHandlerModule.new({
+                soundPath = clipsPath .. "/" .. soundFile
+            })
+
+            if faceSound then
+                faceSound:Play()
+                faceSound:Remove()
+            end
+        end
+    })
+
+    table.insert(self._objects, faceButton)
 end
 
 local function _getUpgrades()
     return UpgradeHandlerModule:GetUpgradesByShop(
-        SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.ID
+        CONSTANTS.SHOP.UPGRADE_SHOP.ID
     )
 end
 
@@ -87,7 +121,7 @@ local function _createStackIndicators(
     currentStacks
 )
     local indicators = {}
-    local itemSpacing = CONSTANTS.MEDIUM_PADDING
+    local itemSpacing = COMMON_VALUES.MEDIUM_PADDING
 
     local startPositionX =
         buttonConfig.x -
@@ -107,10 +141,11 @@ local function _createStackIndicators(
 
         indicator.y = buttonConfig.indicatorY
 
-        indicator.color =
+        indicator:ChangeColor(
             (stackIndex <= currentStacks)
-            and self._yellowColor
-            or self._darkColor
+            and COMMON_VALUES.COLOR_YELLOW
+            or COMMON_VALUES.COLOR_DARK
+        )
 
         table.insert(buttonConfig.children, indicator)
         table.insert(indicators, indicator)
@@ -239,16 +274,6 @@ local function _createUpgradeButton(self, buttonConfig)
 end
 
 local function _setupUpgradesScrollingFrame(self)
-    self._yellowColor =
-        RenderUtilsModule.CreateColorFromTable(
-            CONSTANTS.COLOR_YELLOW
-        )
-
-    self._darkColor =
-        RenderUtilsModule.CreateColorFromTable(
-            CONSTANTS.COLOR_DARK
-        )
-
     local frameTrack = UISharedFunctions:CreateElement(
         SceneData.upgradesFrameBackground,
         self
@@ -264,7 +289,7 @@ local function _setupUpgradesScrollingFrame(self)
     local startPositionY =
         frameTrack.y -
         (frameTrack:GetHeight() / 2) +
-        CONSTANTS.LARGE_PADDING
+        COMMON_VALUES.LARGE_PADDING
 
     for index, upgradeId in pairs(_getUpgrades()) do
         _createUpgradeButton(self, {
@@ -275,7 +300,7 @@ local function _setupUpgradesScrollingFrame(self)
             y = UILayoutHelperModule.GetVerticalStackY(
                 startPositionY,
                 index,
-                CONSTANTS.BUTTON_VERTICAL_GAP
+                COMMON_VALUES.BUTTON_VERTICAL_GAP
             ),
 
             children = childElements
@@ -288,7 +313,7 @@ local function _setupUpgradesScrollingFrame(self)
         scrollBarElement = scrollWheel,
 
         elements = childElements,
-        padding = CONSTANTS.LARGE_PADDING
+        padding = COMMON_VALUES.LARGE_PADDING
     })
 
     table.insert(self._objects, scrollingFrame)
@@ -324,10 +349,10 @@ function Module:Update()
         for stackIndex, indicator in pairs(
             upgradeButton.indicators
         ) do
-            indicator.color =
+            indicator:ChangeColor(
                 (stackIndex <= currentStacks)
-                and self._yellowColor
-                or self._darkColor
+                and COMMON_VALUES.COLOR_YELLOW
+                or COMMON_VALUES.COLOR_DARK)
         end
     end
 end
@@ -348,7 +373,9 @@ function Module:Init()
 
     UISharedFunctions:SetupBackground(self)
 
-    _setupTheBirbsWord(self)
+    _setupBirdSecret(self)
+    _setupFaceSecret(self)
+
     _setupUpgradesScrollingFrame(self)
 end
 

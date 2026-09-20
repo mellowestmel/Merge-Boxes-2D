@@ -4,19 +4,24 @@ local math = require("code.engine.helpers.math")
 
 local Module = {}
 
---- Normalizes RGBA values (0-255 -> .0-1.0).
-function Module.CreateColor(r, g, b, alpha)
-    return {
-        r = (r or 255) / 255,
-        g = (g or 255) / 255,
-        b = (b or 255) / 255,
-        alpha = alpha or 1
-    }
-end
+-- Creates a color from a table or 4 r, g, b, a values
+function Module.CreateColor(r, g, b, a)
+    -- Accept a table: {r=, g=, b=, a=} or {r, g, b, a}
+    if type(r) == "table" then
+        local color = r
 
---- Creates RGBA color object from a 1-4 index array.
-function Module.CreateColorFromTable(color)
-    return Module.CreateColor(color[1], color[2], color[3], color[4])
+        r = color.r or color[1]
+        g = color.g or color[2]
+        b = color.b or color[3]
+        a = color.a or color[4]
+    end
+
+    return {
+        r = math.clamp(r or 255, 0, 255),
+        g = math.clamp(g or 255, 0, 255),
+        b = math.clamp(b or 255, 0, 255),
+        a = math.clamp(a or 1, 0, 1)
+    }
 end
 
 --- Calculates screen scaling and letterbox offsets to preserve virtual resolution.

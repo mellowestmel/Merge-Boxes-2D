@@ -1,7 +1,5 @@
 -- ~/code/game/ui/scenes/game.lua
 
-local RenderUtilsModule = require("code.engine.render.utils")
-
 local SoundHandlerModule = require("code.engine.soundHandler")
 
 local SavesFilesModule = require("code.engine.saves.files")
@@ -13,8 +11,8 @@ local MusicHandlerModule = require("code.game.musicHandler")
 local BoxesObjectModule = require("code.game.boxes.object")
 local BoxFactoryModule = require("code.game.boxes.factory")
 
-local SHOP_CONSTANTS = require("code.game.shop.constants")
-local CONSTANTS = require("code.game.ui.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
+local CONSTANTS = require("code.data.constants")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
@@ -25,12 +23,12 @@ local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 local ScreenFlashModule = require("code.game.vfx.screenFlash")
 
 local SharedData = require("code.data.ui.scenes.shared")
-local SceneData = require("code.data.ui.scenes.game")
+local SceneData = require("code.data.ui.scenes.boxRanch")
 
 local Module = {}
 Module._elements = {}
 Module._objects = {}
-Module.name = "game"
+Module.name = "boxRanch"
 
 local spawnButtonHitbox = nil
 local spawnButtonLabel = nil
@@ -44,19 +42,19 @@ local SHOP_BUTTONS = {
     {
         key = "upgradeShop",
         hitboxData = SceneData.upgradeShopButtonHitbox,
-        requirement = SHOP_CONSTANTS.SHOPS.UPGRADE_SHOP.UNLOCK_REQUIREMENT,
+        requirement = CONSTANTS.SHOP.UPGRADE_SHOP.UNLOCK_REQUIREMENT,
         targetScene = "upgradeShop"
     },
     {
         key = "blackMarket",
         hitboxData = SceneData.blackMarketButtonHitbox,
-        requirement = SHOP_CONSTANTS.SHOPS.BLACK_MARKET.UNLOCK_REQUIREMENT,
+        requirement = CONSTANTS.SHOP.BLACK_MARKET.UNLOCK_REQUIREMENT,
         targetScene = "blackMarket"
     },
     {
         key = "sacrifice",
         hitboxData = SceneData.sacrificeButtonHitbox,
-        requirement = SHOP_CONSTANTS.SHOPS.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT,
+        requirement = CONSTANTS.SHOP.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT,
         targetScene = "sacrificialGrounds"
     }
 }
@@ -175,12 +173,7 @@ local function _setupAutoSpawnButton(self)
             .. (enabled and "ON" or "OFF")
             .. ")"
 
-        autoSpawnButtonHitbox.color =
-            RenderUtilsModule.CreateColorFromTable(
-                enabled
-                    and CONSTANTS.COLOR_GREEN
-                    or CONSTANTS.COLOR_RED
-            )
+        autoSpawnButtonHitbox:ChangeColor(enabled and COMMON_VALUES.COLOR_GREEN or COMMON_VALUES.COLOR_RED)
     end
 
     _set()

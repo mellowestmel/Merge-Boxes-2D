@@ -1,4 +1,4 @@
--- ~/code/data/easing.lua
+-- ~/code/engine/helpers/easing.lua
 
 return {
     easeInOutQuad = function(t)

@@ -1,13 +1,13 @@
 Back to [README.md](README.md)
 
 ## Legal Notice
-This project is licensed under the MIT License.
+This project is licensed under the MIT License, except for assets explicitly covered by separate licenses or permissions.
 
-The source code and original assets created by the developer may be modified, reused, distributed, and used for personal or commercial purposes under the terms of the MIT License.
+Source code and original assets created by the developer may be modified, reused, distributed, and used for personal or commercial purposes under the MIT License.
 
-You are free to create mods, fan projects, videos, streams, reviews, and other content featuring Merge Boxes! 2D. Attribution is appreciated.
+Artwork, music, sound effects, fonts, and other assets created by contributors or obtained from third parties are not automatically covered by the MIT License. They remain under their respective licenses or permissions as specified in the Credits.
 
-Third-party assets, including artwork, audio, fonts, and music, are not covered by the MIT License unless stated otherwise. They remain under their respective licenses or permissions and are credited below.
+You are free to create mods, fan projects, videos, streams, reviews, and other content featuring Merge Boxes! 2D, subject to the applicable rights and licenses. Attribution is appreciated.
 
 ## Credits
 
@@ -17,7 +17,7 @@ Artwork © Gochged. Licensed for use in Merge Boxes! 2D.
 
 Artist: https://www.youtube.com/@gochgo
 
-### OST (Original Soundtrack)
+### Original Soundtrack
 All music was composed specifically for this game by a collaborator.
 
 The composer has granted free-to-use permission for all purposes.
@@ -66,6 +66,17 @@ Playlist: https://www.youtube.com/playlist?list=PL4SfVAqmkT2WSjVqtZ7hU-KLh6ys-MN
   Link: https://freesound.org/people/Sabacky/sounds/766070/
   License: As stated on Freesound
 
-- **birb.wav**
+- **secret/chirp.wav**
   Link: https://freesound.org/people/Luke100000/sounds/513712/
   License: As stated on Freesound
+
+- **ui/openmap.wav**
+  Link: https://freesound.org/people/Harrisando/sounds/466350/
+  License: As stated on Freesound
+
+- **ui/openinventory.wav**
+  Link: https://freesound.org/people/Rickplayer/sounds/531499/
+  License: As stated on Freesound
+
+- **all of secret/clips**
+  Created by MellowestMel

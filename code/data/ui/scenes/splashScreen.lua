@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/splashScreen.lua
 
-local CONSTANTS = require("code.game.ui.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 
 return {
     splashScreenLogo1 = {
@@ -8,10 +8,10 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
-        y = CONSTANTS.CENTER_Y,
+        x = COMMON_VALUES.CENTER_X,
+        y = COMMON_VALUES.CENTER_Y,
 
-        zIndex = CONSTANTS.Z_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_BACKGROUND,
     },
 
     splashScreenLogo2 = {
@@ -19,9 +19,9 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
-        y = CONSTANTS.CENTER_Y,
+        x = COMMON_VALUES.CENTER_X,
+        y = COMMON_VALUES.CENTER_Y,
 
-        zIndex = CONSTANTS.Z_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_BACKGROUND,
     },
 }

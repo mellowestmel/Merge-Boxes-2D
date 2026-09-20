@@ -3,7 +3,7 @@
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 local SavesFilesModule = require("code.engine.saves.files")
 
-local SAVES_CONSTANTS = require("code.engine.saves.constants")
+local CONSTANTS = require("code.data.constants")
 
 local UpgradesData = require("code.data.shop.upgrades")
 
@@ -48,7 +48,7 @@ function Module:Recount()
     local stats = {}
 
     for statName, value in pairs(
-        SAVES_CONSTANTS.DEFAULT_DATA.stats.upgradeable
+        CONSTANTS.SAVES.DEFAULT_DATA.stats.upgradeable
     ) do
         stats[statName] = value
     end

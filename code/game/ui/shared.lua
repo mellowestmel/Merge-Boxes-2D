@@ -4,8 +4,6 @@ local RenderElementModule = require("code.engine.render.element")
 
 local SavesFilesModule = require("code.engine.saves.files")
 
-local SAVES_CONSTANTS = require("code.engine.saves.constants")
-
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 
@@ -17,7 +15,9 @@ local UIButtonObjectModule = require("code.game.ui.objects.button")
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
 local UILayoutData = require("code.data.ui.layout")
-local CONSTANTS = require("code.game.ui.constants")
+
+local COMMON_VALUES = require("code.data.ui.commonValues")
+local CONSTANTS = require("code.data.constants")
 
 local SharedData = require("code.data.ui.scenes.shared")
 local BoxesData = require("code.data.boxes")
@@ -28,7 +28,7 @@ Module._updateFunctions = {}
 local function _getHighestTierAcrossSaves()
 	local highestTier = 0
 
-	for slot = 1, SAVES_CONSTANTS.MAX_SAVE_SLOTS do
+	for slot = 1, CONSTANTS.SAVES.MAX_SAVE_SLOTS do
 		local save = SavesFilesModule:ReadFile(slot)
 
 		if save and save.stats then
@@ -82,7 +82,7 @@ function Module:SetupHighestTierBoxes(scene)
             x = data.x,
             y = data.y,
 
-            zIndex = CONSTANTS.Z_WORLD + data.zIndex,
+            zIndex = COMMON_VALUES.Z_WORLD + data.zIndex,
 
 			shaders = data.shaders
         })
@@ -180,7 +180,7 @@ function Module:SetupShopBackButton(scene)
 		onClick = function()
 			ScreenTransitionModule:Transition({
 				callback = function()
-					UISceneHandlerModule:Switch("game")
+					UISceneHandlerModule:Switch("boxRanch")
 				end
 			})
 		end

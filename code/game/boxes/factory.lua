@@ -4,7 +4,7 @@ local SavesFilesModule = require("code.engine.saves.files")
 
 local math = require("code.engine.helpers.math")
 
-local CONSTANTS = require("code.game.boxes.constants")
+local CONSTANTS = require("code.data.constants")
 local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
@@ -28,19 +28,19 @@ function Module:Spawn()
         local box = BoxesObjectModule.new(data)
 
         if box then
-            local x = math.random(0, CONSTANTS.AREA_WIDTH)
-            local y = math.random(0, CONSTANTS.AREA_HEIGHT)
+            local x = math.random(0, CONSTANTS.BOX.AREA.WIDTH)
+            local y = math.random(0, CONSTANTS.BOX.AREA.HEIGHT)
 
             box.element.x, box.element.y = x, y
 
             box.velocityX = math.random(
-                CONSTANTS.MIN_SPAWN_VELOCITY,
-                CONSTANTS.MAX_SPAWN_VELOCITY
+                CONSTANTS.BOX.SPAWNER.MIN_SPAWN_VELOCITY,
+                CONSTANTS.BOX.SPAWNER.MAX_SPAWN_VELOCITY
             )
 
             box.velocityY = math.random(
-                CONSTANTS.MIN_SPAWN_VELOCITY,
-                CONSTANTS.MAX_SPAWN_VELOCITY
+                CONSTANTS.BOX.SPAWNER.MIN_SPAWN_VELOCITY,
+                CONSTANTS.BOX.SPAWNER.MAX_SPAWN_VELOCITY
             )
         end
     end

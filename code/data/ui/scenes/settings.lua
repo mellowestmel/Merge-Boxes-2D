@@ -1,8 +1,6 @@
 -- ~/code/data/ui/scenes/settings.lua
 
-local RenderUtilsModule = require("code.engine.render.utils")
-
-local CONSTANTS = require("code.game.ui.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 local UILayoutData = require("code.data.ui.layout")
 
 return {
@@ -14,7 +12,7 @@ return {
         anchorX = 0,
         anchorY = 0,
 
-        zIndex = CONSTANTS.Z_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_BACKGROUND,
     },
 
     cancelButtonHitbox = {
@@ -25,46 +23,46 @@ return {
         x = UILayoutData.shared.settingsButton.x,
         y = UILayoutData.shared.settingsButton.y,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
+        color = COMMON_VALUES.COLOR_RED,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     currentCategoryLabel = {
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.settings.categoryRowY,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = COMMON_VALUES.COLOR_WHITE,
 
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_LARGE
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
         ),
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     settingNameLabel = {
         type = "text",
 
-        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingNameLabelOffsetX,
+        x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingNameLabelOffsetX,
         y = UILayoutData.shared.settingsButton.y,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = COMMON_VALUES.COLOR_WHITE,
 
         anchorX = 0,
 
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_LARGE
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
         ),
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     booleanSettingToggleHitbox = {
@@ -72,14 +70,14 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingToggleOffsetX,
+        x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingToggleOffsetX,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = COMMON_VALUES.COLOR_GRAY,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     decreaseSettingHitbox = {
@@ -87,14 +85,14 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingDecreaseOffsetX,
+        x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingDecreaseOffsetX,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
+        color = COMMON_VALUES.COLOR_RED,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     increaseSettingHitbox = {
@@ -102,27 +100,27 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingIncreaseOffsetX,
+        x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingIncreaseOffsetX,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GREEN),
+        color = COMMON_VALUES.COLOR_GREEN,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     settingValueLabel = {
         type = "text",
 
-        x = CONSTANTS.CENTER_X + UILayoutData.settings.settingValueLabelOffsetX,
+        x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingValueLabelOffsetX,
 
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_MEDIUM
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_MEDIUM
         ),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     scrollLeftButtonHitbox = {
@@ -130,15 +128,15 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X - UILayoutData.settings.categoryScrollOffsetX,
+        x = COMMON_VALUES.CENTER_X - UILayoutData.settings.categoryScrollOffsetX,
         y = UILayoutData.settings.categoryRowY,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
+        color = COMMON_VALUES.COLOR_RED,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     scrollRightButtonHitbox = {
@@ -146,14 +144,14 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X + UILayoutData.settings.categoryScrollOffsetX,
+        x = COMMON_VALUES.CENTER_X + UILayoutData.settings.categoryScrollOffsetX,
         y = UILayoutData.settings.categoryRowY,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GREEN),
+        color = COMMON_VALUES.COLOR_GREEN,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     }
 }

@@ -7,14 +7,15 @@ local SignalHandlerModule = require("code.engine.events.signalHandler")
 local SavesFilesModule = require("code.engine.saves.files")
 local SettingsModule = require("code.engine.saves.settings")
 
-local SAVES_CONSTANTS = require("code.engine.saves.constants")
+local CONSTANTS = require("code.data.constants")
 
 local table = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
 local BoxesObjectModule = require("code.game.boxes.object")
 
-local CONSTANTS = require("code.game.ui.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
+
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
 
@@ -26,7 +27,7 @@ local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 local SceneData = require("code.data.ui.scenes.settings")
 
 local ENUM_SETTING_OPTIONS = {
-	colorblindMode = SAVES_CONSTANTS.COLORBLIND_MODES
+	colorblindMode = CONSTANTS.SAVES.COLORBLIND_MODES
 }
 
 local Module = {}
@@ -222,8 +223,8 @@ end
 local function _booleanToggleImage(value)
 	return RenderElementModule.imageCache[
 		value
-			and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH
-			or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
+			and COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH
+			or COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
 	]
 end
 
@@ -254,14 +255,14 @@ end
 
 -- Creates a boolean setting control.
 local function _setupBooleanSettingControl(self, category, setting, rowY)
-	_preloadSprite(CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH)
-	_preloadSprite(CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH)
+	_preloadSprite(COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH)
+	_preloadSprite(COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH)
 
 	local currentValue = SettingsModule.loadedFile[category][setting.key]
 
 	local togglePath = currentValue
-		and CONSTANTS.BOOLEAN_TOGGLE_ON_BUTTON_PATH
-		or CONSTANTS.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
+		and COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH
+		or COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
 
 	local toggleHitbox = UISharedFunctions:CreateElement(
 		_copyWithOverrides(SceneData.booleanSettingToggleHitbox, {
@@ -306,7 +307,7 @@ local function _adjustNumericSetting(category, settingKey, direction)
 	local oldValue = SettingsModule.loadedFile[category][settingKey]
 
 	local newValue = _clampNumberSetting(
-		oldValue + direction * CONSTANTS.NUMBER_SETTING_CHANGE_INCREMENT,
+		oldValue + direction * COMMON_VALUES.SETTINGS.NUMBER_SETTING_CHANGE_INCREMENT,
 		range
 	)
 
@@ -426,8 +427,8 @@ local function _setupNumericSettingControl(self, category, setting, rowY)
 		setting,
 		rowY,
 
-		CONSTANTS.NUMBER_DECREASE_BUTTON_PATH,
-		CONSTANTS.NUMBER_INCREASE_BUTTON_PATH,
+		COMMON_VALUES.NUMBER_DECREASE_BUTTON_PATH,
+		COMMON_VALUES.NUMBER_INCREASE_BUTTON_PATH,
 
 		_adjustNumericSetting,
 		_formatPercent
@@ -442,8 +443,8 @@ local function _setupEnumSettingControl(self, category, setting, rowY)
 		setting,
 		rowY,
 
-		CONSTANTS.ENUM_DECREASE_BUTTON_PATH,
-		CONSTANTS.ENUM_INCREASE_BUTTON_PATH,
+		COMMON_VALUES.ENUM_DECREASE_BUTTON_PATH,
+		COMMON_VALUES.ENUM_INCREASE_BUTTON_PATH,
 
 		_cycleEnumSetting,
 		_capitalizeFirstLetter
@@ -496,7 +497,7 @@ local function _setupSettingNameLabels(self)
 		local rowY = UILayoutHelperModule.GetVerticalStackY(
 			SceneData.settingNameLabel.y or 0,
 			index,
-			CONSTANTS.BUTTON_HORIZONTAL_GAP - CONSTANTS.MEDIUM_PADDING
+			COMMON_VALUES.BUTTON_HORIZONTAL_GAP - COMMON_VALUES.MEDIUM_PADDING
 		)
 
 		local label = UISharedFunctions:CreateElement(

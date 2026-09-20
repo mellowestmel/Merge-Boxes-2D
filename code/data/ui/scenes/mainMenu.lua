@@ -1,8 +1,6 @@
 -- ~/code/data/ui/scenes/mainMenu.lua
 
-local RenderUtilsModule = require("code.engine.render.utils")
-
-local CONSTANTS = require("code.game.ui.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 local UILayoutData = require("code.data.ui.layout")
 
 return {
@@ -14,7 +12,7 @@ return {
         anchorX = 0,
         anchorY = 0,
 
-        zIndex = CONSTANTS.Z_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_BACKGROUND,
     },
 
     logo = {
@@ -22,13 +20,13 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.mainMenu.logoPrimaryOffsetY,
 
         scaleX = UILayoutData.mainMenu.logoPrimaryScale,
         scaleY = UILayoutData.mainMenu.logoPrimaryScale,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     logo2 = {
@@ -36,26 +34,26 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.mainMenu.logoSecondaryOffsetY,
 
         scaleX = UILayoutData.mainMenu.logoSecondaryScale,
         scaleY = UILayoutData.mainMenu.logoSecondaryScale,
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     playGameButtonHitbox = {
-        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+        spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GREEN),
+        color = COMMON_VALUES.COLOR_GREEN,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     playGameButtonLabel = {
@@ -63,29 +61,29 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = COMMON_VALUES.COLOR_WHITE,
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_LARGE
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
         ),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     quitButtonHitbox = {
-        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+        spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
-        y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        x = COMMON_VALUES.CENTER_X,
+        y = UILayoutData.mainMenu.startButton.y + COMMON_VALUES.BUTTON_VERTICAL_GAP,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
+        color = COMMON_VALUES.COLOR_RED,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     quitButtonLabel = {
@@ -93,15 +91,15 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
-        y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        x = COMMON_VALUES.CENTER_X,
+        y = UILayoutData.mainMenu.startButton.y + COMMON_VALUES.BUTTON_VERTICAL_GAP,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = COMMON_VALUES.COLOR_WHITE,
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_LARGE
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
         ),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 }

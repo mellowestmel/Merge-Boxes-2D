@@ -1,8 +1,6 @@
 -- ~/code/data/ui/scenes/saveFiles.lua
 
-local RenderUtilsModule = require("code.engine.render.utils")
-
-local CONSTANTS = require("code.game.ui.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 local UILayoutData = require("code.data.ui.layout")
 
 return {
@@ -14,20 +12,20 @@ return {
         anchorX = 0,
         anchorY = 0,
 
-        zIndex = CONSTANTS.Z_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_BACKGROUND,
     },
 
     backToMenuButtonHitbox = {
-        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+        spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
-        y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        x = COMMON_VALUES.CENTER_X,
+        y = UILayoutData.mainMenu.startButton.y + COMMON_VALUES.BUTTON_VERTICAL_GAP,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
+        color = COMMON_VALUES.COLOR_RED,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     backToMenuButtonLabel = {
@@ -35,35 +33,35 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
-        y = UILayoutData.mainMenu.startButton.y + CONSTANTS.BUTTON_VERTICAL_GAP,
+        x = COMMON_VALUES.CENTER_X,
+        y = UILayoutData.mainMenu.startButton.y + COMMON_VALUES.BUTTON_VERTICAL_GAP,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
+        color = COMMON_VALUES.COLOR_WHITE,
+        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     templateSaveFileBackground = {
-        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+        spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider,
 
         rotation = UILayoutData.saveFiles.templateRotation,
         scaleX = UILayoutData.saveFiles.templateScaleX,
-        scaleY = CONSTANTS.SPRITE_LARGE_SCALE,
+        scaleY = COMMON_VALUES.SPRITE_LARGE_SCALE,
 
-        color = RenderUtilsModule.CreateColor(
-            CONSTANTS.COLOR_DARK[1],
-            CONSTANTS.COLOR_DARK[2],
-            CONSTANTS.COLOR_DARK[3],
-            CONSTANTS.HIGH_ALPHA
-        ),
+        color = {
+            COMMON_VALUES.COLOR_DARK[1],
+            COMMON_VALUES.COLOR_DARK[2],
+            COMMON_VALUES.COLOR_DARK[3],
+            COMMON_VALUES.HIGH_ALPHA
+        },
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     templateSaveFileLabel = {
@@ -71,29 +69,29 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
+        color = COMMON_VALUES.COLOR_WHITE,
+        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     templateSaveFileLoadButtonHitbox = {
-        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+        spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.loadButtonOffset,
 
         scaleX = UILayoutData.saveFiles.templateSmallScale,
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GREEN),
+        color = COMMON_VALUES.COLOR_GREEN,
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     templateSaveFileLoadButtonLabel = {
@@ -101,32 +99,32 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.loadButtonOffset,
 
         scaleX = UILayoutData.saveFiles.templateSmallScale,
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
+        color = COMMON_VALUES.COLOR_WHITE,
+        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT_OVERLAY,
+        zIndex = COMMON_VALUES.Z_UI_TEXT_OVERLAY,
     },
 
     templateSaveFileResetButtonHitbox = {
-        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+        spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.resetButtonOffset,
 
         scaleX = UILayoutData.saveFiles.templateSmallScale,
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
+        color = COMMON_VALUES.COLOR_RED,
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     templateSaveFileResetButtonLabel = {
@@ -134,28 +132,28 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.resetButtonOffset,
 
         scaleX = UILayoutData.saveFiles.templateSmallScale,
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_LARGE),
+        color = COMMON_VALUES.COLOR_WHITE,
+        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
-        zIndex = CONSTANTS.Z_UI_TEXT_OVERLAY,
+        zIndex = COMMON_VALUES.Z_UI_TEXT_OVERLAY,
     },
 
     templateSaveFileBoxPreview = {
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
-        y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider - CONSTANTS.LARGE_PADDING,
+        x = COMMON_VALUES.CENTER_X,
+        y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider - COMMON_VALUES.LARGE_PADDING,
 
-        scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
-        scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
+        scaleX = COMMON_VALUES.SPRITE_DEFAULT_SCALE,
+        scaleY = COMMON_VALUES.SPRITE_DEFAULT_SCALE,
 
-        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
+        zIndex = COMMON_VALUES.Z_UI_ICON_OVERLAY,
     },
 
     templateSaveFilePlusIcon = {
@@ -163,13 +161,13 @@ return {
 
         type = "sprite",
 
-        x = CONSTANTS.CENTER_X,
-        y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider - CONSTANTS.LARGE_PADDING,
+        x = COMMON_VALUES.CENTER_X,
+        y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider - COMMON_VALUES.LARGE_PADDING,
 
-        scaleX = CONSTANTS.SPRITE_DEFAULT_SCALE,
-        scaleY = CONSTANTS.SPRITE_DEFAULT_SCALE,
+        scaleX = COMMON_VALUES.SPRITE_DEFAULT_SCALE,
+        scaleY = COMMON_VALUES.SPRITE_DEFAULT_SCALE,
 
-        zIndex = CONSTANTS.Z_UI_ICON_OVERLAY,
+        zIndex = COMMON_VALUES.Z_UI_ICON_OVERLAY,
     },
 
     templateSaveHighestTier = {
@@ -177,13 +175,13 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.highestTierLabelOffset,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_SMALL),
+        color = COMMON_VALUES.COLOR_WHITE,
+        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_SMALL),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     templateSavePlaytime = {
@@ -191,12 +189,12 @@ return {
 
         type = "text",
 
-        x = CONSTANTS.CENTER_X,
+        x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.playtimeLabelOffset,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
-        font = love.graphics.newFont(CONSTANTS.STANBERRY_FONT_PATH, CONSTANTS.FONT_MEDIUM),
+        color = COMMON_VALUES.COLOR_WHITE,
+        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_MEDIUM),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 }

@@ -1,9 +1,11 @@
+-- ~/code/engine/render/element.lua
+
 local math = require("code.engine.helpers.math")
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 local ShaderHandlerModule = require("code.engine.shaderHandler")
-local RenderUtilsModule = require("code.engine.render.utils")
 local IdManagerModule = require("code.engine.idManager")
+local RenderUtilsModule = require("code.engine.render.utils")
 
 local Module = {}
 
@@ -51,6 +53,35 @@ function Element:ChangeSprite(path)
     self.spritePath = path
 
     Module._dirty = true
+end
+
+-- Partial updates are fine: :ChangeColor({a = 0.5}) only changes alpha.
+-- The existing color table is updated in place, so references stay valid.
+function Element:ChangeColor(new)
+    local color = self.color
+
+    local updated = RenderUtilsModule.CreateColor(
+        new.r or new[1] or color.r,
+        new.g or new[2] or color.g,
+        new.b or new[3] or color.b,
+        new.a or new[4] or color.a
+    )
+
+    color.r, color.g, color.b, color.a =
+        updated.r, updated.g, updated.b, updated.a
+end
+
+function Element:SetAlpha(alpha)
+    self.color.a = math.clamp(alpha, 0, 1)
+end
+
+function Element:GetAlpha()
+    return self.color.a
+end
+
+function Element:GetColor()
+    local color = self.color
+    return color.r, color.g, color.b, color.a
 end
 
 function Element:Remove()
@@ -132,16 +163,12 @@ local function _drawElement(element)
 
     local color = element.color
 
-    if color then
-        love.graphics.setColor(
-            color.r,
-            color.g,
-            color.b,
-            color.alpha or color.a or 1
-        )
-    else
-        love.graphics.setColor(1, 1, 1, 1)
-    end
+    love.graphics.setColor(
+        color.r / 255,
+        color.g / 255,
+        color.b / 255,
+        color.a
+    )
 
     if element.scissor then
         love.graphics.setScissor(
@@ -157,25 +184,31 @@ local function _drawElement(element)
 
         love.graphics.draw(
             drawable,
+
             positionX,
             positionY,
+
             radians,
+
             element.scaleX,
             element.scaleY,
+
             drawable:getWidth() * element.anchorX,
             drawable:getHeight() * element.anchorY
         )
 
     elseif element.type == "text" and element.text ~= "" then
         local font = element.font or love.graphics.getFont()
-
         love.graphics.setFont(font)
 
         love.graphics.print(
             element.text,
+
             positionX - font:getWidth(element.text) * element.scaleX * element.anchorX,
             positionY - font:getHeight() * element.scaleY * element.anchorY,
+
             radians,
+
             element.scaleX,
             element.scaleY
         )
@@ -249,8 +282,7 @@ local STANDARD_UNIFORM_PROVIDERS = {
     end,
 
     elementAlpha = function(element)
-        local color = element.color
-        return color and (color.alpha or color.a or 1) or 1
+        return element.color.a
     end,
 }
 
@@ -323,7 +355,7 @@ function Element:Draw()
         return
     end
 
-    if #self.shaders == 0 then
+    if self.bypassShaders or #self.shaders == 0 then
         _drawElement(self)
         return
     end
@@ -368,11 +400,11 @@ function Module.new(data)
         x = data.x or 0,
         y = data.y or 0,
 
-        color = data.color
-            or RenderUtilsModule.CreateColor(),
+        color = RenderUtilsModule.CreateColor(data.color),
 
         rotation = data.rotation or 0,
 
+        bypassShaders = data.bypassShaders or false,
         render = data.render ~= false,
 
         scissor = data.scissor,

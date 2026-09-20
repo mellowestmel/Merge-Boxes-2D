@@ -7,7 +7,7 @@ local IdManagerModule = require("code.engine.idManager")
 
 local table = require("code.engine.helpers.table")
 
-local CONSTANTS = require("code.game.boxes.constants")
+local CONSTANTS = require("code.data.constants")
 
 local BoxesData = require("code.data.boxes")
 
@@ -72,7 +72,7 @@ function Module.newElement(data)
 		scaleX = data.scale or 1,
 		scaleY = data.scale or 1,
 
-		zIndex = data.zIndex or CONSTANTS.BASE_BOX_ZINDEX,
+		zIndex = data.zIndex or CONSTANTS.BOX.BASE_ZINDEX,
 
 		shaders = data.shaders
 	})

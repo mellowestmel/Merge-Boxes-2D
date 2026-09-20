@@ -1,9 +1,7 @@
 -- ~/code/data/ui/scenes/shared.lua
 
-local RenderUtilsModule = require("code.engine.render.utils")
-
-local BOX_CONSTANTS = require("code.game.boxes.constants")
-local CONSTANTS = require("code.game.ui.constants")
+local CONSTANTS = require("code.data.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 
 local UILayoutData = require("code.data.ui.layout")
 
@@ -16,12 +14,12 @@ return {
         x = UILayoutData.shared.settingsButton.x,
         y = UILayoutData.shared.settingsButton.y,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = COMMON_VALUES.COLOR_GRAY,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     discordButtonHitbox = {
@@ -32,10 +30,10 @@ return {
         x = UILayoutData.shared.discordButton.x,
         y = UILayoutData.shared.discordButton.y,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     sidebarBackground = {
@@ -46,24 +44,24 @@ return {
         anchorX = 0,
         anchorY = 0,
 
-        x = BOX_CONSTANTS.AREA_WIDTH,
+        x = CONSTANTS.BOX.AREA.WIDTH,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
+        color = COMMON_VALUES.COLOR_DARK,
 
-        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_UI_BACKGROUND,
     },
 
     shopBackButtonHitbox = {
-        spritePath = CONSTANTS.DEFAULT_BUTTON_PATH,
+        spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
 
         type = "sprite",
 
         x = UILayoutData.game.spawnButton.x,
         y = UILayoutData.game.spawnButton.y + UILayoutData.game.spawnButtonRowOffset,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_RED),
+        color = COMMON_VALUES.COLOR_RED,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     shopBackButtonLabel = {
@@ -74,13 +72,13 @@ return {
         x = UILayoutData.game.spawnButton.x,
         y = UILayoutData.game.spawnButton.y + UILayoutData.game.spawnButtonRowOffset,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_WHITE),
+        color = COMMON_VALUES.COLOR_WHITE,
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_LARGE
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
         ),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     creditsLabel = {
@@ -89,19 +87,19 @@ return {
         type = "text",
 
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_SMALL
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_SMALL
         ),
 
         anchorX = 0,
         anchorY = 0,
 
-        x = CONSTANTS.SMALL_PADDING,
-        y = CONSTANTS.LARGE_PADDING,
+        x = COMMON_VALUES.SMALL_PADDING,
+        y = COMMON_VALUES.LARGE_PADDING,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_YELLOW),
+        color = COMMON_VALUES.COLOR_YELLOW,
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     sessionPlaytimeLabel = {
@@ -110,17 +108,17 @@ return {
         type = "text",
 
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_SMALL
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_SMALL
         ),
 
         anchorX = 0,
         anchorY = 0,
 
-        x = CONSTANTS.SMALL_PADDING,
-        y = CONSTANTS.SMALL_PADDING,
+        x = COMMON_VALUES.SMALL_PADDING,
+        y = COMMON_VALUES.SMALL_PADDING,
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     backToMenuButtonHitbox = {
@@ -128,15 +126,15 @@ return {
 
         type = "sprite",
 
-        x = UILayoutData.shared.settingsButton.x - CONSTANTS.MASSIVE_PADDING,
+        x = UILayoutData.shared.settingsButton.x - COMMON_VALUES.MASSIVE_PADDING,
         y = UILayoutData.shared.settingsButton.y,
 
-        scaleX = CONSTANTS.ICON_SMALL_SCALE,
-        scaleY = CONSTANTS.ICON_SMALL_SCALE,
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = COMMON_VALUES.COLOR_GRAY,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     dialoguePortrait = {
@@ -148,10 +146,10 @@ return {
         x = 0,
         y = RESOLUTION_HEIGHT,
 
-        scaleX = CONSTANTS.SPRITE_HUGE_SCALE,
-        scaleY = CONSTANTS.SPRITE_HUGE_SCALE,
+        scaleX = COMMON_VALUES.SPRITE_HUGE_SCALE,
+        scaleY = COMMON_VALUES.SPRITE_HUGE_SCALE,
 
-        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_UI_BACKGROUND,
     },
 
     dialogueBackground = {
@@ -165,12 +163,12 @@ return {
         x = 0,
         y = RESOLUTION_HEIGHT,
 
-        scaleX = CONSTANTS.SPRITE_HUGE_SCALE,
-        scaleY = CONSTANTS.SPRITE_HUGE_SCALE,
+        scaleX = COMMON_VALUES.SPRITE_HUGE_SCALE,
+        scaleY = COMMON_VALUES.SPRITE_HUGE_SCALE,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
+        color = COMMON_VALUES.COLOR_DARK,
 
-        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_UI_BACKGROUND,
     },
 
     dialogueNext = {
@@ -181,9 +179,9 @@ return {
         x = UILayoutData.shared.dialogue.arrowX,
         y = UILayoutData.shared.dialogue.arrowY,
 
-        color = RenderUtilsModule.CreateColorFromTable(CONSTANTS.COLOR_DARK),
+        color = COMMON_VALUES.COLOR_DARK,
 
-        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_UI_BACKGROUND,
     },
 
     dialogueText = {
@@ -195,6 +193,6 @@ return {
         x = 0,
         y = RESOLUTION_HEIGHT,
 
-        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_UI_BACKGROUND,
     },
 }

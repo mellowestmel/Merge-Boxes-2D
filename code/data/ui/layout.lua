@@ -1,7 +1,7 @@
 -- ~/code/data/ui/layout.lua
 
-local BOX_CONSTANTS = require("code.game.boxes.constants")
-local CONSTANTS = require("code.game.ui.constants")
+local CONSTANTS = require("code.data.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 
 return {
     mainMenu = {
@@ -36,8 +36,8 @@ return {
             textPaddingX = 20,
             textPaddingY = 45,
 
-            arrowX = BOX_CONSTANTS.AREA_WIDTH - CONSTANTS.MASSIVE_PADDING,
-            arrowY = RESOLUTION_HEIGHT - CONSTANTS.MASSIVE_PADDING
+            arrowX = CONSTANTS.BOX.AREA.WIDTH - COMMON_VALUES.MASSIVE_PADDING,
+            arrowY = RESOLUTION_HEIGHT - COMMON_VALUES.MASSIVE_PADDING
         },
 
         backgroundBoxesPathPrefix = "assets/sprites/ui/background_boxes/",
@@ -99,7 +99,7 @@ return {
 
     game = {
         spawnButton = {
-            x = BOX_CONSTANTS.AREA_WIDTH + (RESOLUTION_WIDTH - BOX_CONSTANTS.AREA_WIDTH) / 2,
+            x = CONSTANTS.BOX.AREA.WIDTH + (RESOLUTION_WIDTH - CONSTANTS.BOX.AREA.WIDTH) / 2,
             y = 475,
         },
 
@@ -123,9 +123,14 @@ return {
     },
 
     upgradeShop = {
-        birb = {
+        birdSecret = {
             x = 230,
             y = 125,
+        },
+
+        faceSecret = {
+            x = 152,
+            y = 338,
         },
 
         backgroundFrame = {

@@ -7,7 +7,7 @@ local SavesFilesModule = require("code.engine.saves.files")
 local RenderUtilsModule = require("code.engine.render.utils")
 local math = require("code.engine.helpers.math")
 
-local CONSTANTS = require("code.game.boxes.constants")
+local CONSTANTS = require("code.data.constants")
 
 local BoxDragHandlerModule = require("code.game.boxes.dragHandler")
 local BoxesObjectModule = require("code.game.boxes.object")
@@ -16,12 +16,12 @@ local BoxesObjectModule = require("code.game.boxes.object")
 local FPS_SCALE = _G.FPS_SCALE
 
 local function _getWeightFactor(box)
-    return box.data.weight / CONSTANTS.BASE_WEIGHT
+    return box.data.weight / CONSTANTS.BOX.PHYSICS.BASE_WEIGHT
 end
 
 local function _applyFriction(box, deltaTime)
     local fpsFactor = deltaTime * FPS_SCALE
-    local friction = CONSTANTS.FRICTION
+    local friction = CONSTANTS.BOX.PHYSICS.FRICTION
 
     local damping = math.max(0, 1 - friction * fpsFactor)
 
@@ -39,10 +39,10 @@ local function _edgeBounceX(box)
 
     if box.element.x - halfWidth < 0 then
         box.element.x = halfWidth
-        box.velocityX = -box.velocityX * CONSTANTS.ELASTICITY
-    elseif box.element.x + width * (1 - box.element.anchorX) > CONSTANTS.AREA_WIDTH then
-        box.element.x = CONSTANTS.AREA_WIDTH - width * (1 - box.element.anchorX)
-        box.velocityX = -box.velocityX * CONSTANTS.ELASTICITY
+        box.velocityX = -box.velocityX * CONSTANTS.BOX.PHYSICS.ELASTICITY
+    elseif box.element.x + width * (1 - box.element.anchorX) > CONSTANTS.BOX.AREA.WIDTH then
+        box.element.x = CONSTANTS.BOX.AREA.WIDTH - width * (1 - box.element.anchorX)
+        box.velocityX = -box.velocityX * CONSTANTS.BOX.PHYSICS.ELASTICITY
     end
 end
 
@@ -52,10 +52,10 @@ local function _edgeBounceY(box)
 
     if box.element.y - halfHeight < 0 then
         box.element.y = halfHeight
-        box.velocityY = -box.velocityY * CONSTANTS.ELASTICITY
-    elseif box.element.y + height * (1 - box.element.anchorY) > CONSTANTS.AREA_HEIGHT then
-        box.element.y = CONSTANTS.AREA_HEIGHT - height * (1 - box.element.anchorY)
-        box.velocityY = -box.velocityY * CONSTANTS.ELASTICITY
+        box.velocityY = -box.velocityY * CONSTANTS.BOX.PHYSICS.ELASTICITY
+    elseif box.element.y + height * (1 - box.element.anchorY) > CONSTANTS.BOX.AREA.HEIGHT then
+        box.element.y = CONSTANTS.BOX.AREA.HEIGHT - height * (1 - box.element.anchorY)
+        box.velocityY = -box.velocityY * CONSTANTS.BOX.PHYSICS.ELASTICITY
     end
 end
 
@@ -67,7 +67,7 @@ local function _dragPhysics(box)
     local dragMultiplier = SavesFilesModule:Get("stats.upgradeable.dragMultiplier")
     local weightFactor = _getWeightFactor(box)
 
-    local currentMultiplier = CONSTANTS.DRAG_VELOCITY_MULTIPLIER * dragMultiplier
+    local currentMultiplier = CONSTANTS.BOX.DRAG.VELOCITY_MULTIPLIER * dragMultiplier
 
     local targetX = mouseX - box.dragOffsetX
     local targetY = mouseY - box.dragOffsetY
@@ -94,18 +94,18 @@ local function _rotationHandler(box)
         local offsetX = math.clamp(box.dragOffsetX / (width * .5), -1, 1)
         local offsetY = math.clamp(box.dragOffsetY / (height * .5), -1, 1)
 
-        local horizontalRotation = box.velocityX * CONSTANTS.DRAG_ROTATION_MULTIPLIER * -offsetY
-        local verticalRotation = box.velocityY * CONSTANTS.DRAG_ROTATION_MULTIPLIER * offsetX
+        local horizontalRotation = box.velocityX * CONSTANTS.BOX.DRAG.ROTATION_MULTIPLIER * -offsetY
+        local verticalRotation = box.velocityY * CONSTANTS.BOX.DRAG.ROTATION_MULTIPLIER * offsetX
 
         local targetRotation = horizontalRotation + verticalRotation
-        targetRotation = math.clamp(targetRotation, -CONSTANTS.DRAGGING_MAX_TILT, CONSTANTS.DRAGGING_MAX_TILT)
+        targetRotation = math.clamp(targetRotation, -CONSTANTS.BOX.DRAG.MAX_TILT, CONSTANTS.BOX.DRAG.MAX_TILT)
 
-        box.element.rotation = box.element.rotation + (targetRotation - box.element.rotation) * CONSTANTS.BASE_DRAGGING_TILT_SPEED
+        box.element.rotation = box.element.rotation + (targetRotation - box.element.rotation) * CONSTANTS.BOX.DRAG.BASE_TILT_SPEED
     else
         local velocity = (box.velocityX + box.velocityY) / 2
 
         box.element.rotation = box.element.rotation
-            + velocity / CONSTANTS.FREE_ROTATION_VELOCITY_DIVISOR
+            + velocity / CONSTANTS.BOX.PHYSICS.FREE_ROTATION_VELOCITY_DIVISOR
     end
 end
 

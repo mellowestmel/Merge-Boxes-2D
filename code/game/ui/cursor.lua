@@ -7,7 +7,7 @@ local TweenHandlerModule = require("code.engine.tweenHandler")
 
 local math = require("code.engine.helpers.math")
 
-local CONSTANTS = require("code.game.ui.constants")
+local CONSTANTS = require("code.data.constants")
 
 local Module = {
     _sprites = {},
@@ -38,12 +38,12 @@ local function _lerpAngle(currentAngle, targetAngle, lerpFactor)
 end
 
 local function _loadSprites()
-    for _, fileName in pairs(love.filesystem.getDirectoryItems(CONSTANTS.CURSOR_SPRITE_PATH)) do
+    for _, fileName in pairs(love.filesystem.getDirectoryItems(CONSTANTS.UI.CURSOR.SPRITE_PATH)) do
         local spriteName = fileName:match("^(.-)%.png$")
         if not spriteName then goto continue end
 
         Module._sprites[spriteName] = RenderElementModule:PreloadSprite(
-            CONSTANTS.CURSOR_SPRITE_PATH .. fileName
+            CONSTANTS.UI.CURSOR.SPRITE_PATH .. fileName
         )
 
         :: continue ::
@@ -55,7 +55,7 @@ local function _createDragLineDot(dotIndex, x, y)
         name = "cursorDragLine" .. dotIndex,
         type = "sprite",
 
-        spritePath = CONSTANTS.CURSOR_DRAG_LINE_SPRITE_PATH,
+        spritePath = CONSTANTS.UI.CURSOR.DRAG_LINE_SPRITE_PATH,
 
         x = x,
         y = y,
@@ -63,7 +63,7 @@ local function _createDragLineDot(dotIndex, x, y)
         anchorX = .5,
         anchorY = .5,
 
-        zIndex = CONSTANTS.CURSOR_Z_INDEX - 1
+        zIndex = CONSTANTS.UI.CURSOR.Z_INDEX - 1
     })
 end
 
@@ -164,8 +164,8 @@ local function _updateDragLine(animationsEnabled)
     )
 
     local requiredDotCount = math.max(
-        CONSTANTS.CURSOR_DRAG_LINE_MIN_DOTS,
-        math.floor(projection / CONSTANTS.CURSOR_DRAG_LINE_SPACING) + 1
+        CONSTANTS.UI.CURSOR.DRAG_LINE_MIN_DOTS,
+        math.floor(projection / CONSTANTS.UI.CURSOR.DRAG_LINE_SPACING) + 1
     )
 
     _removeTrailingDragLineDots(requiredDotCount)
@@ -192,7 +192,7 @@ local function _updateDragLine(animationsEnabled)
 
             dot.render = not Module._element:IsPointInside(dot.x, dot.y)
         else
-            local targetDistance = index * CONSTANTS.CURSOR_DRAG_LINE_SPACING
+            local targetDistance = index * CONSTANTS.UI.CURSOR.DRAG_LINE_SPACING
 
             dot.x = currentStartX + directionX * targetDistance
             dot.y = currentStartY + directionY * targetDistance
@@ -205,15 +205,15 @@ end
 function Module:SetSprite(spriteName, force)
     if self._dragging and not force then return end
 
-    spriteName = spriteName or CONSTANTS.CURSOR_DEFAULT_NAME
-    local drawable = self._sprites[spriteName] or self._sprites[CONSTANTS.CURSOR_DEFAULT_NAME]
+    spriteName = spriteName or CONSTANTS.UI.CURSOR.DEFAULT_NAME
+    local drawable = self._sprites[spriteName] or self._sprites[CONSTANTS.UI.CURSOR.DEFAULT_NAME]
     if not drawable then return end
 
     if self._spriteName == spriteName then return end
 
     self._spriteName = spriteName
     self._element:ChangeSprite(
-        CONSTANTS.CURSOR_SPRITE_PATH .. spriteName .. ".png"
+        CONSTANTS.UI.CURSOR.SPRITE_PATH .. spriteName .. ".png"
     )
 end
 
@@ -241,8 +241,8 @@ function Module:Click()
         self._clickTween:Cancel()
     end
 
-    local baseScale = CONSTANTS.CURSOR_SCALE
-    local squashScale = CONSTANTS.CURSOR_CLICK_SQUASH
+    local baseScale = CONSTANTS.UI.CURSOR.SCALE
+    local squashScale = CONSTANTS.UI.CURSOR.CLICK_SQUASH
 
     self._element.scaleX = baseScale * squashScale
     self._element.scaleY = baseScale * squashScale
@@ -250,8 +250,8 @@ function Module:Click()
     self._clickTween = TweenHandlerModule.new(
         self._element,
         { scaleX = baseScale, scaleY = baseScale },
-        CONSTANTS.CURSOR_CLICK_RECOVERY_DURATION,
-        CONSTANTS.CURSOR_CLICK_EASING
+        CONSTANTS.UI.CURSOR.CLICK_RECOVERY_DURATION,
+        CONSTANTS.UI.CURSOR.CLICK_EASING
     )
 end
 
@@ -300,7 +300,7 @@ function Module:UpdateDragging(element, deltaTime)
 
         if directionX ~= 0 or directionY ~= 0 then
             local targetRotation = math.deg(math.atan2(directionY, directionX)) + 90
-            local lerpFactor = 1 - math.exp(-CONSTANTS.CURSOR_ROTATION_LERP_SPEED * deltaTime)
+            local lerpFactor = 1 - math.exp(-CONSTANTS.UI.CURSOR.ROTATION_LERP_SPEED * deltaTime)
 
             self._element.rotation = _lerpAngle(self._element.rotation, targetRotation, lerpFactor)
         end
@@ -316,7 +316,7 @@ function Module:Update(deltaTime)
     if not self._element then return end
 
     if not self._dragging then
-        local targetSprite = self._spriteOverride or self._hoverCursor or CONSTANTS.CURSOR_DEFAULT_NAME
+        local targetSprite = self._spriteOverride or self._hoverCursor or CONSTANTS.UI.CURSOR.DEFAULT_NAME
         self:SetSprite(targetSprite, true)
     end
 
@@ -343,14 +343,14 @@ function Module:Update(deltaTime)
         return
     end
 
-    local lerpFactor = 1 - math.exp(-CONSTANTS.CURSOR_ROTATION_LERP_SPEED * deltaTime)
+    local lerpFactor = 1 - math.exp(-CONSTANTS.UI.CURSOR.ROTATION_LERP_SPEED * deltaTime)
     local velocityX = targetX - self._element.x
     local velocityY = targetY - self._element.y
 
     local targetRotation = math.clamp(
-        (velocityX + velocityY) * CONSTANTS.CURSOR_TILT_MULTIPLIER,
-        -CONSTANTS.CURSOR_MAX_TILT,
-        CONSTANTS.CURSOR_MAX_TILT
+        (velocityX + velocityY) * CONSTANTS.UI.CURSOR.TILT_MULTIPLIER,
+        -CONSTANTS.UI.CURSOR.MAX_TILT,
+        CONSTANTS.UI.CURSOR.MAX_TILT
     )
 
     self._element.x = self._element.x + velocityX * lerpFactor
@@ -364,16 +364,16 @@ function Module.Init()
     love.mouse.setVisible(false)
     _loadSprites()
 
-    local defaultSprite = Module._sprites[CONSTANTS.CURSOR_DEFAULT_NAME]
+    local defaultSprite = Module._sprites[CONSTANTS.UI.CURSOR.DEFAULT_NAME]
     if not defaultSprite then return end
 
-    Module._spriteName = CONSTANTS.CURSOR_DEFAULT_NAME
+    Module._spriteName = CONSTANTS.UI.CURSOR.DEFAULT_NAME
 
     Module._element = RenderElementModule.new({
         name = "cursor",
         type = "sprite",
 
-        spritePath = CONSTANTS.CURSOR_SPRITE_PATH .. CONSTANTS.CURSOR_DEFAULT_NAME .. ".png",
+        spritePath = CONSTANTS.UI.CURSOR.SPRITE_PATH .. CONSTANTS.UI.CURSOR.DEFAULT_NAME .. ".png",
 
         x = 0,
         y = 0,
@@ -381,10 +381,10 @@ function Module.Init()
         anchorX = 0,
         anchorY = 0,
 
-        scaleX = CONSTANTS.CURSOR_SCALE,
-        scaleY = CONSTANTS.CURSOR_SCALE,
+        scaleX = CONSTANTS.UI.CURSOR.SCALE,
+        scaleY = CONSTANTS.UI.CURSOR.SCALE,
 
-        zIndex = CONSTANTS.CURSOR_Z_INDEX,
+        zIndex = CONSTANTS.UI.CURSOR.Z_INDEX,
         render = true
     })
 

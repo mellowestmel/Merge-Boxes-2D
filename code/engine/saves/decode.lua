@@ -1,6 +1,6 @@
 local BoxesObjectModule = require("code.game.boxes.object")
 
-local CONSTANTS = require("code.engine.saves.constants")
+local CONSTANTS = require("code.data.constants")
 
 local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
@@ -227,7 +227,7 @@ function Module:DecodeSettings(file)
 
 	finalOutput = _normalizeTable(
 		finalOutput,
-		CONSTANTS.DEFAULT_SETTINGS
+		CONSTANTS.SAVES.DEFAULT_SETTINGS
 	)
 
 	return finalOutput
@@ -244,10 +244,10 @@ function Module:Decode(file)
 
 	if version then
 		finalOutput = {
-			version = CONSTANTS.DEFAULT_DATA.version,
+			version = CONSTANTS.SAVES.DEFAULT_DATA.version,
 			slot = self:DecodeSlot(sections[2]),
 
-			boxes = version < CONSTANTS.DEFAULT_DATA.version
+			boxes = version < CONSTANTS.SAVES.DEFAULT_DATA.version
 				and self:DecodeLegacyBoxes(sections[3])
 				or self:DecodeBoxes(sections[3]),
 
@@ -259,7 +259,7 @@ function Module:Decode(file)
 		}
 	else
 		finalOutput = {
-			version = CONSTANTS.DEFAULT_DATA.version,
+			version = CONSTANTS.SAVES.DEFAULT_DATA.version,
 			slot = self:DecodeSlot(sections[1]),
 
 			boxes = self:DecodeLegacyBoxes(sections[4]),
@@ -267,14 +267,14 @@ function Module:Decode(file)
 			currencies = self:DecodeSimple(sections[2]),
 			stats = self:DecodeSimple(sections[3]),
 
-			upgrades = table.clone(CONSTANTS.DEFAULT_DATA.upgrades),
-			trinkets = table.clone(CONSTANTS.DEFAULT_DATA.trinkets)
+			upgrades = table.clone(CONSTANTS.SAVES.DEFAULT_DATA.upgrades),
+			trinkets = table.clone(CONSTANTS.SAVES.DEFAULT_DATA.trinkets)
 		}
 	end
 
 	return _normalizeTable(
 		finalOutput,
-		CONSTANTS.DEFAULT_DATA,
+		CONSTANTS.SAVES.DEFAULT_DATA,
 		{
 			boxes = true
 		}

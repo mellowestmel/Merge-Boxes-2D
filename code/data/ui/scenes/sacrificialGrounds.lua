@@ -1,6 +1,6 @@
 -- ~/code/data/ui/scenes/sacrifice.lua
 
-local CONSTANTS = require("code.game.ui.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 
 return {
     background = {
@@ -11,6 +11,6 @@ return {
         anchorX = 0,
         anchorY = 0,
 
-        zIndex = CONSTANTS.Z_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_BACKGROUND,
     },
 }

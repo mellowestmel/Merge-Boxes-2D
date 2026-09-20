@@ -2,7 +2,7 @@
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
-local CONSTANTS = require("code.engine.saves.constants")
+local CONSTANTS = require("code.data.constants")
 
 local SavesHelpersModule = require("code.engine.saves.helpers")
 local SavesDecodeModule = require("code.engine.saves.decode")
@@ -25,19 +25,19 @@ end
 
 function Module:SaveFile()
     local finalOutput = SavesEncodeModule:EncodeSettings(self.loadedFile)
-    local fileName = CONSTANTS.SETTINGS_FILE_NAME
+    local fileName = CONSTANTS.SAVES.SETTINGS_FILE_NAME
 
     love.filesystem.write(fileName, finalOutput)
 end
 
 function Module:LoadFile()
-    local fileName = CONSTANTS.SETTINGS_FILE_NAME
+    local fileName = CONSTANTS.SAVES.SETTINGS_FILE_NAME
 
     local file = love.filesystem.read(fileName)
     local decodedFile = (file and SavesDecodeModule:DecodeSettings(file) or nil)
 
     if not decodedFile then
-        decodedFile = table.clone(CONSTANTS.DEFAULT_SETTINGS)
+        decodedFile = table.clone(CONSTANTS.SAVES.DEFAULT_SETTINGS)
     end
 
     self.loadedFile = decodedFile

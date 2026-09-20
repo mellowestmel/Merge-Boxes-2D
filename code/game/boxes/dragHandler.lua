@@ -3,7 +3,8 @@
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 local RenderUtilsModule = require("code.engine.render.utils")
 
-local CONSTANTS = require("code.game.boxes.constants")
+local CONSTANTS = require("code.data.constants")
+
 local BoxesObjectModule = require("code.game.boxes.object")
 local UICursorModule = require("code.game.ui.cursor")
 
@@ -22,7 +23,7 @@ local function _findDraggableBoxAt(boxesArray, x, y)
 
 		if box.data.draggable then
 			-- Reset stacking order before hit-testing.
-			box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX)
+			box.element:SetZIndex(CONSTANTS.BOX.BASE_ZINDEX)
 
 			if box.element:IsPointInside(x, y) then
 				return box
@@ -55,11 +56,11 @@ function Module:_StartDrag(box, mouseX, mouseY)
 	box.dragOffsetX = mouseX - box.element.x
 	box.dragOffsetY = mouseY - box.element.y
 
-	_lastDraggedBoxAlpha = box.element.color.alpha
-	box.element.color.alpha = CONSTANTS.DRAGGED_BOX_ALPHA
+	_lastDraggedBoxAlpha = box.element:GetAlpha()
+	box.element:SetAlpha(CONSTANTS.BOX.DRAG.HELD_BOX_ALPHA)
 
 	-- Bring the dragged box above everything else.
-	box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 2)
+	box.element:SetZIndex(CONSTANTS.BOX.BASE_ZINDEX + 2)
 
 	UICursorModule:SetDragging(true, box.element, mouseX, mouseY)
 end
@@ -70,8 +71,8 @@ function Module:_EndDrag()
 
 	SignalHandlerModule.Get("game.boxes.dragended"):Fire(box)
 
-	box.element.color.alpha = _lastDraggedBoxAlpha
-	box.element:SetZIndex(CONSTANTS.BASE_BOX_ZINDEX + 1)
+	box.element:SetAlpha(_lastDraggedBoxAlpha)
+	box.element:SetZIndex(CONSTANTS.BOX.BASE_ZINDEX + 1)
 	box.dragging = false
 
 	UICursorModule:SetDragging(false)
