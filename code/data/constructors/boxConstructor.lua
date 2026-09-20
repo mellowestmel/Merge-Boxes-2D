@@ -2,40 +2,49 @@
 
 local Module = {}
 
-function Module.new(data)
-    assert(data.tier, "Box requires a tier")
+function Module.new(type, gameplayData, flavorData, cosmeticData)
+	assert(flavorData, "Missing flavor data for " .. type)
+	assert(cosmeticData, "Missing cosmetic data for " .. type)
 
-    return {
-        -- Identity
-        name = data.name,
-        description = data.description or "",
-        quote = data.quote,
+	return {
+		-- Identity
+		type = type,
+        name = flavorData.name or gameplayData.type,
+
+        description = flavorData.description or "",
+        quote = flavorData.quote,
+
+        -- Gameplay
+        tier = gameplayData.tier,
+
+        mergeable = gameplayData.mergeable ~= false,
+        mergeReward = gameplayData.mergeReward or 0,
+
+        draggable = gameplayData.draggable ~= false,
+        weight = gameplayData.weight or 0,
+
+        saveable = gameplayData.saveable ~= false,
+
+        next = gameplayData.next,
 
         -- Visuals
-        spritePath = data.spritePath,
-        scale = data.scale or 1,
+        spritePath = cosmeticData.spritePath,
+        scale = cosmeticData.scale or 1,
 
-        reflectionPath = data.reflectionPath,
-        reflective = data.reflective or false,
-
-        -- Progression
-        tier = data.tier,
-        mergeReward = data.mergeReward or 0,
-        weight = data.weight or 0,
+        shaders = cosmeticData.shaders or {},
 
         -- Merge effects
-        mergeSoundData = data.mergeSoundData,
-
-        flashScreen = data.flashScreen or false,
-        screenFlashFadeDuration = data.screenFlashFadeDuration,
+        mergeSoundData = cosmeticData.mergeSoundData,
+        flashScreen = cosmeticData.flashScreen or false,
+        screenFlashFadeDuration = cosmeticData.screenFlashFadeDuration,
 
         -- Cosmetic behavior
-        onUpdateCosmetic = data.onUpdateCosmetic,
+        onUpdate = cosmeticData.onUpdate,
 
         -- Crafting
-        craftingMaterialDrop = data.craftingMaterial,
-        trinketChance = data.trinketChance
-    }
+        craftingMaterialDrop = gameplayData.craftingMaterial,
+        trinketChance = gameplayData.trinketChance,
+	}
 end
 
 return Module

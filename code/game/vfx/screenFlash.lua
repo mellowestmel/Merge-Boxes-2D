@@ -1,61 +1,61 @@
 -- ~/code/game/vfx/screenFlash.lua
 
-local RenderModule = require("code.engine.render")
-local table = require("code.engine.helpers.table")
+local RenderElementModule = require("code.engine.render.element")
 
 local SettingsModule = require("code.engine.saves.settings")
 
-local CONSTANTS = require("code.game.vfx.constants")
+local CONSTANTS = require("code.data.constants")
 
 local Module = {}
 Module._screenFlashElement = nil
 Module._fadeDuration = 2
 
-function Module:flash(color, fadeDuration)
-    local screenFlashEnabled = SettingsModule.loadedFile.accessibility.screenFlashEnabled
-    if not screenFlashEnabled then return end
+function Module:Flash(color, fadeDuration)
+    if not SettingsModule:Get("accessibility.screenFlashEnabled") then return end
 
-    if color then color = table.clone(color) end
+    local element = self._screenFlashElement
+    if not element then return end
 
-    self._screenFlashElement.color = color or RenderModule:createColor(
-        CONSTANTS.BASE_SCREEN_FLASH_COLOR.r * 255,
-        CONSTANTS.BASE_SCREEN_FLASH_COLOR.g * 255,
-        CONSTANTS.BASE_SCREEN_FLASH_COLOR.b * 255,
-        1
-    )
+    color = color or CONSTANTS.VFX.BASE_SCREEN_FLASH_COLOR
+
+    element:ChangeColor(color)
+    element:SetAlpha(color.a or color[4] or 1)
+
+    element.render = true
 
     self._fadeDuration = fadeDuration or 2
 end
 
-function Module:stop()
-    self._screenFlashElement.color = RenderModule:createColor(0, 0, 0, 0)
+function Module:Stop()
+    self._screenFlashElement:SetAlpha(0)
 end
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     local element = self._screenFlashElement
     if not element then return end
 
-    local alpha = element.color.alpha
-    if alpha > 0 then
-        local alphaPerSecond = 1 / self._fadeDuration
-        alpha = alpha - alphaPerSecond * deltaTime
+    local alpha = element:GetAlpha()
+    if alpha <= 0 then return end
 
-        if alpha < 0 then return end
-        element.color.alpha = alpha
-    end
+    element:SetAlpha(alpha - deltaTime / self._fadeDuration)
 end
 
-function Module.init()
-    Module._screenFlashElement = RenderModule:createElement({
+function Module.Init()
+    local element = RenderElementModule.new({
         spritePath = "assets/sprites/vfx/whitesquare.png",
         type = "sprite",
 
-        scaleX = 10,
-        scaleY = 10,
+        scaleX = 10^10,
+        scaleY = 10^10,
 
-        color = CONSTANTS.BASE_SCREEN_FLASH_COLOR,
-        zIndex = 50
+        color = CONSTANTS.VFX.BASE_SCREEN_FLASH_COLOR,
+        zIndex = 99999
     })
+
+    -- Start invisible so nothing flashes at startup.
+    element:SetAlpha(0)
+
+    Module._screenFlashElement = element
 end
 
 return Module

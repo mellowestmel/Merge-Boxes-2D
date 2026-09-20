@@ -1,16 +1,16 @@
 -- ~/code/data/ui/scenes/blackMarket.lua
 
-local CONSTANTS = require("code.game.ui.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 
 return {
     background = {
-        spritePath = "assets/sprites/backgrounds/menubg.png",
+        spritePath = "assets/sprites/backgrounds/blackmarketbg.png",
 
         type = "sprite",
 
         anchorX = 0,
         anchorY = 0,
 
-        zIndex = CONSTANTS.Z_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_BACKGROUND,
     },
 }

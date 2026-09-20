@@ -6,9 +6,11 @@ for key, value in pairs(string) do
 end
 
 function Module.formatTime(seconds)
-    local m = math.floor(seconds / 60)
+    local h = math.floor(seconds / 3600)
+    local m = math.floor((seconds % 3600) / 60)
     local s = seconds % 60
-    return string.format("%02d:%02d:%02d", 0, m, s)
+
+    return string.format("%02d:%02d:%02d", h, m, s)
 end
 
 function Module.formatNumber(number)

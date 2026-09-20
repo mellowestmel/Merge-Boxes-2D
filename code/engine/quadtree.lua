@@ -1,0 +1,322 @@
+local table = require("code.engine.helpers.table")
+local math = require("code.engine.helpers.math")
+
+local MAX_DEPTH = 8
+
+local Quadtree = {
+    width = 100,
+    height = 100,
+
+    x = 0,
+    y = 0,
+
+    capacity = 4,
+    parent = nil,
+    depth = 0,
+
+    subdivided = false,
+
+    children = {},
+    points = {}
+}
+Quadtree.__index = Quadtree
+
+local Module = {}
+
+-- Check if two points are the same
+local function _pointsEqual(a, b)
+    return a.x == b.x and a.y == b.y
+end
+
+-- Calculates distance between two points
+local function _getDistanceXY(a, b)
+    local dx = a.x - b.x
+    local dy = a.y - b.y
+
+    return dx, dy
+end
+
+local function _isDistanceInRadius(dx, dy, radius)
+    return dx * dx + dy * dy <= radius * radius
+end
+
+-- Check if a point is inside a radius
+local function _isPointInRadius(point, center, radius)
+    local dx, dy = _getDistanceXY(point, center)
+    return _isDistanceInRadius(dx, dy, radius)
+end
+
+-- Check if a range has a point inside
+local function _contains(range, point)
+    return point.x >= range.x
+        and point.x <= range.x + range.width
+        and point.y >= range.y
+        and point.y <= range.y + range.height
+end
+
+--[[
+Checks for all points inside a radius
+
+center = {x, y}
+radius = num
+]]
+
+function Quadtree:QueryRadius(center, radius)
+    local found = {}
+
+    if not self:IsInRadius(center, radius) then return found end
+
+    for _, point in pairs(self.points) do
+        if not _isPointInRadius(point, center, radius) then goto continue end
+        table.insert(found, point)
+
+        :: continue ::
+    end
+
+    if self.subdivided then
+
+        for _, child in pairs(self.children) do
+
+            local results = child:QueryRadius(center, radius)
+            for _, point in pairs(results) do
+                table.insert(found, point)
+            end
+
+        end
+
+    end
+
+    return found
+end
+
+--[[
+Checks for all points inside an arbitrary rectangle
+
+rect = {
+    height = num,
+    width = num,
+
+    x = num,
+    y = num,
+}
+]]
+
+function Quadtree:QueryRect(rect)
+    local found = {}
+
+    if not self:IsInRect(rect) then return found end
+
+    for _, point in pairs(self.points) do
+        if not _contains(rect, point) then goto continue end
+        table.insert(found, point)
+
+        :: continue ::
+    end
+
+    if self.subdivided then
+
+        for _, child in pairs(self.children) do
+
+            local results = child:QueryRect(rect)
+            for _, point in pairs(results) do
+                table.insert(found, point)
+            end
+
+        end
+
+    end
+
+    return found
+end
+
+-- A wrapper for contains(quadtree, point)
+function Quadtree:Contains(point)
+    return _contains(self, point)
+end
+
+-- Check if the quadtree node intersects a circle with a given center and radius
+function Quadtree:IsInRadius(center, radius)
+    local closestX = math.max(self.x, math.min(center.x, self.x + self.width))
+    local closestY = math.max(self.y, math.min(center.y, self.y + self.height))
+
+    local dx, dy = _getDistanceXY({
+        x = closestX,
+        y = closestY
+    }, center)
+
+    return _isDistanceInRadius(dx, dy, radius)
+end
+
+-- Check if the quadtree intersects a range
+function Quadtree:IsInRect(range)
+    return not (self.x + self.width < range.x or self.x > range.x + range.width
+           or self.y + self.height < range.y or self.y > range.y + range.height)
+end
+
+-- Inserts new point into the quadtree
+function Quadtree:Insert(point)
+    local contains = self:Contains(point)
+    if not contains then return false end
+
+    if not self.subdivided and (#self.points < self.capacity or self.depth >= MAX_DEPTH) then
+        table.insert(self.points, point)
+        return true
+    end
+
+    if not self.subdivided then
+        self:Subdivide()
+    end
+
+    for _, child in pairs(self.children) do
+        if child:Insert(point) then
+            return true
+        end
+    end
+
+    return false
+end
+
+-- Subdivide the quadtree
+function Quadtree:Subdivide()
+    local halfX = self.width / 2
+    local halfY = self.height / 2
+
+    local offsets = {
+        {0, 0},
+        {halfX, 0},
+        {0, halfY},
+        {halfX, halfY}
+    }
+
+    for _, offset in pairs(offsets) do
+        local child = Module.new({
+            width = halfX,
+            height = halfY,
+
+            x = self.x + offset[1],
+            y = self.y + offset[2],
+
+            capacity = self.capacity,
+            parent = self,
+            depth = self.depth + 1
+        })
+
+        table.insert(self.children, child)
+    end
+
+    -- Redistribute points between new children
+    for _, point in pairs(self.points) do
+
+        for _, child in pairs(self.children) do
+
+            if child:Insert(point) then
+                break
+            end
+
+        end
+
+    end
+
+    self.subdivided = true
+    self.points = {}
+end
+
+-- Merges the quadtree's empty children
+function Quadtree:MergeEmpty()
+    if not self.subdivided then return end
+
+    local allEmpty = true
+
+    for _, child in pairs(self.children) do
+
+        if #child.points > 0 or child.subdivided then
+            allEmpty = false
+            break
+        end
+
+    end
+
+    if allEmpty then
+        self.subdivided = false
+        self.children = {}
+    end
+end
+
+-- Removes a point from the quadtree and merges empty children automatically
+function Quadtree:Remove(point)
+    for index, value in pairs(self.points) do
+
+        if _pointsEqual(value, point) then
+            table.remove(self.points, index)
+            return true
+        end
+
+    end
+
+    for _, child in pairs(self.children) do
+
+        local success = child:Remove(point)
+        if success then
+            self:MergeEmpty()
+            return true
+        end
+
+    end
+
+    return false
+end
+
+-- Updates a point's position
+function Quadtree:Update(old, new)
+    local success = self:Remove(old)
+    if success then
+        self:Insert(new)
+        return true
+    end
+
+    return false
+end
+
+-- Returns the quadtree and its children's points
+function Quadtree:GetAllPoints()
+    local found = table.shallowClone(self.points)
+
+    for _, child in pairs(self.children) do
+
+        local childPoints = child:GetAllPoints()
+        for _, point in pairs(childPoints) do
+            table.insert(found, point)
+        end
+
+    end
+
+    return found
+end
+
+-- Create a quadtree
+function Module.new(data)
+    local quadtree = setmetatable({
+        width = data.width or 100,
+        height = data.height or 100,
+
+        x = data.x or 0,
+        y =  data.y or 0,
+
+        capacity = data.capacity or 4,
+        parent = data.parent or nil,
+        depth = data.depth or 0,
+
+        subdivided = false,
+
+        children = {},
+        points = {}
+    }, Quadtree)
+
+    for _, point in pairs(data.points or {}) do
+        quadtree:Insert(point)
+    end
+
+    return quadtree
+end
+
+return Module

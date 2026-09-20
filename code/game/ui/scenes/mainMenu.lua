@@ -1,9 +1,6 @@
 -- ~/code/game/ui/scenes/mainMenu.lua
 
-local RenderModule = require("code.engine.render")
-
 local SettingsModule = require("code.engine.saves.settings")
-
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
@@ -20,47 +17,51 @@ local SceneData = require("code.data.ui.scenes.mainMenu")
 local Module = {}
 Module._elements = {}
 Module._objects = {}
+
 Module.name = "mainMenu"
 
 local logo2 = nil
 local logo = nil
 
-function Module:clean()
+function Module:Clean()
     for _, element in pairs(self._elements) do
-        element:remove()
+        element:Remove()
     end
 
     for _, object in pairs(self._objects) do
-        object:remove()
+        object:Remove()
     end
 
     self._elements = {}
     self._objects = {}
 
-    UISharedFunctions:cleanUpdates()
+    UISharedFunctions:CleanUpdates()
 end
 
-local function setupLogo(self)
-    logo = RenderModule:createElement(SceneData.logo)
-    table.insert(self._elements, logo)
+local function _setupLogo(self)
+    logo = UISharedFunctions:CreateElement(
+        SceneData.logo,
+        self
+    )
 
-    logo2 = RenderModule:createElement(SceneData.logo2)
-    table.insert(self._elements, logo2)
+    logo2 = UISharedFunctions:CreateElement(
+        SceneData.logo2,
+        self
+    )
 end
 
-local function setupBackground(self)
-    local background = RenderModule:createElement(SceneData.background)
-    table.insert(self._elements, background)
-end
+local function _setupPlayGameButton(self)
+    local playGameButtonHitbox = UISharedFunctions:CreateElement(
+        SceneData.playGameButtonHitbox,
+        self
+    )
 
-local function setupPlayGameButton(self)
-    local playGameButtonHitbox = RenderModule:createElement(SceneData.playGameButtonHitbox)
-    local playGameButtonLabel = RenderModule:createElement(SceneData.playGameButtonLabel)
+    local playGameButtonLabel = UISharedFunctions:CreateElement(
+        SceneData.playGameButtonLabel,
+        self
+    )
 
-    table.insert(self._elements, playGameButtonHitbox)
-    table.insert(self._elements, playGameButtonLabel)
-
-    local playGameButton = UIButtonObjectModule:createButton({
+    local playGameButton = UIButtonObjectModule.new({
         elements = {
             playGameButtonHitbox,
             playGameButtonLabel
@@ -69,10 +70,11 @@ local function setupPlayGameButton(self)
         hitboxElement = playGameButtonHitbox,
 
         mouseButton = 1,
+
         onClick = function()
-            ScreenTransitionModule:transition({
+            ScreenTransitionModule:Transition({
                 callback = function()
-                    UISceneHandlerModule:switch("saveFiles")
+                    UISceneHandlerModule:Switch("saveFiles")
                 end
             })
         end
@@ -81,14 +83,18 @@ local function setupPlayGameButton(self)
     table.insert(self._objects, playGameButton)
 end
 
-local function setupQuitButton(self)
-    local quitButtonHitbox = RenderModule:createElement(SceneData.quitButtonHitbox)
-    local quitButtonLabel = RenderModule:createElement(SceneData.quitButtonLabel)
+local function _setupQuitButton(self)
+    local quitButtonHitbox = UISharedFunctions:CreateElement(
+        SceneData.quitButtonHitbox,
+        self
+    )
 
-    table.insert(self._elements, quitButtonHitbox)
-    table.insert(self._elements, quitButtonLabel)
+    local quitButtonLabel = UISharedFunctions:CreateElement(
+        SceneData.quitButtonLabel,
+        self
+    )
 
-    local quitButton = UIButtonObjectModule:createButton({
+    local quitButton = UIButtonObjectModule.new({
         elements = {
             quitButtonHitbox,
             quitButtonLabel
@@ -97,8 +103,9 @@ local function setupQuitButton(self)
         hitboxElement = quitButtonHitbox,
 
         mouseButton = 1,
+
         onClick = function()
-            ScreenTransitionModule:transition({
+            ScreenTransitionModule:Transition({
                 callback = function()
                     love.event.quit()
                 end
@@ -109,50 +116,35 @@ local function setupQuitButton(self)
     table.insert(self._objects, quitButton)
 end
 
-local function setupDiscordButton(self)
-    local discordButtonHitbox = RenderModule:createElement(SceneData.discordButtonHitbox)
-    table.insert(self._elements, discordButtonHitbox)
-
-    local discordButton = UIButtonObjectModule:createButton({
-        elements = {
-            discordButtonHitbox
-        },
-
-        hitboxElement = discordButtonHitbox,
-
-        mouseButton = 1,
-        onClick = function()
-            love.system.openURL("https://www.discord.gg/pQShPG8XPf")
-        end
-    })
-
-    table.insert(self._objects, discordButton)
-end
-
-function Module:update()
-    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+function Module:Update()
+    local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
     if not animationsEnabled then return end
 
-    local rotation = math.sin(love.timer.getTime()) * 2
+    local animation = math.sin(love.timer.getTime())
 
     if logo then
-       logo:setRotation(rotation)
+        logo.offsetY = animation * 5
     end
 
     if logo2 then
-        logo2:setRotation(-rotation)
+        logo2.offsetY = animation * 8
     end
 end
 
-function Module:init()
-    UISharedFunctions:setupSettingsButton(self)
-    MusicHandlerModule:playTrack("mainMenu")
+function Module:Init()
+    MusicHandlerModule:PlayTrack("mainMenu")
 
-    setupPlayGameButton(self)
-    setupDiscordButton(self)
-    setupQuitButton(self)
-    setupBackground(self)
-    setupLogo(self)
+    UISharedFunctions:SetupHighestTierBoxes(self)
+    UISharedFunctions:SetupSettingsButton(self)
+    UISharedFunctions:SetupDiscordButton(self)
+
+    UISharedFunctions:SetupBackground(self)
+
+    _setupPlayGameButton(self)
+    _setupQuitButton(self)
+    _setupLogo(self)
+
+    --UISharedFunctions:SetupVisibilityToggle(self)
 end
 
 return Module

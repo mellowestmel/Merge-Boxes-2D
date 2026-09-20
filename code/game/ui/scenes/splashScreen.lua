@@ -1,15 +1,15 @@
--- ~/code/game/ui/scenes/mainMenu.lua
+-- ~/code/game/ui/scenes/splashScreen.lua
 
-local RenderModule = require("code.engine.render")
-local SoundModule = require("code.engine.sound")
-local table = require("code.engine.helpers.table")
-
+local SoundHandlerModule = require("code.engine.soundHandler")
 local SettingsModule = require("code.engine.saves.settings")
 
 local MusicHandlerModule = require("code.game.musicHandler")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
+local UICursorModule = require("code.game.ui.cursor")
+
+local UISharedFunctions = require("code.game.ui.shared")
 
 local SceneData = require("code.data.ui.scenes.splashScreen")
 
@@ -24,56 +24,65 @@ local logoTimer = 1
 local transitionStarted = false
 local logoShown = false
 
-local logoFlipSpeed = 0.05
+local logoFlipSpeed = .05
 local logoFlipTimer = 0
+local cursorToggleState = false
 
 local splashLogo1
 local splashLogo2
 
-function Module:clean()
+function Module:Clean()
     for _, element in pairs(self._elements) do
-        element:remove()
+        element:Remove()
     end
 
     for _, object in pairs(self._objects) do
-        object:remove()
+        object:Remove()
     end
+
+    UICursorModule:ClearSpriteOverride()
 
     self._elements = {}
     self._objects = {}
 end
 
 local function setupSplashScreenLogo(self)
-    splashLogo1 = RenderModule:createElement(SceneData.splashScreenLogo1)
-    splashLogo2 = RenderModule:createElement(SceneData.splashScreenLogo2)
+    splashLogo1 = UISharedFunctions:CreateElement(
+        SceneData.splashScreenLogo1,
+        self
+    )
 
-    table.insert(self._elements, splashLogo1)
-    table.insert(self._elements, splashLogo2)
+    splashLogo2 = UISharedFunctions:CreateElement(
+        SceneData.splashScreenLogo2,
+        self
+    )
 
     splashLogo1.render = true
     splashLogo2.render = false
 
-    local splashScreenSound = SoundModule:createSound({
+    local splashScreenSound = SoundHandlerModule.new({
         soundPath = "/assets/sounds/ui/splashscreen.wav",
         volume = 2
     })
 
     if splashScreenSound then
-        splashScreenSound:play()
-        splashScreenSound:remove()
+        splashScreenSound:Play() splashScreenSound:Remove()
     end
 end
 
 local function transition()
-    ScreenTransitionModule:transition({
+    ScreenTransitionModule:Transition({
         callback = function()
-            UISceneHandlerModule:switch("mainMenu")
+            UISceneHandlerModule:Switch("mainMenu")
         end
     })
 end
 
-function Module:init()
-    MusicHandlerModule:stopTrack(MusicHandlerModule.playingTrack)
+function Module:Init()
+    MusicHandlerModule:StopTrack(MusicHandlerModule.playingTrack)
+
+    UICursorModule:ClearSpriteOverride()
+    UICursorModule:SetSprite()
 
     transitionTimer = 2
     logoTimer = .5
@@ -81,11 +90,13 @@ function Module:init()
     transitionStarted = false
     logoShown = false
 
-    local animationsEnabled = SettingsModule.loadedFile.graphics.animationsEnabled
+    cursorToggleState = false
+
+    local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
     logoFlipTimer = (animationsEnabled and 0 or 999)
 end
 
-function Module:update(deltaTime)
+function Module:Update(deltaTime)
     if not logoShown then
         logoTimer = logoTimer - deltaTime
 
@@ -93,18 +104,23 @@ function Module:update(deltaTime)
             logoShown = true
             setupSplashScreenLogo(self)
         end
-
-        return
     end
 
     logoFlipTimer = logoFlipTimer - deltaTime
 
     if logoFlipTimer <= 0 then
-
         logoFlipTimer = logoFlipSpeed
+        cursorToggleState = not cursorToggleState
 
-        splashLogo1.render = not splashLogo1.render
-        splashLogo2.render = not splashLogo2.render
+        if splashLogo1 and splashLogo2 then
+            splashLogo1.render = not splashLogo1.render
+            splashLogo2.render = not splashLogo2.render
+        end
+
+        if SettingsModule:Get("graphics.cursorAnimationsEnabled") then
+            local targetCursorSprite = cursorToggleState and "splashscreen_cursor_1" or "splashscreen_cursor_2"
+            UICursorModule:SetSpriteOverride(targetCursorSprite)
+        end
     end
 
     if not transitionStarted then

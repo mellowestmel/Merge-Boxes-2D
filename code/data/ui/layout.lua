@@ -1,92 +1,148 @@
 -- ~/code/data/ui/layout.lua
 
-local BOX_CONSTANTS = require("code.game.box.constants")
+local CONSTANTS = require("code.data.constants")
+local COMMON_VALUES = require("code.data.ui.commonValues")
 
 return {
-    MAIN_MENU = {
-        START_BUTTON = {
-            Y = 375,
+    mainMenu = {
+        startButton = {
+            y = 375,
         },
 
-        LOGO_PRIMARY_OFFSET_Y = 225,
-        LOGO_SECONDARY_OFFSET_Y = 100,
+        logoPrimaryOffsetY = 225,
+        logoSecondaryOffsetY = 100,
 
-        LOGO_PRIMARY_SCALE = 0.5,
-        LOGO_SECONDARY_SCALE = 0.35,
+        logoPrimaryScale = .5,
+        logoSecondaryScale = .35,
     },
 
-    SHARED = {
-        SETTINGS_BUTTON = {
-            X = _G.RESOLUTION_WIDTH - 35,
-            Y = 35
+    shared = {
+        settingsButton = {
+            x = RESOLUTION_WIDTH - 35,
+            y = 35
         },
 
-        DISCORD_BUTTON = {
-            X = _G.RESOLUTION_WIDTH - 35,
-            Y = _G.RESOLUTION_HEIGHT - 35
+        discordButton = {
+            x = RESOLUTION_WIDTH - 35,
+            y = RESOLUTION_HEIGHT - 35
         },
 
-        BACK_BUTTON_OFFSET = 50,
+        backButtonOffset = 50,
 
-        DIALOGUE = {
-            PORTRAIT_X = 400,
-            PORTRAIT_Y = 425,
+        dialogue = {
+            portraitX = 400,
+            portraitY = 425,
+
+            textPaddingX = 20,
+            textPaddingY = 45,
+
+            arrowX = CONSTANTS.BOX.AREA.WIDTH - COMMON_VALUES.MASSIVE_PADDING,
+            arrowY = RESOLUTION_HEIGHT - COMMON_VALUES.MASSIVE_PADDING
+        },
+
+        backgroundBoxesPathPrefix = "assets/sprites/ui/background_boxes/",
+        backgroundBoxes = {
+            ["gerald"] = { x = 405, y = 445, zIndex = 8 },
+            ["jimbo"] = { x = 341, y = 463, zIndex = 2 },
+            ["glumbo"] = { x = 265, y = 465, zIndex = 3 },
+            ["jeremy"] = { x = 180, y = 466, zIndex = 4 },
+            ["muncher"] = { x = 74, y = 480, zIndex = 5 },
+            ["dylan"] = { x = 296, y = 368, zIndex = 6 },
+            ["carlos"] = { x = 487, y = 400, zIndex = 7 },
+            ["goobsterGoobingtonIII"] = { x = 544, y = 439, zIndex = 8 },
+            ["mark"] = { x = 643, y = 365, zIndex = 7 },
+            ["frigidWendyhot"] = { x = 768, y = 376, zIndex = 8 },
+            ["dizzy"] = { x = 388, y = 366, zIndex = 4 },
+            ["gochged"] = { x = 551, y = 345, zIndex = 1 },
+            ["mtBox"] = { x = 710, y = 279, zIndex = 1 },
+            ["unstable"] = { x = 96, y = 335, zIndex = 2 },
+            ["transcended"] = { x = 196, y = 326, zIndex = 3 },
+
+            ["omnibox"] = {
+                x = 331,
+                y = 318,
+
+                zIndex = 1,
+
+                shaders = {
+                    {
+                        name = "box16"
+                    }
+                }
+            },
+
+            ["devoided"] = { x = 660, y = 95, zIndex = 1 },
+            ["boxOMatter"] = { x = 0, y = 0, zIndex = 1 },
+            ["greatOldGrumpyOne"] = { x = 0, y = 0, zIndex = 1 },
+            ["luckrollBox"] = { x = 0, y = 0, zIndex = 1 },
+            ["mellowBox"] = { x = 0, y = 0, zIndex = 1 },
+            ["theCollector"] = { x = 0, y = 0, zIndex = 1 },
+            ["glitcherson"] = { x = 0, y = 0, zIndex = 1 },
+            ["b24"] = { x = 0, y = 0, zIndex = 1 },
+            ["b25"] = { x = 0, y = 0, zIndex = 1 },
         }
     },
 
-    SETTINGS = {
-        CATEGORY_ROW_Y = 500,
-        CATEGORY_SCROLL_OFFSET_X = 125,
+    settings = {
+        categoryRowY = 550,
+        categoryScrollOffsetX = 125,
 
-        SETTING_NAME_LABEL_OFFSET_X = -225,
+        settingNameLabelOffsetX = -225,
 
-        SETTING_TOGGLE_OFFSET_X = 200,
+        settingToggleOffsetX = 200,
 
-        SETTING_DECREASE_OFFSET_X = 100,
-        SETTING_INCREASE_OFFSET_X = 300,
+        settingDecreaseOffsetX = 100,
+        settingIncreaseOffsetX = 300,
 
-        SETTING_VALUE_LABEL_OFFSET_X = 200,
+        settingValueLabelOffsetX = 200,
     },
 
-    GAME = {
-        SPAWN_BUTTON = {
-            X = BOX_CONSTANTS.AREA_WIDTH + (_G.RESOLUTION_WIDTH - BOX_CONSTANTS.AREA_WIDTH) / 2,
-            Y = 475,
+    game = {
+        spawnButton = {
+            x = CONSTANTS.BOX.AREA.WIDTH + (RESOLUTION_WIDTH - CONSTANTS.BOX.AREA.WIDTH) / 2,
+            y = 475,
         },
 
-        SPAWN_BUTTON_ROW_OFFSET = 65,
+        spawnButtonRowOffset = 65,
 
-        AUTO_SPAWN_BUTTON_HEIGHT_SCALE = 0.6,
-        AUTO_SPAWN_LABEL_SCALE = 0.75,
+        autoSpawnButtonHeightScale = .6,
+        autoSpawnLabelScale = .75,
     },
 
-    SAVE_FILES = {
-        SLOT_OFFSET = 325,
-        Y_DIVIDER = 1.6,
-        LOAD_BUTTON_OFFSET = 60,
-        RESET_BUTTON_OFFSET = 10,
-        TEMPLATE_ROTATION = math.rad(90),
-        TEMPLATE_SCALE_X = 1.5,
-        TEMPLATE_SMALL_SCALE = 0.55,
+    saveFiles = {
+        slotOffset = 325,
+        yDivider = 1.6,
+        loadButtonOffset = 60,
+        resetButtonOffset = 10,
+        templateRotation = 90,
+        templateScaleX = 1.5,
+        templateSmallScale = .55,
 
-        HIGHEST_TIER_LABEL_OFFSET = 40,
-        PLAYTIME_LABEL_OFFSET = 65,
+        highestTierLabelOffset = 40,
+        playtimeLabelOffset = 65,
     },
 
-    UPGRADE_SHOP = {
-        BIRB = {
-            X = 230,
-            Y = 125,
+    upgradeShop = {
+        birdSecret = {
+            x = 230,
+            y = 125,
         },
 
-        BACKGROUND_FRAME = {
-            SCALE_X = 0.9,
-            SCALE_Y = 0.6,
-            OFFSET_Y = -225,
+        faceSecret = {
+            x = 152,
+            y = 338,
         },
 
-        SCROLL_WHEEL = {
-            SCALE_X = 0.1,
+        backgroundFrame = {
+            scaleX = .9,
+            scaleY = .6,
+            offsetY = -225,
         },
+
+        scrollWheel = {
+            scaleX = .1,
+        },
+
+        textOffsetRatio = .3
     },
 }

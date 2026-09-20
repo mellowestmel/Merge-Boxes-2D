@@ -3,6 +3,8 @@
 local Module = {}
 
 function Module.new(data)
+    assert(data.id, "Upgrade requires an id")
+
     assert(data.name, "Upgrade requires a name")
     assert(data.description, "Upgrade requires a description")
     assert(data.maxStacks, "Upgrade requires maxStacks")
@@ -10,6 +12,8 @@ function Module.new(data)
     assert(data.effect, "Upgrade requires effect function")
 
     return {
+        id = data.id,
+
         name = data.name,
         description = data.description,
 

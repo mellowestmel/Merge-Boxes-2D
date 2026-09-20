@@ -1,111 +1,131 @@
 -- ~/code/engine/saves/files.lua
 
-local CONSTANTS = require("code.engine.saves.constants")
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+local CONSTANTS = require("code.data.constants")
 
+local SavesHelpersModule = require("code.engine.saves.helpers")
 local SavesDecodeModule = require("code.engine.saves.decode")
 local SavesEncodeModule = require("code.engine.saves.encode")
 
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
-local BoxesObjectModule = require("code.game.box.object")
+local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
 Module.lastSaveSlot = 1
+
+Module.playtimeAtSessionStart = 0
 Module.loadedFile = nil
 
-function Module:update(deltaTime)
+function Module:Get(path)
+    if not self.loadedFile then return nil end
+    return SavesHelpersModule.GetPath(self.loadedFile, path)
+end
+
+function Module:Set(path, value)
+    if not self.loadedFile then return end
+    SavesHelpersModule.SetPath(self.loadedFile, path, value)
+end
+
+function Module:Update(deltaTime)
     if not self.loadedFile then return end
 
-    self.loadedFile.stats.playtime = self.loadedFile.stats.playtime + deltaTime
+    local playtime = self:Get("stats.playtime") or 0
+    self:Set("stats.playtime", playtime + deltaTime)
 end
 
-function Module:saveFile(file)
+function Module.Init()
+    SignalHandlerModule.Get("love.update"):Connect(function(deltaTime)
+        Module:Update(deltaTime)
+    end)
+
+    SignalHandlerModule.Get("love.quit"):Connect(function()
+        if Module.loadedFile then Module:UnloadFile(Module.loadedFile) end
+    end)
+
+    SignalHandlerModule.Get("game.boxes.spawned"):Connect(function(box)
+        if Module.loadedFile then
+            local highestBoxTier = Module:Get("stats.highestBoxTier") or 0
+
+            local newBoxTier = box.data and box.data.tier
+            if not newBoxTier then return end
+
+            if highestBoxTier < newBoxTier then
+                SignalHandlerModule.Get("game.boxes.highesttierchanged"):Fire(newBoxTier, highestBoxTier)
+                Module:Set("stats.highestBoxTier", newBoxTier)
+            end
+        end
+    end)
+end
+
+function Module:SaveFile(file)
     if type(file) == "string" then
-        file = SavesDecodeModule:decode(file)
+        file = SavesDecodeModule:Decode(file)
     end
 
-    if self.loadedFile and self.loadedFile.slot == file.slot then
-        self.loadedFile.boxes = BoxesObjectModule:getSortedArray()
+    if self.loadedFile and self:Get("slot") == file.slot then
+        self:Set("boxes", BoxesObjectModule:GetSortedArray())
     end
 
-    local finalOutput = SavesEncodeModule:encode(file)
-    local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(file.slot) .. CONSTANTS.SAVE_FILE_EXTENSION
+    local finalOutput = SavesEncodeModule:Encode(file)
+    local fileName = CONSTANTS.SAVES.SAVE_FILE_PREFIX .. tostring(file.slot) .. CONSTANTS.SAVES.SAVE_FILE_EXTENSION
 
     love.filesystem.write(fileName, finalOutput)
+
+    SignalHandlerModule.Get("engine.saves.filesaved"):Fire(file.slot, file)
 end
 
-function Module:unloadFile(file)
-    Module:saveFile(file)
+function Module:UnloadFile(file)
+    Module:SaveFile(file)
     self.loadedFile = nil
 end
 
-function Module:readFile(slot)
-    local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
-
+function Module:ReadFile(slot)
+    local fileName = CONSTANTS.SAVES.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVES.SAVE_FILE_EXTENSION
     local file = love.filesystem.read(fileName)
-    local decodedFile = (file and SavesDecodeModule:decode(file) or nil)
 
-    return decodedFile
+    return file and SavesDecodeModule:Decode(file) or nil
 end
 
-local function loadBoxes(boxesData)
-    if not boxesData then return end
-
-    for _, box in pairs(boxesData) do
-        local boxData = BoxesObjectModule:getBoxDataByTier(box.tier)
-        local boxObject = BoxesObjectModule:createBox(boxData)
-
-        if boxObject then
-            boxObject.velocityX = box.velocityX
-            boxObject.velocityY = box.velocityY
-
-            boxObject.element.x = box.x
-            boxObject.element.y = box.y
-
-            boxObject.element.rotation = box.rotation
-        end
-    end
-end
-
--- ~/code/engine/saves/files.lua
-
-function Module:loadFile(slot)
-    slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
-
-    local decodedFile = Module:readFile(slot)
+function Module:LoadFile(slot)
+    slot = math.clamp(slot, 1, CONSTANTS.SAVES.MAX_SAVE_SLOTS)
+    local decodedFile = Module:ReadFile(slot)
 
     if not decodedFile then
-        decodedFile = table.clone(CONSTANTS.DEFAULT_DATA)
+        decodedFile = table.clone(CONSTANTS.SAVES.DEFAULT_DATA)
         decodedFile.slot = slot
     end
-
-    loadBoxes(decodedFile.boxes)
 
     self.lastSaveSlot = decodedFile.slot
     self.loadedFile = decodedFile
 
+    self.playtimeAtSessionStart = self:Get("stats.playtime")
+
+    SignalHandlerModule.Get("engine.saves.fileloaded"):Fire(decodedFile)
     return decodedFile
 end
 
-function Module:deleteFile(slot)
-    slot = math.clamp(slot, 1, CONSTANTS.MAX_SAVE_SLOTS)
-    local fileName = CONSTANTS.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVE_FILE_EXTENSION
+function Module:DeleteFile(slot)
+    slot = math.clamp(slot, 1, CONSTANTS.SAVES.MAX_SAVE_SLOTS)
+    local fileName = CONSTANTS.SAVES.SAVE_FILE_PREFIX .. tostring(slot) .. CONSTANTS.SAVES.SAVE_FILE_EXTENSION
 
     if love.filesystem.getInfo(fileName) then
         love.filesystem.remove(fileName)
     end
 
-    if self.loadedFile and self.loadedFile.slot == slot then
+    if self.loadedFile and self:Get("slot") == slot then
         self.loadedFile = nil
     end
+
+    SignalHandlerModule.Get("engine.saves.filedeleted"):Fire(slot)
 end
 
-function Module:getFiles()
+function Module:GetFiles()
     local files = {}
 
-    for slot = 1, CONSTANTS.MAX_SAVE_SLOTS do
-        files[slot] = self:readFile(slot)
+    for slot = 1, CONSTANTS.SAVES.MAX_SAVE_SLOTS do
+        files[slot] = self:ReadFile(slot)
     end
 
     return files

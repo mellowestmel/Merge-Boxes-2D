@@ -1,59 +1,74 @@
 -- ~/main.lua
 
-local RenderModule = require("code.engine.render")
-local SoundModule = require("code.engine.sound")
+local RenderHandlerModule = require("code.engine.render.handler")                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
+
+local SignalHandlerModule = require("code.engine.events.signalHandler")
+
+local TweenHandlerModule = require("code.engine.tweenHandler")
+local SoundHandlerModule = require("code.engine.soundHandler")
 
 local SettingsModule = require("code.engine.saves.settings")
-local SaveFilesModule = require("code.engine.saves.files")
+local SavesFilesModule = require("code.engine.saves.files")
 
+local UpgradesHandlerModule = require("code.game.upgradeHandler")
 local MusicHandlerModule = require("code.game.musicHandler")
 
-local BoxHandlerModule = require("code.game.box.handler")
+local BoxHandlerModule = require("code.game.boxes.handler")
 
-local UIHandlerModule = require("code.game.ui.handler")
 local VFXHandlerModule = require("code.game.vfx.handler")
+local UIHandlerModule = require("code.game.ui.handler")
 
-function love.load()
-    SettingsModule:loadFile()
-    RenderModule:init()
+-- Generic fire functions for Love2D's handlers
+for name, handler in pairs(love.handlers) do
+	local signal = SignalHandlerModule.Get("love." .. name)
 
-    MusicHandlerModule.init()
-    VFXHandlerModule.init()
-    UIHandlerModule.init()
+	love.handlers[name] = function(...)
+		signal:Fire(...)
+
+		local result = handler(...)
+		return result
+	end
 end
 
-function love.update(deltaTime)                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
-    RenderModule:update()
+-- Special binds for Love2D's built-in callbacks
+local function _bindCallback(name)
+	local oldCallback = love[name]
+	local signal = SignalHandlerModule.Get("love." .. name)
 
-    BoxHandlerModule:update(deltaTime)
-    VFXHandlerModule:update(deltaTime)
-    UIHandlerModule:update(deltaTime)
-
-    SaveFilesModule:update(deltaTime)
-    SoundModule:update()
+	love[name] = function(...)
+		signal:Fire(...)
+		if oldCallback then return oldCallback(...) end
+	end
 end
 
-function love.draw()
-    RenderModule:drawAll()
-end
+_bindCallback("update")
+_bindCallback("draw")
 
-function love.mousepressed(_, _, button)
-    local mouseX, mouseY = RenderModule:getMousePos()
-    UIHandlerModule:mousePressed(mouseX, mouseY, button)
-end
+_bindCallback("load")
+_bindCallback("quit")
 
-function love.mousereleased(_, _, button)
-    local mouseX, mouseY = RenderModule:getMousePos()
-    UIHandlerModule:mouseReleased(mouseX, mouseY, button)
-end
+-- Callbacks to all those signals
+SignalHandlerModule.Get("love.load"):Connect(function()
+    math.randomseed(os.time())
+    math.random()
 
-function love.wheelmoved(x, y)
-    UIHandlerModule:wheelMoved(x, y)
-end
+    SavesFilesModule.Init()
+    SettingsModule.Init()
 
-function love.quit()
+    RenderHandlerModule.Init()
+    TweenHandlerModule.Init()
+
+    BoxHandlerModule.Init()
+
+    SoundHandlerModule.Init()
+    MusicHandlerModule.Init()
+
+    UpgradesHandlerModule.Init()
+
+    VFXHandlerModule.Init()
+    UIHandlerModule.Init()
+end)
+
+SignalHandlerModule.Get("love.quit"):Connect(function()
     love.window.setFullscreen(false)
-
-    if SaveFilesModule.loadedFile then SaveFilesModule:unloadFile(SaveFilesModule.loadedFile) end
-    if SettingsModule.loadedFile then SettingsModule:saveFile() end
-end
+end)

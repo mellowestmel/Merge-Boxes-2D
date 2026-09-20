@@ -1,9 +1,7 @@
 -- ~/code/data/ui/scenes/upgradeShop.lua
 
-local RenderModule = require("code.engine.render")
-
-local CONSTANTS = require("code.game.ui.constants")
-local UI_LAYOUT = require("code.data.ui.layout")
+local COMMON_VALUES = require("code.data.ui.commonValues")
+local UILayoutData = require("code.data.ui.layout")
 
 return {
     background = {
@@ -14,7 +12,7 @@ return {
         anchorX = 0,
         anchorY = 0,
 
-        zIndex = CONSTANTS.Z_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_BACKGROUND,
     },
 
     upgradesFrameBackground = {
@@ -22,71 +20,66 @@ return {
 
         type = "sprite",
 
-        scaleX = UI_LAYOUT.UPGRADE_SHOP.BACKGROUND_FRAME.SCALE_X,
-        scaleY = UI_LAYOUT.UPGRADE_SHOP.BACKGROUND_FRAME.SCALE_Y,
+        scaleX = UILayoutData.upgradeShop.backgroundFrame.scaleX,
+        scaleY = UILayoutData.upgradeShop.backgroundFrame.scaleY,
 
-        x = UI_LAYOUT.GAME.SPAWN_BUTTON.X,
-        y = UI_LAYOUT.GAME.SPAWN_BUTTON.Y + UI_LAYOUT.UPGRADE_SHOP.BACKGROUND_FRAME.OFFSET_Y,
+        x = UILayoutData.game.spawnButton.x,
+        y = UILayoutData.game.spawnButton.y + UILayoutData.upgradeShop.backgroundFrame.offsetY,
 
-        color = RenderModule:createColor(
-            CONSTANTS.COLOR_GRAY[1],
-            CONSTANTS.COLOR_GRAY[2],
-            CONSTANTS.COLOR_GRAY[3],
-            CONSTANTS.LOW_ALPHA
-        ),
+        color = COMMON_VALUES.COLOR_DARK,
 
-        zIndex = CONSTANTS.Z_UI_BACKGROUND,
+        zIndex = COMMON_VALUES.Z_UI_BACKGROUND + .1,
     },
 
     upgradesFrameScrollWheel = {
-        spritePath = "assets/sprites/ui/button74x74.png",
+        spritePath = "assets/sprites/ui/buttons/button74x74.png",
 
         type = "sprite",
 
-        scaleX = UI_LAYOUT.UPGRADE_SHOP.SCROLL_WHEEL.SCALE_X,
+        scaleX = UILayoutData.upgradeShop.scrollWheel.scaleX,
 
-        x = CONSTANTS.CENTER_X,
-        y = CONSTANTS.CENTER_Y,
+        x = COMMON_VALUES.CENTER_X,
+        y = COMMON_VALUES.CENTER_Y,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = COMMON_VALUES.COLOR_GRAY,
 
-        zIndex = CONSTANTS.Z_UI_OVERLAY,
+        zIndex = COMMON_VALUES.Z_UI_OVERLAY,
     },
 
     upgradeBuyHitbox = {
-        spritePath = "assets/sprites/ui/button220x75.png",
+        spritePath = "assets/sprites/ui/buttons/button220x75.png",
 
         type = "sprite",
 
         scaleX = .9,
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_GRAY),
+        color = COMMON_VALUES.COLOR_GRAY,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     upgradeName = {
         type = "text",
 
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_MEDIUM
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_MEDIUM
         ),
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     upgradeCost = {
         type = "text",
 
         font = love.graphics.newFont(
-            CONSTANTS.STANBERRY_FONT_PATH,
-            CONSTANTS.FONT_SMALL
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_SMALL
         ),
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_YELLOW),
+        color = COMMON_VALUES.COLOR_YELLOW,
 
-        zIndex = CONSTANTS.Z_UI_TEXT,
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     upgradeStackCounter = {
@@ -94,19 +87,30 @@ return {
 
         type = "sprite",
 
-        color = RenderModule:createColorFromTable(CONSTANTS.COLOR_DARK),
+        color = COMMON_VALUES.COLOR_DARK,
 
-        zIndex = CONSTANTS.Z_UI_OVERLAY,
+        zIndex = COMMON_VALUES.Z_UI_OVERLAY,
     },
 
-    theBirbsWord = {
-        spritePath = "assets/sprites/birb.png",
+    birdSecret = {
+        spritePath = "assets/sprites/familiarbird.png",
 
         type = "sprite",
 
-        x = UI_LAYOUT.UPGRADE_SHOP.BIRB.X,
-        y = UI_LAYOUT.UPGRADE_SHOP.BIRB.Y,
+        x = UILayoutData.upgradeShop.birdSecret.x,
+        y = UILayoutData.upgradeShop.birdSecret.y,
 
-        zIndex = CONSTANTS.Z_UI_BUTTON,
-    }
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
+    },
+
+    faceSecret = {
+        spritePath = "assets/sprites/whoisthis.png",
+
+        type = "sprite",
+
+        x = UILayoutData.upgradeShop.faceSecret.x,
+        y = UILayoutData.upgradeShop.faceSecret.y,
+
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
+    },
 }

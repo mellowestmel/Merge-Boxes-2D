@@ -1,16 +1,14 @@
--- ~/code/engine/saves/encode.lua
-
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
 local Module = {}
 
-local function encryptBase64(string)
+local function _encryptBase64(string)
     return love.data.encode("string", "base64", string)
 end
 
-local function encryptWithKey(string)
-    local key = _G.SAVE_FILE_ENCRYPTION_KEY
+local function _encryptWithKey(string)
+    local key = SAVE_FILE_ENCRYPTION_KEY
     local keyLength = #key
 
     local output = {}
@@ -24,22 +22,24 @@ local function encryptWithKey(string)
     return table.concat(output)
 end
 
-local function addStringNewLine(...)
+local function _addStringNewLine(...)
     local parts = {...}
-    return table.concat(parts, "\n")
+    return table.concat(parts, "\n\n")
 end
 
-local function addString(...)
+local function _addString(...)
     local parts = {...}
     return table.concat(parts, " ")
 end
 
-function Module:encodeBoxes(boxes)
+function Module:EncodeBoxes(boxes)
     local output = ""
 
     for _, box in pairs(boxes) do
-        local line = addString(
-            box.tier,
+        if not box.data.saveable then goto continue end
+
+        local values = {
+            box.data.type,
 
             box.velocityX,
             box.velocityY,
@@ -48,57 +48,66 @@ function Module:encodeBoxes(boxes)
             box.element.y,
 
             box.element.rotation
-        )
-        output = output .. line .. "\n"
+        }
+
+        for _, item in pairs(box.items) do
+            table.insert(values, item)
+        end
+
+        output = output .. _addString(unpack(values)) .. "\n"
+
+        :: continue ::
     end
 
-    return output
+    return output:gsub("\n$", "")
 end
 
-function Module:encodeSimple(section)
+function Module:EncodeSimple(section)
     if not section then return "" end
 
     local lines = {}
+
     for key, value in pairs(section) do
         table.insert(lines, key .. " " .. tostring(value))
     end
 
-    return table.concat(lines, "\n") .. "\n"
+    return table.concat(lines, "\n")
 end
 
-
-function Module:encodeVersion(version)
-    return "version " .. version .. "\n"
+function Module:EncodeVersion(version)
+    return "version " .. version
 end
 
-function Module:encodeSlot(slot)
-    return "slot " .. slot .. "\n"
+function Module:EncodeSlot(slot)
+    return "slot " .. slot
 end
 
-function Module:encodeSettings(file)
-    local finalOutput = addStringNewLine(
-        self:encodeSimple(file.audio),
-        self:encodeSimple(file.graphics),
-        self:encodeSimple(file.accessibility)
+function Module:EncodeSettings(file)
+    local finalOutput = _addStringNewLine(
+        self:EncodeSimple(file.audio),
+        self:EncodeSimple(file.graphics),
+        self:EncodeSimple(file.accessibility)
     )
 
     return finalOutput
 end
 
-function Module:encode(file)
-    local finalOutput = addStringNewLine(
-        self:encodeVersion(file.version),
-        self:encodeSlot(file.slot),
+function Module:Encode(file)
+    local finalOutput = _addStringNewLine(
+        self:EncodeVersion(file.version),
+        self:EncodeSlot(file.slot),
 
-        self:encodeBoxes(file.boxes),
+        self:EncodeBoxes(file.boxes),
 
-        self:encodeSimple(file.currencies),
-        self:encodeSimple(file.stats),
-        self:encodeSimple(file.upgrades)
+        self:EncodeSimple(file.currencies),
+        self:EncodeSimple(file.stats),
+
+        self:EncodeSimple(file.upgrades),
+        self:EncodeSimple(file.trinkets)
     )
 
-    finalOutput = encryptBase64(finalOutput)
-    finalOutput = encryptWithKey(finalOutput)
+    finalOutput = _encryptBase64(finalOutput)
+    finalOutput = _encryptWithKey(finalOutput)
 
     return finalOutput
 end

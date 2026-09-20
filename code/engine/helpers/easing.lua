@@ -1,8 +1,8 @@
--- ~/code/data/easing.lua
+-- ~/code/engine/helpers/easing.lua
 
 return {
     easeInOutQuad = function(t)
-        if t < 0.5 then
+        if t < .5 then
             return 2 * t * t
         else
             return -1 + (4 - 2 * t) * t
