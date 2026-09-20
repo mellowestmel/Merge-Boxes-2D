@@ -242,7 +242,7 @@ function Module:Click()
     end
 
     local baseScale = CONSTANTS.UI.CURSOR.SCALE
-    local squashScale = CONSTANTS.UI.CURSOR.CLICK_SQUASH
+    local squashScale = CONSTANTS.UI.CURSOR.CLICK_SCALE
 
     self._element.scaleX = baseScale * squashScale
     self._element.scaleY = baseScale * squashScale

@@ -130,9 +130,9 @@ function Module:Merge(boxA, boxB)
     ) / 2
 
     local weightDurationMultiplier = math.max(.1, 1 + averageWeight / CONSTANTS.BOX.ANIMATION.WEIGHT_ANIM_DURATION_DIVISOR)
-    local velocityDurationMultiplier = 1 + velocityMagnitude / CONSTANTS.BOX..MERGE.VELOCITY_DURATION_FACTOR
+    local velocityDurationMultiplier = 1 + velocityMagnitude / CONSTANTS.BOX.MERGE.VELOCITY_DURATION_FACTOR
 
-    local duration = (distance / CONSTANTS.BOX.BASE_MERGE_SPEED) * weightDurationMultiplier / velocityDurationMultiplier
+    local duration = (distance / CONSTANTS.BOX.MERGE.BASE_SPEED) * weightDurationMultiplier / velocityDurationMultiplier
 
     -- Make sure merge has an actual duration so it works
     duration = math.max(duration, .001)
@@ -201,7 +201,10 @@ local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
     end
 
     if newBox.data.flashScreen then
-        ScreenFlashModule:Flash(newBox.data.screenFlashColor)
+        ScreenFlashModule:Flash(
+            newBox.data.screenFlashColor,
+            newBox.data.screenFlashFadeDuration
+        )
     end
 
     return newBox

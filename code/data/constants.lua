@@ -215,7 +215,7 @@ return {
             DEFAULT_NAME = "default",
 
             CLICK_RECOVERY_DURATION = .1,
-            CLICK_SQUASH = .9,
+            CLICK_SCALE = .9,
 
             CLICK_EASING = "easeInOutQuad",
 
@@ -226,7 +226,7 @@ return {
     },
 
     VFX = {
-        BASE_SCREEN_FLASH_COLOR = {255, 227, 17, 0},
+        BASE_SCREEN_FLASH_COLOR = {255, 227, 17, .8},
         BASE_SCREEN_FLASH_SPEED = 2,
     }
 }

@@ -176,7 +176,7 @@ end
 local function _getCurrentCategorySchema()
 	local currentCategory = categories[currentCategoryIndex]
 
-	for _, category in pairs(SAVES_CONSTANTS.SETTINGS_SCHEMA) do
+	for _, category in pairs(CONSTANTS.SAVES.SETTINGS_SCHEMA) do
 		if category.key == currentCategory then
 			return category
 		end
@@ -303,7 +303,7 @@ end
 
 -- Changes a numeric setting.
 local function _adjustNumericSetting(category, settingKey, direction)
-	local range = SAVES_CONSTANTS.NUMBER_SETTING_RANGES[settingKey]
+	local range = CONSTANTS.SAVES.NUMBER_SETTING_RANGES[settingKey]
 	local oldValue = SettingsModule.loadedFile[category][settingKey]
 
 	local newValue = _clampNumberSetting(
@@ -581,7 +581,7 @@ end
 local function _buildCategories()
 	categories = {}
 
-	for _, category in pairs(SAVES_CONSTANTS.SETTINGS_SCHEMA) do
+	for _, category in pairs(CONSTANTS.SAVES.SETTINGS_SCHEMA) do
 		if SettingsModule.loadedFile[category.key] then
 			table.insert(categories, category.key)
 		end
