@@ -2,65 +2,74 @@ local BoxesObjectModule = require("code.game.boxes.object")
 
 local CONSTANTS = require("code.data.constants")
 
-local string = require("code.engine.helpers.string")
 local table = require("code.engine.helpers.table")
 local math = require("code.engine.helpers.math")
 
+local stdString = _G.string
+local stdTable = _G.table
+
 local Module = {}
+
+local CURRENT_VERSION = CONSTANTS.SAVES.DEFAULT_DATA.version
 
 local function _normalizeTable(input, default, ignoreKeys)
 	ignoreKeys = ignoreKeys or {}
+	input = type(input) == "table" and input or {}
 
 	local normalized = {}
-
-	input = type(input) == "table" and input or {}
 
 	for key, defaultValue in pairs(default) do
 		local value = input[key]
 
 		if ignoreKeys[key] then
+			if value == nil then
+				value = type(defaultValue) == "table"
+					and table.clone(defaultValue)
+					or defaultValue
+			end
+
 			normalized[key] = value
 
 		elseif type(defaultValue) == "table" then
-			normalized[key] = _normalizeTable(
-				value,
-				defaultValue,
-				{}
-			)
+			normalized[key] = _normalizeTable(value, defaultValue)
+
+		elseif value == nil then
+			normalized[key] = defaultValue
 
 		else
-			if value == nil then
-				normalized[key] = defaultValue
-			else
-				normalized[key] = value
-			end
+			normalized[key] = value
 		end
 	end
 
 	return normalized
 end
 
-local function _decryptBase64(string)
-	return love.data.decode("string", "base64", string)
+local function _decryptBase64(encoded)
+	return love.data.decode("string", "base64", encoded)
 end
 
-local function _decryptWithKey(string)
+local function _decryptWithKey(encrypted)
 	local key = SAVE_FILE_ENCRYPTION_KEY
-	local keyLength = #key
 
+	assert(
+		type(key) == "string" and #key > 0,
+		"SAVE_FILE_ENCRYPTION_KEY is missing or empty"
+	)
+
+	local keyLength = #key
 	local output = {}
 
-	for index = 1, #string do
-		local eByte = string:byte(index)
+	for index = 1, #encrypted do
+		local eByte = encrypted:byte(index)
 		local kByte = key:byte(((index - 1) % keyLength) + 1)
 
-		output[index] = string.char(math.xorByte(eByte, kByte))
+		output[index] = stdString.char(math.xorByte(eByte, kByte))
 	end
 
-	return table.concat(output)
+	return stdTable.concat(output)
 end
 
-local function _seperateLines(file)
+local function _splitSections(file)
 	local sections = {}
 
 	file = file:gsub("\r\n", "\n")
@@ -68,27 +77,44 @@ local function _seperateLines(file)
 	local start = 1
 
 	while true do
-		local separatorStart, separatorEnd =
-			file:find("\n\n", start, true)
+		local separatorStart, separatorEnd = file:find("\n\n", start, true)
 
 		if not separatorStart then
-			table.insert(
-				sections,
-				file:sub(start)
-			)
-
+			sections[#sections + 1] = file:sub(start)
 			break
 		end
 
-		table.insert(
-			sections,
-			file:sub(start, separatorStart - 1)
-		)
-
+		sections[#sections + 1] = file:sub(start, separatorStart - 1)
 		start = separatorEnd + 1
 	end
 
 	return sections
+end
+
+local function _assignPath(target, path, value)
+	local segments = {}
+
+	for segment in path:gmatch("[^%.]+") do
+		segments[#segments + 1] = segment
+	end
+
+	if #segments == 0 then
+		return
+	end
+
+	local node = target
+
+	for index = 1, #segments - 1 do
+		local segment = segments[index]
+
+		if type(node[segment]) ~= "table" then
+			node[segment] = {}
+		end
+
+		node = node[segment]
+	end
+
+	node[segments[#segments]] = value
 end
 
 function Module:DecodeSimple(section)
@@ -103,14 +129,13 @@ function Module:DecodeSimple(section)
 
 		if index and value then
 			if value == "true" then
-				result[index] = true
+				_assignPath(result, index, true)
 
 			elseif value == "false" then
-				result[index] = false
+				_assignPath(result, index, false)
 
 			else
-				local num = tonumber(value)
-				result[index] = num or value
+				_assignPath(result, index, tonumber(value) or value)
 			end
 		end
 	end
@@ -129,12 +154,13 @@ function Module:DecodeBoxes(section)
 		local values = {}
 
 		for value in line:gmatch("%S+") do
-			table.insert(values, value)
+			values[#values + 1] = value
 		end
 
 		if #values >= 6 then
 			local box = {
 				type = values[1],
+
 				velocityX = tonumber(values[2]),
 				velocityY = tonumber(values[3]),
 
@@ -147,16 +173,20 @@ function Module:DecodeBoxes(section)
 			}
 
 			for index = 7, #values do
-				table.insert(box.items, values[index])
+				box.items[#box.items + 1] = values[index]
 			end
 
-			table.insert(boxes, box)
+			-- skip corrupt lines instead of crashing later on nil numbers
+			if box.velocityX and box.velocityY and box.x and box.y and box.rotation then
+				boxes[#boxes + 1] = box
+			end
 		end
 	end
 
 	return boxes
 end
 
+-- Pre-v3 saves stored a numeric tier instead of a box type.
 function Module:DecodeLegacyBoxes(section)
 	if not section then
 		return
@@ -168,27 +198,33 @@ function Module:DecodeLegacyBoxes(section)
 		local values = {}
 
 		for value in line:gmatch("%S+") do
-			table.insert(values, value)
+			values[#values + 1] = value
 		end
 
 		if #values >= 6 then
 			local tier = tonumber(values[1])
-			local boxData = BoxesObjectModule.GetBoxDataByTier(tier)
+			local boxData = tier and BoxesObjectModule.GetBoxDataByTier(tier)
 
-			if boxData then
-				table.insert(boxes, {
+			local velocityX = tonumber(values[2])
+			local velocityY = tonumber(values[3])
+			local x = tonumber(values[4])
+			local y = tonumber(values[5])
+			local rotation = tonumber(values[6])
+
+			if boxData and velocityX and velocityY and x and y and rotation then
+				boxes[#boxes + 1] = {
 					type = boxData.type,
 
-					velocityX = tonumber(values[2]),
-					velocityY = tonumber(values[3]),
+					velocityX = velocityX,
+					velocityY = velocityY,
 
-					x = tonumber(values[4]),
-					y = tonumber(values[5]),
+					x = x,
+					y = y,
 
-					rotation = tonumber(values[6]),
+					rotation = rotation,
 
 					items = {}
-				})
+				}
 			end
 		end
 	end
@@ -201,9 +237,7 @@ function Module:DecodeVersion(section)
 		return
 	end
 
-	local output = string.gsub(section, "version ", "")
-
-	return tonumber(output)
+	return tonumber(section:match("^%s*version%s+(%d+)"))
 end
 
 function Module:DecodeSlot(section)
@@ -211,13 +245,11 @@ function Module:DecodeSlot(section)
 		return
 	end
 
-	local output = string.gsub(section, "slot ", "")
-
-	return tonumber(output)
+	return tonumber(section:match("^%s*slot%s+(%d+)"))
 end
 
 function Module:DecodeSettings(file)
-	local sections = _seperateLines(file)
+	local sections = _splitSections(file)
 
 	local finalOutput = {
 		audio = self:DecodeSimple(sections[1]),
@@ -225,29 +257,32 @@ function Module:DecodeSettings(file)
 		accessibility = self:DecodeSimple(sections[3]),
 	}
 
-	finalOutput = _normalizeTable(
+	return _normalizeTable(
 		finalOutput,
 		CONSTANTS.SAVES.DEFAULT_SETTINGS
 	)
-
-	return finalOutput
 end
 
 function Module:Decode(file)
-	file = _decryptWithKey(file)
-	file = _decryptBase64(file)
+	local ok, decoded = pcall(function()
+		return _decryptBase64(_decryptWithKey(file))
+	end)
 
-	local sections = _seperateLines(file)
+	if not ok then
+		return nil, tostring(decoded)
+	end
+
+	local sections = _splitSections(decoded)
 
 	local version = self:DecodeVersion(sections[1])
 	local finalOutput
 
 	if version then
 		finalOutput = {
-			version = CONSTANTS.SAVES.DEFAULT_DATA.version,
+			version = CURRENT_VERSION,
 			slot = self:DecodeSlot(sections[2]),
 
-			boxes = version < CONSTANTS.SAVES.DEFAULT_DATA.version
+			boxes = version < CURRENT_VERSION
 				and self:DecodeLegacyBoxes(sections[3])
 				or self:DecodeBoxes(sections[3]),
 
@@ -259,7 +294,7 @@ function Module:Decode(file)
 		}
 	else
 		finalOutput = {
-			version = CONSTANTS.SAVES.DEFAULT_DATA.version,
+			version = CURRENT_VERSION,
 			slot = self:DecodeSlot(sections[1]),
 
 			boxes = self:DecodeLegacyBoxes(sections[4]),
@@ -276,7 +311,8 @@ function Module:Decode(file)
 		finalOutput,
 		CONSTANTS.SAVES.DEFAULT_DATA,
 		{
-			boxes = true
+			boxes = true,
+			trinkets = true
 		}
 	)
 end
