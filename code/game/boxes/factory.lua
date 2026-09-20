@@ -18,7 +18,7 @@ function Module:Spawn()
     local spawnAmount = SavesFilesModule:Get("stats.upgradeable.spawnCount")
 
     for _ = 1, spawnAmount do
-        local currentSpawnTier = 4--spawnTier
+        local currentSpawnTier = spawnTier
 
         if math.random() < extraTierChance then
             currentSpawnTier = currentSpawnTier + 1
