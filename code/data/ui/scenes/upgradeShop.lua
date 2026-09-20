@@ -92,6 +92,25 @@ return {
         zIndex = COMMON_VALUES.Z_UI_OVERLAY,
     },
 
+    upgradeDescriptionBackground = {
+        spritePath = "assets/sprites/ui/buttons/button220x75.png",
+        type = "sprite",
+
+        color = COMMON_VALUES.COLOR_DARK,
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
+    },
+
+    upgradeDescriptionText = {
+        type = "text",
+
+        zIndex = COMMON_VALUES.Z_UI_TEXT,
+
+        font = love.graphics.newFont(
+            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.FONT_MEDIUM
+        ),
+    },
+
     birdSecret = {
         spritePath = "assets/sprites/familiarbird.png",
 

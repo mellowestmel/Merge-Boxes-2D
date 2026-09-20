@@ -120,15 +120,10 @@ function Module:Update()
     local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
     if not animationsEnabled then return end
 
-    local animation = math.sin(love.timer.getTime())
+    local wave = math.sin(love.timer.getTime())
 
-    if logo then
-        logo.offsetY = animation * 5
-    end
-
-    if logo2 then
-        logo2.offsetY = animation * 8
-    end
+    if logo then logo.offsetY = wave * 5 end
+    if logo2 then logo2.offsetY = wave * 8 end
 end
 
 function Module:Init()

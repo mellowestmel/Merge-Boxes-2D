@@ -137,6 +137,54 @@ return {
         zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
+    mapButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttons/buttonmap74x74.png",
+
+        type = "sprite",
+
+        x = UILayoutData.shared.settingsButton.x,
+        y = UILayoutData.shared.settingsButton.y - COMMON_VALUES.MASSIVE_PADDING,
+
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
+
+        color = COMMON_VALUES.COLOR_GREEN,
+
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
+    },
+
+    almanacButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttons/buttonalmanac74x74.png",
+
+        type = "sprite",
+
+        x = UILayoutData.shared.settingsButton.x - COMMON_VALUES.MASSIVE_PADDING,
+        y = UILayoutData.shared.settingsButton.y - COMMON_VALUES.MASSIVE_PADDING,
+
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
+
+        color = COMMON_VALUES.COLOR_GOLD,
+
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
+    },
+
+    inventoryButtonHitbox = {
+        spritePath = "assets/sprites/ui/buttons/buttoninventory74x74.png",
+
+        type = "sprite",
+
+        x = UILayoutData.shared.settingsButton.x - (COMMON_VALUES.MASSIVE_PADDING * 2),
+        y = UILayoutData.shared.settingsButton.y - COMMON_VALUES.MASSIVE_PADDING,
+
+        scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
+        scaleY = COMMON_VALUES.ICON_SMALL_SCALE,
+
+        color = COMMON_VALUES.COLOR_BLUE,
+
+        zIndex = COMMON_VALUES.Z_UI_BUTTON,
+    },
+
     dialoguePortrait = {
         type = "sprite",
 

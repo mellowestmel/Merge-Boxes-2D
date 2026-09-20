@@ -203,7 +203,7 @@ return {
         },
 
         CURSOR = {
-            ROTATION_LERP_SPEED = 25,
+            LERP_SPEED = 40,
 
             TILT_MULTIPLIER = .3,
             MAX_TILT = 25,

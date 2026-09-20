@@ -300,7 +300,7 @@ function Module:UpdateDragging(element, deltaTime)
 
         if directionX ~= 0 or directionY ~= 0 then
             local targetRotation = math.deg(math.atan2(directionY, directionX)) + 90
-            local lerpFactor = 1 - math.exp(-CONSTANTS.UI.CURSOR.ROTATION_LERP_SPEED * deltaTime)
+            local lerpFactor = 1 - math.exp(-CONSTANTS.UI.CURSOR.LERP_SPEED * deltaTime)
 
             self._element.rotation = _lerpAngle(self._element.rotation, targetRotation, lerpFactor)
         end
@@ -343,7 +343,7 @@ function Module:Update(deltaTime)
         return
     end
 
-    local lerpFactor = 1 - math.exp(-CONSTANTS.UI.CURSOR.ROTATION_LERP_SPEED * deltaTime)
+    local lerpFactor = 1 - math.exp(-CONSTANTS.UI.CURSOR.LERP_SPEED * deltaTime)
     local velocityX = targetX - self._element.x
     local velocityY = targetY - self._element.y
 

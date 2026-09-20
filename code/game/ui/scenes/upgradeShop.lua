@@ -14,6 +14,7 @@ local BoxesObjectModule = require("code.game.boxes.object")
 local UISharedFunctions = require("code.game.ui.shared")
 local UIButtonObjectModule = require("code.game.ui.objects.button")
 local UIScrollingFrameObjectModule = require("code.game.ui.objects.scrollingFrame")
+local UITextWrappingHelperModule = require("code.game.ui.helpers.textWrapping")
 local UILayoutHelperModule = require("code.game.ui.helpers.layout")
 
 local UILayoutData = require("code.data.ui.layout")
@@ -72,8 +73,11 @@ local function _setupBirdSecret(self)
     table.insert(self._objects, birdButton)
 end
 
+local SavesFilesModule = require("code.engine.saves.files")
 local function _setupFaceSecret(self)
-    if math.random(1, 1000) ~= 1 then return end
+    if math.floor(
+        SavesFilesModule:Get("stats.playtime") - SavesFilesModule.playtimeAtSessionStart
+    ) ~= 745 then return end -- 12 minutes 25 seconds
 
     local faceSecret = UISharedFunctions:CreateElement(
         SceneData.faceSecret,
@@ -106,6 +110,89 @@ local function _setupFaceSecret(self)
     })
 
     table.insert(self._objects, faceButton)
+end
+
+local function _setupDescriptionPanel(self)
+    local background = UISharedFunctions:CreateElement(
+        SceneData.upgradeDescriptionBackground,
+        self
+    )
+
+    local text = UISharedFunctions:CreateElement(
+        SceneData.upgradeDescriptionText,
+        self
+    )
+
+    background.render, text.render = false, false
+
+    self._description = {
+        background = background,
+        text = text,
+        baseScaleY = background.scaleY,
+        baseHeight = background:GetHeight()
+    }
+end
+
+-- Runs only when the hovered upgrade changes, not every frame.
+local function _setDescription(self, upgradeId)
+    local panel = self._description
+    local text, background = panel.text, panel.background
+    local padding = COMMON_VALUES.MEDIUM_PADDING
+
+    text.text = UpgradeHandlerModule:GetUpgrade(upgradeId).description or ""
+    UITextWrappingHelperModule.Wrap(text, background, padding)
+
+    local _, breaks = text.text:gsub("\n", "")
+    local lineCount = breaks + 1
+    local lineHeight =
+        text.font:getHeight() * text.font:getLineHeight() * text.scaleY
+
+    -- Grow the background if the wrapped text doesn't fit
+    background.scaleY = panel.baseScaleY * math.max(
+        1,
+        (lineCount * lineHeight + padding * 2) / panel.baseHeight
+    )
+
+    -- The renderer anchors text by ONE line's height, so a multi-line block
+    -- hangs down from the anchor. Shift up by half the extra lines to center.
+    panel.textOffsetY = -((lineCount - 1) * lineHeight) / 2
+    panel.id = upgradeId
+end
+
+local function _updateDescription(self)
+    local panel = self._description
+    if not panel then return end
+
+    -- Same rule Button uses for the hover cursor
+    local hovered
+    for _, upgradeButton in pairs(self._upgradeButtons) do
+        if upgradeButton.button._isHovered and upgradeButton.hitbox.render then
+            hovered = upgradeButton
+            break
+        end
+    end
+
+    local background, text = panel.background, panel.text
+    background.render, text.render = hovered ~= nil, hovered ~= nil
+
+    if not hovered then return end
+
+    if panel.id ~= hovered.id then
+        _setDescription(self, hovered.id)
+    end
+
+    -- Left of the hovered button; repositioned every frame so it follows scrolling
+    local hitbox = hovered.hitbox
+
+    background.x =
+        hitbox.x
+        - (hitbox:GetWidth() + background:GetWidth()) / 2
+        - COMMON_VALUES.MEDIUM_PADDING
+
+    background.y = hitbox.y
+
+    text.x = background.x
+    text.y = background.y + panel.textOffsetY
 end
 
 local function _getUpgrades()
@@ -267,6 +354,8 @@ local function _createUpgradeButton(self, buttonConfig)
 
     table.insert(self._upgradeButtons, {
         id = buttonConfig.id,
+        button = buyButton,
+        hitbox = hitbox,
         costLabel = costLabel,
         indicators = indicators,
         maxStacks = maximumStacks
@@ -355,6 +444,8 @@ function Module:Update()
                 or COMMON_VALUES.COLOR_DARK)
         end
     end
+
+    _updateDescription(self)
 end
 
 function Module:Init()
@@ -377,6 +468,7 @@ function Module:Init()
     _setupFaceSecret(self)
 
     _setupUpgradesScrollingFrame(self)
+    _setupDescriptionPanel(self)
 end
 
 return Module
