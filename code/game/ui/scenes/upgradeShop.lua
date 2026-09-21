@@ -76,7 +76,7 @@ end
 local SavesFilesModule = require("code.engine.saves.files")
 local function _setupFaceSecret(self)
     if math.floor(
-        SavesFilesModule:Get("stats.playtime") - SavesFilesModule.playtimeAtSessionStart
+        SavesFilesModule:Get("tracking.playtime") - SavesFilesModule.playtimeAtSessionStart
     ) ~= 745 then return end -- 12 minutes 25 seconds
 
     local faceSecret = UISharedFunctions:CreateElement(

@@ -32,7 +32,7 @@ local function _getHighestTierAcrossSaves()
 		local save = SavesFilesModule:ReadFile(slot)
 
 		if save and save.stats then
-			local tier = save.stats.highestBoxTier or 0
+			local tier = save.tracking.highestBoxTier or 0
 
 			if tier > highestTier then
 				highestTier = tier
@@ -242,7 +242,7 @@ function Module:SetupSessionPlaytimeLabel(scene)
 		if not SavesFilesModule.loadedFile then return end
 
 		sessionPlaytimeLabel.text = string.formatTime(
-				SavesFilesModule:Get("stats.playtime") - SavesFilesModule.playtimeAtSessionStart
+				SavesFilesModule:Get("tracking.playtime") - SavesFilesModule.playtimeAtSessionStart
 			)
 	end
 end

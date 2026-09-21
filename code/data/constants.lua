@@ -59,9 +59,6 @@ end
 local SAVE_SCHEMA = {
     { key = "currencies", fields = { { key = "credits", default = 50 } } },
     { key = "stats", fields = {
-        { key = "highestBoxTier", default = 0 },
-        { key = "playtime", default = 0 },
-
         { key = "upgradeable", fields = {
             { key = "extraSpawnTierChance", default = 0 },
 
@@ -72,6 +69,11 @@ local SAVE_SCHEMA = {
             { key = "autoSpawnUnlocked", default = false },
             { key = "dragMultiplier", default = 1 }
         }}
+    }},
+
+    { key = "tracking", fields = {
+        { key = "highestBoxTier", default = 0 },
+        { key = "playtime", default = 0 },
     }},
 
     { key = "boxes", fields = {} },
@@ -90,7 +92,7 @@ local SAVE_SCHEMA = {
 }
 
 local DEFAULT_DATA = {
-    version = 3,
+    version = 4,
     slot = 1,
 }
 -- Merge schema defaults into DEFAULT_DATA

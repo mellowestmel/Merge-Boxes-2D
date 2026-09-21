@@ -52,7 +52,7 @@ local function _startGame(slot)
 end
 
 local function _setupSavePlaytime(self, backgroundElement, save)
-    local playtime = (save.stats and save.stats.playtime) or 0
+    local playtime = (save.stats and save.tracking.playtime) or 0
     local templateSavePlaytime = UISharedFunctions:CreateElement(
         SceneData.templateSavePlaytime,
         self
@@ -63,7 +63,7 @@ local function _setupSavePlaytime(self, backgroundElement, save)
 end
 
 local function _setupSaveHighestTier(self, backgroundElement, save)
-    local highestTier = (save.stats and save.stats.highestBoxTier) or 0
+    local highestTier = (save.stats and save.tracking.highestBoxTier) or 0
 
     local templateSaveHighestTier = UISharedFunctions:CreateElement(
         SceneData.templateSaveHighestTier,
@@ -75,7 +75,7 @@ local function _setupSaveHighestTier(self, backgroundElement, save)
 end
 
 local function _setupSaveFileBoxPreview(self, backgroundElement, save)
-    local highestTier = (save.stats and save.stats.highestBoxTier) or 0
+    local highestTier = (save.stats and save.tracking.highestBoxTier) or 0
     local boxData = BoxesObjectModule.GetBoxDataByTier(highestTier)
 
     if not boxData then

@@ -210,7 +210,7 @@ local function _setupShopButton(self, shopButton)
         mouseButton = 1,
 
         onClick = function()
-            if SavesFilesModule:Get("stats.highestBoxTier")
+            if SavesFilesModule:Get("tracking.highestBoxTier")
                 < shopButton.requirement
             then
                 _playNotAllowedSound()
@@ -249,7 +249,7 @@ function Module:Update()
         if not hitbox then goto continue end
 
         hitbox:ChangeSprite(_lockedImageLogic(
-            SavesFilesModule:Get("stats.highestBoxTier"),
+            SavesFilesModule:Get("tracking.highestBoxTier"),
             shopButton.requirement,
             shopButton.hitboxData.spritePath
         ))
