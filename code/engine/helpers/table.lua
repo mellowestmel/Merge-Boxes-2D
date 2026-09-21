@@ -1,3 +1,5 @@
+-- ~/code/engine/helpers/table.lua
+
 local Module = {}
 
 -- Insert base functions into module

@@ -165,6 +165,8 @@ return {
 
             BASE_SPEED = 400,
             BASE_RANGE = 150,
+
+            MIN_DURATION = .001,
         },
 
         ANIMATION = {

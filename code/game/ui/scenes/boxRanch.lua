@@ -3,8 +3,6 @@
 local SoundHandlerModule = require("code.engine.soundHandler")
 local SavesFilesModule = require("code.engine.saves.files")
 
-local string = require("code.engine.helpers.string")
-
 local MusicHandlerModule = require("code.game.musicHandler")
 local BoxesObjectModule = require("code.game.boxes.object")
 local BoxFactoryModule = require("code.game.boxes.factory")
