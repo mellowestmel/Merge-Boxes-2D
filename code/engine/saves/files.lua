@@ -7,9 +7,6 @@ local SavesHelpersModule = require("code.engine.saves.helpers")
 local SavesDecodeModule = require("code.engine.saves.decode")
 local SavesEncodeModule = require("code.engine.saves.encode")
 
-local table = require("code.engine.helpers.table")
-local math = require("code.engine.helpers.math")
-
 local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}

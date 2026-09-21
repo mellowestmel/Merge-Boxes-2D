@@ -5,8 +5,6 @@ local RenderUtilsModule = require("code.engine.render.utils")
 local SettingsModule = require("code.engine.saves.settings")
 local TweenHandlerModule = require("code.engine.tweenHandler")
 
-local math = require("code.engine.helpers.math")
-
 local CONSTANTS = require("code.data.constants")
 
 local Module = {
@@ -206,8 +204,6 @@ function Module:SetSprite(spriteName, force)
     if self._dragging and not force then return end
 
     spriteName = spriteName or CONSTANTS.UI.CURSOR.DEFAULT_NAME
-    local drawable = self._sprites[spriteName] or self._sprites[CONSTANTS.UI.CURSOR.DEFAULT_NAME]
-    if not drawable then return end
 
     if self._spriteName == spriteName then return end
 
@@ -231,11 +227,11 @@ function Module:SetHovering(hoveringCursor)
 end
 
 function Module:ResetRotation()
-    if self._element then self._element.rotation = 0 end
+    self._element.rotation = 0
 end
 
 function Module:Click()
-    if not self._element or not SettingsModule:Get("graphics.cursorAnimationsEnabled") then return end
+    if not SettingsModule:Get("graphics.cursorAnimationsEnabled") then return end
 
     if self._clickTween then
         self._clickTween:Cancel()
@@ -256,8 +252,6 @@ function Module:Click()
 end
 
 function Module:SetDragging(dragging, element, mouseX, mouseY)
-    if not self._element then return end
-
     self._dragging = dragging
     self:SetSprite(dragging and "grabbing" or nil, true)
 
@@ -286,7 +280,7 @@ function Module:SetDragging(dragging, element, mouseX, mouseY)
 end
 
 function Module:UpdateDragging(element, deltaTime)
-    if not self._dragging or not element or not self._element then return end
+    if not self._dragging then return end
 
     self._element.x = element.x + self._dragOffsetX
     self._element.y = element.y + self._dragOffsetY
@@ -365,7 +359,7 @@ function Module.Init()
     _loadSprites()
 
     local defaultSprite = Module._sprites[CONSTANTS.UI.CURSOR.DEFAULT_NAME]
-    if not defaultSprite then return end
+    assert(defaultSprite, "Cursor default sprite failed to load")
 
     Module._spriteName = CONSTANTS.UI.CURSOR.DEFAULT_NAME
 

@@ -1,14 +1,12 @@
 -- ~/code/game/ui/scenes/mainMenu.lua
 
 local SettingsModule = require("code.engine.saves.settings")
-local table = require("code.engine.helpers.table")
-local math = require("code.engine.helpers.math")
 
 local MusicHandlerModule = require("code.game.musicHandler")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
-local UIButtonObjectModule = require("code.game.ui.objects.button")
+local UIObjectHelperModule = require("code.game.ui.helpers.object")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
@@ -24,96 +22,77 @@ local logo2 = nil
 local logo = nil
 
 function Module:Clean()
-    for _, element in pairs(self._elements) do
-        element:Remove()
-    end
+    UIObjectHelperModule.CleanScene(self)
 
-    for _, object in pairs(self._objects) do
-        object:Remove()
-    end
-
-    self._elements = {}
-    self._objects = {}
-
-    UISharedFunctions:CleanUpdates()
+    UISharedFunctions:Clean()
 end
 
 local function _setupLogo(self)
-    logo = UISharedFunctions:CreateElement(
+    logo = UIObjectHelperModule.CreateElement(
         SceneData.logo,
         self
     )
 
-    logo2 = UISharedFunctions:CreateElement(
+    logo2 = UIObjectHelperModule.CreateElement(
         SceneData.logo2,
         self
     )
 end
 
 local function _setupPlayGameButton(self)
-    local playGameButtonHitbox = UISharedFunctions:CreateElement(
+    local playGameButtonHitbox = UIObjectHelperModule.CreateElement(
         SceneData.playGameButtonHitbox,
         self
     )
 
-    local playGameButtonLabel = UISharedFunctions:CreateElement(
+    local playGameButtonLabel = UIObjectHelperModule.CreateElement(
         SceneData.playGameButtonLabel,
         self
     )
 
-    local playGameButton = UIButtonObjectModule.new({
-        elements = {
+    UIObjectHelperModule.CreateButton(
+        self,
+        {
             playGameButtonHitbox,
             playGameButtonLabel
         },
-
-        hitboxElement = playGameButtonHitbox,
-
-        mouseButton = 1,
-
-        onClick = function()
+        playGameButtonHitbox,
+        function()
             ScreenTransitionModule:Transition({
                 callback = function()
                     UISceneHandlerModule:Switch("saveFiles")
                 end
             })
         end
-    })
-
-    table.insert(self._objects, playGameButton)
+    )
 end
 
 local function _setupQuitButton(self)
-    local quitButtonHitbox = UISharedFunctions:CreateElement(
+    local quitButtonHitbox = UIObjectHelperModule.CreateElement(
         SceneData.quitButtonHitbox,
         self
     )
 
-    local quitButtonLabel = UISharedFunctions:CreateElement(
+    local quitButtonLabel = UIObjectHelperModule.CreateElement(
         SceneData.quitButtonLabel,
         self
     )
 
-    local quitButton = UIButtonObjectModule.new({
-        elements = {
+    UIObjectHelperModule.CreateButton(
+        self,
+        {
             quitButtonHitbox,
             quitButtonLabel
         },
-
-        hitboxElement = quitButtonHitbox,
-
-        mouseButton = 1,
-
-        onClick = function()
+        quitButtonHitbox,
+        function()
             ScreenTransitionModule:Transition({
                 callback = function()
                     love.event.quit()
                 end
             })
         end
-    })
-
-    table.insert(self._objects, quitButton)
+    )
 end
 
 function Module:Update()
@@ -139,7 +118,6 @@ function Module:Init()
     _setupQuitButton(self)
     _setupLogo(self)
 
-    --UISharedFunctions:SetupVisibilityToggle(self)
 end
 
 return Module

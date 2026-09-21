@@ -2,8 +2,8 @@ local BoxesObjectModule = require("code.game.boxes.object")
 
 local CONSTANTS = require("code.data.constants")
 
-local table = require("code.engine.helpers.table")
-local math = require("code.engine.helpers.math")
+
+
 
 local Module = {}
 

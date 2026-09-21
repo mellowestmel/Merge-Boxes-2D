@@ -1,7 +1,5 @@
 -- ~/code/engine/render/element.lua
 
-local math = require("code.engine.helpers.math")
-
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 local ShaderHandlerModule = require("code.engine.shaderHandler")
 local IdManagerModule = require("code.engine.idManager")
@@ -10,7 +8,6 @@ local RenderUtilsModule = require("code.engine.render.utils")
 local Module = {}
 
 Module.imageCache = {}
-Module._shaderCanvases = {}
 Module._elements = {}
 Module._dirty = true
 
@@ -20,7 +17,7 @@ local Element = {}
 Element.__index = Element
 
 function Module:PreloadSprite(path)
-    if not path then return nil end
+    assert(path, "PreloadSprite requires path")
 
     if not love.filesystem.getInfo(path, "file") then
         path = "assets/sprites/missing.png"
@@ -91,19 +88,21 @@ function Element:Remove()
 end
 
 local function _getDimensions(element)
-    if element.type == "sprite" and element.drawable then
-        return
-            element.drawable:getWidth() * element.scaleX,
-            element.drawable:getHeight() * element.scaleY
-    end
+    if element.type == "sprite" then
+        local drawable = element.drawable
 
-    if element.type == "text" and element.text then
-        local font = element.font or love.graphics.getFont()
+        assert(drawable, "Sprite element requires drawable")
 
         return
-            font:getWidth(element.text) * element.scaleX,
-            font:getHeight() * element.scaleY
+            drawable:getWidth() * element.scaleX,
+            drawable:getHeight() * element.scaleY
     end
+
+    local font = element.font or love.graphics.getFont()
+
+    return
+        font:getWidth(element.text),
+        font:getHeight() * element.scaleY
 end
 
 function Element:SetZIndex(zIndex)
@@ -179,8 +178,10 @@ local function _drawElement(element)
         )
     end
 
-    if element.type == "sprite" and element.drawable then
+    if element.type == "sprite" then
         local drawable = element.drawable
+
+        assert(drawable, "Sprite element requires drawable")
 
         love.graphics.draw(
             drawable,
@@ -199,6 +200,7 @@ local function _drawElement(element)
 
     elseif element.type == "text" and element.text ~= "" then
         local font = element.font or love.graphics.getFont()
+
         love.graphics.setFont(font)
 
         love.graphics.print(
@@ -219,135 +221,22 @@ local function _drawElement(element)
     end
 end
 
-local function _getShaderCanvases()
-    local width = RESOLUTION_WIDTH
-    local height = RESOLUTION_HEIGHT
-    local canvases = Module._shaderCanvases
+-- Reused every draw. The shader handler only reads it during the call.
+local _shaderContext = {}
 
-    if canvases.width ~= width
-        or canvases.height ~= height
-        or not canvases.canvasA
-        or not canvases.canvasB
-    then
-        canvases.canvasA = love.graphics.newCanvas(width, height)
-        canvases.canvasB = love.graphics.newCanvas(width, height)
+local function _getShaderContext(element)
+    local width, height = _getDimensions(element)
 
-        canvases.width = width
-        canvases.height = height
-    end
+    _shaderContext.x = element.x + element.offsetX
+    _shaderContext.y = element.y + element.offsetY
 
-    return canvases.canvasA, canvases.canvasB
-end
+    _shaderContext.width = width
+    _shaderContext.height = height
 
-local function _loadTexture(path)
-    local texture = Module.imageCache[path]
+    _shaderContext.rotation = math.rad(element.rotation)
+    _shaderContext.alpha = element.color.a
 
-    if not texture then
-        texture = love.graphics.newImage(path)
-        Module.imageCache[path] = texture
-    end
-
-    return texture
-end
-
-local function _sendUniform(shader, name, value)
-    if shader:hasUniform(name) then
-        shader:send(name, value)
-    end
-end
-
-local STANDARD_UNIFORM_PROVIDERS = {
-    time = function()
-        return love.timer.getTime()
-    end,
-
-    canvasSize = function()
-        return { RESOLUTION_WIDTH, RESOLUTION_HEIGHT }
-    end,
-
-    texelSize = function()
-        return { 1 / RESOLUTION_WIDTH, 1 / RESOLUTION_HEIGHT }
-    end,
-
-    elementCenter = function(element)
-        return { element.x + element.offsetX, element.y + element.offsetY }
-    end,
-
-    elementSize = function(element)
-        return { _getDimensions(element) }
-    end,
-
-    elementRotation = function(element)
-        return math.rad(element.rotation)
-    end,
-
-    elementAlpha = function(element)
-        return element.color.a
-    end,
-}
-
-local function _sendShaderParams(shader, shaderEntry, element)
-    for name, getValue in pairs(STANDARD_UNIFORM_PROVIDERS) do
-        if shader:hasUniform(name) then
-            shader:send(name, getValue(element))
-        end
-    end
-
-    if type(shaderEntry) ~= "table" then
-        return
-    end
-
-    for name, value in pairs(shaderEntry) do
-        if name ~= "name" then
-            if type(value) == "string" and name:match("Texture$") then
-                value = _loadTexture(value)
-            end
-
-            _sendUniform(shader, name, value)
-        end
-    end
-end
-
-local function _drawWithShaders(element)
-    local inputCanvas, outputCanvas = _getShaderCanvases()
-
-    local previousCanvas = love.graphics.getCanvas()
-    local previousShader = love.graphics.getShader()
-
-    love.graphics.setCanvas(inputCanvas)
-    love.graphics.clear(0, 0, 0, 0)
-
-    love.graphics.setShader()
-
-    _drawElement(element)
-
-    for _, shaderEntry in pairs(element.shaders) do
-        local shaderName = type(shaderEntry) == "table"
-            and shaderEntry.name
-            or shaderEntry
-
-        local shader = ShaderHandlerModule:Get(shaderName)
-
-        if shader then
-            love.graphics.setCanvas(outputCanvas)
-            love.graphics.clear(0, 0, 0, 0)
-
-            love.graphics.setShader(shader)
-
-            love.graphics.setColor(1, 1, 1, 1)
-
-            _sendShaderParams(shader, shaderEntry, element)
-            love.graphics.draw(inputCanvas, 0, 0)
-
-            inputCanvas, outputCanvas = outputCanvas, inputCanvas
-        end
-    end
-
-    love.graphics.setCanvas(previousCanvas)
-    love.graphics.setShader(previousShader)
-    love.graphics.setColor(1, 1, 1, 1)
-
-    love.graphics.draw(inputCanvas, 0, 0)
+    return _shaderContext
 end
 
 function Element:Draw()
@@ -360,7 +249,12 @@ function Element:Draw()
         return
     end
 
-    _drawWithShaders(self)
+    ShaderHandlerModule:DrawChain(
+        self.shaders,
+        _getShaderContext(self),
+        _drawElement,
+        self
+    )
 end
 
 function Module.Get(id)
@@ -372,7 +266,7 @@ function Module.GetAll()
 end
 
 function Module.new(data)
-    data = data or {}
+    assert(data, "RenderElementModule.new requires data")
 
     local element = setmetatable({
         id = manager:Get(),
@@ -414,7 +308,6 @@ function Module.new(data)
 
     if element.type == "sprite" then
         element:ChangeSprite(data.spritePath)
-
     elseif not element.font then
         element.font = love.graphics.newFont(
             "assets/fonts/Stanberry.ttf"

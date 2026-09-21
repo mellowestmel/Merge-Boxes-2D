@@ -8,7 +8,7 @@ local SavesHelpersModule = require("code.engine.saves.helpers")
 local SavesDecodeModule = require("code.engine.saves.decode")
 local SavesEncodeModule = require("code.engine.saves.encode")
 
-local table = require("code.engine.helpers.table")
+
 
 local Module = {}
 Module.loadedFile = nil

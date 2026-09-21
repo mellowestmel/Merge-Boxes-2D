@@ -177,6 +177,11 @@ return {
     },
 
     SHOP = {
+        UPGRADE_DATA = {
+            REQUIRE_DIRECTORY = "code.data.shop.upgrades.",
+            DIRECTORY = "code/data/shop/upgrades"
+        },
+
         UPGRADE_SHOP = {
             UNLOCK_REQUIREMENT = 5,
             ID = "upgradeShop"
@@ -230,5 +235,24 @@ return {
     VFX = {
         BASE_SCREEN_FLASH_COLOR = {255, 227, 17, .8},
         BASE_SCREEN_FLASH_SPEED = 2,
-    }
+    },
+
+    QUADTREE = {
+        MAX_DEPTH = 8,
+
+        DEFAULT_WIDTH = 100,
+        DEFAULT_HEIGHT = 100,
+        DEFAULT_CAPACITY = 4
+    },
+
+    SHADERS = {
+        SOURCES = {
+            { directory = "code/data/shaders", prefix = "" },
+            { directory = "code/data/particles", prefix = "particles/" }
+        }
+    },
+
+    TWEEN = {
+        COMPLETION_EPSILON = 1e-6
+    },
 }

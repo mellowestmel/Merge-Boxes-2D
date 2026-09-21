@@ -3,6 +3,9 @@
 local MusicHandlerModule = require("code.game.musicHandler")
 local BoxesObjectModule = require("code.game.boxes.object")
 local UISharedFunctions = require("code.game.ui.shared")
+local UIObjectHelperModule = require("code.game.ui.helpers.object")
+
+local SceneData = require("code.data.ui.scenes.sacrificialGrounds")
 
 local Module = {}
 Module._elements = {}
@@ -10,18 +13,8 @@ Module._objects = {}
 Module.name = "sacrificialGrounds"
 
 function Module:Clean()
-    for _, element in pairs(self._elements) do
-        element:Remove()
-    end
-
-    for _, button in pairs(self._objects) do
-        button:Remove()
-    end
-
-    self._elements = {}
-    self._objects = {}
-
-    UISharedFunctions:CleanUpdates()
+    UIObjectHelperModule.CleanScene(self)
+    UISharedFunctions:Clean()
 end
 
 function Module:Update()
@@ -30,19 +23,18 @@ end
 
 function Module:Init()
     MusicHandlerModule:PlayTrack("sacrificialGrounds")
-
     BoxesObjectModule.renderBoxes = false
 
     UISharedFunctions:SetupSidebarBackground(self)
+    UISharedFunctions:SetupBackground(self)
+
+    UISharedFunctions:SetupBackToMenuButton(self)
     UISharedFunctions:SetupSettingsButton(self)
-    UISharedFunctions:SetupShopBackButton(self)
 
     UISharedFunctions:SetupSessionPlaytimeLabel(self)
     UISharedFunctions:SetupCurrencyLabels(self)
 
-    UISharedFunctions:SetupBackToMenuButton(self)
-
-    UISharedFunctions:SetupBackground(self)
+    UISharedFunctions:SetupShopBackButton(self)
 end
 
 return Module

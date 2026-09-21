@@ -1,15 +1,11 @@
 -- ~/code/game/ui/scenes/settings.lua
 
-local RenderElementModule = require("code.engine.render.element")
-
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
 local SavesFilesModule = require("code.engine.saves.files")
 local SettingsModule = require("code.engine.saves.settings")
 
 local CONSTANTS = require("code.data.constants")
-
-local table = require("code.engine.helpers.table")
 
 local MusicHandlerModule = require("code.game.musicHandler")
 local BoxesObjectModule = require("code.game.boxes.object")
@@ -18,8 +14,7 @@ local COMMON_VALUES = require("code.data.ui.commonValues")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
-
-local UIButtonObjectModule = require("code.game.ui.objects.button")
+local UIObjectHelperModule = require("code.game.ui.helpers.object")
 local UILayoutHelperModule = require("code.game.ui.helpers.layout")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
@@ -54,25 +49,12 @@ local function _resetSelectionState()
 end
 
 function Module:Clean()
-	for _, element in pairs(self._elements) do
-		if element then
-			element:Remove()
-		end
-	end
-
-	for _, object in pairs(self._objects) do
-		if object then
-			object:Remove()
-		end
-	end
-
-	self._elements = {}
-	self._objects = {}
+	UIObjectHelperModule.CleanScene(self)
 
 	_resetSelectionState()
 	categories = {}
 
-	UISharedFunctions:CleanUpdates()
+	UISharedFunctions:Clean()
 
 	BoxesObjectModule.renderBoxes = true
 end
@@ -97,14 +79,12 @@ local function _removeAndPrune(items, list)
 	for itemIndex = #items, 1, -1 do
 		local item = items[itemIndex]
 
-		if item then
-			item:Remove()
+		item:Remove()
 
-			for listIndex = #list, 1, -1 do
-				if list[listIndex] == item then
-					table.remove(list, listIndex)
-					break
-				end
+		for listIndex = #list, 1, -1 do
+			if list[listIndex] == item then
+				table.remove(list, listIndex)
+				break
 			end
 		end
 
@@ -114,7 +94,7 @@ end
 
 -- Creates the background.
 local function _setupBackground(self)
-	UISharedFunctions:CreateElement(
+	UIObjectHelperModule.CreateElement(
 		SceneData.background,
 		self
 	)
@@ -124,22 +104,17 @@ end
 -- buttons in this scene are just "one hitbox, one click handler", so
 -- this covers the cancel/toggle/stepper/scroll buttons below.
 local function _setupHitboxButton(self, hitbox, onClick)
-	local button = UIButtonObjectModule.new({
-		elements = {hitbox},
-		hitboxElement = hitbox,
-
-		mouseButton = 1,
-		onClick = onClick
-	})
-
-	table.insert(self._objects, button)
-
-	return button
+	return UIObjectHelperModule.CreateButton(
+		self,
+		{hitbox},
+		hitbox,
+		onClick
+	)
 end
 
 -- Creates the cancel button.
 local function _setupCancelButton(self)
-	local cancelButtonHitbox = UISharedFunctions:CreateElement(
+	local cancelButtonHitbox = UIObjectHelperModule.CreateElement(
 		SceneData.cancelButtonHitbox,
 		self
 	)
@@ -194,38 +169,13 @@ local function _clearSettingValueControls(self)
 	for index = #settingValueControls, 1, -1 do
 		local control = settingValueControls[index]
 
-		if control then
-			_removeAndPrune(control.elements or {}, self._elements)
-			_removeAndPrune(control.objects or {}, self._objects)
-		end
+		_removeAndPrune(control.elements, self._elements)
+		_removeAndPrune(control.objects, self._objects)
 
 		table.remove(settingValueControls, index)
 	end
 
 	settingValueControls = {}
-end
-
--- Loads a sprite into the cache.
-local function _preloadSprite(spritePath)
-	if RenderElementModule.imageCache[spritePath] then
-		return
-	end
-
-	local temp = RenderElementModule.new({
-		type = "sprite",
-		spritePath = spritePath
-	})
-
-	temp:Remove()
-end
-
--- Gets the image for a boolean toggle.
-local function _booleanToggleImage(value)
-	return RenderElementModule.imageCache[
-		value
-			and COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH
-			or COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
-	]
 end
 
 -- Persists a setting change, saving and firing the changed signal.
@@ -255,16 +205,13 @@ end
 
 -- Creates a boolean setting control.
 local function _setupBooleanSettingControl(self, category, setting, rowY)
-	_preloadSprite(COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH)
-	_preloadSprite(COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH)
-
 	local currentValue = SettingsModule.loadedFile[category][setting.key]
 
 	local togglePath = currentValue
 		and COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH
 		or COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
 
-	local toggleHitbox = UISharedFunctions:CreateElement(
+	local toggleHitbox = UIObjectHelperModule.CreateElement(
 		_copyWithOverrides(SceneData.booleanSettingToggleHitbox, {
 			y = rowY,
 			type = "sprite",
@@ -274,8 +221,13 @@ local function _setupBooleanSettingControl(self, category, setting, rowY)
 	)
 
 	local toggleButton = _setupHitboxButton(self, toggleHitbox, function()
-		toggleHitbox.drawable =
-			_booleanToggleImage(_toggleBooleanSetting(category, setting.key))
+		local value = _toggleBooleanSetting(category, setting.key)
+
+		toggleHitbox:ChangeSprite(
+			value
+				and COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH
+				or COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
+		)
 	end)
 
 	table.insert(settingValueControls, {
@@ -354,7 +306,7 @@ local function _setupStepperControl(
 	adjustValue,
 	formatValue
 )
-	local decreaseHitbox = UISharedFunctions:CreateElement(
+	local decreaseHitbox = UIObjectHelperModule.CreateElement(
 		_copyWithOverrides(
 			SceneData.decreaseSettingHitbox,
 			{
@@ -365,7 +317,7 @@ local function _setupStepperControl(
 		self
 	)
 
-	local increaseHitbox = UISharedFunctions:CreateElement(
+	local increaseHitbox = UIObjectHelperModule.CreateElement(
 		_copyWithOverrides(
 			SceneData.increaseSettingHitbox,
 			{
@@ -376,7 +328,7 @@ local function _setupStepperControl(
 		self
 	)
 
-	local valueLabel = UISharedFunctions:CreateElement(
+	local valueLabel = UIObjectHelperModule.CreateElement(
 		_copyWithOverrides(
 			SceneData.settingValueLabel,
 			{
@@ -500,7 +452,7 @@ local function _setupSettingNameLabels(self)
 			COMMON_VALUES.BUTTON_HORIZONTAL_GAP - COMMON_VALUES.MEDIUM_PADDING
 		)
 
-		local label = UISharedFunctions:CreateElement(
+		local label = UIObjectHelperModule.CreateElement(
 			_copyWithOverrides(
 				SceneData.settingNameLabel,
 				{
@@ -539,7 +491,7 @@ end
 -- Creates the current category label.
 local function _setupCurrentCategoryLabel(self)
 	currentCategoryLabel =
-		UISharedFunctions:CreateElement(
+		UIObjectHelperModule.CreateElement(
 			SceneData.currentCategoryLabel,
 			self
 		)
@@ -550,13 +502,13 @@ end
 -- Creates the category scroll buttons.
 local function _setupScrollButtons(self)
 	local scrollRightButtonHitbox =
-		UISharedFunctions:CreateElement(
+		UIObjectHelperModule.CreateElement(
 			SceneData.scrollRightButtonHitbox,
 			self
 		)
 
 	local scrollLeftButtonHitbox =
-		UISharedFunctions:CreateElement(
+		UIObjectHelperModule.CreateElement(
 			SceneData.scrollLeftButtonHitbox,
 			self
 		)

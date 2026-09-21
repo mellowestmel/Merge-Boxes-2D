@@ -1,16 +1,13 @@
--- ~/code/game/ui/shared.lua
-
-local RenderElementModule = require("code.engine.render.element")
-
 local SavesFilesModule = require("code.engine.saves.files")
 
 local string = require("code.engine.helpers.string")
-local table = require("code.engine.helpers.table")
+
 
 local BoxesObjectModule = require("code.game.boxes.object")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UIButtonObjectModule = require("code.game.ui.objects.button")
+local UIObjectHelperModule = require("code.game.ui.helpers.object")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
@@ -43,60 +40,41 @@ local function _getHighestTierAcrossSaves()
 	return highestTier
 end
 
-function Module:CreateElement(elementData, scene)
-	if not elementData then return end
-	if not scene then return end
-
-	local data = {}
-
-	for key, value in pairs(elementData) do
-		data[key] = value
-	end
-
-	local element = RenderElementModule.new(data)
-
-	table.insert(scene._elements, element)
-
-	return element
-end
-
 function Module:SetupHighestTierBoxes(scene)
-    local highestTier = _getHighestTierAcrossSaves()
-    if highestTier <= 0 then return end
+	local highestTier = _getHighestTierAcrossSaves()
+	if highestTier <= 0 then return end
 
-    for type, data in pairs(UILayoutData.shared.backgroundBoxes) do
-        local box = BoxesData[type]
+	for type, data in pairs(UILayoutData.shared.backgroundBoxes) do
+		local box = BoxesData[type]
 
-        if not box then goto continue end
-        if not box.tier then goto continue end
-        if box.tier > highestTier then goto continue end
+		if not box then goto continue end
+		if not box.tier then goto continue end
+		if box.tier > highestTier then goto continue end
 
-        local boxElement = RenderElementModule.new({
-            name = type .. "BackgroundBox",
+		UIObjectHelperModule.CreateElement({
+			name = type .. "BackgroundBox",
 
-            spritePath = UILayoutData.shared.backgroundBoxesPathPrefix
-                .. "box"
-                .. box.tier
-                .. ".png",
+			spritePath = UILayoutData.shared.backgroundBoxesPathPrefix
+				.. "box"
+				.. box.tier
+				.. ".png",
 
-            x = data.x,
-            y = data.y,
+			x = data.x,
+			y = data.y,
 
-            zIndex = COMMON_VALUES.Z_WORLD + data.zIndex,
+			zIndex = COMMON_VALUES.Z_WORLD + data.zIndex,
 
 			shaders = data.shaders
-        })
+		}, scene)
 
-        table.insert(scene._elements, boxElement)
-
-        :: continue ::
-    end
+		::continue::
+	end
 end
 
 function Module:SetupSettingsButton(scene)
 	if not scene then return end
 
-	local settingsButtonHitbox = self:CreateElement(
+	local settingsButtonHitbox = UIObjectHelperModule.CreateElement(
 		SharedData.settingsButtonHitbox,
 		scene
 	)
@@ -126,7 +104,7 @@ end
 function Module:SetupDiscordButton(scene)
 	if not scene then return end
 
-	local discordButtonHitbox = self:CreateElement(
+	local discordButtonHitbox = UIObjectHelperModule.CreateElement(
 		SharedData.discordButtonHitbox,
 		scene
 	)
@@ -150,19 +128,19 @@ function Module:SetupDiscordButton(scene)
 end
 
 function Module:SetupSidebarBackground(scene)
-	self:CreateElement(
+	UIObjectHelperModule.CreateElement(
 		SharedData.sidebarBackground,
 		scene
 	)
 end
 
 function Module:SetupShopBackButton(scene)
-	local shopBackButtonHitbox = self:CreateElement(
+	local shopBackButtonHitbox = UIObjectHelperModule.CreateElement(
 		SharedData.shopBackButtonHitbox,
 		scene
 	)
 
-	local shopBackButtonLabel = self:CreateElement(
+	local shopBackButtonLabel = UIObjectHelperModule.CreateElement(
 		SharedData.shopBackButtonLabel,
 		scene
 	)
@@ -190,7 +168,7 @@ function Module:SetupShopBackButton(scene)
 end
 
 function Module:SetupBackToMenuButton(scene)
-	local backToMenuButtonHitbox = self:CreateElement(
+	local backToMenuButtonHitbox = UIObjectHelperModule.CreateElement(
 		SharedData.backToMenuButtonHitbox,
 		scene
 	)
@@ -217,7 +195,7 @@ function Module:SetupBackToMenuButton(scene)
 end
 
 function Module:SetupCurrencyLabels(scene)
-	local creditsLabel = self:CreateElement(
+	local creditsLabel = UIObjectHelperModule.CreateElement(
 		SharedData.creditsLabel,
 		scene
 	)
@@ -232,7 +210,7 @@ function Module:SetupCurrencyLabels(scene)
 end
 
 function Module:SetupSessionPlaytimeLabel(scene)
-	local sessionPlaytimeLabel = self:CreateElement(
+	local sessionPlaytimeLabel = UIObjectHelperModule.CreateElement(
 		SharedData.sessionPlaytimeLabel,
 		scene
 	)
@@ -242,8 +220,9 @@ function Module:SetupSessionPlaytimeLabel(scene)
 		if not SavesFilesModule.loadedFile then return end
 
 		sessionPlaytimeLabel.text = string.formatTime(
-				SavesFilesModule:Get("tracking.playtime") - SavesFilesModule.playtimeAtSessionStart
-			)
+			SavesFilesModule:Get("tracking.playtime")
+				- SavesFilesModule.playtimeAtSessionStart
+		)
 	end
 end
 
@@ -252,7 +231,7 @@ function Module:SetupBackground(scene)
 		"code.data.ui.scenes." .. scene.name
 	)
 
-	self:CreateElement(
+	UIObjectHelperModule.CreateElement(
 		sceneData.background,
 		scene
 	)
@@ -264,7 +243,7 @@ function Module:Update()
 	end
 end
 
-function Module:CleanUpdates()
+function Module:Clean()
 	self._updateFunctions = {}
 end
 

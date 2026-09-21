@@ -9,14 +9,12 @@ Module._currentTransition = {}
 Module.transitioning = false
 
 function Module:Transition(data)
-    if not data then data = {} end
+    data = data or {}
 
     if not SettingsModule:Get("graphics.transitionsEnabled") then
         self.transitioning = true
 
-        if self._screenTransitionElement then
-            self._screenTransitionElement:SetAlpha(1)
-        end
+        self._screenTransitionElement:SetAlpha(1)
 
         if data.callback then
             data.callback()
@@ -33,21 +31,22 @@ function Module:Transition(data)
 
     self.transitioning = true
     self._currentTransition = {
-        callback = data.callback or nil,
+        callback = data.callback,
         duration = data.duration or .8,
+
         timeSinceStart = 0,
+
         callbackFired = false
     }
 end
 
 function Module:Update(deltaTime)
+    if not self.transitioning then return end
+
     local element = self._screenTransitionElement
-    if not element then return end
-
     local transition = self._currentTransition
-    if not transition.duration then return end
 
-    transition.timeSinceStart = transition.timeSinceStart + (deltaTime)
+    transition.timeSinceStart = transition.timeSinceStart + deltaTime
 
     local halfDuration = transition.duration / 2
     local progress = transition.timeSinceStart / halfDuration

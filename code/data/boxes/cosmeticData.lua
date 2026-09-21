@@ -1,4 +1,4 @@
--- ~/code/data/boxes/cosmetic.lua
+-- ~/code/data/boxes/cosmeticData.lua
 
 local cosmetic = {
 	-- Special

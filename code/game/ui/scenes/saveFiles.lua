@@ -2,10 +2,6 @@
 
 local SavesFilesModule = require("code.engine.saves.files")
 
-local string = require("code.engine.helpers.string")
-local table = require("code.engine.helpers.table")
-local math = require("code.engine.helpers.math")
-
 local MusicHandlerModule = require("code.game.musicHandler")
 
 local BoxesObjectModule = require("code.game.boxes.object")
@@ -14,8 +10,7 @@ local CONSTANTS = require("code.data.constants")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
-
-local UIButtonObjectModule = require("code.game.ui.objects.button")
+local UIObjectHelperModule = require("code.game.ui.helpers.object")
 local UILayoutHelperModule = require("code.game.ui.helpers.layout")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
@@ -31,20 +26,12 @@ Module._boxes = {}
 Module.name = "saveFiles"
 
 function Module:Clean()
-    for _, element in pairs(self._elements) do
-        element:Remove()
-    end
+    UIObjectHelperModule.CleanScene(self)
 
-    for _, button in pairs(self._objects) do
-        button:Remove()
-    end
-
-    self._elements = {}
-    self._objects = {}
     self._resetButtons = {}
     self._boxes = {}
 
-    UISharedFunctions:CleanUpdates()
+    UISharedFunctions:Clean()
 end
 
 local function _startGame(slot)
@@ -53,7 +40,7 @@ end
 
 local function _setupSavePlaytime(self, backgroundElement, save)
     local playtime = (save.stats and save.tracking.playtime) or 0
-    local templateSavePlaytime = UISharedFunctions:CreateElement(
+    local templateSavePlaytime = UIObjectHelperModule.CreateElement(
         SceneData.templateSavePlaytime,
         self
     )
@@ -65,7 +52,7 @@ end
 local function _setupSaveHighestTier(self, backgroundElement, save)
     local highestTier = (save.stats and save.tracking.highestBoxTier) or 0
 
-    local templateSaveHighestTier = UISharedFunctions:CreateElement(
+    local templateSaveHighestTier = UIObjectHelperModule.CreateElement(
         SceneData.templateSaveHighestTier,
         self
     )
@@ -77,10 +64,6 @@ end
 local function _setupSaveFileBoxPreview(self, backgroundElement, save)
     local highestTier = (save.stats and save.tracking.highestBoxTier) or 0
     local boxData = BoxesObjectModule.GetBoxDataByTier(highestTier)
-
-    if not boxData then
-        return
-    end
 
     local boxElement = BoxesObjectModule.newElement(boxData)
 
@@ -96,12 +79,12 @@ local function _setupSaveFileBoxPreview(self, backgroundElement, save)
 end
 
 local function _setupSaveFileLoadButton(self, backgroundElement, slot)
-    local saveFileLoadButtonHitbox = UISharedFunctions:CreateElement(
+    local saveFileLoadButtonHitbox = UIObjectHelperModule.CreateElement(
         SceneData.templateSaveFileLoadButtonHitbox,
         self
     )
 
-    local saveFileLoadButtonLabel = UISharedFunctions:CreateElement(
+    local saveFileLoadButtonLabel = UIObjectHelperModule.CreateElement(
         SceneData.templateSaveFileLoadButtonLabel,
         self
     )
@@ -109,34 +92,30 @@ local function _setupSaveFileLoadButton(self, backgroundElement, slot)
     saveFileLoadButtonHitbox.x = backgroundElement.x
     saveFileLoadButtonLabel.x = backgroundElement.x
 
-    local saveFileLoadButton = UIButtonObjectModule.new({
-        elements = {
+    UIObjectHelperModule.CreateButton(
+        self,
+        {
             saveFileLoadButtonHitbox,
             saveFileLoadButtonLabel
         },
-
-        hitboxElement = saveFileLoadButtonHitbox,
-        mouseButton = 1,
-
-        onClick = function()
+        saveFileLoadButtonHitbox,
+        function()
             ScreenTransitionModule:Transition({
                 callback = function()
                     _startGame(slot)
                 end
             })
         end
-    })
-
-    table.insert(self._objects, saveFileLoadButton)
+    )
 end
 
 local function _setupSaveFileResetButton(self, backgroundElement, slot)
-    local saveFileResetButtonHitbox = UISharedFunctions:CreateElement(
+    local saveFileResetButtonHitbox = UIObjectHelperModule.CreateElement(
         SceneData.templateSaveFileResetButtonHitbox,
         self
     )
 
-    local saveFileResetButtonLabel = UISharedFunctions:CreateElement(
+    local saveFileResetButtonLabel = UIObjectHelperModule.CreateElement(
         SceneData.templateSaveFileResetButtonLabel,
         self
     )
@@ -146,21 +125,14 @@ local function _setupSaveFileResetButton(self, backgroundElement, slot)
 
     local saveFileResetButton
 
-    saveFileResetButton = UIButtonObjectModule.new({
-        elements = {
+    saveFileResetButton = UIObjectHelperModule.CreateButton(
+        self,
+        {
             saveFileResetButtonHitbox,
             saveFileResetButtonLabel
         },
-
-        hitboxElement = saveFileResetButtonHitbox,
-        cooldown = 0,
-        mouseButton = 1,
-
-        onClick = function()
-            if not saveFileResetButton then
-                return
-            end
-
+        saveFileResetButtonHitbox,
+        function()
             if saveFileResetButton.deleting then
                 return
             end
@@ -186,13 +158,12 @@ local function _setupSaveFileResetButton(self, backgroundElement, slot)
                 duration = 1.2
             })
         end
-    })
+    )
 
     saveFileResetButton.lastConfirm = -math.huge
     saveFileResetButton.deleting = false
 
     table.insert(self._resetButtons, saveFileResetButton)
-    table.insert(self._objects, saveFileResetButton)
 end
 
 local function _setupSaveFileButtons(self, backgroundElement, slot)
@@ -207,7 +178,7 @@ local function _setupSaveFileBackgrounds(self)
     local slotBackgrounds = {}
 
     for _ = 1, maxSlots do
-        local templateSaveFileBackground = UISharedFunctions:CreateElement(
+        local templateSaveFileBackground = UIObjectHelperModule.CreateElement(
             SceneData.templateSaveFileBackground,
             self
         )
@@ -230,7 +201,7 @@ local function _setupSaveFileBackgrounds(self)
         local save = saves[index]
         local templateSaveFileBackground = slotBackgrounds[index]
 
-        local templateSaveFileLabel = UISharedFunctions:CreateElement(
+        local templateSaveFileLabel = UIObjectHelperModule.CreateElement(
             SceneData.templateSaveFileLabel,
             self
         )
@@ -238,9 +209,7 @@ local function _setupSaveFileBackgrounds(self)
         templateSaveFileLabel.x = templateSaveFileBackground.x
         templateSaveFileLabel.text = "Slot " .. tostring(index)
 
-        local fileExists = SavesFilesModule:ReadFile(index) ~= nil
-
-        if fileExists then
+        if save then
             _setupSaveFileButtons(
                 self,
                 templateSaveFileBackground,
@@ -265,23 +234,21 @@ local function _setupSaveFileBackgrounds(self)
                 save
             )
         else
-            local templateSaveFilePlusIcon = UISharedFunctions:CreateElement(
+            local templateSaveFilePlusIcon = UIObjectHelperModule.CreateElement(
                 SceneData.templateSaveFilePlusIcon,
                 self
             )
 
             templateSaveFilePlusIcon.x = templateSaveFileBackground.x
 
-            local createSaveFileButton = UIButtonObjectModule.new({
-                elements = {
+            UIObjectHelperModule.CreateButton(
+                self,
+                {
                     templateSaveFileBackground,
                     templateSaveFilePlusIcon
                 },
-
-                hitboxElement = templateSaveFileBackground,
-                mouseButton = 1,
-
-                onClick = function()
+                templateSaveFileBackground,
+                function()
                     ScreenTransitionModule:Transition({
                         callback = function()
                             _startGame(index)
@@ -290,43 +257,37 @@ local function _setupSaveFileBackgrounds(self)
                         duration = 1.2
                     })
                 end
-            })
-
-            table.insert(self._objects, createSaveFileButton)
+            )
         end
     end
 end
 
 local function _setupBackToMenuButton(self)
-    local backToMenuButtonHitbox = UISharedFunctions:CreateElement(
+    local backToMenuButtonHitbox = UIObjectHelperModule.CreateElement(
         SceneData.backToMenuButtonHitbox,
         self
     )
 
-    local backToMenuButtonLabel = UISharedFunctions:CreateElement(
+    local backToMenuButtonLabel = UIObjectHelperModule.CreateElement(
         SceneData.backToMenuButtonLabel,
         self
     )
 
-    local backToMenuButton = UIButtonObjectModule.new({
-        elements = {
+    UIObjectHelperModule.CreateButton(
+        self,
+        {
             backToMenuButtonHitbox,
             backToMenuButtonLabel
         },
-
-        hitboxElement = backToMenuButtonHitbox,
-        mouseButton = 1,
-
-        onClick = function()
+        backToMenuButtonHitbox,
+        function()
             ScreenTransitionModule:Transition({
                 callback = function()
                     UISceneHandlerModule:Switch("mainMenu")
                 end
             })
         end
-    })
-
-    table.insert(self._objects, backToMenuButton)
+    )
 end
 
 function Module:Update()
@@ -341,11 +302,8 @@ function Module:Update()
             goto continue
         end
 
-        button.elements[1].text =
-            SceneData.templateSaveFileResetButtonLabel.text
-
-        button.elements[2].text =
-            SceneData.templateSaveFileResetButtonLabel.text
+        button.elements[1].text = SceneData.templateSaveFileResetButtonLabel.text
+        button.elements[2].text = SceneData.templateSaveFileResetButtonLabel.text
 
         :: continue ::
     end

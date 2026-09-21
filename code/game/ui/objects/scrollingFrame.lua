@@ -5,8 +5,6 @@ local IdManagerModule = require("code.engine.idManager")
 local SettingsModule = require("code.engine.saves.settings")
 local UICursorModule = require("code.game.ui.cursor")
 
-local math = require("code.engine.helpers.math")
-
 local ScrollingFrame = {}
 ScrollingFrame.__index = ScrollingFrame
 
@@ -17,19 +15,17 @@ local manager = IdManagerModule.new()
 
 -- Gets an element's height without its scale.
 local function _getUnscaledHeight(element)
-	if not element then
-		return 1
+	if element.type == "sprite" then
+		local drawable = element.drawable
+
+		assert(drawable, "Sprite element requires drawable")
+
+		return drawable:getHeight()
 	end
 
-	if element.type == "sprite" and element.drawable then
-		return element.drawable:getHeight()
-	end
+	local font = element.font or love.graphics.getFont()
 
-	if element.type == "text" and element.text then
-		return (element.font or love.graphics.getFont()):getHeight()
-	end
-
-	return 1
+	return font:getHeight()
 end
 
 -- Keeps the scroll offset inside the content.
@@ -83,10 +79,8 @@ local function _updatePositions(self)
 	}
 
 	for _, element in pairs(self.elements) do
-		if element then
-			element.y = element.y + delta
-			element.scissor = clipArea
-		end
+		element.y = element.y + delta
+		element.scissor = clipArea
 	end
 
 	if self.scrollBarElement and self.scrollTrackElement then
@@ -102,12 +96,18 @@ local function _updatePositions(self)
 		local thumbWidth = thumb:GetWidth()
 
 		local trackTop = track.y - trackHeight * (track.anchorY or .5)
-		local trackRight = track.x + trackWidth * (1 - (track.anchorX or .5))
+		local trackRight =
+			track.x + trackWidth * (1 - (track.anchorX or .5))
 
 		local travel = math.max(0, trackHeight - thumbHeight)
 
-		thumb.x = trackRight - thumbWidth * (1 - (thumb.anchorX or .5))
-		thumb.y = trackTop + thumbHeight * (thumb.anchorY or .5) + progress * travel
+		thumb.x =
+			trackRight - thumbWidth * (1 - (thumb.anchorX or .5))
+
+		thumb.y =
+			trackTop
+			+ thumbHeight * (thumb.anchorY or .5)
+			+ progress * travel
 	end
 
 	self._lastOffset = self.scrollOffset
@@ -117,24 +117,24 @@ end
 
 -- Puts the cursor into the grabbing state at the drag's starting point.
 local function _startDrag(self, x, y)
-    self._dragStartY = y
-    self._initialOffsetOnDrag = self.scrollOffset
+	self._dragStartY = y
+	self._initialOffsetOnDrag = self.scrollOffset
 
-    self._dragCursorElement.x = x
-    self._dragCursorElement.y = y
+	self._dragCursorElement.x = x
+	self._dragCursorElement.y = y
 
-    UICursorModule:SetDragging(true, self._dragCursorElement, x, y)
+	UICursorModule:SetDragging(true, self._dragCursorElement, x, y)
 end
 
 -- Restores the cursor once dragging stops.
 local function _stopDrag(self)
-    UICursorModule:SetDragging(false)
+	UICursorModule:SetDragging(false)
 end
 
 -- Checks whether any child element is under (x, y).
 local function _isHoveringElement(self, x, y)
 	for _, element in pairs(self.elements) do
-		if element and element:IsPointInside(x, y) then
+		if element:IsPointInside(x, y) then
 			return true
 		end
 	end
@@ -155,10 +155,8 @@ function ScrollingFrame:RecalculateContentHeight()
 	local maxY = -math.huge
 
 	for _, element in pairs(self.elements) do
-		if element and element.y then
-			minY = math.min(minY, element.y)
-			maxY = math.max(maxY, element.y + element:GetHeight())
-		end
+		minY = math.min(minY, element.y)
+		maxY = math.max(maxY, element.y + element:GetHeight())
 	end
 
 	self.contentHeight = (minY == math.huge)
@@ -194,9 +192,11 @@ function ScrollingFrame:MousePressed(_, _, button)
 	end
 
 	local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
-	local isScrollable = self.contentHeight > self.hitboxElement:GetHeight()
+	local isScrollable =
+		self.contentHeight > self.hitboxElement:GetHeight()
 
-	local canGrabBackground = isScrollable
+	local canGrabBackground =
+		isScrollable
 		and self.hitboxElement:IsPointInside(mouseX, mouseY)
 		and not _isHoveringElement(self, mouseX, mouseY)
 
@@ -216,11 +216,6 @@ function ScrollingFrame:MouseReleased(button)
 end
 
 function ScrollingFrame:Update(deltaTime)
-	if not self.hitboxElement then
-		self:Remove()
-		return
-	end
-
 	local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
 
 	if self._isDragging then
@@ -232,9 +227,11 @@ function ScrollingFrame:Update(deltaTime)
 			self._initialOffsetOnDrag - dragDelta
 		)
 	else
-		local isScrollable = self.contentHeight > self.hitboxElement:GetHeight()
+		local isScrollable =
+			self.contentHeight > self.hitboxElement:GetHeight()
 
-		local hoveringBackground = isScrollable
+		local hoveringBackground =
+			isScrollable
 			and self.hitboxElement:IsPointInside(mouseX, mouseY)
 			and not _isHoveringElement(self, mouseX, mouseY)
 
@@ -243,12 +240,14 @@ function ScrollingFrame:Update(deltaTime)
 		end
 	end
 
-	local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
+	local animationsEnabled =
+		SettingsModule:Get("graphics.uiAnimationsEnabled")
 
 	if animationsEnabled then
 		local alpha = math.min(1, self.smoothness * deltaTime)
 
-		self.scrollOffset = self.scrollOffset
+		self.scrollOffset =
+			self.scrollOffset
 			+ (self.targetScrollOffset - self.scrollOffset) * alpha
 	else
 		self.scrollOffset = self.targetScrollOffset
@@ -258,17 +257,19 @@ function ScrollingFrame:Update(deltaTime)
 
 	if self._isDragging then
 		-- Cursor follows the content directly, only moving with real scroll movement.
-		self._dragCursorElement.y = self._dragCursorElement.y + appliedDelta
-		UICursorModule:UpdateDragging(self._dragCursorElement, deltaTime)
+		self._dragCursorElement.y =
+			self._dragCursorElement.y + appliedDelta
+
+		UICursorModule:UpdateDragging(
+			self._dragCursorElement,
+			deltaTime
+		)
 	end
 end
 
 function Module.new(data)
-	if not data or not data.hitboxElement then
-		return
-	end
-
-	local padding = data.padding or 0
+	assert(data, "ScrollingFrame.new requires data")
+	assert(data.hitboxElement, "ScrollingFrame.new requires hitboxElement")
 
 	local scrollingFrame = setmetatable({
 		id = manager:Get(),
@@ -279,7 +280,7 @@ function Module.new(data)
 		scrollBarElement = data.scrollBarElement,
 		scrollTrackElement = data.scrollTrackElement,
 
-		padding = padding,
+		padding = data.padding or 0,
 
 		scrollOffset = 0,
 		targetScrollOffset = 0,
@@ -298,9 +299,7 @@ function Module.new(data)
 
 	-- Apply the initial top padding.
 	for _, element in pairs(scrollingFrame.elements) do
-		if element then
-			element.y = element.y + padding
-		end
+		element.y = element.y + scrollingFrame.padding
 	end
 
 	if data.contentHeight then
