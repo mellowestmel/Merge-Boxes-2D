@@ -150,7 +150,7 @@ local cosmetic = {
             {
                 name = "box16"
             }
-        }
+        },
     },
 
     ["devoided"] = {

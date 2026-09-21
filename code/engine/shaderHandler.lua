@@ -1,19 +1,5 @@
 -- ~/code/engine/shaderHandler.lua
 
--- Handles all shader work: loading .glsl files, sending uniforms and drawing.
---
--- Names: "reflection" (code/data/shaders), "particles/box16" (code/data/particles).
--- Empty .glsl files are skipped, so :Get() returns nil for them.
---
--- Entry: a shader name, or { name = "reflection", someTexture = "a.png", power = 2 }
--- Context: { x, y, width, height, rotation (radians), alpha }, all optional
---
--- Sent automatically if the shader declares them: time, canvasSize, texelSize,
--- elementCenter, elementSize, elementRotation, elementAlpha.
---
--- Elements: :DrawChain(entries, context, drawFn, ...)
--- Particles: :Begin(entry, context), draw, then :End()
-
 local Module = {}
 Module.shaders = {}
 
@@ -24,7 +10,7 @@ Module._previousShaders = {}
 local CONSTANTS = require("code.data.constants")
 
 -- Loads and caches a shader. Returns nil for empty files.
-function Module:Load(name, path)
+function Module:Load(name, path, prelude)
     local shader = self.shaders[name]
 
     if shader then
@@ -37,7 +23,13 @@ function Module:Load(name, path)
         return nil
     end
 
-    local success, result = pcall(love.graphics.newShader, source)
+    local success, result
+
+    if prelude and not source:find("vec4%s+position%s*%(") then
+        success, result = pcall(love.graphics.newShader, prelude, source)
+    else
+        success, result = pcall(love.graphics.newShader, source)
+    end
 
     if not success then
         error(
@@ -57,22 +49,23 @@ function Module:Load(name, path)
 end
 
 -- Loads every .glsl in a folder as prefix .. filename.
-function Module:LoadDirectory(directory, prefix)
+function Module:LoadDirectory(directory, prefix, preludePath)
     prefix = prefix or ""
 
+    local prelude = preludePath and love.filesystem.read(preludePath)
+
     for _, fileName in ipairs(love.filesystem.getDirectoryItems(directory)) do
-        if fileName:sub(-5) == ".glsl" then
-            self:Load(
-                prefix .. fileName:sub(1, -6),
-                directory .. "/" .. fileName
-            )
+        local path = directory .. "/" .. fileName
+
+        if fileName:sub(-5) == ".glsl" and path ~= preludePath then
+            self:Load(prefix .. fileName:sub(1, -6), path, prelude)
         end
     end
 end
 
 function Module:LoadAll()
     for _, source in ipairs(CONSTANTS.SHADERS.SOURCES) do
-        self:LoadDirectory(source.directory, source.prefix)
+        self:LoadDirectory(source.directory, source.prefix, source.prelude)
     end
 end
 
@@ -204,8 +197,8 @@ local function _getCanvases()
     return canvases.a, canvases.b
 end
 
--- Draws drawFn(...) through each shader in order. Missing shaders are skipped.
-function Module:DrawChain(entries, context, drawFn, ...)
+-- Draws drawFunction(...) through each shader in order. Missing shaders are skipped.
+function Module:DrawChain(entries, context, drawFunction, ...)
     local inputCanvas, outputCanvas = _getCanvases()
 
     local previousCanvas = love.graphics.getCanvas()
@@ -216,7 +209,7 @@ function Module:DrawChain(entries, context, drawFn, ...)
 
     love.graphics.setShader()
 
-    drawFn(...)
+    drawFunction(...)
 
     for _, entry in ipairs(entries) do
         local shader = self.shaders[_getEntryName(entry)]

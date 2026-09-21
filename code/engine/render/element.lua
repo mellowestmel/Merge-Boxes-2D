@@ -82,6 +82,8 @@ function Element:GetColor()
 end
 
 function Element:Remove()
+    self.removed = true
+
     Module._elements[self.id] = nil
     manager:Release(self.id)
     Module._dirty = true
@@ -198,6 +200,9 @@ local function _drawElement(element)
             drawable:getHeight() * element.anchorY
         )
 
+    elseif element.type == "custom" and element.onDraw then
+        element.onDraw(element)
+
     elseif element.type == "text" and element.text ~= "" then
         local font = element.font or love.graphics.getFont()
 
@@ -273,9 +278,13 @@ function Module.new(data)
 
         name = data.name,
 
-        type = data.type == "text"
-            and "text"
+        -- "custom" calls data.onDraw(element) instead of drawing a sprite or text
+        type = (data.type == "text" or data.type == "custom")
+            and data.type
             or "sprite",
+
+        onDraw = data.onDraw,
+        removed = false,
 
         zIndex = data.zIndex or 0,
 
@@ -308,7 +317,7 @@ function Module.new(data)
 
     if element.type == "sprite" then
         element:ChangeSprite(data.spritePath)
-    elseif not element.font then
+    elseif element.type == "text" and not element.font then
         element.font = love.graphics.newFont(
             "assets/fonts/Stanberry.ttf"
         )

@@ -250,7 +250,11 @@ return {
     SHADERS = {
         SOURCES = {
             { directory = "code/data/shaders", prefix = "" },
-            { directory = "code/data/particles", prefix = "particles/" }
+            {
+                directory = "code/data/particles",
+                prefix = "particles/",
+                prelude = "code/data/particles/prelude.glsl"
+            }
         }
     },
 

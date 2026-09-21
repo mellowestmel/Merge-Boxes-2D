@@ -5,8 +5,6 @@ local SignalHandlerModule = require("code.engine.events.signalHandler")
 local RenderElementModule = require("code.engine.render.element")
 local IdManagerModule = require("code.engine.idManager")
 
-
-
 local CONSTANTS = require("code.data.constants")
 
 local BoxesData = require("code.data.boxes")
@@ -85,6 +83,7 @@ function Module.new(data)
         data = data,
 
         element = element,
+        emitters = emitters,
 
         velocityX = 0,
         velocityY = 0,
@@ -147,10 +146,7 @@ end
 function Module.Init()
     SignalHandlerModule.Get("engine.saves.fileloaded"):Connect(function(loadedFile)
         local loadedBoxesData = loadedFile.boxes
-
-        if not loadedBoxesData then
-            return
-        end
+        if not loadedBoxesData then return end
 
         for _, savedBoxData in pairs(loadedBoxesData) do
             local boxData = Module.GetBoxDataByType(savedBoxData.type)

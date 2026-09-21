@@ -32,6 +32,7 @@ function Module.new(type, gameplayData, flavorData, cosmeticData)
         scale = cosmeticData.scale or 1,
 
         shaders = cosmeticData.shaders or {},
+        particles = cosmeticData.particles or {},
 
         -- Merge effects
         mergeSoundData = cosmeticData.mergeSoundData,
