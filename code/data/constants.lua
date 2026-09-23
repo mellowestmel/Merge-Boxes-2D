@@ -26,6 +26,7 @@ local SETTINGS_SCHEMA = {
     {
         key = "accessibility",
         settings = {
+            { key = "language", name = "Language", default = "english" },
             { key = "colorblindMode", name = "Colorblindness mode", default = "none" },
             { key = "screenFlashEnabled", name = "Enable screen flashes?", default = true }
         }

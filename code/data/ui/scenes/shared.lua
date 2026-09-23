@@ -82,8 +82,6 @@ return {
     },
 
     creditsLabel = {
-        text = "Credits:",
-
         type = "text",
 
         font = love.graphics.newFont(
@@ -103,8 +101,6 @@ return {
     },
 
     sessionPlaytimeLabel = {
-        text = "Session Time: ",
-
         type = "text",
 
         font = love.graphics.newFont(
