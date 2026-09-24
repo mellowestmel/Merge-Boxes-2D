@@ -3,6 +3,7 @@
 local SoundHandlerModule = require("code.engine.soundHandler")
 local SavesFilesModule = require("code.engine.saves.files")
 
+local LocalizationHandlerModule = require("code.engine.localizationHandler")
 local MusicHandlerModule = require("code.game.musicHandler")
 local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
@@ -109,7 +110,7 @@ local function _setDescription(self, upgradeId)
 	local text, background = panel.text, panel.background
 	local padding = COMMON_VALUES.MEDIUM_PADDING
 
-	text.text = UpgradeHandlerModule:GetUpgrade(upgradeId).description or ""
+	text.text = LocalizationHandlerModule.Get("upgrades." .. upgradeId .. ".description")
 	UITextWrappingHelperModule.Wrap(text, background, padding)
 
 	local _, breaks = text.text:gsub("\n", "")
@@ -226,7 +227,7 @@ local function _createUpgradeButton(self, buttonConfig)
 		self
 	)
 
-	nameLabel.text = upgrade.name or buttonConfig.id
+	nameLabel.text = LocalizationHandlerModule.Get("upgrades." .. buttonConfig.id .. ".name")
 	nameLabel.x, nameLabel.y =
 		buttonConfig.x,
 		buttonConfig.y - halfHeight
@@ -245,11 +246,8 @@ local function _createUpgradeButton(self, buttonConfig)
 
 	costLabel.text =
 		isMaxedOut
-		and "MAX"
-		or string.format(
-			"%s Credits",
-			string.formatNumber(upgradeCost)
-		)
+		and LocalizationHandlerModule.Get("upgradeShop.maxed")
+		or LocalizationHandlerModule.Get("upgradeShop.cost", { amount = string.formatNumber(upgradeCost) })
 
 	costLabel.x, costLabel.y =
 		buttonConfig.x,

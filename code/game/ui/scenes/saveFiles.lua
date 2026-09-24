@@ -2,6 +2,7 @@
 
 local SavesFilesModule = require("code.engine.saves.files")
 
+local LocalizationHandlerModule = require("code.engine.localizationHandler")
 local MusicHandlerModule = require("code.game.musicHandler")
 
 local BoxesObjectModule = require("code.game.boxes.object")
@@ -57,7 +58,7 @@ local function _setupSaveHighestTier(self, backgroundElement, save)
         self
     )
 
-    templateSaveHighestTier.text = "Highest Tier: " .. highestTier
+    templateSaveHighestTier.text = LocalizationHandlerModule.Get("saveFiles.highestTier", { tier = highestTier })
     templateSaveHighestTier.x = backgroundElement.x
 end
 
@@ -140,14 +141,14 @@ local function _setupSaveFileResetButton(self, backgroundElement, slot)
             if (love.timer.getTime() - saveFileResetButton.lastConfirm)
                 >= CONSTANTS.UI.SAVES.RESET_BUTTON_WARN_TIME_OUT
             then
-                saveFileResetButtonLabel.text = "Are you sure?"
+                saveFileResetButtonLabel.text = LocalizationHandlerModule.Get("saveFiles.resetConfirm")
                 saveFileResetButton.lastConfirm = love.timer.getTime()
 
                 return
             end
 
             saveFileResetButton.deleting = true
-            saveFileResetButtonLabel.text = "Bye bye!"
+            saveFileResetButtonLabel.text = LocalizationHandlerModule.Get("saveFiles.resetDone")
 
             ScreenTransitionModule:Transition({
                 callback = function()
@@ -302,8 +303,10 @@ function Module:Update()
             goto continue
         end
 
-        button.elements[1].text = SceneData.templateSaveFileResetButtonLabel.text
-        button.elements[2].text = SceneData.templateSaveFileResetButtonLabel.text
+        local resetText = LocalizationHandlerModule.Get("saveFiles.resetFile")
+
+        button.elements[1].text = resetText
+        button.elements[2].text = resetText
 
         :: continue ::
     end

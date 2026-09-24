@@ -2,17 +2,12 @@
 
 local Module = {}
 
-function Module.new(type, gameplayData, flavorData, cosmeticData)
-	assert(flavorData, "Missing flavor data for " .. type)
+function Module.new(type, gameplayData, cosmeticData)
 	assert(cosmeticData, "Missing cosmetic data for " .. type)
 
 	return {
 		-- Identity
 		type = type,
-        name = flavorData.name or gameplayData.type,
-
-        description = flavorData.description or "",
-        quote = flavorData.quote,
 
         -- Gameplay
         tier = gameplayData.tier,

@@ -5,10 +5,6 @@ local UpgradeConstructor = require("code.data.constructors.upgradeConstructor")
 local rawUpgrades = {
     {
         id = "spawnCooldown",
-
-        name = "Spawn Cooldown",
-        description = "Decrease spawn cooldown by .1 seconds per stack.",
-
         maxStacks = 8,
 
         cost = function(stacks)
@@ -24,10 +20,6 @@ local rawUpgrades = {
 
     {
         id = "spawnTier",
-
-        name = "Spawn Tier",
-        description = "Increase spawn tier by 1 per stack.",
-
         maxStacks = 9,
 
         cost = function(stacks)
@@ -44,10 +36,6 @@ local rawUpgrades = {
 
     {
         id = "autoSpawn",
-
-        name = "Auto Spawn",
-        description = "Automatically spawn boxes. (Doesn't work while in shops or the settings menu.)",
-
         maxStacks = 1,
 
         cost = function()
@@ -63,10 +51,6 @@ local rawUpgrades = {
 
     {
         id = "luckyRoll",
-
-        name = "Lucky Roll",
-        description = "Each spawned box has a chance to spawn one tier higher. Each stack increases the chance by 10%.",
-
         maxStacks = 5,
 
         cost = function(stacks)
@@ -82,10 +66,6 @@ local rawUpgrades = {
 
     {
         id = "multiSpawn",
-
-        name = "Multi Spawn",
-        description = "Spawn an extra box per stack.",
-
         maxStacks = 6,
 
         cost = function(stacks)
@@ -102,10 +82,6 @@ local rawUpgrades = {
 
     {
         id = "pullPower",
-
-        name = "Pull Power",
-        description = "Increases the strength of your pull. Useful for pulling large boxes. Each stack increases power by 100%.",
-
         maxStacks = 10,
 
         cost = function(stacks)

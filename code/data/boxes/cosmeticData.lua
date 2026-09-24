@@ -132,7 +132,13 @@ local cosmetic = {
 		spritePath = "assets/sprites/boxes/box15.png",
 		scale = 2,
 
-		screenFlashFadeDuration = 1.2,
+		screenFlashFadeDuration = 2,
+		screenFlashColor = {
+			red = 255,
+			blue = 255,
+			green = 255,
+			alpha = 0.5
+		},
 		flashScreen = true,
 
 		mergeSoundData = { soundPath = "assets/sounds/merge/special.wav" },

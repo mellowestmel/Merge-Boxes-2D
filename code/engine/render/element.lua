@@ -1,5 +1,6 @@
 -- ~/code/engine/render/element.lua
 
+local LocalizationHandlerModule = require("code.engine.localizationHandler")
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 local ShaderHandlerModule = require("code.engine.shaderHandler")
 local IdManagerModule = require("code.engine.idManager")
@@ -101,9 +102,10 @@ local function _getDimensions(element)
     end
 
     local font = element.font or love.graphics.getFont()
+    local text = type(element.text) == "string" and element.text or ""
 
     return
-        font:getWidth(element.text),
+        font:getWidth(text),
         font:getHeight() * element.scaleY
 end
 
@@ -203,7 +205,7 @@ local function _drawElement(element)
     elseif element.type == "custom" and element.onDraw then
         element.onDraw(element)
 
-    elseif element.type == "text" and element.text ~= "" then
+    elseif element.type == "text" and type(element.text) == "string" and element.text ~= "" then
         local font = element.font or love.graphics.getFont()
 
         love.graphics.setFont(font)
@@ -288,7 +290,11 @@ function Module.new(data)
 
         zIndex = data.zIndex or 0,
 
-        text = data.text or "",
+        text = data.textKey
+        and LocalizationHandlerModule.Get(data.textKey)
+        or data.text
+        or "",
+
         font = data.font,
 
         anchorX = data.anchorX or .5,
@@ -319,7 +325,7 @@ function Module.new(data)
         element:ChangeSprite(data.spritePath)
     elseif element.type == "text" and not element.font then
         element.font = love.graphics.newFont(
-            "assets/fonts/Stanberry.ttf"
+            "assets/fonts/Baloo2.ttf"
         )
     end
 

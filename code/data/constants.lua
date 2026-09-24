@@ -3,32 +3,32 @@
 local SETTINGS_SCHEMA = {
     {
         key = "audio",
-        settings = {
-            { key = "masterVolume", name = "Master volume", default = .5 },
-            { key = "soundVolume", name = "Sound volume", default = 1 },
-            { key = "trackVolume", name = "Music volume", default = 1 },
-            { key = "muteGame", name = "Mute game?", default = false }
+        fields = {
+            { key = "masterVolume", default = .5 },
+            { key = "soundVolume", default = 1 },
+            { key = "trackVolume", default = 1 },
+            { key = "muteGame", default = false }
         }
     },
     {
         key = "graphics",
-        settings = {
-            { key = "contrast", name = "Contrast", default = 1 },
-            { key = "gamma", name = "Gamma", default = 1 },
-            { key = "fullscreen", name = "Fullscreen?", default = true },
-            { key = "vsync", name = "VSync?", default = true },
-            { key = "uiAnimationsEnabled", name = "Enable UI animations?", default = true },
-            { key = "cursorAnimationsEnabled", name = "Enable cursor animations?", default = true },
-            { key = "transitionsEnabled", name = "Enable transitions?", default = true },
-            { key = "particlesEnabled", name = "Enable particles?", default = true }
+        fields = {
+            { key = "contrast", default = 1 },
+            { key = "gamma", default = 1 },
+            { key = "fullscreen", default = true },
+            { key = "vsync", default = true },
+            { key = "uiAnimationsEnabled", default = true },
+            { key = "cursorAnimationsEnabled", default = true },
+            { key = "transitionsEnabled", default = true },
+            { key = "particlesEnabled", default = true }
         }
     },
     {
         key = "accessibility",
-        settings = {
-            { key = "language", name = "Language", default = "english" },
-            { key = "colorblindMode", name = "Colorblindness mode", default = "none" },
-            { key = "screenFlashEnabled", name = "Enable screen flashes?", default = true }
+        fields = {
+            { key = "language", default = "english" },
+            { key = "colorblindMode", default = "none" },
+            { key = "screenFlashEnabled", default = true }
         }
     }
 }
@@ -39,7 +39,7 @@ local function _buildDefaultsFromSchema(schema)
     for _, category in pairs(schema) do
         local values = {}
 
-        for _, item in pairs(category.settings or category.fields or {}) do
+        for _, item in pairs(category.fields or {}) do
             if item.fields then
                 local nested = _buildDefaultsFromSchema({
                     { key = item.key, fields = item.fields }
@@ -112,8 +112,9 @@ return {
         SAVE_SCHEMA = SAVE_SCHEMA,
 
         SETTINGS_FILE_NAME = "settings.conf",
+
+        DEFAULT_SETTINGS =_buildDefaultsFromSchema(SETTINGS_SCHEMA),
         SETTINGS_SCHEMA = SETTINGS_SCHEMA,
-        DEFAULT_SETTINGS = _buildDefaultsFromSchema(SETTINGS_SCHEMA),
 
         NUMBER_SETTING_RANGES = {
             masterVolume = { min = 0, max = 1.5 },
@@ -204,7 +205,7 @@ return {
             RESET_BUTTON_WARN_TIME_OUT = .5,
         },
 
-        SETTINGS = {
+        fields = {
             NUMBER_SETTING_CHANGE_INCREMENT = .1,
         },
 

@@ -29,9 +29,19 @@ Composer: https://www.youtube.com/@orzech05
 Playlist: https://www.youtube.com/playlist?list=PL4SfVAqmkT2WSjVqtZ7hU-KLh6ys-MNjb
 
 ### Fonts
-- **Stanberry.ttf**
-  Link: https://www.dafont.com/stanberry.font
-  License: As stated on DaFont
+- **Baloo2.ttf**
+  Link: https://fonts.google.com/specimen/Baloo+2
+  License: SIL Open Font License 1.1 (OFL-1.1)
+
+### Locales
+- **english.lua**
+  Made by: MellowestMel, with help from Gochged (Box quotes, descriptions and names)
+
+- **polish.lua**
+  Made by: MellowestMel
+
+- **turkish.lua**
+  Made by: Pudding (penglineg_56335 on Discord)
 
 ### Sound Effects
 - **ui/splashscreen.wav**

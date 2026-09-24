@@ -65,7 +65,7 @@ return {
     },
 
     shopBackButtonLabel = {
-        text = "Back",
+        textKey = "common.back",
 
         type = "text",
 
@@ -74,7 +74,7 @@ return {
 
         color = COMMON_VALUES.COLOR_WHITE,
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_LARGE
         ),
 
@@ -85,7 +85,7 @@ return {
         type = "text",
 
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_SMALL
         ),
 
@@ -104,7 +104,7 @@ return {
         type = "text",
 
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_SMALL
         ),
 

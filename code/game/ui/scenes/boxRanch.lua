@@ -3,7 +3,9 @@
 local SoundHandlerModule = require("code.engine.soundHandler")
 local SavesFilesModule = require("code.engine.saves.files")
 
+local LocalizationHandlerModule = require("code.engine.localizationHandler")
 local MusicHandlerModule = require("code.game.musicHandler")
+
 local BoxesObjectModule = require("code.game.boxes.object")
 local BoxFactoryModule = require("code.game.boxes.factory")
 
@@ -133,7 +135,13 @@ local function _setupAutoSpawnButton(self)
     local function __update()
         local enabled = BoxFactoryModule.autoSpawnEnabled
 
-        label.text = "Auto Spawn (" .. (enabled and "ON" or "OFF") .. ")"
+        label.text = LocalizationHandlerModule.Get(
+            "boxRanch.autoSpawn",
+            {
+                state = LocalizationHandlerModule.Get(enabled and "boxRanch.on" or "boxRanch.off")
+            }
+        )
+
         hitbox:ChangeColor(
             enabled and COMMON_VALUES.COLOR_GREEN or COMMON_VALUES.COLOR_RED
         )
@@ -252,9 +260,14 @@ function Module:Update()
     local timeLeft = cooldown - time
 
     if time <= cooldown then
-        spawnButtonLabel.text = string.format("%.1fs", timeLeft)
+        spawnButtonLabel.text = LocalizationHandlerModule.Get(
+            "boxRanch.spawnCooldown",
+            {
+                time = string.format("%.1f", timeLeft)
+            }
+        )
     else
-        spawnButtonLabel.text = SceneData.spawnButtonLabel.text
+        spawnButtonLabel.text = LocalizationHandlerModule.Get("boxRanch.spawnBox")
     end
 end
 

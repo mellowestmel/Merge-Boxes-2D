@@ -18,7 +18,7 @@ return {
     },
 
     spawnButtonLabel = {
-        text = "Spawn Box!",
+        textKey = "boxRanch.spawnBox",
 
         type = "text",
 
@@ -26,7 +26,7 @@ return {
         y = UILayoutData.game.spawnButton.y,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
@@ -47,7 +47,7 @@ return {
     },
 
     autoSpawnButtonLabel = {
-        text = "Auto Spawn (OFF)",
+        textKey = "boxRanch.autoSpawn",
 
         type = "text",
 
@@ -58,7 +58,7 @@ return {
         scaleY = UILayoutData.game.autoSpawnLabelScale,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },

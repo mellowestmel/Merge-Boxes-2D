@@ -2,7 +2,6 @@
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
-
 local DEFAULT_LANGUAGE = "english"
 
 local LOCALE_DIRECTORY = "code/data/locales"
@@ -68,7 +67,17 @@ local function _scanLocales()
         end
     end
 
-    table.sort(Module.languages)
+    -- Sort languages by meta.sortOrder, falling back to alphabetical code if missing/tied
+    table.sort(Module.languages, function(a, b)
+        local orderA = (locales[a] and locales[a].meta.sortOrder) or math.huge
+        local orderB = (locales[b] and locales[b].meta.sortOrder) or math.huge
+
+        if orderA == orderB then
+            return a < b
+        end
+
+        return orderA < orderB
+    end)
 end
 
 -- Returns the translated text for a key.

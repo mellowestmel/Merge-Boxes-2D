@@ -62,7 +62,7 @@ return {
         type = "text",
 
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_MEDIUM
         ),
 
@@ -73,7 +73,7 @@ return {
         type = "text",
 
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_SMALL
         ),
 
@@ -106,7 +106,7 @@ return {
         zIndex = COMMON_VALUES.Z_UI_TEXT,
 
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_MEDIUM
         ),
     },

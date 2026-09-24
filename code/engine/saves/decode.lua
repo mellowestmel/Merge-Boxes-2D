@@ -283,11 +283,11 @@ end
 
 -- Decodes a save file and updates older save formats to the current format.
 function Module:Decode(file)
-    local ok, decoded = pcall(function()
+    local success, decoded = pcall(function()
         return _decryptBase64(_decryptWithKey(file))
     end)
 
-    if not ok then
+    if not success then
         return nil, tostring(decoded)
     end
 
