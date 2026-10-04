@@ -93,7 +93,7 @@ return {
         anchorY = 0,
 
         x = COMMON_VALUES.SMALL_PADDING,
-        y = COMMON_VALUES.LARGE_PADDING,
+        y = COMMON_VALUES.MEDIUM_PADDING + COMMON_VALUES.SMALL_PADDING,
 
         color = COMMON_VALUES.COLOR_YELLOW,
 
@@ -112,7 +112,7 @@ return {
         anchorY = 0,
 
         x = COMMON_VALUES.SMALL_PADDING,
-        y = COMMON_VALUES.SMALL_PADDING,
+        y = -COMMON_VALUES.SMALL_PADDING,
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },

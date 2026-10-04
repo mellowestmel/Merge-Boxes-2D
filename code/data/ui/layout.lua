@@ -135,8 +135,8 @@ return {
 
         backgroundFrame = {
             scaleX = .9,
-            scaleY = .6,
-            offsetY = -225,
+            scaleY = .7,
+            offsetY = -200,
         },
 
         scrollWheel = {

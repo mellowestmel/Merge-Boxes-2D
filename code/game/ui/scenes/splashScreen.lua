@@ -7,16 +7,12 @@ local MusicHandlerModule = require("code.game.musicHandler")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UIObjectHelperModule = require("code.game.ui.helpers.object")
+local UISceneBase = require("code.game.ui.helpers.scene")
 local UICursorModule = require("code.game.ui.cursor")
-
-local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
 local SceneData = require("code.data.ui.scenes.splashScreen")
 
-local Module = {}
-Module._elements = {}
-Module._objects = {}
-Module.name = "splashScreen"
+local Module = UISceneBase.new("splashScreen")
 
 local transitionTimer = 2
 local logoTimer = .5
@@ -34,13 +30,17 @@ local splashLogo2
 local animationsEnabled
 local cursorAnimationsEnabled
 
-function Module:Clean()
-	UIObjectHelperModule.CleanScene(self)
-
+function Module:OnClean()
 	UICursorModule:ClearSpriteOverride()
 
 	splashLogo1 = nil
 	splashLogo2 = nil
+end
+
+local function _toggleRender(element)
+	if element then
+		element.render = not element.render
+	end
 end
 
 local function _setupSplashScreenLogo(self)
@@ -84,7 +84,7 @@ function Module:Init()
 	end
 end
 
-function Module:Update(deltaTime)
+function Module:OnUpdate(deltaTime)
 	if not logoShown then
 		logoTimer = logoTimer - deltaTime
 
@@ -101,13 +101,8 @@ function Module:Update(deltaTime)
 			logoFlipTimer = logoFlipSpeed
 			cursorToggleState = not cursorToggleState
 
-			if splashLogo1 then
-				splashLogo1.render = not splashLogo1.render
-			end
-
-			if splashLogo2 then
-				splashLogo2.render = not splashLogo2.render
-			end
+			_toggleRender(splashLogo1)
+			_toggleRender(splashLogo2)
 
 			if cursorAnimationsEnabled then
 				UICursorModule:SetSpriteOverride(
@@ -125,11 +120,7 @@ function Module:Update(deltaTime)
 		if transitionTimer <= 0 then
 			transitionStarted = true
 
-			ScreenTransitionModule:Transition({
-				callback = function()
-					UISceneHandlerModule:Switch("mainMenu")
-				end
-			})
+			UISceneHandlerModule:TransitionTo("mainMenu")
 		end
 	end
 end

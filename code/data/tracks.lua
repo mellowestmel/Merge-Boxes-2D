@@ -19,9 +19,16 @@ local rawTracks = {
     },
 
     almanac = {
-        trackPath = "assets/tracks/upgradeshop.ogg",
+        trackPath = "assets/tracks/settingsmenu.ogg",
         author = "Orzech05",
         trackName = "Boxology 101",
+
+        isGameplayTrack = false
+    },
+    map = {
+        trackPath = "assets/tracks/settingsmenu.ogg",
+        author = "Orzech05",
+        trackName = "Bigger Picture",
 
         isGameplayTrack = false
     },
@@ -52,6 +59,27 @@ local rawTracks = {
         trackPath = "assets/tracks/game1.ogg",
         author = "Orzech05",
         trackName = "Mellow Meadows",
+
+        isGameplayTrack = true
+    },
+    game2 = {
+        trackPath = "assets/tracks/game1.ogg",
+        author = "Orzech05",
+        trackName = "TBA",
+
+        isGameplayTrack = true
+    },
+    game3 = {
+        trackPath = "assets/tracks/game1.ogg",
+        author = "Orzech05",
+        trackName = "TBA",
+
+        isGameplayTrack = true
+    },
+    game4 = {
+        trackPath = "assets/tracks/game1.ogg",
+        author = "Orzech05",
+        trackName = "TBA",
 
         isGameplayTrack = true
     },

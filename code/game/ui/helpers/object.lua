@@ -7,10 +7,16 @@ local UIButtonObjectModule = require("code.game.ui.objects.button")
 
 local Module = {}
 
-function Module.CreateElement(elementData, scene)
+-- Creates an element from data and registers it with the scene.
+-- `overrides` (optional) is applied on top of a copy of the data.
+function Module.CreateElement(elementData, scene, overrides)
     local data = {}
 
     for key, value in pairs(elementData) do
+        data[key] = value
+    end
+
+    for key, value in pairs(overrides or {}) do
         data[key] = value
     end
 
@@ -31,6 +37,23 @@ function Module.CreateButton(scene, elements, hitboxElement, onClick)
     table.insert(scene._objects, button)
 
     return button
+end
+
+-- Creates a hitbox element, an optional label element, and a button using both.
+-- `overrides` (optional) is applied to both elements.
+-- Returns button, hitbox, label.
+function Module.CreateElementButton(scene, hitboxData, labelData, onClick, overrides)
+    local hitbox = Module.CreateElement(hitboxData, scene, overrides)
+    local label = labelData and Module.CreateElement(labelData, scene, overrides)
+
+    local button = Module.CreateButton(
+        scene,
+        label and {hitbox, label} or {hitbox},
+        hitbox,
+        onClick
+    )
+
+    return button, hitbox, label
 end
 
 function Module.CreateScrollingFrame(scene, background, scrollBar, elements, padding)

@@ -1,6 +1,5 @@
 -- ~/code/game/ui/scenes/boxRanch.lua
 
-local SoundHandlerModule = require("code.engine.soundHandler")
 local SavesFilesModule = require("code.engine.saves.files")
 
 local LocalizationHandlerModule = require("code.engine.localizationHandler")
@@ -15,23 +14,18 @@ local CONSTANTS = require("code.data.constants")
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
 local UIObjectHelperModule = require("code.game.ui.helpers.object")
+local UISceneBase = require("code.game.ui.helpers.scene")
 
-local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 local ScreenFlashModule = require("code.game.vfx.screenFlash")
 
-local SharedData = require("code.data.ui.scenes.shared")
 local SceneData = require("code.data.ui.scenes.boxRanch")
 
-local Module = {}
-Module._elements = {}
-Module._objects = {}
-Module.name = "boxRanch"
+local Module = UISceneBase.new("boxRanch")
 
-local spawnButtonHitbox
-local spawnButtonLabel
+local LOCKED_SHOP_BUTTON_SPRITE = "assets/sprites/ui/buttons/buttonlocked74x74.png"
+
 local spawnButton
-
-local backButtonClicked = false
+local spawnButtonLabel
 
 local SHOP_BUTTONS = {
     {
@@ -62,59 +56,13 @@ local SHOP_BUTTONS = {
 
 local shopButtonHitboxes = {}
 
-local function _playNotAllowedSound()
-    SoundHandlerModule.new({
-        soundPath = "assets/sounds/ui/notallowed.wav"
-    }):Play(true)
-end
-
-local function _setupBackToMenuButton(self)
-    backButtonClicked = false
-
-    local hitbox = UIObjectHelperModule.CreateElement(
-        SharedData.backToMenuButtonHitbox,
-        self
-    )
-
-    UIObjectHelperModule.CreateButton(
-        self,
-
-        {hitbox},
-        hitbox,
-
-        function()
-            backButtonClicked = true
-
-            ScreenTransitionModule:Transition({
-                callback = function()
-                    SavesFilesModule:UnloadFile(SavesFilesModule.loadedFile)
-                    UISceneHandlerModule:Switch("saveFiles")
-                end
-            })
-        end
-    )
-end
-
 local function _setupSpawnButton(self)
-    spawnButtonHitbox = UIObjectHelperModule.CreateElement(
-        SceneData.spawnButtonHitbox,
-        self
-    )
+    local hitbox
 
-    spawnButtonLabel = UIObjectHelperModule.CreateElement(
-        SceneData.spawnButtonLabel,
-        self
-    )
-
-    spawnButton = UIObjectHelperModule.CreateButton(
+    spawnButton, hitbox, spawnButtonLabel = UIObjectHelperModule.CreateElementButton(
         self,
-
-        {
-            spawnButtonHitbox,
-            spawnButtonLabel
-        },
-        spawnButtonHitbox,
-
+        SceneData.spawnButtonHitbox,
+        SceneData.spawnButtonLabel,
         function()
             BoxFactoryModule:Spawn()
         end
@@ -122,17 +70,9 @@ local function _setupSpawnButton(self)
 end
 
 local function _setupAutoSpawnButton(self)
-    local hitbox = UIObjectHelperModule.CreateElement(
-        SceneData.autoSpawnButtonHitbox,
-        self
-    )
+    local button, hitbox, label
 
-    local label = UIObjectHelperModule.CreateElement(
-        SceneData.autoSpawnButtonLabel,
-        self
-    )
-
-    local function __update()
+    local function _refresh()
         local enabled = BoxFactoryModule.autoSpawnEnabled
 
         label.text = LocalizationHandlerModule.Get(
@@ -147,128 +87,95 @@ local function _setupAutoSpawnButton(self)
         )
     end
 
-    __update()
-
-    UIObjectHelperModule.CreateButton(
+    button, hitbox, label = UIObjectHelperModule.CreateElementButton(
         self,
-
-        {hitbox, label},
-        hitbox,
-
+        SceneData.autoSpawnButtonHitbox,
+        SceneData.autoSpawnButtonLabel,
         function()
-            BoxFactoryModule.autoSpawnEnabled =
-                not BoxFactoryModule.autoSpawnEnabled
+            BoxFactoryModule.autoSpawnEnabled = not BoxFactoryModule.autoSpawnEnabled
 
-            __update()
+            _refresh()
         end
     )
-end
 
-local function _setupShopButton(self, shopButton)
-    local hitbox = UIObjectHelperModule.CreateElement(
-        shopButton.hitboxData,
-        self
-    )
-
-    shopButtonHitboxes[shopButton.key] = hitbox
-
-    UIObjectHelperModule.CreateButton(
-        self,
-
-        {hitbox},
-        hitbox,
-
-        function()
-            local highestBoxTier = SavesFilesModule:Get("tracking.highestBoxTier")
-
-            if highestBoxTier < shopButton.requirement then
-                _playNotAllowedSound()
-                return
-            end
-
-            ScreenTransitionModule:Transition({
-                callback = function()
-                    UISceneHandlerModule:Switch(shopButton.targetScene)
-                end
-            })
-        end
-    )
+    _refresh()
 end
 
 local function _setupShopButtons(self)
     shopButtonHitboxes = {}
 
     for _, shopButton in ipairs(SHOP_BUTTONS) do
-        _setupShopButton(self, shopButton)
+        local _, hitbox = UIObjectHelperModule.CreateElementButton(
+            self,
+            shopButton.hitboxData,
+            nil,
+            function()
+                if SavesFilesModule:Get("tracking.highestBoxTier") < shopButton.requirement then
+                    UISharedFunctions:PlayNotAllowedSound()
+                    return
+                end
+
+                UISceneHandlerModule:TransitionTo(shopButton.targetScene)
+            end
+        )
+
+        shopButtonHitboxes[shopButton.key] = hitbox
     end
 end
 
-local function _updateShopButton(shopButton, highestBoxTier)
-    local hitbox = shopButtonHitboxes[shopButton.key]
+-- Shows the locked sprite on shop buttons the player hasn't unlocked yet.
+local function _updateShopButtons()
+    local highestBoxTier = SavesFilesModule:Get("tracking.highestBoxTier")
 
-    if not hitbox then
-        return
+    for _, shopButton in ipairs(SHOP_BUTTONS) do
+        local hitbox = shopButtonHitboxes[shopButton.key]
+
+        if hitbox then
+            hitbox:ChangeSprite(
+                highestBoxTier < shopButton.requirement
+                    and LOCKED_SHOP_BUTTON_SPRITE
+                    or shopButton.hitboxData.spritePath
+            )
+        end
     end
-
-    local spritePath = shopButton.hitboxData.spritePath
-
-    if highestBoxTier < shopButton.requirement then
-        spritePath = "assets/sprites/ui/buttons/buttonlocked74x74.png"
-    end
-
-    hitbox:ChangeSprite(spritePath)
 end
 
-function Module:Clean()
-    UIObjectHelperModule.CleanScene(self)
+local function _updateSpawnButton()
+    if not spawnButton or not spawnButtonLabel then return end
 
-    if not backButtonClicked and SavesFilesModule.loadedFile then
+    local cooldown = SavesFilesModule:Get("stats.upgradeable.spawnCooldown")
+    local timeLeft = cooldown - (love.timer.getTime() - BoxFactoryModule.lastSpawned)
+
+    spawnButton.cooldown = cooldown
+
+    spawnButtonLabel.text = timeLeft >= 0
+        and LocalizationHandlerModule.Get(
+            "boxRanch.spawnCooldown",
+            { time = string.format("%.1f", timeLeft) }
+        )
+        or LocalizationHandlerModule.Get("boxRanch.spawnBox")
+end
+
+-- The back-to-menu button unloads the file (which saves it) before this runs,
+-- so only save here when the file is still loaded (e.g. going to settings).
+function Module:OnClean()
+    if SavesFilesModule.loadedFile then
         SavesFilesModule:SaveFile(SavesFilesModule.loadedFile)
-    elseif backButtonClicked then
-        BoxesObjectModule:ClearBoxes()
     end
 
-    spawnButtonHitbox = nil
-    spawnButtonLabel = nil
     spawnButton = nil
+    spawnButtonLabel = nil
 
     shopButtonHitboxes = {}
 
     ScreenFlashModule:Stop()
-    UISharedFunctions:Clean()
 end
 
-function Module:Update()
+function Module:OnUpdate()
     MusicHandlerModule:Update()
-    UISharedFunctions:Update()
 
-    local highestBoxTier = SavesFilesModule:Get("tracking.highestBoxTier")
-
-    for _, shopButton in ipairs(SHOP_BUTTONS) do
-        _updateShopButton(shopButton, highestBoxTier)
-    end
-
-    if not spawnButtonHitbox or not spawnButtonLabel or not spawnButton then
-        return
-    end
-
-    local cooldown = SavesFilesModule:Get("stats.upgradeable.spawnCooldown")
-
-    spawnButton.cooldown = cooldown
-
-    local time = love.timer.getTime() - BoxFactoryModule.lastSpawned
-    local timeLeft = cooldown - time
-
-    if time <= cooldown then
-        spawnButtonLabel.text = LocalizationHandlerModule.Get(
-            "boxRanch.spawnCooldown",
-            {
-                time = string.format("%.1f", timeLeft)
-            }
-        )
-    else
-        spawnButtonLabel.text = LocalizationHandlerModule.Get("boxRanch.spawnBox")
-    end
+    _updateShopButtons()
+    _updateSpawnButton()
 end
 
 function Module:Init(slot)
@@ -296,7 +203,7 @@ function Module:Init(slot)
     end
 
     _setupShopButtons(self)
-    _setupBackToMenuButton(self)
+    UISharedFunctions:SetupBackToMenuButton(self)
     _setupSpawnButton(self)
 end
 

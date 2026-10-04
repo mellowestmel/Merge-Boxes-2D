@@ -18,23 +18,20 @@ local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
 local UIObjectHelperModule = require("code.game.ui.helpers.object")
 local UILayoutHelperModule = require("code.game.ui.helpers.layout")
-
-local ScreenTransitionModule = require("code.game.vfx.screenTransition")
+local UISceneBase = require("code.game.ui.helpers.scene")
 
 local SceneData = require("code.data.ui.scenes.settings")
 
-local Module = {}
-
-Module._elements = {}
-Module._objects = {}
-
-Module.name = "settings"
+local Module = UISceneBase.new("settings")
 
 local currentCategoryIndex = 1
 local currentCategoryLabel = nil
 
-local settingNameLabels = {}
-local settingValueControls = {}
+-- Everything created for the current category's rows (labels, toggles, steppers).
+-- Rebuilt whenever the category changes.
+local rowElements = {}
+local rowObjects = {}
+
 local categories = {}
 
 -- Resets category/selection state shared by Clean and Init.
@@ -42,34 +39,15 @@ local function _resetSelectionState()
     currentCategoryIndex = 1
     currentCategoryLabel = nil
 
-    settingNameLabels = {}
-    settingValueControls = {}
+    rowElements = {}
+    rowObjects = {}
 end
 
-function Module:Clean()
-    UIObjectHelperModule.CleanScene(self)
-
+function Module:OnClean()
     _resetSelectionState()
     categories = {}
 
-    UISharedFunctions:Clean()
-
     BoxesObjectModule.renderBoxes = true
-end
-
--- Copies a table and applies new values.
-local function _copyWithOverrides(base, overrides)
-    local result = {}
-
-    for key, value in pairs(base) do
-        result[key] = value
-    end
-
-    for key, value in pairs(overrides or {}) do
-        result[key] = value
-    end
-
-    return result
 end
 
 -- Removes objects and their references from a list.
@@ -90,40 +68,10 @@ local function _removeAndPrune(items, list)
     end
 end
 
--- Creates the background.
-local function _setupBackground(self)
-    UIObjectHelperModule.CreateElement(
-        SceneData.background,
-        self
-    )
-end
-
--- Creates a single-hitbox button and registers it for cleanup.
-local function _setupHitboxButton(self, hitbox, onClick)
-    return UIObjectHelperModule.CreateButton(
-        self,
-        {hitbox},
-        hitbox,
-        onClick
-    )
-end
-
--- Creates the cancel button.
-local function _setupCancelButton(self)
-    local cancelButtonHitbox = UIObjectHelperModule.CreateElement(
-        SceneData.cancelButtonHitbox,
-        self
-    )
-
-    _setupHitboxButton(self, cancelButtonHitbox, function()
-        ScreenTransitionModule:Transition({
-            callback = function()
-                UISceneHandlerModule:Switch(
-                    UISceneHandlerModule.lastScene.name
-                )
-            end
-        })
-    end)
+-- Removes the current category's rows from the scene.
+local function _clearRows(self)
+    _removeAndPrune(rowElements, self._elements)
+    _removeAndPrune(rowObjects, self._objects)
 end
 
 -- Gets all colorblind mode keys directly from the colorblind data.
@@ -139,34 +87,28 @@ local function _getColorblindModes()
     return modes
 end
 
--- Gets the options an enum setting can cycle through.
--- Languages come from the loaded locale files.
--- Colorblind modes come directly from the colorblind data.
-local function _getEnumOptions(settingKey)
-    if settingKey == "language" then
-        return LocalizationHandlerModule.GetLanguages()
-    end
+-- Enum settings: the options they cycle through and how a value is displayed.
+-- Languages come from the loaded locale files and show their own name.
+-- Colorblind modes come from the colorblind data and the locale files.
+local ENUM_SETTINGS = {
+    language = {
+        getOptions = function()
+            return LocalizationHandlerModule.GetLanguages()
+        end,
 
-    if settingKey == "colorblindMode" then
-        return _getColorblindModes()
-    end
-
-    return nil
-end
-
--- Creates a function that turns an enum value into the text shown next to it.
--- Languages show their own name, other enums use the locale files.
-local function _createEnumValueFormatter(settingKey)
-    return function(value)
-        if settingKey == "language" then
+        format = function(value)
             return LocalizationHandlerModule.GetLanguageName(value)
         end
+    },
 
-        return LocalizationHandlerModule.Get(
-            "settings.colorblindModes." .. value
-        )
-    end
-end
+    colorblindMode = {
+        getOptions = _getColorblindModes,
+
+        format = function(value)
+            return LocalizationHandlerModule.Get("settings.colorblindModes." .. value)
+        end
+    }
+}
 
 -- Updates the current category label.
 local function _updateCategoryLabel()
@@ -190,26 +132,6 @@ local function _getCurrentCategorySchema()
             return category
         end
     end
-end
-
--- Removes all setting name labels.
-local function _clearSettingNameLabels(self)
-    _removeAndPrune(settingNameLabels, self._elements)
-    settingNameLabels = {}
-end
-
--- Removes all setting value controls.
-local function _clearSettingValueControls(self)
-    for index = #settingValueControls, 1, -1 do
-        local control = settingValueControls[index]
-
-        _removeAndPrune(control.elements, self._elements)
-        _removeAndPrune(control.objects, self._objects)
-
-        table.remove(settingValueControls, index)
-    end
-
-    settingValueControls = {}
 end
 
 -- Persists a setting change, saving and firing the changed signal.
@@ -237,91 +159,34 @@ end
 local function _toggleBooleanSetting(category, settingKey)
     local oldValue = SettingsModule.loadedFile[category][settingKey]
 
-    return _commitSettingChange(
-        category,
-        settingKey,
-        oldValue,
-        not oldValue
-    )
+    return _commitSettingChange(category, settingKey, oldValue, not oldValue)
 end
 
--- Creates a boolean setting control.
-local function _setupBooleanSettingControl(self, category, setting, rowY)
-    local currentValue = SettingsModule.loadedFile[category][setting.key]
-
-    local togglePath = currentValue
-        and COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH
-        or COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
-
-    local toggleHitbox = UIObjectHelperModule.CreateElement(
-        _copyWithOverrides(SceneData.booleanSettingToggleHitbox, {
-            y = rowY,
-            type = "sprite",
-            spritePath = togglePath
-        }),
-        self
-    )
-
-    local toggleButton = _setupHitboxButton(self, toggleHitbox, function()
-        local value = _toggleBooleanSetting(category, setting.key)
-
-        toggleHitbox:ChangeSprite(
-            value
-                and COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH
-                or COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
-        )
-    end)
-
-    table.insert(settingValueControls, {
-        elements = {toggleHitbox},
-        objects = {toggleButton}
-    })
-end
-
--- Clamps a number setting to its allowed range.
-local function _clampNumberSetting(value, range)
-    if not range then
-        return value
-    end
-
-    if value < range.min then
-        return range.min
-    end
-
-    if value > range.max then
-        return range.max
-    end
-
-    return value
-end
-
--- Changes a numeric setting.
+-- Changes a numeric setting, keeping it inside its allowed range.
 local function _adjustNumericSetting(category, settingKey, direction)
     local range = CONSTANTS.SAVES.NUMBER_SETTING_RANGES[settingKey]
     local oldValue = SettingsModule.loadedFile[category][settingKey]
 
-    local newValue = _clampNumberSetting(
-        oldValue + direction * CONSTANTS.UI.SETTINGS.NUMBER_SETTING_CHANGE_INCREMENT,
-        range
-    )
+    local newValue = oldValue
+        + direction * CONSTANTS.UI.SETTINGS.NUMBER_SETTING_CHANGE_INCREMENT
 
-    return _commitSettingChange(
-        category,
-        settingKey,
-        oldValue,
-        newValue
-    )
+    if range then
+        newValue = math.clamp(newValue, range.min, range.max)
+    end
+
+    return _commitSettingChange(category, settingKey, oldValue, newValue)
 end
 
 -- Changes an enum setting.
 local function _cycleEnumSetting(category, settingKey, direction)
-    local options = _getEnumOptions(settingKey)
+    local oldValue = SettingsModule.loadedFile[category][settingKey]
+    local enum = ENUM_SETTINGS[settingKey]
+    local options = enum and enum.getOptions()
 
     if not options or #options == 0 then
-        return
+        return oldValue
     end
 
-    local oldValue = SettingsModule.loadedFile[category][settingKey]
     local currentIndex = 1
 
     -- Use ipairs to preserve sequential array order
@@ -332,14 +197,11 @@ local function _cycleEnumSetting(category, settingKey, direction)
         end
     end
 
-    local newIndex = ((currentIndex - 1 + direction) % #options) + 1
-    local newValue = options[newIndex]
-
     return _commitSettingChange(
         category,
         settingKey,
         oldValue,
-        newValue
+        options[UILayoutHelperModule.WrapIndex(currentIndex, direction, #options)]
     )
 end
 
@@ -348,7 +210,45 @@ local function _formatPercent(value)
     return math.floor(value * 100 + .5) .. "%"
 end
 
--- Creates the buttons and value label for a stepper setting.
+local function _formatEnumValue(settingKey)
+    local enum = ENUM_SETTINGS[settingKey]
+
+    return enum and enum.format or tostring
+end
+
+local function _getTogglePath(value)
+    return value
+        and COMMON_VALUES.BOOLEAN_TOGGLE_ON_BUTTON_PATH
+        or COMMON_VALUES.BOOLEAN_TOGGLE_OFF_BUTTON_PATH
+end
+
+-- Creates a boolean setting control.
+local function _setupBooleanSettingControl(self, category, setting, rowY)
+    local toggleButton, toggleHitbox
+
+    toggleButton, toggleHitbox = UIObjectHelperModule.CreateElementButton(
+        self,
+        SceneData.booleanSettingToggleHitbox,
+        nil,
+        function()
+            toggleHitbox:ChangeSprite(
+                _getTogglePath(_toggleBooleanSetting(category, setting.key))
+            )
+        end,
+        {
+            y = rowY,
+            type = "sprite",
+            spritePath = _getTogglePath(SettingsModule.loadedFile[category][setting.key])
+        }
+    )
+
+    table.insert(rowElements, toggleHitbox)
+    table.insert(rowObjects, toggleButton)
+end
+
+-- Creates the buttons and value label for a stepper (numeric or enum) setting.
+-- `adjustValue` changes the setting and returns the new value;
+-- `formatValue` turns a value into the text shown between the buttons.
 local function _setupStepperControl(
     self,
     category,
@@ -359,147 +259,82 @@ local function _setupStepperControl(
     adjustValue,
     formatValue
 )
-    local decreaseHitbox = UIObjectHelperModule.CreateElement(
-        _copyWithOverrides(
-            SceneData.decreaseSettingHitbox,
-            {
-                y = rowY,
-                spritePath = decreaseSprite
-            }
-        ),
-        self
-    )
-
-    local increaseHitbox = UIObjectHelperModule.CreateElement(
-        _copyWithOverrides(
-            SceneData.increaseSettingHitbox,
-            {
-                y = rowY,
-                spritePath = increaseSprite
-            }
-        ),
-        self
-    )
-
-    local valueLabel = UIObjectHelperModule.CreateElement(
-        _copyWithOverrides(
-            SceneData.settingValueLabel,
-            {
-                y = rowY
-            }
-        ),
-        self
-    )
-
-    valueLabel.text = formatValue(
-        SettingsModule.loadedFile[category][setting.key]
-    )
+    local valueLabel
 
     local function _step(direction)
         return function()
             valueLabel.text = formatValue(
-                adjustValue(
-                    category,
-                    setting.key,
-                    direction
-                )
+                adjustValue(category, setting.key, direction)
             )
         end
     end
 
-    local decreaseButton = _setupHitboxButton(
+    local decreaseButton, decreaseHitbox = UIObjectHelperModule.CreateElementButton(
         self,
-        decreaseHitbox,
-        _step(-1)
+        SceneData.decreaseSettingHitbox,
+        nil,
+        _step(-1),
+        { y = rowY, spritePath = decreaseSprite }
     )
 
-    local increaseButton = _setupHitboxButton(
+    local increaseButton, increaseHitbox = UIObjectHelperModule.CreateElementButton(
         self,
-        increaseHitbox,
-        _step(1)
+        SceneData.increaseSettingHitbox,
+        nil,
+        _step(1),
+        { y = rowY, spritePath = increaseSprite }
     )
 
-    table.insert(settingValueControls, {
-        elements = {
-            decreaseHitbox,
-            increaseHitbox,
-            valueLabel
-        },
-
-        objects = {
-            decreaseButton,
-            increaseButton
-        }
-    })
-end
-
--- Creates a numeric setting control.
-local function _setupNumericSettingControl(self, category, setting, rowY)
-    _setupStepperControl(
+    valueLabel = UIObjectHelperModule.CreateElement(
+        SceneData.settingValueLabel,
         self,
-        category,
-        setting,
-        rowY,
-
-        COMMON_VALUES.NUMBER_DECREASE_BUTTON_PATH,
-        COMMON_VALUES.NUMBER_INCREASE_BUTTON_PATH,
-
-        _adjustNumericSetting,
-        _formatPercent
+        { y = rowY }
     )
-end
 
--- Creates an enum setting control.
-local function _setupEnumSettingControl(self, category, setting, rowY)
-    _setupStepperControl(
-        self,
-        category,
-        setting,
-        rowY,
+    valueLabel.text = formatValue(SettingsModule.loadedFile[category][setting.key])
 
-        COMMON_VALUES.ENUM_DECREASE_BUTTON_PATH,
-        COMMON_VALUES.ENUM_INCREASE_BUTTON_PATH,
+    table.insert(rowElements, decreaseHitbox)
+    table.insert(rowElements, increaseHitbox)
+    table.insert(rowElements, valueLabel)
 
-        _cycleEnumSetting,
-        _createEnumValueFormatter(setting.key)
-    )
+    table.insert(rowObjects, decreaseButton)
+    table.insert(rowObjects, increaseButton)
 end
 
 -- Creates the right control based on the setting type.
 local function _setupSettingValueControl(self, category, setting, rowY)
-    local valueType =
-        type(SettingsModule.loadedFile[category][setting.key])
+    local valueType = type(SettingsModule.loadedFile[category][setting.key])
 
     if valueType == "boolean" then
-        _setupBooleanSettingControl(
-            self,
-            category,
-            setting,
-            rowY
-        )
+        _setupBooleanSettingControl(self, category, setting, rowY)
 
     elseif valueType == "number" then
-        _setupNumericSettingControl(
-            self,
-            category,
-            setting,
-            rowY
+        _setupStepperControl(
+            self, category, setting, rowY,
+
+            COMMON_VALUES.NUMBER_DECREASE_BUTTON_PATH,
+            COMMON_VALUES.NUMBER_INCREASE_BUTTON_PATH,
+
+            _adjustNumericSetting,
+            _formatPercent
         )
 
     elseif valueType == "string" then
-        _setupEnumSettingControl(
-            self,
-            category,
-            setting,
-            rowY
+        _setupStepperControl(
+            self, category, setting, rowY,
+
+            COMMON_VALUES.ENUM_DECREASE_BUTTON_PATH,
+            COMMON_VALUES.ENUM_INCREASE_BUTTON_PATH,
+
+            _cycleEnumSetting,
+            _formatEnumValue(setting.key)
         )
     end
 end
 
 -- Rebuilds the setting labels and controls for the current category.
-local function _setupSettingNameLabels(self)
-    _clearSettingNameLabels(self)
-    _clearSettingValueControls(self)
+local function _setupSettingRows(self)
+    _clearRows(self)
 
     local categorySchema = _getCurrentCategorySchema()
 
@@ -512,32 +347,20 @@ local function _setupSettingNameLabels(self)
         local rowY = UILayoutHelperModule.GetVerticalStackY(
             SceneData.settingNameLabel.y or 0,
             index,
-            COMMON_VALUES.BUTTON_HORIZONTAL_GAP
-                - COMMON_VALUES.MEDIUM_PADDING
+            COMMON_VALUES.BUTTON_HORIZONTAL_GAP - COMMON_VALUES.MEDIUM_PADDING
         )
 
         local label = UIObjectHelperModule.CreateElement(
-            _copyWithOverrides(
-                SceneData.settingNameLabel,
-                {
-                    y = rowY
-                }
-            ),
-            self
-        )
-
-        label.text = LocalizationHandlerModule.Get(
-            "settings." .. setting.key
-        )
-
-        table.insert(settingNameLabels, label)
-
-        _setupSettingValueControl(
+            SceneData.settingNameLabel,
             self,
-            categorySchema.key,
-            setting,
-            rowY
+            { y = rowY }
         )
+
+        label.text = LocalizationHandlerModule.Get("settings." .. setting.key)
+
+        table.insert(rowElements, label)
+
+        _setupSettingValueControl(self, categorySchema.key, setting, rowY)
     end
 end
 
@@ -547,52 +370,44 @@ local function _scrollCategory(self, increment)
         return
     end
 
-    currentCategoryIndex =
-        ((currentCategoryIndex - 1 + increment) % #categories) + 1
+    currentCategoryIndex = UILayoutHelperModule.WrapIndex(
+        currentCategoryIndex,
+        increment,
+        #categories
+    )
 
     _updateCategoryLabel()
-    _setupSettingNameLabels(self)
+    _setupSettingRows(self)
 end
 
--- Creates the current category label.
-local function _setupCurrentCategoryLabel(self)
-    currentCategoryLabel =
-        UIObjectHelperModule.CreateElement(
-            SceneData.currentCategoryLabel,
-            self
-        )
-
-    _updateCategoryLabel()
-end
-
--- Creates the category scroll buttons.
-local function _setupScrollButtons(self)
-    local scrollRightButtonHitbox =
-        UIObjectHelperModule.CreateElement(
-            SceneData.scrollRightButtonHitbox,
-            self
-        )
-
-    local scrollLeftButtonHitbox =
-        UIObjectHelperModule.CreateElement(
-            SceneData.scrollLeftButtonHitbox,
-            self
-        )
-
-    _setupHitboxButton(self, scrollRightButtonHitbox, function()
-        _scrollCategory(self, 1)
-    end)
-
-    _setupHitboxButton(self, scrollLeftButtonHitbox, function()
-        _scrollCategory(self, -1)
-    end)
-end
-
--- Creates the category scrolling UI.
+-- Creates the category label, its scroll buttons, and the first category's rows.
 local function _setupCategoryScrolling(self)
-    _setupCurrentCategoryLabel(self)
-    _setupScrollButtons(self)
-    _setupSettingNameLabels(self)
+    currentCategoryLabel = UIObjectHelperModule.CreateElement(
+        SceneData.currentCategoryLabel,
+        self
+    )
+
+    _updateCategoryLabel()
+
+    UIObjectHelperModule.CreateElementButton(
+        self,
+        SceneData.scrollRightButtonHitbox,
+        nil,
+        function()
+            _scrollCategory(self, 1)
+        end
+    )
+
+    UIObjectHelperModule.CreateElementButton(
+        self,
+        SceneData.scrollLeftButtonHitbox,
+        nil,
+        function()
+            _scrollCategory(self, -1)
+        end
+    )
+
+    _setupSettingRows(self)
 end
 
 -- Builds the list of available categories.
@@ -606,8 +421,15 @@ local function _buildCategories()
     end
 end
 
-function Module:Update()
-    UISharedFunctions:Update()
+local function _setupCancelButton(self)
+    UIObjectHelperModule.CreateElementButton(
+        self,
+        SceneData.cancelButtonHitbox,
+        nil,
+        function()
+            UISceneHandlerModule:TransitionTo(UISceneHandlerModule.lastScene.name)
+        end
+    )
 end
 
 -- Accepts an optional preserved category index to keep player position on refresh.
@@ -624,7 +446,7 @@ function Module:Init(preservedCategoryIndex)
 
     _buildCategories()
 
-    _setupBackground(self)
+    UISharedFunctions:SetupBackground(self)
     _setupCategoryScrolling(self)
     _setupCancelButton(self)
 

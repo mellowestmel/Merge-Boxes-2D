@@ -7,84 +7,41 @@ local MusicHandlerModule = require("code.game.musicHandler")
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
 local UISharedFunctions = require("code.game.ui.shared")
 local UIObjectHelperModule = require("code.game.ui.helpers.object")
+local UISceneBase = require("code.game.ui.helpers.scene")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
 local SceneData = require("code.data.ui.scenes.mainMenu")
 
-local Module = {}
-Module._elements = {}
-Module._objects = {}
+local Module = UISceneBase.new("mainMenu")
 
-Module.name = "mainMenu"
-
-local logo2 = nil
 local logo = nil
+local logo2 = nil
 
-function Module:Clean()
-    UIObjectHelperModule.CleanScene(self)
-
-    UISharedFunctions:Clean()
+function Module:OnClean()
+    logo = nil
+    logo2 = nil
 end
 
 local function _setupLogo(self)
-    logo = UIObjectHelperModule.CreateElement(
-        SceneData.logo,
-        self
-    )
-
-    logo2 = UIObjectHelperModule.CreateElement(
-        SceneData.logo2,
-        self
-    )
+    logo = UIObjectHelperModule.CreateElement(SceneData.logo, self)
+    logo2 = UIObjectHelperModule.CreateElement(SceneData.logo2, self)
 end
 
-local function _setupPlayGameButton(self)
-    local playGameButtonHitbox = UIObjectHelperModule.CreateElement(
-        SceneData.playGameButtonHitbox,
-        self
-    )
-
-    local playGameButtonLabel = UIObjectHelperModule.CreateElement(
-        SceneData.playGameButtonLabel,
-        self
-    )
-
-    UIObjectHelperModule.CreateButton(
+local function _setupButtons(self)
+    UIObjectHelperModule.CreateElementButton(
         self,
-        {
-            playGameButtonHitbox,
-            playGameButtonLabel
-        },
-        playGameButtonHitbox,
+        SceneData.playGameButtonHitbox,
+        SceneData.playGameButtonLabel,
         function()
-            ScreenTransitionModule:Transition({
-                callback = function()
-                    UISceneHandlerModule:Switch("saveFiles")
-                end
-            })
+            UISceneHandlerModule:TransitionTo("saveFiles")
         end
     )
-end
 
-local function _setupQuitButton(self)
-    local quitButtonHitbox = UIObjectHelperModule.CreateElement(
-        SceneData.quitButtonHitbox,
-        self
-    )
-
-    local quitButtonLabel = UIObjectHelperModule.CreateElement(
-        SceneData.quitButtonLabel,
-        self
-    )
-
-    UIObjectHelperModule.CreateButton(
+    UIObjectHelperModule.CreateElementButton(
         self,
-        {
-            quitButtonHitbox,
-            quitButtonLabel
-        },
-        quitButtonHitbox,
+        SceneData.quitButtonHitbox,
+        SceneData.quitButtonLabel,
         function()
             ScreenTransitionModule:Transition({
                 callback = function()
@@ -95,9 +52,8 @@ local function _setupQuitButton(self)
     )
 end
 
-function Module:Update()
-    local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
-    if not animationsEnabled then return end
+function Module:OnUpdate()
+    if not SettingsModule:Get("graphics.uiAnimationsEnabled") then return end
 
     local wave = math.sin(love.timer.getTime())
 
@@ -114,10 +70,8 @@ function Module:Init()
 
     UISharedFunctions:SetupBackground(self)
 
-    _setupPlayGameButton(self)
-    _setupQuitButton(self)
+    _setupButtons(self)
     _setupLogo(self)
-
 end
 
 return Module
