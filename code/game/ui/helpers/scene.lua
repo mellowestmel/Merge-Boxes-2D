@@ -17,8 +17,12 @@ function Scene:Clean()
     UISharedFunctions:Clean()
 end
 
-function Scene:Update()
+function Scene:Update(deltaTime)
     UISharedFunctions:Update()
+
+    if self.OnUpdate then
+        self:OnUpdate(deltaTime)
+    end
 end
 
 local Module = {}
