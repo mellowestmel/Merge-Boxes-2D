@@ -91,19 +91,23 @@ function Element:Remove()
 end
 
 local function _getDimensions(element)
+    local width, height
+
     if element.type == "sprite" and element.drawable then
-        return
-            element.drawable:getWidth() * element.scaleX,
-            element.drawable:getHeight() * element.scaleY
-    end
+        width, height = element.drawable:getDimensions()
 
-    if element.type == "text" and element.text then
+    elseif element.type == "text" then
         local font = element.font or love.graphics.getFont()
+        width = font:getWidth(element.text or "")
+        height = font:getHeight()
 
-        return
-            font:getWidth(element.text) * element.scaleX,
-            font:getHeight() * element.scaleY
+    else
+        width, height = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
     end
+
+    return
+        (element.width or width) * element.scaleX,
+        (element.height or height) * element.scaleY
 end
 
 function Element:SetZIndex(zIndex)
@@ -161,6 +165,7 @@ local function _drawElement(element)
     local positionY = element.y + element.offsetY
     local radians = math.rad(element.rotation)
 
+    local width, height = _getDimensions(element)
     local color = element.color
 
     love.graphics.setColor(
@@ -181,37 +186,50 @@ local function _drawElement(element)
 
     if element.type == "sprite" and element.drawable then
         local drawable = element.drawable
+        local drawableWidth, drawableHeight = drawable:getDimensions()
 
         love.graphics.draw(
             drawable,
-
             positionX,
             positionY,
-
             radians,
-
-            element.scaleX,
-            element.scaleY,
-
-            drawable:getWidth() * element.anchorX,
-            drawable:getHeight() * element.anchorY
+            width / drawableWidth,
+            height / drawableHeight,
+            drawableWidth * element.anchorX,
+            drawableHeight * element.anchorY
         )
 
     elseif element.type == "text" and element.text ~= "" then
         local font = element.font or love.graphics.getFont()
         love.graphics.setFont(font)
 
+        local fontWidth = math.max(font:getWidth(element.text), 1)
+        local fontHeight = math.max(font:getHeight(), 1)
+
         love.graphics.print(
             element.text,
-
-            positionX - font:getWidth(element.text) * element.scaleX * element.anchorX,
-            positionY - font:getHeight() * element.scaleY * element.anchorY,
-
+            positionX - width * element.anchorX,
+            positionY - height * element.anchorY,
             radians,
-
-            element.scaleX,
-            element.scaleY
+            width / fontWidth,
+            height / fontHeight
         )
+
+    elseif element.type == "rectangle" then
+        love.graphics.push()
+
+        love.graphics.translate(positionX, positionY)
+        love.graphics.rotate(radians)
+
+        love.graphics.rectangle(
+            element.shapeMode,
+            -width * element.anchorX,
+            -height * element.anchorY,
+            width,
+            height
+        )
+
+        love.graphics.pop()
     end
 
     if element.scissor then
@@ -379,11 +397,14 @@ function Module.new(data)
 
         name = data.name,
 
-        type = data.type == "text"
-            and "text"
+        type = data.type == "text" and "text"
+            or data.type == "rectangle" and "rectangle"
             or "sprite",
 
         zIndex = data.zIndex or 0,
+
+        shapeMode = data.shapeMode or "line",
+        spritePath = data.spritePath or "",
 
         text = data.text or "",
         font = data.font,
@@ -396,6 +417,9 @@ function Module.new(data)
 
         scaleX = data.scaleX or 1,
         scaleY = data.scaleY or 1,
+
+        height = data.height,
+        width = data.width,
 
         x = data.x or 0,
         y = data.y or 0,

@@ -42,14 +42,19 @@ end
 
 function Module.Init()
     local element = RenderElementModule.new({
-        spritePath = "assets/sprites/vfx/whitesquare.png",
-        type = "sprite",
+        type = "rectangle",
+        shapeMode = "fill",
 
-        scaleX = 10^10,
-        scaleY = 10^10,
+        bypassShaders = true,
 
-        color = CONSTANTS.VFX.BASE_SCREEN_FLASH_COLOR,
-        zIndex = 99999
+        width = RESOLUTION_WIDTH,
+        height = RESOLUTION_HEIGHT,
+
+        anchorX = 0,
+        anchorY = 0,
+
+        color = {0, 0, 0, 0},
+        zIndex = math.huge
     })
 
     -- Start invisible so nothing flashes at startup.
