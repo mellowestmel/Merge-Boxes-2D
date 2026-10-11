@@ -340,7 +340,9 @@ local function _updateUpgradeButton(upgradeButton)
 	end
 end
 
-function Module:OnUpdate()
+function Module:Update()
+	UISharedFunctions:Update()
+
 	for _, upgradeButton in pairs(self._upgradeButtons) do
 		_updateUpgradeButton(upgradeButton)
 	end

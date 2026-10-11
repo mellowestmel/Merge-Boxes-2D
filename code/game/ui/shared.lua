@@ -16,8 +16,6 @@ local CONSTANTS = require("code.data.constants")
 local SharedData = require("code.data.ui.scenes.shared")
 local BoxesData = require("code.data.boxes")
 
-local DISCORD_URL = "https://www.discord.gg/pQShPG8XPf"
-
 local Module = {}
 Module._updateFunctions = {}
 
@@ -99,7 +97,7 @@ function Module:SetupDiscordButton(scene)
 		SharedData.discordButtonHitbox,
 		nil,
 		function()
-			love.system.openURL(DISCORD_URL)
+			love.system.openURL(CONSTANTS.UI.DISCORD_URL)
 		end
 	)
 end
@@ -190,9 +188,9 @@ function Module:SetupShopScene(scene)
 	self:SetupShopBackButton(scene)
 end
 
-function Module:Update(deltaTime)
+function Module:Update()
 	for _, updateFunction in pairs(self._updateFunctions) do
-		updateFunction(deltaTime)
+		updateFunction()
 	end
 end
 

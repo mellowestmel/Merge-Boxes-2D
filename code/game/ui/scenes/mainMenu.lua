@@ -52,7 +52,7 @@ local function _setupButtons(self)
     )
 end
 
-function Module:OnUpdate()
+function Module:Update()
     if not SettingsModule:Get("graphics.uiAnimationsEnabled") then return end
 
     local wave = math.sin(love.timer.getTime())

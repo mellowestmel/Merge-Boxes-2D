@@ -171,8 +171,9 @@ function Module:OnClean()
     ScreenFlashModule:Stop()
 end
 
-function Module:OnUpdate()
+function Module:Update()
     MusicHandlerModule:Update()
+    UISharedFunctions:Update()
 
     _updateShopButtons()
     _updateSpawnButton()

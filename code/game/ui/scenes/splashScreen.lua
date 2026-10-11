@@ -84,7 +84,7 @@ function Module:Init()
 	end
 end
 
-function Module:OnUpdate(deltaTime)
+function Module:Update(deltaTime)
 	if not logoShown then
 		logoTimer = logoTimer - deltaTime
 

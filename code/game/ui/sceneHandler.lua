@@ -51,6 +51,9 @@ function Module:Switch(name, ...)
 	)
 end
 
+-- Plays a screen transition, then switches scene.
+-- `options` (optional) is passed on to the transition, e.g. { duration = 1.2 }.
+-- Any extra arguments are passed to the new scene's Init.
 function Module:TransitionTo(name, options, ...)
     local args, count = {...}, select("#", ...)
     local transition = {}

@@ -205,7 +205,7 @@ return {
             RESET_BUTTON_WARN_TIME_OUT = .5,
         },
 
-        fields = {
+        SETTINGS = {
             NUMBER_SETTING_CHANGE_INCREMENT = .1,
         },
 
@@ -233,7 +233,9 @@ return {
             DRAG_LINE_SPRITE_PATH = "assets/sprites/ui/cursors/dot.png",
             DRAG_LINE_SPACING = 45,
             DRAG_LINE_MIN_DOTS = 1
-        }
+        },
+
+        DISCORD_URL = "https://www.discord.gg/pQShPG8XPf"
     },
 
     VFX = {

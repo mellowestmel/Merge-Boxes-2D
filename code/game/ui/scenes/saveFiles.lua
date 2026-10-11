@@ -199,7 +199,7 @@ local function _setupBackToMenuButton(self)
 end
 
 -- Puts the reset buttons back to their default text once the confirm window passes.
-function Module:OnUpdate()
+function Module:Update()
     for _, button in pairs(self._resetButtons) do
         local confirmExpired = (love.timer.getTime() - button.lastConfirm)
             >= CONSTANTS.UI.SAVES.RESET_BUTTON_WARN_TIME_OUT
