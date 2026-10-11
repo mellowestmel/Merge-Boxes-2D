@@ -1,2 +1,3 @@
 .vscode/
-templateRequires.lua
+.builder/rcedit-x64.exe
+.builder/rcedit.exe

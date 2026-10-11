@@ -1,16 +1,15 @@
 -- ~/code/data/shop/upgrades.lua
 
-local UPGRADE_REQUIRE_DIRECTORY = "code.data.shop.upgrades."
-local UPGRADES_DIRECTORY = "code/data/shop/upgrades"
+local CONSTANTS = require("code.data.constants")
 
 local upgradesByShop = {}
 local upgrades = {}
 
-for _, fileName in pairs(love.filesystem.getDirectoryItems(UPGRADES_DIRECTORY)) do
+for _, fileName in pairs(love.filesystem.getDirectoryItems(CONSTANTS.SHOP.UPGRADE_DATA.DIRECTORY)) do
     local shopId = fileName:match("(.+)%.lua$")
 
     if shopId then
-        local rawUpgradeList = require(UPGRADE_REQUIRE_DIRECTORY .. shopId)
+        local rawUpgradeList = require(CONSTANTS.SHOP.UPGRADE_DATA.REQUIRE_DIRECTORY .. shopId)
         local shopUpgradeIds = {}
 
         for _, upgradeData in pairs(rawUpgradeList) do

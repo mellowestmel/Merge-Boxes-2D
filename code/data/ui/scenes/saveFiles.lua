@@ -29,7 +29,7 @@ return {
     },
 
     backToMenuButtonLabel = {
-        text = "Back",
+        textKey = "common.back",
 
         type = "text",
 
@@ -37,7 +37,7 @@ return {
         y = UILayoutData.mainMenu.startButton.y + COMMON_VALUES.BUTTON_VERTICAL_GAP,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
@@ -65,15 +65,13 @@ return {
     },
 
     templateSaveFileLabel = {
-        text = "Slot ",
-
         type = "text",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
@@ -95,7 +93,7 @@ return {
     },
 
     templateSaveFileLoadButtonLabel = {
-        text = "Load File",
+        textKey = "saveFiles.loadFile",
 
         type = "text",
 
@@ -106,7 +104,7 @@ return {
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT_OVERLAY,
     },
@@ -128,7 +126,7 @@ return {
     },
 
     templateSaveFileResetButtonLabel = {
-        text = "Reset File",
+        textKey = "saveFiles.resetFile",
 
         type = "text",
 
@@ -139,7 +137,7 @@ return {
         scaleY = UILayoutData.saveFiles.templateSmallScale,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT_OVERLAY,
     },
@@ -171,15 +169,13 @@ return {
     },
 
     templateSaveHighestTier = {
-        text = "Highest Tier: 1",
-
         type = "text",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.highestTierLabelOffset,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_SMALL),
+        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_SMALL),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
@@ -193,7 +189,7 @@ return {
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.playtimeLabelOffset,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.STANBERRY_FONT_PATH, COMMON_VALUES.FONT_MEDIUM),
+        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_MEDIUM),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },

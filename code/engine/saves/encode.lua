@@ -1,5 +1,5 @@
-local table = require("code.engine.helpers.table")
-local math = require("code.engine.helpers.math")
+
+
 
 local Module = {}
 
@@ -101,6 +101,7 @@ function Module:Encode(file)
 
         self:EncodeSimple(file.currencies),
         self:EncodeSimple(file.stats),
+        self:EncodeSimple(file.tracking),
 
         self:EncodeSimple(file.upgrades),
         self:EncodeSimple(file.trinkets)

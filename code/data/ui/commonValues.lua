@@ -17,7 +17,7 @@ COMMON_VALUES.ENUM_DECREASE_BUTTON_PATH = "assets/sprites/ui/buttons/buttonarrow
 COMMON_VALUES.ENUM_INCREASE_BUTTON_PATH = "assets/sprites/ui/buttons/buttonarrowr74x74.png"
 
 -- FONTS
-COMMON_VALUES.STANBERRY_FONT_PATH = "assets/fonts/Stanberry.ttf"
+COMMON_VALUES.DEFAULT_FONT_PATH = "assets/fonts/Baloo2.ttf"
 
 -- COMMON SCALES
 COMMON_VALUES.ICON_SMALL_SCALE = .6

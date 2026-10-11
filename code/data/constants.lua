@@ -3,31 +3,32 @@
 local SETTINGS_SCHEMA = {
     {
         key = "audio",
-        settings = {
-            { key = "masterVolume", name = "Master volume", default = .5 },
-            { key = "soundVolume", name = "Sound volume", default = 1 },
-            { key = "trackVolume", name = "Music volume", default = 1 },
-            { key = "muteGame", name = "Mute game?", default = false }
+        fields = {
+            { key = "masterVolume", default = .5 },
+            { key = "soundVolume", default = 1 },
+            { key = "trackVolume", default = 1 },
+            { key = "muteGame", default = false }
         }
     },
     {
         key = "graphics",
-        settings = {
-            { key = "contrast", name = "Contrast", default = 1 },
-            { key = "gamma", name = "Gamma", default = 1 },
-            { key = "fullscreen", name = "Fullscreen?", default = true },
-            { key = "vsync", name = "VSync?", default = true },
-            { key = "uiAnimationsEnabled", name = "Enable UI animations?", default = true },
-            { key = "cursorAnimationsEnabled", name = "Enable cursor animations?", default = true },
-            { key = "transitionsEnabled", name = "Enable transitions?", default = true },
-            { key = "particlesEnabled", name = "Enable particles?", default = true }
+        fields = {
+            { key = "contrast", default = 1 },
+            { key = "gamma", default = 1 },
+            { key = "fullscreen", default = true },
+            { key = "vsync", default = true },
+            { key = "uiAnimationsEnabled", default = true },
+            { key = "cursorAnimationsEnabled", default = true },
+            { key = "transitionsEnabled", default = true },
+            { key = "particlesEnabled", default = true }
         }
     },
     {
         key = "accessibility",
-        settings = {
-            { key = "colorblindMode", name = "Colorblindness mode", default = "none" },
-            { key = "screenFlashEnabled", name = "Enable screen flashes?", default = true }
+        fields = {
+            { key = "language", default = "english" },
+            { key = "colorblindMode", default = "none" },
+            { key = "screenFlashEnabled", default = true }
         }
     }
 }
@@ -38,7 +39,7 @@ local function _buildDefaultsFromSchema(schema)
     for _, category in pairs(schema) do
         local values = {}
 
-        for _, item in pairs(category.settings or category.fields or {}) do
+        for _, item in pairs(category.fields or {}) do
             if item.fields then
                 local nested = _buildDefaultsFromSchema({
                     { key = item.key, fields = item.fields }
@@ -59,9 +60,6 @@ end
 local SAVE_SCHEMA = {
     { key = "currencies", fields = { { key = "credits", default = 50 } } },
     { key = "stats", fields = {
-        { key = "highestBoxTier", default = 0 },
-        { key = "playtime", default = 0 },
-
         { key = "upgradeable", fields = {
             { key = "extraSpawnTierChance", default = 0 },
 
@@ -72,6 +70,11 @@ local SAVE_SCHEMA = {
             { key = "autoSpawnUnlocked", default = false },
             { key = "dragMultiplier", default = 1 }
         }}
+    }},
+
+    { key = "tracking", fields = {
+        { key = "highestBoxTier", default = 0 },
+        { key = "playtime", default = 0 },
     }},
 
     { key = "boxes", fields = {} },
@@ -90,7 +93,7 @@ local SAVE_SCHEMA = {
 }
 
 local DEFAULT_DATA = {
-    version = 3,
+    version = 4,
     slot = 1,
 }
 -- Merge schema defaults into DEFAULT_DATA
@@ -109,8 +112,9 @@ return {
         SAVE_SCHEMA = SAVE_SCHEMA,
 
         SETTINGS_FILE_NAME = "settings.conf",
+
+        DEFAULT_SETTINGS =_buildDefaultsFromSchema(SETTINGS_SCHEMA),
         SETTINGS_SCHEMA = SETTINGS_SCHEMA,
-        DEFAULT_SETTINGS = _buildDefaultsFromSchema(SETTINGS_SCHEMA),
 
         NUMBER_SETTING_RANGES = {
             masterVolume = { min = 0, max = 1.5 },
@@ -163,6 +167,8 @@ return {
 
             BASE_SPEED = 400,
             BASE_RANGE = 150,
+
+            MIN_DURATION = .001,
         },
 
         ANIMATION = {
@@ -175,6 +181,11 @@ return {
     },
 
     SHOP = {
+        UPGRADE_DATA = {
+            REQUIRE_DIRECTORY = "code.data.shop.upgrades.",
+            DIRECTORY = "code/data/shop/upgrades"
+        },
+
         UPGRADE_SHOP = {
             UNLOCK_REQUIREMENT = 5,
             ID = "upgradeShop"
@@ -194,7 +205,7 @@ return {
             RESET_BUTTON_WARN_TIME_OUT = .5,
         },
 
-        SETTINGS = {
+        fields = {
             NUMBER_SETTING_CHANGE_INCREMENT = .1,
         },
 
@@ -203,7 +214,7 @@ return {
         },
 
         CURSOR = {
-            ROTATION_LERP_SPEED = 25,
+            LERP_SPEED = 40,
 
             TILT_MULTIPLIER = .3,
             MAX_TILT = 25,
@@ -228,5 +239,28 @@ return {
     VFX = {
         BASE_SCREEN_FLASH_COLOR = {255, 227, 17, .8},
         BASE_SCREEN_FLASH_SPEED = 2,
-    }
+    },
+
+    QUADTREE = {
+        MAX_DEPTH = 8,
+
+        DEFAULT_WIDTH = 100,
+        DEFAULT_HEIGHT = 100,
+        DEFAULT_CAPACITY = 4
+    },
+
+    SHADERS = {
+        SOURCES = {
+            { directory = "code/data/shaders", prefix = "" },
+            {
+                directory = "code/data/particles",
+                prefix = "particles/",
+                prelude = "code/data/particles/prelude.glsl"
+            }
+        }
+    },
+
+    TWEEN = {
+        COMPLETION_EPSILON = 1e-6
+    },
 }

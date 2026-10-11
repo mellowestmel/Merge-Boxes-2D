@@ -4,6 +4,7 @@ local RenderHandlerModule = require("code.engine.render.handler")               
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
+local LocalizationHandlerModule = require("code.engine.localizationHandler")
 local TweenHandlerModule = require("code.engine.tweenHandler")
 local SoundHandlerModule = require("code.engine.soundHandler")
 
@@ -54,6 +55,8 @@ SignalHandlerModule.Get("love.load"):Connect(function()
 
     SavesFilesModule.Init()
     SettingsModule.Init()
+
+    LocalizationHandlerModule.Init()
 
     RenderHandlerModule.Init()
     TweenHandlerModule.Init()

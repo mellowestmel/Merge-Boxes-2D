@@ -40,7 +40,7 @@ return {
         color = COMMON_VALUES.COLOR_WHITE,
 
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_LARGE
         ),
 
@@ -58,7 +58,7 @@ return {
         anchorX = 0,
 
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_LARGE
         ),
 
@@ -116,7 +116,7 @@ return {
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingValueLabelOffsetX,
 
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_MEDIUM
         ),
 

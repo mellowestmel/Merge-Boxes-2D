@@ -57,7 +57,7 @@ return {
     },
 
     playGameButtonLabel = {
-        text = "Play Game",
+        textKey = "mainMenu.play",
 
         type = "text",
 
@@ -66,7 +66,7 @@ return {
 
         color = COMMON_VALUES.COLOR_WHITE,
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_LARGE
         ),
 
@@ -87,7 +87,7 @@ return {
     },
 
     quitButtonLabel = {
-        text = "Quit Game",
+        textKey = "mainMenu.quit",
 
         type = "text",
 
@@ -96,7 +96,7 @@ return {
 
         color = COMMON_VALUES.COLOR_WHITE,
         font = love.graphics.newFont(
-            COMMON_VALUES.STANBERRY_FONT_PATH,
+            COMMON_VALUES.DEFAULT_FONT_PATH,
             COMMON_VALUES.FONT_LARGE
         ),
 

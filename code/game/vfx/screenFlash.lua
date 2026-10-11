@@ -14,7 +14,6 @@ function Module:Flash(color, fadeDuration)
     if not SettingsModule:Get("accessibility.screenFlashEnabled") then return end
 
     local element = self._screenFlashElement
-    if not element then return end
 
     color = color or CONSTANTS.VFX.BASE_SCREEN_FLASH_COLOR
 
@@ -32,7 +31,6 @@ end
 
 function Module:Update(deltaTime)
     local element = self._screenFlashElement
-    if not element then return end
 
     local alpha = element:GetAlpha()
     if alpha <= 0 then return end

@@ -2,6 +2,8 @@
 
 local SignalHandlerModule = require("code.engine.events.signalHandler")
 
+local ScreenTransitionModule = require("code.game.vfx.screenTransition")
+
 local Module = {}
 Module.currentScene = nil
 Module.lastScene = nil
@@ -47,6 +49,21 @@ function Module:Switch(name, ...)
 		scene,
 		oldScene
 	)
+end
+
+function Module:TransitionTo(name, options, ...)
+    local args, count = {...}, select("#", ...)
+    local transition = {}
+
+    for key, value in pairs(options or {}) do
+        transition[key] = value
+    end
+
+    transition.callback = function()
+        self:Switch(name, unpack(args, 1, count))
+    end
+
+    ScreenTransitionModule:Transition(transition)
 end
 
 return Module

@@ -7,9 +7,6 @@ local SavesHelpersModule = require("code.engine.saves.helpers")
 local SavesDecodeModule = require("code.engine.saves.decode")
 local SavesEncodeModule = require("code.engine.saves.encode")
 
-local table = require("code.engine.helpers.table")
-local math = require("code.engine.helpers.math")
-
 local BoxesObjectModule = require("code.game.boxes.object")
 
 local Module = {}
@@ -31,8 +28,8 @@ end
 function Module:Update(deltaTime)
     if not self.loadedFile then return end
 
-    local playtime = self:Get("stats.playtime") or 0
-    self:Set("stats.playtime", playtime + deltaTime)
+    local playtime = self:Get("tracking.playtime") or 0
+    self:Set("tracking.playtime", playtime + deltaTime)
 end
 
 function Module.Init()
@@ -46,14 +43,14 @@ function Module.Init()
 
     SignalHandlerModule.Get("game.boxes.spawned"):Connect(function(box)
         if Module.loadedFile then
-            local highestBoxTier = Module:Get("stats.highestBoxTier") or 0
+            local highestBoxTier = Module:Get("tracking.highestBoxTier") or 0
 
             local newBoxTier = box.data and box.data.tier
             if not newBoxTier then return end
 
             if highestBoxTier < newBoxTier then
                 SignalHandlerModule.Get("game.boxes.highesttierchanged"):Fire(newBoxTier, highestBoxTier)
-                Module:Set("stats.highestBoxTier", newBoxTier)
+                Module:Set("tracking.highestBoxTier", newBoxTier)
             end
         end
     end)
@@ -100,7 +97,7 @@ function Module:LoadFile(slot)
     self.lastSaveSlot = decodedFile.slot
     self.loadedFile = decodedFile
 
-    self.playtimeAtSessionStart = self:Get("stats.playtime")
+    self.playtimeAtSessionStart = self:Get("tracking.playtime")
 
     SignalHandlerModule.Get("engine.saves.fileloaded"):Fire(decodedFile)
     return decodedFile

@@ -1,4 +1,4 @@
--- ~/code/engine/helpers/easing.lua
+-- ~/code/data/easing.lua
 
 return {
     easeInOutQuad = function(t)
@@ -13,5 +13,6 @@ return {
     end,
     easeInQuad = function(t)
         return t * t
-    end
+    end,
+    linear = function(t) return t end
 }

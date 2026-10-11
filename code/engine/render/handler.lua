@@ -11,7 +11,7 @@ Module._bypassCache = {}
 
 Module._sceneCanvas = nil
 
--- Intermediate canvas used for sharp scaling at non-integer window sizes.
+-- Canvas used for sharp scaling at non-integer window sizes.
 Module._prescaleCanvas = nil
 Module._prescaleFactor = 0
 

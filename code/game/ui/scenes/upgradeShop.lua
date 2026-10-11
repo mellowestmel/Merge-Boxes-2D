@@ -1,9 +1,8 @@
 -- ~/code/game/ui/scenes/upgradeShop.lua
 
-local SoundHandlerModule = require("code.engine.soundHandler")
+local SavesFilesModule = require("code.engine.saves.files")
 
-local string = require("code.engine.helpers.string")
-
+local LocalizationHandlerModule = require("code.engine.localizationHandler")
 local MusicHandlerModule = require("code.game.musicHandler")
 local UpgradeHandlerModule = require("code.game.upgradeHandler")
 
@@ -12,9 +11,10 @@ local PurchaseUpgradeHandlerModule = require("code.game.shop.upgrade.purchase")
 local BoxesObjectModule = require("code.game.boxes.object")
 
 local UISharedFunctions = require("code.game.ui.shared")
-local UIButtonObjectModule = require("code.game.ui.objects.button")
-local UIScrollingFrameObjectModule = require("code.game.ui.objects.scrollingFrame")
+local UIObjectHelperModule = require("code.game.ui.helpers.object")
+local UITextWrappingHelperModule = require("code.game.ui.helpers.textWrapping")
 local UILayoutHelperModule = require("code.game.ui.helpers.layout")
+local UISceneBase = require("code.game.ui.helpers.scene")
 
 local UILayoutData = require("code.data.ui.layout")
 
@@ -24,359 +24,342 @@ local CONSTANTS = require("code.data.constants")
 local SceneData = require("code.data.ui.scenes.upgradeShop")
 local ShopID = CONSTANTS.SHOP.UPGRADE_SHOP.ID
 
-local Module = {}
-Module._elements = {}
-Module._objects = {}
+local FACE_SECRET_PLAYTIME = 745 -- 12 minutes 25 seconds
+local SECRET_CLIPS_PATH = "assets/sounds/secret/clips"
+
+local Module = UISceneBase.new("upgradeShop")
 Module._upgradeButtons = {}
-Module.name = "upgradeShop"
 
-function Module:Clean()
-    for _, element in pairs(self._elements) do
-        element:Remove()
-    end
-
-    for _, object in pairs(self._objects) do
-        object:Remove()
-    end
-
-    self._elements = {}
-    self._objects = {}
-    self._upgradeButtons = {}
-
-    UISharedFunctions:CleanUpdates()
+function Module:OnClean()
+	self._upgradeButtons = {}
 end
 
 local function _setupBirdSecret(self)
-    local birdSecret = UISharedFunctions:CreateElement(
-        SceneData.birdSecret,
-        self
-    )
-
-    local birdButton = UIButtonObjectModule.new({
-        elements = {birdSecret},
-
-        hitboxElement = birdSecret,
-        mouseButton = 1,
-
-        onClick = function()
-            local birdSound = SoundHandlerModule.new({
-                soundPath = "assets/sounds/secret/chirp.wav"
-            })
-
-            if birdSound then
-                birdSound:Play() birdSound:Remove()
-            end
-        end
-    })
-
-    table.insert(self._objects, birdButton)
+	UIObjectHelperModule.CreateElementButton(
+		self,
+		SceneData.birdSecret,
+		nil,
+		function()
+			UISharedFunctions:PlaySound("assets/sounds/secret/chirp.wav")
+		end
+	)
 end
 
 local function _setupFaceSecret(self)
-    if math.random(1, 1000) ~= 1 then return end
+	local sessionPlaytime =
+		SavesFilesModule:Get("tracking.playtime") - SavesFilesModule.playtimeAtSessionStart
 
-    local faceSecret = UISharedFunctions:CreateElement(
-        SceneData.faceSecret,
-        self
-    )
+	if math.floor(sessionPlaytime) ~= FACE_SECRET_PLAYTIME then return end
 
-    local faceButton = UIButtonObjectModule.new({
-        elements = {faceSecret},
+	UIObjectHelperModule.CreateElementButton(
+		self,
+		SceneData.faceSecret,
+		nil,
+		function()
+			local files = love.filesystem.getDirectoryItems(SECRET_CLIPS_PATH)
 
-        hitboxElement = faceSecret,
-        mouseButton = 1,
+			if #files == 0 then return end
 
-        onClick = function()
-            local clipsPath = "assets/sounds/secret/clips"
-            local files = love.filesystem.getDirectoryItems(clipsPath)
-
-            if #files == 0 then return end
-
-            local soundFile = files[math.random(1, #files)]
-
-            local faceSound = SoundHandlerModule.new({
-                soundPath = clipsPath .. "/" .. soundFile
-            })
-
-            if faceSound then
-                faceSound:Play()
-                faceSound:Remove()
-            end
-        end
-    })
-
-    table.insert(self._objects, faceButton)
+			UISharedFunctions:PlaySound(
+				SECRET_CLIPS_PATH .. "/" .. files[math.random(1, #files)]
+			)
+		end
+	)
 end
 
-local function _getUpgrades()
-    return UpgradeHandlerModule:GetUpgradesByShop(
-        CONSTANTS.SHOP.UPGRADE_SHOP.ID
-    )
+local function _setupDescriptionPanel(self)
+	local background = UIObjectHelperModule.CreateElement(
+		SceneData.upgradeDescriptionBackground,
+		self
+	)
+
+	local text = UIObjectHelperModule.CreateElement(
+		SceneData.upgradeDescriptionText,
+		self
+	)
+
+	background.render, text.render = false, false
+
+	self._description = {
+		background = background,
+		text = text,
+		baseScaleY = background.scaleY,
+		baseHeight = background:GetHeight()
+	}
 end
 
-local function _createStackIndicators(
-    self,
-    buttonConfig,
-    maximumStacks,
-    currentStacks
-)
-    local indicators = {}
-    local itemSpacing = COMMON_VALUES.MEDIUM_PADDING
+-- Runs only when the hovered upgrade changes, not every frame.
+local function _setDescription(self, upgradeId)
+	local panel = self._description
+	local text, background = panel.text, panel.background
+	local padding = COMMON_VALUES.MEDIUM_PADDING
 
-    local startPositionX =
-        buttonConfig.x -
-        (((maximumStacks - 1) * itemSpacing) / 2)
+	text.text = LocalizationHandlerModule.Get("upgrades." .. upgradeId .. ".description")
+	UITextWrappingHelperModule.Wrap(text, background, padding)
 
-    for stackIndex = 1, maximumStacks do
-        local indicator = UISharedFunctions:CreateElement(
-            SceneData.upgradeStackCounter,
-            self
-        )
+	local _, breaks = text.text:gsub("\n", "")
+	local lineCount = breaks + 1
+	local lineHeight =
+		text.font:getHeight() * text.font:getLineHeight() * text.scaleY
 
-        indicator.x = UILayoutHelperModule.GetHorizontalStackX(
-            startPositionX,
-            stackIndex,
-            itemSpacing
-        )
+	background.scaleY = panel.baseScaleY * math.max(
+		1,
+		(lineCount * lineHeight + padding * 2) / panel.baseHeight
+	)
 
-        indicator.y = buttonConfig.indicatorY
-
-        indicator:ChangeColor(
-            (stackIndex <= currentStacks)
-            and COMMON_VALUES.COLOR_YELLOW
-            or COMMON_VALUES.COLOR_DARK
-        )
-
-        table.insert(buttonConfig.children, indicator)
-        table.insert(indicators, indicator)
-    end
-
-    return indicators
+	panel.textOffsetY = -((lineCount - 1) * lineHeight) / 2
+	panel.id = upgradeId
 end
 
-local function _createUpgradeButton(self, buttonConfig)
-    local upgrade = UpgradeHandlerModule:GetUpgrade(buttonConfig.id)
+local function _updateDescription(self)
+	local panel = self._description
+	if not panel then return end
 
-    -- Hitbox Background
-    local hitbox = UISharedFunctions:CreateElement(
-        SceneData.upgradeBuyHitbox,
-        self
-    )
+	local hovered
 
-    hitbox.x, hitbox.y = buttonConfig.x, buttonConfig.y
+	for _, upgradeButton in pairs(self._upgradeButtons) do
+		if upgradeButton.button._isHovered and upgradeButton.hitbox.render then
+			hovered = upgradeButton
+			break
+		end
+	end
 
-    table.insert(buttonConfig.children, hitbox)
+	local background, text = panel.background, panel.text
 
-    local halfHeight =
-        hitbox:GetHeight() *
-        UILayoutData.upgradeShop.textOffsetRatio
+	background.render, text.render = hovered ~= nil, hovered ~= nil
 
-    buttonConfig.indicatorY = buttonConfig.y + halfHeight
+	if not hovered then return end
 
-    -- Upgrade Name Label
-    local nameLabel = UISharedFunctions:CreateElement(
-        SceneData.upgradeName,
-        self
-    )
+	if panel.id ~= hovered.id then
+		_setDescription(self, hovered.id)
+	end
 
-    nameLabel.text = upgrade.name or buttonConfig.id
-    nameLabel.x, nameLabel.y =
-        buttonConfig.x,
-        buttonConfig.y - halfHeight
+	local hitbox = hovered.hitbox
 
-    table.insert(buttonConfig.children, nameLabel)
+	background.x =
+		hitbox.x
+		- (hitbox:GetWidth() + background:GetWidth()) / 2
+		- COMMON_VALUES.MEDIUM_PADDING
 
-    -- Upgrade Cost Label
-    local currentStacks =
-        UpgradeHandlerModule:GetStacks(buttonConfig.id)
+	background.y = hitbox.y
 
-    local maximumStacks = upgrade.maxStacks or 1
+	text.x = background.x
+	text.y = background.y + panel.textOffsetY
+end
 
-    local isMaxedOut =
-        UpgradeHandlerModule:IsMaxed(buttonConfig.id)
+-- Filled stack indicators are yellow, empty ones are dark.
+local function _setIndicatorColor(indicator, stackIndex, currentStacks)
+	indicator:ChangeColor(
+		(stackIndex <= currentStacks)
+			and COMMON_VALUES.COLOR_YELLOW
+			or COMMON_VALUES.COLOR_DARK
+	)
+end
 
-    local upgradeCost =
-        PurchaseUpgradeHandlerModule:GetCost(buttonConfig.id)
+local function _formatCostText(isMaxedOut, upgradeCost)
+	return isMaxedOut
+		and LocalizationHandlerModule.Get("upgradeShop.maxed")
+		or LocalizationHandlerModule.Get("upgradeShop.cost", { amount = string.formatNumber(upgradeCost) })
+end
 
-    local formattedCostText =
-        isMaxedOut
-        and "MAX"
-        or string.format(
-            "%s Credits",
-            string.formatNumber(upgradeCost)
-        )
+-- Creates a centered row of stack indicators.
+local function _createStackIndicators(self, x, y, maximumStacks, currentStacks)
+	local indicators = {}
+	local itemSpacing = COMMON_VALUES.MEDIUM_PADDING
 
-    local costLabel = UISharedFunctions:CreateElement(
-        SceneData.upgradeCost,
-        self
-    )
+	local startPositionX = x - (((maximumStacks - 1) * itemSpacing) / 2)
 
-    costLabel.text = formattedCostText
-    costLabel.x, costLabel.y =
-        buttonConfig.x,
-        buttonConfig.y
+	for stackIndex = 1, maximumStacks do
+		local indicator = UIObjectHelperModule.CreateElement(
+			SceneData.upgradeStackCounter,
+			self,
+			{
+				x = UILayoutHelperModule.GetHorizontalStackX(
+					startPositionX,
+					stackIndex,
+					itemSpacing
+				),
 
-    table.insert(buttonConfig.children, costLabel)
+				y = y
+			}
+		)
 
-    -- Stack Indicators
-    local indicators = _createStackIndicators(
-        self,
-        buttonConfig,
-        maximumStacks,
-        currentStacks
-    )
+		_setIndicatorColor(indicator, stackIndex, currentStacks)
 
-    -- Button Hitbox Assembly
-    local buttonElements = {
-        hitbox,
-        nameLabel,
-        costLabel
-    }
+		table.insert(indicators, indicator)
+	end
 
-    for _, indicator in pairs(indicators) do
-        table.insert(buttonElements, indicator)
-    end
+	return indicators
+end
 
-    local buyButton = UIButtonObjectModule.new({
-        elements = buttonElements,
+-- Creates one upgrade button. Every element it makes is added to `children`
+-- so the scrolling frame can move them together.
+local function _createUpgradeButton(self, upgradeId, x, y, children)
+	local upgrade = UpgradeHandlerModule:GetUpgrade(upgradeId)
+	local textOffsetY = UILayoutData.upgradeShop.textOffsetRatio
 
-        hitboxElement = hitbox,
-        mouseButton = 1,
+	local hitbox = UIObjectHelperModule.CreateElement(
+		SceneData.upgradeBuyHitbox,
+		self,
+		{ x = x, y = y }
+	)
 
-        onClick = function()
-            local success =
-                PurchaseUpgradeHandlerModule:Buy(
-                    buttonConfig.id,
-                    ShopID
-                )
+	local halfHeight = hitbox:GetHeight() * textOffsetY
 
-            local sound = SoundHandlerModule.new({
-                soundPath =
-                    success
-                    and "assets/sounds/shop/transaction.wav"
-                    or "assets/sounds/ui/notallowed.wav"
-            })
+	local nameLabel = UIObjectHelperModule.CreateElement(
+		SceneData.upgradeName,
+		self,
+		{ x = x, y = y - halfHeight }
+	)
 
-            if sound then
-                sound:Play() sound:Remove()
-            end
-        end
-    })
+	nameLabel.text = LocalizationHandlerModule.Get("upgrades." .. upgradeId .. ".name")
 
-    table.insert(self._objects, buyButton)
+	local currentStacks = UpgradeHandlerModule:GetStacks(upgradeId)
+	local isMaxedOut = UpgradeHandlerModule:IsMaxed(upgradeId)
+	local upgradeCost = PurchaseUpgradeHandlerModule:GetCost(upgradeId)
 
-    table.insert(self._upgradeButtons, {
-        id = buttonConfig.id,
-        costLabel = costLabel,
-        indicators = indicators,
-        maxStacks = maximumStacks
-    })
+	local costLabel = UIObjectHelperModule.CreateElement(
+		SceneData.upgradeCost,
+		self,
+		{ x = x, y = y }
+	)
+
+	costLabel.text = _formatCostText(isMaxedOut, upgradeCost)
+
+	local indicators = _createStackIndicators(
+		self,
+		x,
+		y + halfHeight,
+		upgrade.maxStacks or 1,
+		currentStacks
+	)
+
+	local buttonElements = { hitbox, nameLabel, costLabel }
+
+	for _, indicator in ipairs(indicators) do
+		table.insert(buttonElements, indicator)
+	end
+
+	for _, element in ipairs(buttonElements) do
+		table.insert(children, element)
+	end
+
+	local buyButton = UIObjectHelperModule.CreateButton(
+		self,
+		buttonElements,
+		hitbox,
+		function()
+			local success = PurchaseUpgradeHandlerModule:Buy(upgradeId, ShopID)
+
+			UISharedFunctions:PlaySound(
+				success
+					and "assets/sounds/shop/transaction.wav"
+					or "assets/sounds/ui/notallowed.wav"
+			)
+		end
+	)
+
+	table.insert(self._upgradeButtons, {
+		id = upgradeId,
+		button = buyButton,
+		hitbox = hitbox,
+		costLabel = costLabel,
+		indicators = indicators,
+		currentStacks = currentStacks,
+		isMaxedOut = isMaxedOut,
+		upgradeCost = upgradeCost
+	})
 end
 
 local function _setupUpgradesScrollingFrame(self)
-    local frameTrack = UISharedFunctions:CreateElement(
-        SceneData.upgradesFrameBackground,
-        self
-    )
+	local frameTrack = UIObjectHelperModule.CreateElement(
+		SceneData.upgradesFrameBackground,
+		self
+	)
 
-    local scrollWheel = UISharedFunctions:CreateElement(
-        SceneData.upgradesFrameScrollWheel,
-        self
-    )
+	local scrollWheel = UIObjectHelperModule.CreateElement(
+		SceneData.upgradesFrameScrollWheel,
+		self
+	)
 
-    local childElements = {}
+	local childElements = {}
 
-    local startPositionY =
-        frameTrack.y -
-        (frameTrack:GetHeight() / 2) +
-        COMMON_VALUES.LARGE_PADDING
+	local startPositionY =
+		frameTrack.y
+		- (frameTrack:GetHeight() / 2)
+		+ COMMON_VALUES.LARGE_PADDING
 
-    for index, upgradeId in pairs(_getUpgrades()) do
-        _createUpgradeButton(self, {
-            id = upgradeId,
+	for index, upgradeId in pairs(UpgradeHandlerModule:GetUpgradesByShop(ShopID)) do
+		_createUpgradeButton(
+			self,
+			upgradeId,
+			frameTrack.x,
 
-            x = frameTrack.x,
+			UILayoutHelperModule.GetVerticalStackY(
+				startPositionY,
+				index,
+				COMMON_VALUES.BUTTON_VERTICAL_GAP
+			),
 
-            y = UILayoutHelperModule.GetVerticalStackY(
-                startPositionY,
-                index,
-                COMMON_VALUES.BUTTON_VERTICAL_GAP
-            ),
+			childElements
+		)
+	end
 
-            children = childElements
-        })
-    end
-
-    local scrollingFrame = UIScrollingFrameObjectModule.new({
-        hitboxElement = frameTrack,
-        scrollTrackElement = frameTrack,
-        scrollBarElement = scrollWheel,
-
-        elements = childElements,
-        padding = COMMON_VALUES.LARGE_PADDING
-    })
-
-    table.insert(self._objects, scrollingFrame)
+	UIObjectHelperModule.CreateScrollingFrame(
+		self,
+		frameTrack,
+		scrollWheel,
+		childElements,
+		COMMON_VALUES.LARGE_PADDING
+	)
 end
 
-function Module:Update()
-    UISharedFunctions:Update()
+-- Only touches the elements when the upgrade's state actually changed.
+local function _updateUpgradeButton(upgradeButton)
+	local id = upgradeButton.id
 
-    for _, upgradeButton in pairs(self._upgradeButtons) do
-        local currentStacks =
-            UpgradeHandlerModule:GetStacks(
-                upgradeButton.id
-            )
+	local currentStacks = UpgradeHandlerModule:GetStacks(id)
+	local isMaxedOut = UpgradeHandlerModule:IsMaxed(id)
+	local upgradeCost = PurchaseUpgradeHandlerModule:GetCost(id)
 
-        local isMaxedOut =
-            UpgradeHandlerModule:IsMaxed(
-                upgradeButton.id
-            )
+	if currentStacks ~= upgradeButton.currentStacks then
+		upgradeButton.currentStacks = currentStacks
 
-        local upgradeCost =
-            PurchaseUpgradeHandlerModule:GetCost(
-                upgradeButton.id
-            )
+		for stackIndex, indicator in pairs(upgradeButton.indicators) do
+			_setIndicatorColor(indicator, stackIndex, currentStacks)
+		end
+	end
 
-        upgradeButton.costLabel.text =
-            isMaxedOut
-            and "MAX"
-            or string.format(
-                "%s Credits",
-                string.formatNumber(upgradeCost)
-            )
+	if isMaxedOut ~= upgradeButton.isMaxedOut
+		or upgradeCost ~= upgradeButton.upgradeCost
+	then
+		upgradeButton.isMaxedOut = isMaxedOut
+		upgradeButton.upgradeCost = upgradeCost
 
-        for stackIndex, indicator in pairs(
-            upgradeButton.indicators
-        ) do
-            indicator:ChangeColor(
-                (stackIndex <= currentStacks)
-                and COMMON_VALUES.COLOR_YELLOW
-                or COMMON_VALUES.COLOR_DARK)
-        end
-    end
+		upgradeButton.costLabel.text = _formatCostText(isMaxedOut, upgradeCost)
+	end
+end
+
+function Module:OnUpdate()
+	for _, upgradeButton in pairs(self._upgradeButtons) do
+		_updateUpgradeButton(upgradeButton)
+	end
+
+	_updateDescription(self)
 end
 
 function Module:Init()
-    MusicHandlerModule:PlayTrack("upgradeShop")
+	MusicHandlerModule:PlayTrack("upgradeShop")
 
-    BoxesObjectModule.renderBoxes = false
+	BoxesObjectModule.renderBoxes = false
 
-    UISharedFunctions:SetupSidebarBackground(self)
-    UISharedFunctions:SetupSettingsButton(self)
-    UISharedFunctions:SetupShopBackButton(self)
+	UISharedFunctions:SetupShopScene(self)
 
-    UISharedFunctions:SetupSessionPlaytimeLabel(self)
-    UISharedFunctions:SetupCurrencyLabels(self)
+	_setupBirdSecret(self)
+	_setupFaceSecret(self)
 
-    UISharedFunctions:SetupBackToMenuButton(self)
-
-    UISharedFunctions:SetupBackground(self)
-
-    _setupBirdSecret(self)
-    _setupFaceSecret(self)
-
-    _setupUpgradesScrollingFrame(self)
+	_setupUpgradesScrollingFrame(self)
+	_setupDescriptionPanel(self)
 end
 
 return Module

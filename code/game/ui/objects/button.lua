@@ -9,8 +9,6 @@ local UICursorModule = require("code.game.ui.cursor")
 
 local SettingsModule = require("code.engine.saves.settings")
 
-local math = require("code.engine.helpers.math")
-
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
 local Button = {}
@@ -55,14 +53,9 @@ function Button:MousePressed(x, y, mouseButton)
 	end
 
 	if self.playClickSound then
-		local sound = SoundHandlerModule.new({
+		SoundHandlerModule.new({
 			soundPath = "assets/sounds/ui/click.wav"
-		})
-
-		if sound then
-			sound:Play(true, -100, 100, 1000)
-			sound:Remove()
-		end
+		}):Play(true, true, -100, 100, 1000)
 	end
 
 	SignalHandlerModule.Get("game.ui.buttonclicked"):Fire(self)
@@ -73,11 +66,6 @@ function Button:MousePressed(x, y, mouseButton)
 end
 
 function Button:Update(deltaTime)
-	if not self.hitboxElement then
-		self:Remove()
-		return
-	end
-
 	local mouseX, mouseY =
 		RenderUtilsModule.GetScaledMousePosition()
 
@@ -121,14 +109,15 @@ function Button:Update(deltaTime)
 end
 
 function Module.new(data)
-	if not data then return end
-	if not data.hitboxElement then return end
-	if #data.elements == 0 then return end
+	assert(data, "Button.new requires data")
+	assert(data.hitboxElement, "Button.new requires hitboxElement")
+	assert(data.elements, "Button.new requires elements")
+	assert(#data.elements > 0, "Button.new requires at least one element")
 
 	local button = setmetatable({
 		id = manager:Get(),
 
-		elements = data.elements or {},
+		elements = data.elements,
 
 		cooldown = data.cooldown or .25,
 		lastUsed = -math.huge,
@@ -162,13 +151,13 @@ function Module:MousePressed(x, y, mouseButton)
 end
 
 function Module:Update(deltaTime)
-    for _, button in pairs(self._buttons) do
-        button:Update(deltaTime)
+	for _, button in pairs(self._buttons) do
+		button:Update(deltaTime)
 
-        if button._isHovered and button.hitboxElement.render then
-            UICursorModule:SetHovering(button.hoveringCursor)
-        end
-    end
+		if button._isHovered and button.hitboxElement.render then
+			UICursorModule:SetHovering(button.hoveringCursor)
+		end
+	end
 end
 
 return Module

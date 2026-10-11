@@ -9,9 +9,7 @@ local TweenHandlerModule = require("code.engine.tweenHandler")
 
 local SavesFilesModule = require("code.engine.saves.files")
 
-local easing = require("code.engine.helpers.easing")
-local table = require("code.engine.helpers.table")
-local math = require("code.engine.helpers.math")
+local easingData = require("code.data.easing")
 
 local CONSTANTS = require("code.data.constants")
 local BoxesObjectModule = require("code.game.boxes.object")
@@ -25,13 +23,11 @@ Module._activeMerges = {}
 
 --- Validates if two boxes meet the basic criteria to be considered for a merge.
 local function _areBoxesEligible(boxA, boxB)
-    return boxB
-        and boxB ~= boxA
+    return boxB ~= boxA
         and not boxA.merging
         and not boxB.merging
         and not boxA.dragging
         and not boxB.dragging
-        and boxA.data.tier
         and boxA.data.tier == boxB.data.tier
         and boxA.data.mergeable
         and boxB.data.mergeable
@@ -51,33 +47,24 @@ local function _canBoxesMerge(boxA, boxB, maxRange)
     return distance <= maxRange
 end
 
-local function _calculateScaleRange()
-    local baseScale, maxScale
+local function _getMaxBoxScale()
+    local maxScale = 1
 
     for _, boxData in pairs(BoxesData) do
-        local scale = boxData.scale or 1
-
-        if not baseScale or scale < baseScale then
-            baseScale = scale
-        end
-
-        if not maxScale or scale > maxScale then
-            maxScale = scale
-        end
+        maxScale = math.max(maxScale, boxData.scale or 1)
     end
 
-    return baseScale or 1, maxScale or baseScale or 1
+    return maxScale
 end
-
-local BASE_SCALE, MAX_SCALE = _calculateScaleRange()
 
 local function _getMergeRange(boxA, boxB)
     local averageScale = (boxA.element.scaleX + boxB.element.scaleX) / 2
-
-    return CONSTANTS.BOX.MERGE.BASE_RANGE * (averageScale / BASE_SCALE)
+    return CONSTANTS.BOX.MERGE.BASE_RANGE * averageScale
 end
 
-local maxMergeQueryRadius = CONSTANTS.BOX.MERGE.BASE_RANGE * ((MAX_SCALE * CONSTANTS.BOX.ANIMATION.SPAWN_SCALE_MULTIPLIER) / BASE_SCALE)
+local MAX_MERGE_RANGE =
+    CONSTANTS.BOX.MERGE.BASE_RANGE * _getMaxBoxScale()
+
 local function _createQuadtree()
     return QuadtreeModule.new({
         x = 0,
@@ -89,8 +76,8 @@ local function _createQuadtree()
 end
 
 local function _cancelMerge(index, boxA, boxB)
-    if boxA then boxA.merging = false end
-    if boxB then boxB.merging = false end
+    boxA.merging = false
+    boxB.merging = false
 
     table.remove(Module._activeMerges, index)
 end
@@ -99,7 +86,6 @@ function Module:Merge(boxA, boxB)
     if not _areBoxesEligible(boxA, boxB) then return end
 
     local newBoxData = BoxesObjectModule.GetBoxDataByTier(boxA.data.tier + 1)
-    if not newBoxData then return end
 
     SignalHandlerModule.Get("game.boxes.mergestarted"):Fire(boxA, boxB)
 
@@ -135,7 +121,7 @@ function Module:Merge(boxA, boxB)
     local duration = (distance / CONSTANTS.BOX.MERGE.BASE_SPEED) * weightDurationMultiplier / velocityDurationMultiplier
 
     -- Make sure merge has an actual duration so it works
-    duration = math.max(duration, .001)
+    duration = math.max(duration, CONSTANTS.BOX.MERGE.MIN_DURATION)
 
     table.insert(self._activeMerges, {
         boxA = boxA,
@@ -166,8 +152,6 @@ local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
 
     local newBox = BoxesObjectModule.new(newBoxData)
 
-    if not newBox then return nil end
-
     newBox.element.x = middleX
     newBox.element.y = middleY
 
@@ -194,10 +178,7 @@ local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
     )
 
     if newBox.data.mergeSoundData then
-        local mergeSound = SoundHandlerModule.new(newBox.data.mergeSoundData)
-        if mergeSound then
-            mergeSound:Play() mergeSound:Remove()
-        end
+        SoundHandlerModule.new(newBox.data.mergeSoundData):Play(true)
     end
 
     if newBox.data.flashScreen then
@@ -213,14 +194,7 @@ end
 function Module:MergeUpdate(deltaTime)
     for index = #self._activeMerges, 1, -1 do
         local merge = self._activeMerges[index]
-        if not merge then goto continue end
-
         local boxA, boxB = merge.boxA, merge.boxB
-
-        if not (boxA and boxB and boxA.element and boxB.element) then
-            _cancelMerge(index, boxA, boxB)
-            goto continue
-        end
 
         if boxA.dragging or boxB.dragging then
             _cancelMerge(index, boxA, boxB)
@@ -230,7 +204,7 @@ function Module:MergeUpdate(deltaTime)
         merge.timeSinceStart = merge.timeSinceStart + deltaTime
 
         local progress = math.min(merge.timeSinceStart / merge.duration, 1)
-        local eased = easing.easeInQuad(progress)
+        local eased = easingData.easeInQuad(progress)
 
         -- Larp towards the middle
         boxA.element.x = math.lerp(merge.startAX, merge.middleX, eased)
@@ -241,12 +215,7 @@ function Module:MergeUpdate(deltaTime)
 
         if progress < 1 then goto continue end
 
-        local newBoxData = SavesFilesModule.loadedFile and BoxesObjectModule.GetBoxDataByType(boxA.data.next)
-
-        if not newBoxData then
-            _cancelMerge(index, boxA, boxB)
-            goto continue
-        end
+        local newBoxData = BoxesObjectModule.GetBoxDataByType(boxA.data.next)
 
         local newBox = _spawnMergedBox(boxA, boxB, newBoxData, merge.middleX, merge.middleY)
         SignalHandlerModule.Get("game.boxes.mergecompleted"):Fire(newBox, boxA, boxB)
@@ -285,7 +254,7 @@ function Module:CheckMerges()
                     y = boxA.element.y
                 },
 
-                maxMergeQueryRadius
+                MAX_MERGE_RANGE
             )
 
         for index = 1, #nearbyPoints do
@@ -293,18 +262,8 @@ function Module:CheckMerges()
             local mergeRange = _getMergeRange(boxA, boxB)
 
             if _canBoxesMerge(boxA, boxB, mergeRange) then
-                local distance = math.distance2D(
-                        boxA.element.x,
-                        boxA.element.y,
-
-                        boxB.element.x,
-                        boxB.element.y
-                    )
-
-                if distance <= _getMergeRange(boxA, boxB) then
-                    self:Merge(boxA, boxB)
-                    break
-                end
+                self:Merge(boxA, boxB)
+                break
             end
         end
 

@@ -10,6 +10,10 @@ MIN_WINDOW_HEIGHT = 300
 
 FPS_SCALE = 240
 
+string = require("code.engine.helpers.string")
+table = require("code.engine.helpers.table")
+math = require("code.engine.helpers.math")
+
 function love.conf(config)
     config.identity = "MERGE-BOXES-2D"
 

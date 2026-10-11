@@ -2,15 +2,12 @@
 
 -- Generic tween system, works on any table with numbers.
 local SignalHandlerModule = require("code.engine.events.signalHandler")
+local easingData = require("code.data.easing")
 
-local easing = require("code.engine.helpers.easing")
-local math = require("code.engine.helpers.math")
+local CONSTANTS = require("code.data.constants")
 
 local Module = {}
 Module._active = {}
-
--- Accounts for float accumulation drift, so completion still triggers on time.
-local COMPLETION_EPSILON = 1e-6
 
 local Tween = {}
 Tween.__index = Tween
@@ -27,9 +24,11 @@ end
 -- onComplete: optional function called once the tween finishes naturally
 
 function Module.new(target, properties, duration, easingName, onComplete)
-    if not target or not properties then return end
+    assert(target, "Tween.new requires target")
+    assert(properties, "Tween.new requires properties")
 
     local startValues = {}
+
     for property in pairs(properties) do
         startValues[property] = target[property] or 0
     end
@@ -58,21 +57,29 @@ function Module:Update(deltaTime)
     for index = #self._active, 1, -1 do
         local tween = self._active[index]
 
-        if tween._cancelled or not tween.target then
+        if tween._cancelled then
             table.remove(self._active, index)
             goto continue
         end
 
         tween.timeSinceStart = tween.timeSinceStart + deltaTime
 
-        local isFinished = tween.timeSinceStart >= tween.duration - COMPLETION_EPSILON
-        local timerLocalized = isFinished and 1 or (tween.timeSinceStart / tween.duration)
-        local easingFunction = easing[tween.easingName] or easing.linear
+        local isFinished =
+            tween.timeSinceStart >= tween.duration - CONSTANTS.TWEEN.COMPLETION_EPSILON
+
+        local timerLocalized =
+            isFinished and 1 or (tween.timeSinceStart / tween.duration)
+
+        local easingFunction =
+            easingData[tween.easingName] or easingData.linear
+
         local eased = easingFunction(timerLocalized)
 
         for property, goalValue in pairs(tween.goalValues) do
             local startValue = tween.startValues[property]
-            tween.target[property] = math.lerp(startValue, goalValue, eased)
+
+            tween.target[property] =
+                math.lerp(startValue, goalValue, eased)
         end
 
         if isFinished then

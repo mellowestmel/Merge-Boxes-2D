@@ -2,17 +2,12 @@
 
 local Module = {}
 
-function Module.new(type, gameplayData, flavorData, cosmeticData)
-	assert(flavorData, "Missing flavor data for " .. type)
+function Module.new(type, gameplayData, cosmeticData)
 	assert(cosmeticData, "Missing cosmetic data for " .. type)
 
 	return {
 		-- Identity
 		type = type,
-        name = flavorData.name or gameplayData.type,
-
-        description = flavorData.description or "",
-        quote = flavorData.quote,
 
         -- Gameplay
         tier = gameplayData.tier,
@@ -32,6 +27,7 @@ function Module.new(type, gameplayData, flavorData, cosmeticData)
         scale = cosmeticData.scale or 1,
 
         shaders = cosmeticData.shaders or {},
+        particles = cosmeticData.particles or {},
 
         -- Merge effects
         mergeSoundData = cosmeticData.mergeSoundData,

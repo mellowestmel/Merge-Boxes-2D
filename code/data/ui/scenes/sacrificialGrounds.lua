@@ -1,4 +1,4 @@
--- ~/code/data/ui/scenes/sacrifice.lua
+-- ~/code/data/ui/scenes/sacrificialGrounds.lua
 
 local COMMON_VALUES = require("code.data.ui.commonValues")
 

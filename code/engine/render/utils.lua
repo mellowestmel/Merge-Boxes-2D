@@ -1,7 +1,5 @@
 -- ~/code/engine/render/utils.lua
 
-local math = require("code.engine.helpers.math")
-
 local Module = {}
 
 -- Creates a color from a table or 4 r, g, b, a values

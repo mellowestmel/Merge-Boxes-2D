@@ -1,16 +1,10 @@
--- ~/code/game/ui/shared.lua
-
-local RenderElementModule = require("code.engine.render.element")
-
 local SavesFilesModule = require("code.engine.saves.files")
-
-local string = require("code.engine.helpers.string")
-local table = require("code.engine.helpers.table")
+local SoundHandlerModule = require("code.engine.soundHandler")
 
 local BoxesObjectModule = require("code.game.boxes.object")
 
 local UISceneHandlerModule = require("code.game.ui.sceneHandler")
-local UIButtonObjectModule = require("code.game.ui.objects.button")
+local UIObjectHelperModule = require("code.game.ui.helpers.object")
 
 local ScreenTransitionModule = require("code.game.vfx.screenTransition")
 
@@ -22,6 +16,8 @@ local CONSTANTS = require("code.data.constants")
 local SharedData = require("code.data.ui.scenes.shared")
 local BoxesData = require("code.data.boxes")
 
+local DISCORD_URL = "https://www.discord.gg/pQShPG8XPf"
+
 local Module = {}
 Module._updateFunctions = {}
 
@@ -32,176 +28,106 @@ local function _getHighestTierAcrossSaves()
 		local save = SavesFilesModule:ReadFile(slot)
 
 		if save and save.stats then
-			local tier = save.stats.highestBoxTier or 0
-
-			if tier > highestTier then
-				highestTier = tier
-			end
+			highestTier = math.max(highestTier, save.tracking.highestBoxTier or 0)
 		end
 	end
 
 	return highestTier
 end
 
-function Module:CreateElement(elementData, scene)
-	if not elementData then return end
-	if not scene then return end
+-- Creates a label and keeps its text updated while a save is loaded.
+local function _setupUpdatingLabel(scene, updateKey, labelData, getText)
+	local label = UIObjectHelperModule.CreateElement(labelData, scene)
 
-	local data = {}
+	Module._updateFunctions[updateKey] = function()
+		if not SavesFilesModule.loadedFile then return end
 
-	for key, value in pairs(elementData) do
-		data[key] = value
+		label.text = getText()
 	end
+end
 
-	local element = RenderElementModule.new(data)
+-- Plays a one-shot UI sound.
+function Module:PlaySound(soundPath)
+	SoundHandlerModule.new({ soundPath = soundPath }):Play(true)
+end
 
-	table.insert(scene._elements, element)
-
-	return element
+function Module:PlayNotAllowedSound()
+	self:PlaySound("assets/sounds/ui/notallowed.wav")
 end
 
 function Module:SetupHighestTierBoxes(scene)
-    local highestTier = _getHighestTierAcrossSaves()
-    if highestTier <= 0 then return end
+	local highestTier = _getHighestTierAcrossSaves()
+	if highestTier <= 0 then return end
 
-    for type, data in pairs(UILayoutData.shared.backgroundBoxes) do
-        local box = BoxesData[type]
+	for type, data in pairs(UILayoutData.shared.backgroundBoxes) do
+		local box = BoxesData[type]
 
-        if not box then goto continue end
-        if not box.tier then goto continue end
-        if box.tier > highestTier then goto continue end
+		if box and box.tier and box.tier <= highestTier then
+			UIObjectHelperModule.CreateElement({
+				name = type .. "BackgroundBox",
 
-        local boxElement = RenderElementModule.new({
-            name = type .. "BackgroundBox",
+				spritePath = UILayoutData.shared.backgroundBoxesPathPrefix
+					.. "box"
+					.. box.tier
+					.. ".png",
 
-            spritePath = UILayoutData.shared.backgroundBoxesPathPrefix
-                .. "box"
-                .. box.tier
-                .. ".png",
+				x = data.x,
+				y = data.y,
 
-            x = data.x,
-            y = data.y,
+				zIndex = COMMON_VALUES.Z_WORLD + data.zIndex,
 
-            zIndex = COMMON_VALUES.Z_WORLD + data.zIndex,
-
-			shaders = data.shaders
-        })
-
-        table.insert(scene._elements, boxElement)
-
-        :: continue ::
-    end
+				shaders = data.shaders
+			}, scene)
+		end
+	end
 end
 
 function Module:SetupSettingsButton(scene)
-	if not scene then return end
-
-	local settingsButtonHitbox = self:CreateElement(
+	UIObjectHelperModule.CreateElementButton(
+		scene,
 		SharedData.settingsButtonHitbox,
-		scene
-	)
-
-	local settingsButton = UIButtonObjectModule.new({
-		elements = {settingsButtonHitbox},
-		hitboxElement = settingsButtonHitbox,
-
-		mouseButton = 1,
-
-		onClick = function()
-			ScreenTransitionModule:Transition({
-				callback = function()
-					UISceneHandlerModule:Switch("settings")
-				end
-			})
+		nil,
+		function()
+			UISceneHandlerModule:TransitionTo("settings")
 		end
-	})
-
-	table.insert(scene._objects, settingsButton)
-
-	if scene._hideableElements then
-		table.insert(scene._hideableElements, settingsButtonHitbox)
-	end
+	)
 end
 
 function Module:SetupDiscordButton(scene)
-	if not scene then return end
-
-	local discordButtonHitbox = self:CreateElement(
+	UIObjectHelperModule.CreateElementButton(
+		scene,
 		SharedData.discordButtonHitbox,
-		scene
-	)
-
-	local discordButton = UIButtonObjectModule.new({
-		elements = {discordButtonHitbox},
-		hitboxElement = discordButtonHitbox,
-
-		mouseButton = 1,
-
-		onClick = function()
-			love.system.openURL("https://www.discord.gg/pQShPG8XPf")
+		nil,
+		function()
+			love.system.openURL(DISCORD_URL)
 		end
-	})
-
-	table.insert(scene._objects, discordButton)
-
-	if scene._hideableElements then
-		table.insert(scene._hideableElements, discordButtonHitbox)
-	end
+	)
 end
 
 function Module:SetupSidebarBackground(scene)
-	self:CreateElement(
+	UIObjectHelperModule.CreateElement(
 		SharedData.sidebarBackground,
 		scene
 	)
 end
 
 function Module:SetupShopBackButton(scene)
-	local shopBackButtonHitbox = self:CreateElement(
+	UIObjectHelperModule.CreateElementButton(
+		scene,
 		SharedData.shopBackButtonHitbox,
-		scene
-	)
-
-	local shopBackButtonLabel = self:CreateElement(
 		SharedData.shopBackButtonLabel,
-		scene
-	)
-
-	local shopBackButton = UIButtonObjectModule.new({
-		elements = {
-			shopBackButtonHitbox,
-			shopBackButtonLabel
-		},
-
-		hitboxElement = shopBackButtonHitbox,
-
-		mouseButton = 1,
-
-		onClick = function()
-			ScreenTransitionModule:Transition({
-				callback = function()
-					UISceneHandlerModule:Switch("boxRanch")
-				end
-			})
+		function()
+			UISceneHandlerModule:TransitionTo("boxRanch")
 		end
-	})
-
-	table.insert(scene._objects, shopBackButton)
+	)
 end
 
 function Module:SetupBackToMenuButton(scene)
-	local backToMenuButtonHitbox = self:CreateElement(
+	UIObjectHelperModule.CreateElementButton(
+		scene,
 		SharedData.backToMenuButtonHitbox,
-		scene
-	)
-
-	local backToMenuButton = UIButtonObjectModule.new({
-		elements = {backToMenuButtonHitbox},
-		hitboxElement = backToMenuButtonHitbox,
-
-		mouseButton = 1,
-
-		onClick = function()
+		nil,
+		function()
 			ScreenTransitionModule:Transition({
 				callback = function()
 					SavesFilesModule:UnloadFile(SavesFilesModule.loadedFile)
@@ -211,40 +137,32 @@ function Module:SetupBackToMenuButton(scene)
 				end
 			})
 		end
-	})
-
-	table.insert(scene._objects, backToMenuButton)
+	)
 end
 
 function Module:SetupCurrencyLabels(scene)
-	local creditsLabel = self:CreateElement(
+	_setupUpdatingLabel(
+		scene,
+		"creditsLabelUpdateFunction",
 		SharedData.creditsLabel,
-		scene
+		function()
+			return string.formatNumber(SavesFilesModule:Get("currencies.credits")) .. " C$"
+		end
 	)
-
-	self._updateFunctions.creditsLabelUpdateFunction = function()
-		if not creditsLabel then return end
-		if not SavesFilesModule.loadedFile then return end
-
-		local credits = SavesFilesModule:Get("currencies.credits")
-		creditsLabel.text = string.formatNumber(credits) .. " C$"
-	end
 end
 
 function Module:SetupSessionPlaytimeLabel(scene)
-	local sessionPlaytimeLabel = self:CreateElement(
+	_setupUpdatingLabel(
+		scene,
+		"sessionPlaytimeLabelUpdateFunction",
 		SharedData.sessionPlaytimeLabel,
-		scene
-	)
-
-	self._updateFunctions.sessionPlaytimeLabelUpdateFunction = function()
-		if not sessionPlaytimeLabel then return end
-		if not SavesFilesModule.loadedFile then return end
-
-		sessionPlaytimeLabel.text = string.formatTime(
-				SavesFilesModule:Get("stats.playtime") - SavesFilesModule.playtimeAtSessionStart
+		function()
+			return string.formatTime(
+				SavesFilesModule:Get("tracking.playtime")
+					- SavesFilesModule.playtimeAtSessionStart
 			)
-	end
+		end
+	)
 end
 
 function Module:SetupBackground(scene)
@@ -252,19 +170,33 @@ function Module:SetupBackground(scene)
 		"code.data.ui.scenes." .. scene.name
 	)
 
-	self:CreateElement(
+	UIObjectHelperModule.CreateElement(
 		sceneData.background,
 		scene
 	)
 end
 
-function Module:Update()
+-- Everything the shop-style scenes (upgrade shop, black market, ...) have in common.
+function Module:SetupShopScene(scene)
+	self:SetupSidebarBackground(scene)
+	self:SetupBackground(scene)
+
+	self:SetupBackToMenuButton(scene)
+	self:SetupSettingsButton(scene)
+
+	self:SetupSessionPlaytimeLabel(scene)
+	self:SetupCurrencyLabels(scene)
+
+	self:SetupShopBackButton(scene)
+end
+
+function Module:Update(deltaTime)
 	for _, updateFunction in pairs(self._updateFunctions) do
-		updateFunction()
+		updateFunction(deltaTime)
 	end
 end
 
-function Module:CleanUpdates()
+function Module:Clean()
 	self._updateFunctions = {}
 end
 

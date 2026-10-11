@@ -1,24 +1,8 @@
-local table = require("code.engine.helpers.table")
-local math = require("code.engine.helpers.math")
+-- ~/code/engine/quadtree.lua
 
-local MAX_DEPTH = 8
+local CONSTANTS = require("code.data.constants")
 
-local Quadtree = {
-    width = 100,
-    height = 100,
-
-    x = 0,
-    y = 0,
-
-    capacity = 4,
-    parent = nil,
-    depth = 0,
-
-    subdivided = false,
-
-    children = {},
-    points = {}
-}
+local Quadtree = {}
 Quadtree.__index = Quadtree
 
 local Module = {}
@@ -158,7 +142,7 @@ function Quadtree:Insert(point)
     local contains = self:Contains(point)
     if not contains then return false end
 
-    if not self.subdivided and (#self.points < self.capacity or self.depth >= MAX_DEPTH) then
+    if not self.subdivided and (#self.points < self.capacity or self.depth >= CONSTANTS.QUADTREE.MAX_DEPTH) then
         table.insert(self.points, point)
         return true
     end
