@@ -91,22 +91,28 @@ function Element:Remove()
 end
 
 local function _getDimensions(element)
+    local width, height
+
     if element.type == "sprite" then
         local drawable = element.drawable
-
         assert(drawable, "Sprite element requires drawable")
 
-        return
-            drawable:getWidth() * element.scaleX,
-            drawable:getHeight() * element.scaleY
+        width, height = drawable:getDimensions()
+
+    elseif element.type == "text" then
+        local font = element.font or love.graphics.getFont()
+        local text = type(element.text) == "string" and element.text or ""
+
+        width = font:getWidth(text)
+        height = font:getHeight()
+
+    else
+        width, height = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
     end
 
-    local font = element.font or love.graphics.getFont()
-    local text = type(element.text) == "string" and element.text or ""
-
     return
-        font:getWidth(text),
-        font:getHeight() * element.scaleY
+        (element.width or width) * element.scaleX,
+        (element.height or height) * element.scaleY
 end
 
 function Element:SetZIndex(zIndex)
@@ -164,6 +170,7 @@ local function _drawElement(element)
     local positionY = element.y + element.offsetY
     local radians = math.rad(element.rotation)
 
+    local width, height = _getDimensions(element)
     local color = element.color
 
     love.graphics.setColor(
@@ -184,22 +191,19 @@ local function _drawElement(element)
 
     if element.type == "sprite" then
         local drawable = element.drawable
+        local drawableWidth, drawableHeight = drawable:getDimensions()
 
         assert(drawable, "Sprite element requires drawable")
 
         love.graphics.draw(
             drawable,
-
             positionX,
             positionY,
-
             radians,
-
-            element.scaleX,
-            element.scaleY,
-
-            drawable:getWidth() * element.anchorX,
-            drawable:getHeight() * element.anchorY
+            width / drawableWidth,
+            height / drawableHeight,
+            drawableWidth * element.anchorX,
+            drawableHeight * element.anchorY
         )
 
     elseif element.type == "custom" and element.onDraw then
@@ -210,17 +214,33 @@ local function _drawElement(element)
 
         love.graphics.setFont(font)
 
+        local fontWidth = math.max(font:getWidth(element.text), 1)
+        local fontHeight = math.max(font:getHeight(), 1)
+
         love.graphics.print(
             element.text,
-
-            positionX - font:getWidth(element.text) * element.scaleX * element.anchorX,
-            positionY - font:getHeight() * element.scaleY * element.anchorY,
-
+            positionX - width * element.anchorX,
+            positionY - height * element.anchorY,
             radians,
-
-            element.scaleX,
-            element.scaleY
+            width / fontWidth,
+            height / fontHeight
         )
+
+    elseif element.type == "rectangle" then
+        love.graphics.push()
+
+        love.graphics.translate(positionX, positionY)
+        love.graphics.rotate(radians)
+
+        love.graphics.rectangle(
+            element.shapeMode,
+            -width * element.anchorX,
+            -height * element.anchorY,
+            width,
+            height
+        )
+
+        love.graphics.pop()
     end
 
     if element.scissor then
@@ -281,7 +301,9 @@ function Module.new(data)
         name = data.name,
 
         -- "custom" calls data.onDraw(element) instead of drawing a sprite or text
-        type = (data.type == "text" or data.type == "custom")
+        type = (data.type == "text"
+            or data.type == "custom"
+            or data.type == "rectangle")
             and data.type
             or "sprite",
 
@@ -290,10 +312,13 @@ function Module.new(data)
 
         zIndex = data.zIndex or 0,
 
+        shapeMode = data.shapeMode or "line",
+        spritePath = data.spritePath or "",
+
         text = data.textKey
-        and LocalizationHandlerModule.Get(data.textKey)
-        or data.text
-        or "",
+            and LocalizationHandlerModule.Get(data.textKey)
+            or data.text
+            or "",
 
         font = data.font,
 
@@ -305,6 +330,9 @@ function Module.new(data)
 
         scaleX = data.scaleX or 1,
         scaleY = data.scaleY or 1,
+
+        height = data.height,
+        width = data.width,
 
         x = data.x or 0,
         y = data.y or 0,

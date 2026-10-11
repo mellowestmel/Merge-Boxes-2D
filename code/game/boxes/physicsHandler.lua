@@ -86,7 +86,9 @@ local function _changePosition(box, deltaTime)
     box.element.y = box.element.y + box.velocityY * fpsFactor
 end
 
-local function _rotationHandler(box)
+local function _rotationHandler(box, deltaTime)
+    local fpsFactor = deltaTime * FPS_SCALE
+
     if box.dragging then
         local width = box.element:GetWidth()
         local height = box.element:GetHeight()
@@ -94,18 +96,20 @@ local function _rotationHandler(box)
         local offsetX = math.clamp(box.dragOffsetX / (width * .5), -1, 1)
         local offsetY = math.clamp(box.dragOffsetY / (height * .5), -1, 1)
 
-        local horizontalRotation = box.velocityX * CONSTANTS.BOX.DRAG.ROTATION_MULTIPLIER * -offsetY
-        local verticalRotation = box.velocityY * CONSTANTS.BOX.DRAG.ROTATION_MULTIPLIER * offsetX
+        local horizontalRotation = (box.velocityX * CONSTANTS.BOX.DRAG.ROTATION_MULTIPLIER * -offsetY) * fpsFactor
+        local verticalRotation = (box.velocityY * CONSTANTS.BOX.DRAG.ROTATION_MULTIPLIER * offsetX) * fpsFactor
 
         local targetRotation = horizontalRotation + verticalRotation
         targetRotation = math.clamp(targetRotation, -CONSTANTS.BOX.DRAG.MAX_TILT, CONSTANTS.BOX.DRAG.MAX_TILT)
 
-        box.element.rotation = box.element.rotation + (targetRotation - box.element.rotation) * CONSTANTS.BOX.DRAG.BASE_TILT_SPEED
+        local result = box.element.rotation + (targetRotation - box.element.rotation) * CONSTANTS.BOX.DRAG.BASE_TILT_SPEED
+        box.element.rotation = result
     else
-        local velocity = (box.velocityX + box.velocityY) / 2
-
-        box.element.rotation = box.element.rotation
+        local velocity = ((box.velocityX + box.velocityY) / 2) * fpsFactor
+        local result = box.element.rotation
             + velocity / CONSTANTS.BOX.PHYSICS.FREE_ROTATION_VELOCITY_DIVISOR
+
+        box.element.rotation = result
     end
 end
 
@@ -127,7 +131,7 @@ function Module:Update(deltaTime)
         _edgeBounceX(box)
         _edgeBounceY(box)
 
-        _rotationHandler(box)
+        _rotationHandler(box, deltaTime)
 
         :: continue ::
     end
