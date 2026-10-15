@@ -1,4 +1,4 @@
-# please work this time
+
 name: Discord Notifications
 
 on:
@@ -27,6 +27,7 @@ jobs:
           import json
           import os
           import urllib.request
+          import urllib.error
 
           def github_get(url):
               req = urllib.request.Request(
@@ -39,7 +40,6 @@ jobs:
               with urllib.request.urlopen(req, timeout=20) as response:
                   return json.load(response)
 
-          # Use GitHub's built-in event file path.
           event_path = os.environ.get("GITHUB_EVENT_PATH")
 
           if not event_path or not os.path.isfile(event_path):
@@ -62,7 +62,6 @@ jobs:
                   raise SystemExit(0)
 
               sha = commit["id"]
-
               details = github_get(
                   f"{os.environ['API_URL']}/repos/{repo}/commits/{sha}"
               )
@@ -132,13 +131,11 @@ jobs:
 
           elif event_type == "release":
               release = event.get("release", {})
-
               title = (
                   release.get("name")
                   or release.get("tag_name")
                   or "New release"
               )
-
               description = (
                   release.get("body") or "A new release is available."
               )[:4000]
@@ -183,13 +180,30 @@ jobs:
               "allowed_mentions": {"parse": []}
           }
 
+          webhook = os.environ.get("WEBHOOK", "").strip()
+
+          if not webhook:
+              print("Error: DISCORD_WEBHOOK_URL secret is empty.")
+              raise SystemExit(1)
+
           request = urllib.request.Request(
-              os.environ["WEBHOOK"] + "?wait=true",
+              webhook + "?wait=true",
               data=json.dumps(payload).encode("utf-8"),
               headers={"Content-Type": "application/json"},
               method="POST"
           )
 
-          with urllib.request.urlopen(request, timeout=20) as response:
-              print("Discord notification sent:", response.status)
+          try:
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  print("Discord notification sent:", response.status)
+          except urllib.error.HTTPError as error:
+              print("Discord HTTP status:", error.code)
+              print(
+                  "Discord response:",
+                  error.read().decode("utf-8", errors="replace")
+              )
+              raise
+          except urllib.error.URLError as error:
+              print("Could not connect to Discord:", error.reason)
+              raise
           PY
