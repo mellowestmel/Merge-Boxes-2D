@@ -73,7 +73,7 @@ jobs:
                   or "Unknown"
               )
 
-              title = f"New commit: {subject}"[:256]
+              title = f"New Commit: {subject}"[:256]
 
               description = (
                   body.strip()[:3000]
@@ -96,7 +96,7 @@ jobs:
                   },
                   {
                       "name": "Author",
-                      "value": author[:1024],
+                      "value": f"`{author[:1024]}`",
                       "inline": True
                   },
                   {
@@ -129,8 +129,8 @@ jobs:
                   })
 
               fields.append({
-                  "name": "Commit",
-                  "value": f"[View commit](https://github.com/{repo}/commit/{sha})",
+                  "name": "View Commit",
+                  "value": f"https://github.com/{repo}/commit/{sha}",
                   "inline": False
               })
 
