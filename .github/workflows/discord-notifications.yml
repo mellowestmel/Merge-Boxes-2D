@@ -8,7 +8,7 @@ on:
 
 permissions:
   contents: read
-# TEST
+
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -41,12 +41,17 @@ jobs:
               with urllib.request.urlopen(req, timeout=20) as response:
                   return json.load(response)
 
-          with open(os.environ["EVENT_PATH"]) as f:
+          event_path = os.environ.get("EVENT_PATH", "")
+          if not event_path or not os.path.isfile(event_path):
+              print("Error: GitHub event file is missing.")
+              print("EVENT_PATH =", repr(event_path))
+              raise SystemExit(1)
+
+          with open(event_path, encoding="utf-8") as f:
               event = json.load(f)
 
           repo = os.environ["REPO"]
           event_type = os.environ["EVENT"]
-
           color = 0xE4E78C
           fields = []
 
@@ -69,10 +74,11 @@ jobs:
                   or "Unknown"
               )
 
-              title = subject[:256]
-              description = body.strip()[:4000] or (
-                  f"{author} pushed an update to "
-                  f"`{os.environ['BRANCH']}`."
+              title = subject[:256] or "Repository updated"
+              description = (
+                  body.strip()[:4000]
+                  or f"{author} pushed an update to "
+                     f"`{os.environ['BRANCH']}`."
               )
 
               fields = [
@@ -108,7 +114,8 @@ jobs:
 
               if files:
                   lines = [
-                      f"`{file['filename']}` ({file.get('status', 'modified')})"
+                      f"`{file['filename']}` "
+                      f"({file.get('status', 'modified')})"
                       for file in files[:10]
                   ]
 
@@ -123,8 +130,8 @@ jobs:
 
               url = f"https://github.com/{repo}/commit/{sha}"
 
-          else:
-              release = event["release"]
+          elif event_type == "release":
+              release = event.get("release", {})
               title = (
                   release.get("name")
                   or release.get("tag_name")
@@ -156,6 +163,10 @@ jobs:
 
               url = release.get("html_url")
 
+          else:
+              print("Unsupported event:", event_type)
+              raise SystemExit(0)
+
           embed = {
               "title": title,
               "url": url,
@@ -172,7 +183,7 @@ jobs:
 
           request = urllib.request.Request(
               os.environ["WEBHOOK"] + "?wait=true",
-              data=json.dumps(payload).encode(),
+              data=json.dumps(payload).encode("utf-8"),
               headers={"Content-Type": "application/json"},
               method="POST"
           )
