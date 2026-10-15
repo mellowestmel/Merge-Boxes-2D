@@ -45,7 +45,6 @@ jobs:
 
           if not event_path or not os.path.isfile(event_path):
               print("GitHub event file not found.")
-              print("GITHUB_EVENT_PATH:", repr(event_path))
               raise SystemExit(1)
 
           with open(event_path, encoding="utf-8") as f:
@@ -63,7 +62,6 @@ jobs:
                   raise SystemExit(0)
 
               sha = commit["id"]
-
               details = github_get(
                   f"{os.environ['API_URL']}/repos/{repo}/commits/{sha}"
               )
@@ -75,13 +73,15 @@ jobs:
                   or "Unknown"
               )
 
-              title = subject[:256] or "Repository updated"
+              title = f"New commit: {subject}"[:256]
 
               description = (
-                  body.strip()[:4000]
-                  or f"{author} pushed an update to "
-                     f"`{os.environ['BRANCH']}`."
+                  body.strip()[:3000]
+                  or f"{author} pushed an update to `{os.environ['BRANCH']}`."
               )
+
+              stats = details.get("stats", {})
+              files = details.get("files", [])
 
               fields = [
                   {
@@ -98,43 +98,46 @@ jobs:
                       "name": "Author",
                       "value": author[:1024],
                       "inline": True
+                  },
+                  {
+                      "name": "Changes",
+                      "value": (
+                          "```diff\n"
+                          f"+ {stats.get('additions', 0)} additions\n"
+                          f"- {stats.get('deletions', 0)} deletions\n"
+                          f"  {len(files)} files changed\n"
+                          "```"
+                      ),
+                      "inline": False
                   }
               ]
 
-              stats = details.get("stats", {})
-              files = details.get("files", [])
-
-              fields.append({
-                  "name": "Changes",
-                  "value": (
-                      f"+{stats.get('additions', 0)} additions\n"
-                      f"-{stats.get('deletions', 0)} deletions\n"
-                      f"{len(files)} files changed"
-                  ),
-                  "inline": True
-              })
-
               if files:
                   lines = [
-                      f"`{file['filename']}` "
-                      f"({file.get('status', 'modified')})"
+                      f"  {file.get('status', 'modified')}: "
+                      f"{file['filename']}"
                       for file in files[:10]
                   ]
 
                   if len(files) > 10:
-                      lines.append(f"...and {len(files) - 10} more")
+                      lines.append(f"  ...and {len(files) - 10} more")
 
                   fields.append({
                       "name": "Files changed",
-                      "value": "\n".join(lines)[:1024],
+                      "value": "```\n" + "\n".join(lines) + "\n```",
                       "inline": False
                   })
 
-              url = f"https://github.com/{repo}/commit/{sha}"
+              fields.append({
+                  "name": "Commit",
+                  "value": f"[View commit](https://github.com/{repo}/commit/{sha})",
+                  "inline": False
+              })
+
+              url = None
 
           elif event_type == "release":
               release = event.get("release", {})
-
               title = (
                   release.get("name")
                   or release.get("tag_name")
@@ -173,12 +176,14 @@ jobs:
 
           embed = {
               "title": title,
-              "url": url,
               "description": description,
               "color": color,
               "fields": fields,
               "footer": {"text": repo}
           }
+
+          if url:
+              embed["url"] = url
 
           payload = {
               "embeds": [embed],
