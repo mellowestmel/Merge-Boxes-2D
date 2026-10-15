@@ -21,34 +21,38 @@ jobs:
           EVENT: ${{ github.event_name }}
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
-          SHA: ${{ github.sha }}
-          EVENT_PATH: ${{ github.event_path }}
           API_URL: ${{ github.api_url }}
         run: |
           python3 <<'PY'
           import json
           import os
           import urllib.request
+          import urllib.error
 
           def github_get(url):
               req = urllib.request.Request(
                   url,
                   headers={
                       "Authorization": "Bearer " + os.environ["GH_TOKEN"],
-                      "Accept": "application/vnd.github+json"
+                      "Accept": "application/vnd.github+json",
+                      "User-Agent": "GitHub-Discord-Notifications/1.0"
                   }
               )
               with urllib.request.urlopen(req, timeout=20) as response:
                   return json.load(response)
 
-          with open(os.environ["EVENT_PATH"]) as f:
+          event_path = os.environ.get("GITHUB_EVENT_PATH")
+
+          if not event_path or not os.path.isfile(event_path):
+              print("GitHub event file not found.")
+              raise SystemExit(1)
+
+          with open(event_path, encoding="utf-8") as f:
               event = json.load(f)
 
           repo = os.environ["REPO"]
           event_type = os.environ["EVENT"]
-
-          color = 0xE4E78C
-          fields = []
+          color = 0x6E99CA
 
           if event_type == "push":
               commit = event.get("head_commit")
@@ -69,18 +73,17 @@ jobs:
                   or "Unknown"
               )
 
-              title = subject[:256]
-              description = body.strip()[:4000] or (
-                  f"{author} pushed an update to "
-                  f"`{os.environ['BRANCH']}`."
+              title = f"New Commit: {subject}"[:256]
+
+              description = (
+                  body.strip()[:3000]
+                  or f"{author} pushed an update to `{os.environ['BRANCH']}`."
               )
 
+              stats = details.get("stats", {})
+              files = details.get("files", [])
+
               fields = [
-                  {
-                      "name": "Repository",
-                      "value": f"`{repo}`",
-                      "inline": True
-                  },
                   {
                       "name": "Branch",
                       "value": f"`{os.environ['BRANCH']}`",
@@ -88,58 +91,59 @@ jobs:
                   },
                   {
                       "name": "Author",
-                      "value": author[:1024],
+                      "value": f"`{author[:1024]}`",
                       "inline": True
+                  },
+                  {
+                      "name": "Changes",
+                      "value": (
+                          "```diff\n"
+                          f"+ {stats.get('additions', 0)} additions\n"
+                          f"- {stats.get('deletions', 0)} deletions\n"
+                          f"  {len(files)} files changed\n"
+                          "```"
+                      ),
+                      "inline": False
                   }
               ]
 
-              stats = details.get("stats", {})
-              files = details.get("files", [])
-
-              fields.append({
-                  "name": "Changes",
-                  "value": (
-                      f"+{stats.get('additions', 0)} additions\n"
-                      f"-{stats.get('deletions', 0)} deletions\n"
-                      f"{len(files)} files changed"
-                  ),
-                  "inline": True
-              })
-
               if files:
                   lines = [
-                      f"`{file['filename']}` ({file.get('status', 'modified')})"
+                      f"  {file.get('status', 'modified')}: "
+                      f"{file['filename']}"
                       for file in files[:10]
                   ]
 
                   if len(files) > 10:
-                      lines.append(f"...and {len(files) - 10} more")
+                      lines.append(f"  ...and {len(files) - 10} more")
 
                   fields.append({
                       "name": "Files changed",
-                      "value": "\n".join(lines)[:1024],
+                      "value": "```\n" + "\n".join(lines) + "\n```",
                       "inline": False
                   })
 
-              url = f"https://github.com/{repo}/commit/{sha}"
+              fields.append({
+                  "name": "View Commit",
+                  "value": f"https://github.com/{repo}/commit/{sha}",
+                  "inline": False
+              })
 
-          else:
-              release = event["release"]
+              url = None
+
+          elif event_type == "release":
+              release = event.get("release", {})
               title = (
                   release.get("name")
                   or release.get("tag_name")
                   or "New release"
               )
+
               description = (
                   release.get("body") or "A new release is available."
               )[:4000]
 
               fields = [
-                  {
-                      "name": "Repository",
-                      "value": f"`{repo}`",
-                      "inline": True
-                  },
                   {
                       "name": "Version",
                       "value": release.get("tag_name", "Unknown"),
@@ -156,27 +160,54 @@ jobs:
 
               url = release.get("html_url")
 
+          else:
+              print("Unsupported event:", event_type)
+              raise SystemExit(0)
+
           embed = {
               "title": title,
-              "url": url,
               "description": description,
               "color": color,
-              "fields": fields,
-              "footer": {"text": repo}
+              "fields": fields
           }
+
+          if url:
+              embed["url"] = url
 
           payload = {
               "embeds": [embed],
               "allowed_mentions": {"parse": []}
           }
 
+          webhook = os.environ.get("WEBHOOK", "").strip()
+
+          if not webhook:
+              print("Error: DISCORD_WEBHOOK_URL secret is empty.")
+              raise SystemExit(1)
+
           request = urllib.request.Request(
-              os.environ["WEBHOOK"] + "?wait=true",
-              data=json.dumps(payload).encode(),
-              headers={"Content-Type": "application/json"},
+              webhook + "?wait=true",
+              data=json.dumps(payload).encode("utf-8"),
+              headers={
+                  "Content-Type": "application/json",
+                  "User-Agent": "DiscordBot (https://github.com, 1.0)"
+              },
               method="POST"
           )
 
-          with urllib.request.urlopen(request, timeout=20) as response:
-              print("Discord notification sent:", response.status)
+          try:
+              with urllib.request.urlopen(request, timeout=20) as response:
+                  print("Discord notification sent:", response.status)
+
+          except urllib.error.HTTPError as error:
+              print("Discord HTTP status:", error.code)
+              print(
+                  "Discord response:",
+                  error.read().decode("utf-8", errors="replace")
+              )
+              raise
+
+          except urllib.error.URLError as error:
+              print("Could not connect to Discord:", error.reason)
+              raise
           PY
