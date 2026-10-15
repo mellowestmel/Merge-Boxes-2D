@@ -22,7 +22,7 @@ jobs:
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
           SHA: ${{ github.sha }}
-          EVENT_PATH: ${{ github.event_path }}
+          EVENT_JSON: ${{ toJSON(github.event) }}
           API_URL: ${{ github.api_url }}
         run: |
           python3 <<'PY'
@@ -48,7 +48,7 @@ jobs:
               raise SystemExit(1)
 
           with open(event_path, encoding="utf-8") as f:
-              event = json.load(f)
+              event = json.loads(os.environ["EVENT_JSON"])
 
           repo = os.environ["REPO"]
           event_type = os.environ["EVENT"]
