@@ -173,7 +173,7 @@ end
 
 function Module:OnUpdate()
     MusicHandlerModule:Update()
-
+    
     _updateShopButtons()
     _updateSpawnButton()
 end

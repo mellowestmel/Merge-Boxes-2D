@@ -1,0 +1,182 @@
+
+name: Discord Notifications
+
+on:
+  push:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Discord embed
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          SHA: ${{ github.sha }}
+          EVENT_PATH: ${{ github.event_path }}
+          API_URL: ${{ github.api_url }}
+        run: |
+          python3 <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          def github_get(url):
+              req = urllib.request.Request(
+                  url,
+                  headers={
+                      "Authorization": "Bearer " + os.environ["GH_TOKEN"],
+                      "Accept": "application/vnd.github+json"
+                  }
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  return json.load(response)
+
+          with open(os.environ["EVENT_PATH"]) as f:
+              event = json.load(f)
+
+          repo = os.environ["REPO"]
+          event_type = os.environ["EVENT"]
+
+          color = 0xE4E78C
+          fields = []
+
+          if event_type == "push":
+              commit = event.get("head_commit")
+
+              if not commit:
+                  print("No commit details found.")
+                  raise SystemExit(0)
+
+              sha = commit["id"]
+              details = github_get(
+                  f"{os.environ['API_URL']}/repos/{repo}/commits/{sha}"
+              )
+
+              message = commit.get("message", "Repository updated")
+              subject, _, body = message.partition("\n\n")
+              author = (
+                  (commit.get("author") or {}).get("name")
+                  or "Unknown"
+              )
+
+              title = subject[:256]
+              description = body.strip()[:4000] or (
+                  f"{author} pushed an update to "
+                  f"`{os.environ['BRANCH']}`."
+              )
+
+              fields = [
+                  {
+                      "name": "Repository",
+                      "value": f"`{repo}`",
+                      "inline": True
+                  },
+                  {
+                      "name": "Branch",
+                      "value": f"`{os.environ['BRANCH']}`",
+                      "inline": True
+                  },
+                  {
+                      "name": "Author",
+                      "value": author[:1024],
+                      "inline": True
+                  }
+              ]
+
+              stats = details.get("stats", {})
+              files = details.get("files", [])
+
+              fields.append({
+                  "name": "Changes",
+                  "value": (
+                      f"+{stats.get('additions', 0)} additions\n"
+                      f"-{stats.get('deletions', 0)} deletions\n"
+                      f"{len(files)} files changed"
+                  ),
+                  "inline": True
+              })
+
+              if files:
+                  lines = [
+                      f"`{file['filename']}` ({file.get('status', 'modified')})"
+                      for file in files[:10]
+                  ]
+
+                  if len(files) > 10:
+                      lines.append(f"...and {len(files) - 10} more")
+
+                  fields.append({
+                      "name": "Files changed",
+                      "value": "\n".join(lines)[:1024],
+                      "inline": False
+                  })
+
+              url = f"https://github.com/{repo}/commit/{sha}"
+
+          else:
+              release = event["release"]
+              title = (
+                  release.get("name")
+                  or release.get("tag_name")
+                  or "New release"
+              )
+              description = (
+                  release.get("body") or "A new release is available."
+              )[:4000]
+
+              fields = [
+                  {
+                      "name": "Repository",
+                      "value": f"`{repo}`",
+                      "inline": True
+                  },
+                  {
+                      "name": "Version",
+                      "value": release.get("tag_name", "Unknown"),
+                      "inline": True
+                  },
+                  {
+                      "name": "Published by",
+                      "value": (release.get("author") or {}).get(
+                          "login", "Unknown"
+                      ),
+                      "inline": True
+                  }
+              ]
+
+              url = release.get("html_url")
+
+          embed = {
+              "title": title,
+              "url": url,
+              "description": description,
+              "color": color,
+              "fields": fields,
+              "footer": {"text": repo}
+          }
+
+          payload = {
+              "embeds": [embed],
+              "allowed_mentions": {"parse": []}
+          }
+
+          request = urllib.request.Request(
+              os.environ["WEBHOOK"] + "?wait=true",
+              data=json.dumps(payload).encode(),
+              headers={"Content-Type": "application/json"},
+              method="POST"
+          )
+
+          with urllib.request.urlopen(request, timeout=20) as response:
+              print("Discord notification sent:", response.status)
+          PY

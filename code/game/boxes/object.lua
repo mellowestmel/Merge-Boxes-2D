@@ -83,7 +83,6 @@ function Module.new(data)
         data = data,
 
         element = element,
-        emitters = emitters,
 
         velocityX = 0,
         velocityY = 0,

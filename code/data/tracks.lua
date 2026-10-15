@@ -54,6 +54,13 @@ local rawTracks = {
 
         isGameplayTrack = false
     },
+    fishingShop = {
+        trackPath = "assets/tracks/upgradeshop.ogg",
+        author = "Orzech05",
+        trackName = "Gone Fishing",
+
+        isGameplayTrack = false
+    },
 
     game1 = {
         trackPath = "assets/tracks/game1.ogg",

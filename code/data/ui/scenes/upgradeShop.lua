@@ -120,16 +120,5 @@ return {
         y = UILayoutData.upgradeShop.birdSecret.y,
 
         zIndex = COMMON_VALUES.Z_UI_BUTTON,
-    },
-
-    faceSecret = {
-        spritePath = "assets/sprites/whoisthis.png",
-
-        type = "sprite",
-
-        x = UILayoutData.upgradeShop.faceSecret.x,
-        y = UILayoutData.upgradeShop.faceSecret.y,
-
-        zIndex = COMMON_VALUES.Z_UI_BUTTON,
-    },
+    }
 }

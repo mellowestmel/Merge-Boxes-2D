@@ -18,7 +18,7 @@ function Scene:Clean()
 end
 
 function Scene:Update(deltaTime)
-    UISharedFunctions:Update(deltaTime)
+    UISharedFunctions:Update()
 
     if self.OnUpdate then
         self:OnUpdate(deltaTime)
