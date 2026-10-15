@@ -52,7 +52,7 @@ jobs:
 
           repo = os.environ["REPO"]
           event_type = os.environ["EVENT"]
-          color = 0xE4E78C
+          color = 0x6E99CA
 
           if event_type == "push":
               commit = event.get("head_commit")
@@ -84,11 +84,6 @@ jobs:
               files = details.get("files", [])
 
               fields = [
-                  {
-                      "name": "Repository",
-                      "value": f"`{repo}`",
-                      "inline": True
-                  },
                   {
                       "name": "Branch",
                       "value": f"`{os.environ['BRANCH']}`",
@@ -150,11 +145,6 @@ jobs:
 
               fields = [
                   {
-                      "name": "Repository",
-                      "value": f"`{repo}`",
-                      "inline": True
-                  },
-                  {
                       "name": "Version",
                       "value": release.get("tag_name", "Unknown"),
                       "inline": True
@@ -178,8 +168,7 @@ jobs:
               "title": title,
               "description": description,
               "color": color,
-              "fields": fields,
-              "footer": {"text": repo}
+              "fields": fields
           }
 
           if url:
