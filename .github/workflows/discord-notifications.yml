@@ -34,7 +34,8 @@ jobs:
                   url,
                   headers={
                       "Authorization": "Bearer " + os.environ["GH_TOKEN"],
-                      "Accept": "application/vnd.github+json"
+                      "Accept": "application/vnd.github+json",
+                      "User-Agent": "GitHub-Discord-Notifications/1.0"
                   }
               )
               with urllib.request.urlopen(req, timeout=20) as response:
@@ -62,6 +63,7 @@ jobs:
                   raise SystemExit(0)
 
               sha = commit["id"]
+
               details = github_get(
                   f"{os.environ['API_URL']}/repos/{repo}/commits/{sha}"
               )
@@ -74,6 +76,7 @@ jobs:
               )
 
               title = subject[:256] or "Repository updated"
+
               description = (
                   body.strip()[:4000]
                   or f"{author} pushed an update to "
@@ -131,11 +134,13 @@ jobs:
 
           elif event_type == "release":
               release = event.get("release", {})
+
               title = (
                   release.get("name")
                   or release.get("tag_name")
                   or "New release"
               )
+
               description = (
                   release.get("body") or "A new release is available."
               )[:4000]
@@ -189,13 +194,17 @@ jobs:
           request = urllib.request.Request(
               webhook + "?wait=true",
               data=json.dumps(payload).encode("utf-8"),
-              headers={"Content-Type": "application/json"},
+              headers={
+                  "Content-Type": "application/json",
+                  "User-Agent": "DiscordBot (https://github.com, 1.0)"
+              },
               method="POST"
           )
 
           try:
               with urllib.request.urlopen(request, timeout=20) as response:
                   print("Discord notification sent:", response.status)
+
           except urllib.error.HTTPError as error:
               print("Discord HTTP status:", error.code)
               print(
@@ -203,6 +212,7 @@ jobs:
                   error.read().decode("utf-8", errors="replace")
               )
               raise
+
           except urllib.error.URLError as error:
               print("Could not connect to Discord:", error.reason)
               raise
