@@ -1,6 +1,6 @@
 Back to [README.md](README.md)
 
-## Legal Notice
+# Legal Notice
 This project is licensed under the MIT License, except for assets explicitly covered by separate licenses or permissions.
 
 Source code and original assets created by the developer may be modified, reused, distributed, and used for personal or commercial purposes under the MIT License.
@@ -9,15 +9,15 @@ Artwork, music, sound effects, fonts, and other assets created by contributors o
 
 You are free to create mods, fan projects, videos, streams, reviews, and other content featuring Merge Boxes! 2D, subject to the applicable rights and licenses. Attribution is appreciated.
 
-## Credits
+# Credits
 
-### Art
+## Art
 All artwork was created by a collaborator.
 Artwork © Gochged. Licensed for use in Merge Boxes! 2D.
 
 Artist: https://www.youtube.com/@gochgo
 
-### Original Soundtrack
+## Original Soundtrack
 All music was composed specifically for this game by a collaborator.
 
 The composer has granted free-to-use permission for all purposes.
@@ -28,12 +28,12 @@ Music © Orzech05. Licensed for use in Merge Boxes! 2D.
 Composer: https://www.youtube.com/@orzech05
 Playlist: https://www.youtube.com/playlist?list=PL4SfVAqmkT2WSjVqtZ7hU-KLh6ys-MNjb
 
-### Fonts
+## Fonts
 - **Baloo2.ttf**
   Link: https://fonts.google.com/specimen/Baloo+2
   License: SIL Open Font License 1.1 (OFL-1.1)
 
-### Locales
+## Locales
 - **english.lua**
   Made by: MellowestMel, with help from Gochged (Box quotes, descriptions and names)
 
@@ -43,7 +43,7 @@ Playlist: https://www.youtube.com/playlist?list=PL4SfVAqmkT2WSjVqtZ7hU-KLh6ys-MN
 - **turkish.lua**
   Made by: Pudding (penglineg_56335 on Discord)
 
-### Sound Effects
+## Sound Effects
 - **ui/splashscreen.wav**
   Link: https://freesound.org/people/Mikes-MultiMedia/sounds/418509/
   License: As stated on Freesound
