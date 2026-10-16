@@ -14,7 +14,6 @@ Module.languages = {}
 
 local locales = {}
 local strings = {}
-local warnedKeys = {}
 
 -- Walks a dotted key (e.g. "boxes.gerald.name") through a nested table.
 local function _lookup(current, key)
@@ -84,16 +83,6 @@ end
 -- Missing keys return the key itself and are logged once.
 function Module.Get(key, variables)
     local text = _lookup(strings, key)
-
-    if type(text) ~= "string" then
-        if not warnedKeys[key] then
-            warnedKeys[key] = true
-            print("Missing localization key: " .. key)
-        end
-
-        return key
-    end
-
     return _fill(text, variables)
 end
 
