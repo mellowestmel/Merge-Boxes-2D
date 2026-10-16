@@ -10,9 +10,9 @@ MIN_WINDOW_HEIGHT = 300
 
 FPS_SCALE = 240
 
-string = require("code.engine.helpers.string")
-table = require("code.engine.helpers.table")
-math = require("code.engine.helpers.math")
+string = require("src.engine.helpers.string")
+table = require("src.engine.helpers.table")
+math = require("src.engine.helpers.math")
 
 function love.conf(config)
     config.identity = "MERGE-BOXES-2D"
@@ -23,7 +23,7 @@ function love.conf(config)
     config.window.minwidth = MIN_WINDOW_WIDTH
     config.window.minheight = MIN_WINDOW_HEIGHT
 
-    config.window.icon = "assets/sprites/boxes/box1.png"
+    config.window.icon = "assets/sprites/boxes/game/box1.png"
     config.window.title = "Merge Boxes! 2D"
 
     config.window.fullscreentype = "desktop"

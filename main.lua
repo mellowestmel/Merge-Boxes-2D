@@ -1,23 +1,23 @@
 -- ~/main.lua
 
-local RenderHandlerModule = require("code.engine.render.handler")                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
+local RenderHandlerModule = require("src.engine.render.handler")                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
 
-local SignalHandlerModule = require("code.engine.events.signalHandler")
+local SignalHandlerModule = require("src.engine.events.signalHandler")
 
-local LocalizationHandlerModule = require("code.engine.localizationHandler")
-local TweenHandlerModule = require("code.engine.tweenHandler")
-local SoundHandlerModule = require("code.engine.soundHandler")
+local LocalizationHandlerModule = require("src.engine.localizationHandler")
+local TweenHandlerModule = require("src.engine.tweenHandler")
+local SoundHandlerModule = require("src.engine.soundHandler")
 
-local SettingsModule = require("code.engine.saves.settings")
-local SavesFilesModule = require("code.engine.saves.files")
+local SettingsModule = require("src.engine.saves.settings")
+local SavesFilesModule = require("src.engine.saves.files")
 
-local UpgradesHandlerModule = require("code.game.upgradeHandler")
-local MusicHandlerModule = require("code.game.musicHandler")
+local UpgradesHandlerModule = require("src.game.upgradeHandler")
+local MusicHandlerModule = require("src.game.musicHandler")
 
-local BoxHandlerModule = require("code.game.boxes.handler")
+local BoxHandlerModule = require("src.game.boxes.handler")
 
-local VFXHandlerModule = require("code.game.vfx.handler")
-local UIHandlerModule = require("code.game.ui.handler")
+local VFXHandlerModule = require("src.game.vfx.handler")
+local UIHandlerModule = require("src.game.ui.handler")
 
 -- Generic fire functions for Love2D's handlers
 for name, handler in pairs(love.handlers) do
