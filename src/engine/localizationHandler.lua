@@ -80,9 +80,14 @@ local function _scanLocales()
 end
 
 -- Returns the translated text for a key.
--- Missing keys return the key itself and are logged once.
+-- Missing keys return the key itself.
 function Module.Get(key, variables)
     local text = _lookup(strings, key)
+
+    if type(text) ~= "string" then
+        return key
+    end
+
     return _fill(text, variables)
 end
 
