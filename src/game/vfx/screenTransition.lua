@@ -1,0 +1,88 @@
+-- ~/src/game/vfx/sceneTransition.lua
+
+local SettingsModule = require("src.engine.saves.settings")
+local RenderElementModule = require("src.engine.render.element")
+
+local Module = {}
+Module._screenTransitionElement = nil
+Module._currentTransition = {}
+Module.transitioning = false
+
+function Module:Transition(data)
+    data = data or {}
+
+    if not SettingsModule:Get("graphics.transitionsEnabled") then
+        self.transitioning = true
+
+        self._screenTransitionElement:SetAlpha(1)
+
+        if data.callback then
+            data.callback()
+        end
+
+        self._currentTransition = {
+            duration = 0,
+            timeSinceStart = 0,
+            callbackFired = true
+        }
+
+        return
+    end
+
+    self.transitioning = true
+    self._currentTransition = {
+        callback = data.callback,
+        duration = data.duration or .8,
+
+        timeSinceStart = 0,
+
+        callbackFired = false
+    }
+end
+
+function Module:Update(deltaTime)
+    if not self.transitioning then return end
+
+    local element = self._screenTransitionElement
+    local transition = self._currentTransition
+
+    transition.timeSinceStart = transition.timeSinceStart + deltaTime
+
+    local halfDuration = transition.duration / 2
+    local progress = transition.timeSinceStart / halfDuration
+
+    if transition.timeSinceStart < halfDuration then
+        element:SetAlpha(math.min(progress, 1))
+    elseif transition.timeSinceStart >= halfDuration and transition.timeSinceStart < transition.duration then
+        if not transition.callbackFired and transition.callback then
+            transition.callback()
+            transition.callbackFired = true
+        end
+        element:SetAlpha(math.max(1 - (progress - 1), 0))
+    else
+        element:SetAlpha(0)
+
+        self._currentTransition = {}
+        self.transitioning = false
+    end
+end
+
+function Module.Init()
+    Module._screenTransitionElement = RenderElementModule.new({
+        type = "rectangle",
+        shapeMode = "fill",
+
+        bypassShaders = true,
+
+        width = RESOLUTION_WIDTH,
+        height = RESOLUTION_HEIGHT,
+
+        anchorX = 0,
+        anchorY = 0,
+
+        color = {0, 0, 0, 0},
+        zIndex = math.huge
+    })
+end
+
+return Module
