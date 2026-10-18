@@ -1,5 +1,3 @@
--- ~/src/game/vfx/screenFlash.lua
-
 local RenderElementModule = require("src.engine.render.element")
 
 local SettingsModule = require("src.engine.saves.settings")

@@ -1,5 +1,3 @@
--- ~/src/game/box/handler.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local BoxesPhysicsHandlerModule = require("src.game.boxes.physicsHandler")

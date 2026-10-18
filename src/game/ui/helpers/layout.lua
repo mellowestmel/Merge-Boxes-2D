@@ -1,5 +1,3 @@
--- ~/src/game/ui/helpers/layout.lua
-
 local Module = {}
 
 --- Calculates a vertical stack coordinate based on an index and item spacing.

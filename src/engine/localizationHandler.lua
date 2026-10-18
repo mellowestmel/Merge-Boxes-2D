@@ -1,5 +1,3 @@
--- ~/src/engine/localizationHandler.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local DEFAULT_LANGUAGE = "english"

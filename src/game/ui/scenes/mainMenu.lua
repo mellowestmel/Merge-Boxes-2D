@@ -1,5 +1,3 @@
--- ~/src/game/ui/scenes/mainMenu.lua
-
 local SettingsModule = require("src.engine.saves.settings")
 
 local MusicHandlerModule = require("src.game.musicHandler")

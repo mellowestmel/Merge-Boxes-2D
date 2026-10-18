@@ -1,5 +1,3 @@
--- ~/src/game/ui/helpers/scene.lua
-
 local UISharedFunctions = require("src.game.ui.shared")
 local UIObjectHelperModule = require("src.game.ui.helpers.object")
 

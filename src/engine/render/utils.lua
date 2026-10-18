@@ -1,5 +1,3 @@
--- ~/src/engine/render/utils.lua
-
 local Module = {}
 
 -- Creates a color from a table or 4 r, g, b, a values

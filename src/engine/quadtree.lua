@@ -1,5 +1,3 @@
--- ~/src/engine/quadtree.lua
-
 local CONSTANTS = require("src.data.constants")
 
 local Quadtree = {}

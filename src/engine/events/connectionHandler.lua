@@ -1,5 +1,3 @@
--- ~/src/engine/events/connectionHandler.lua
-
 local Connection = {}
 Connection.__index = Connection
 

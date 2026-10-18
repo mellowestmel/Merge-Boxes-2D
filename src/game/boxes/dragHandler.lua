@@ -1,5 +1,3 @@
--- ~/src/game/boxes/dragHandler.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local RenderUtilsModule = require("src.engine.render.utils")
 

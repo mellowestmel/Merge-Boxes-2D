@@ -1,5 +1,3 @@
--- ~/src/game/ui/scenes/boxRanch.lua
-
 local SavesFilesModule = require("src.engine.saves.files")
 
 local LocalizationHandlerModule = require("src.engine.localizationHandler")

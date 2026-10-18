@@ -1,5 +1,3 @@
--- ~/conf.lua
-
 SAWE_FILE_ENCRYPTION_KEY = "Next Update: Femboys"
 
 RESOLUTION_WIDTH = 800

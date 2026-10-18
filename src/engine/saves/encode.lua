@@ -1,6 +1,3 @@
-
-
-
 local Module = {}
 
 local function _encryptBase64(string)

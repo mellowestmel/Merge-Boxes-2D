@@ -1,10 +1,4 @@
--- ~/src/game/musicHandler.lua
-
 local SoundHandlerModule = require("src.engine.soundHandler")
-
-
-
-
 local TracksData = require("src.data.tracks")
 
 local Module = {}

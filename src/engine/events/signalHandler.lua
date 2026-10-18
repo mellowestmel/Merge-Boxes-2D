@@ -1,5 +1,3 @@
--- ~/src/engine/events/signalHandler.lua
-
 local ConnectionHandlerModule = require("src.engine.events.connectionHandler")
 
 local Signal = {}

@@ -1,5 +1,3 @@
--- ~/src/engine/saves/files.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local CONSTANTS = require("src.data.constants")
@@ -7,8 +5,6 @@ local CONSTANTS = require("src.data.constants")
 local SavesHelpersModule = require("src.engine.saves.helpers")
 local SavesDecodeModule = require("src.engine.saves.decode")
 local SavesEncodeModule = require("src.engine.saves.encode")
-
-
 
 local Module = {}
 Module.loadedFile = nil

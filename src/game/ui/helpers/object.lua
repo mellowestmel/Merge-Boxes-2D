@@ -1,5 +1,3 @@
--- ~/src/game/ui/helpers/object.lua
-
 local RenderElementModule = require("src.engine.render.element")
 
 local UIScrollingFrameObjectModule = require("src.game.ui.objects.scrollingFrame")

@@ -1,5 +1,3 @@
--- ~/src/data/ui/scenes/shared.lua
-
 local CONSTANTS = require("src.data.constants")
 local COMMON_VALUES = require("src.data.ui.commonValues")
 

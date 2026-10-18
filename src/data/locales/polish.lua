@@ -1,5 +1,3 @@
--- ~/src/data/locales/polish.lua
-
 return {
     meta = {
         name = "Polski",

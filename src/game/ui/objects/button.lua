@@ -1,5 +1,3 @@
--- ~/src/game/ui/objects/button.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local RenderUtilsModule = require("src.engine.render.utils")

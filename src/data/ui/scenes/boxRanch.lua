@@ -1,5 +1,3 @@
--- ~/src/data/ui/scenes/boxRanch.lua
-
 local COMMON_VALUES = require("src.data.ui.commonValues")
 local UILayoutData = require("src.data.ui.layout")
 

@@ -1,5 +1,3 @@
--- ~/src/game/ui/objects/scrollingFrame.lua
-
 local RenderUtilsModule = require("src.engine.render.utils")
 local IdManagerModule = require("src.engine.idManager")
 local SettingsModule = require("src.engine.saves.settings")

@@ -1,5 +1,3 @@
--- ~/src/engine/render/element.lua
-
 local LocalizationHandlerModule = require("src.engine.localizationHandler")
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local ShaderHandlerModule = require("src.engine.shaderHandler")
@@ -49,6 +47,16 @@ function Element:ChangeSprite(path)
 
     self.drawable = Module:PreloadSprite(path)
     self.spritePath = path
+
+    local spriteWidth, spriteHeight = self.drawable:getDimensions()
+
+    if not self.widthOverride then
+        self.width = spriteWidth
+    end
+
+    if not self.heightOverride then
+        self.height = spriteHeight
+    end
 
     Module._dirty = true
 end
@@ -331,8 +339,11 @@ function Module.new(data)
         scaleX = data.scaleX or 1,
         scaleY = data.scaleY or 1,
 
-        height = data.height,
         width = data.width,
+        height = data.height,
+
+        widthOverride = data.width ~= nil,
+        heightOverride = data.height ~= nil,
 
         x = data.x or 0,
         y = data.y or 0,

@@ -1,8 +1,4 @@
--- ~/src/game/boxes/factory.lua
-
 local SavesFilesModule = require("src.engine.saves.files")
-
-
 
 local CONSTANTS = require("src.data.constants")
 local BoxesObjectModule = require("src.game.boxes.object")

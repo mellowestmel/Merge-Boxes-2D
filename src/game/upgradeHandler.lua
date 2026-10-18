@@ -1,5 +1,3 @@
--- ~/src/game/shop/upgrades/handler.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local SavesFilesModule = require("src.engine.saves.files")
 

@@ -1,5 +1,3 @@
--- ~/src/data/constructors/boxConstructor.lua
-
 local Module = {}
 
 function Module.new(type, gameplayData, cosmeticData)

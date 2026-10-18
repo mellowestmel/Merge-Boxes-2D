@@ -1,5 +1,3 @@
--- ~/src/game/ui/cursor.lua
-
 local RenderElementModule = require("src.engine.render.element")
 local RenderUtilsModule = require("src.engine.render.utils")
 local SettingsModule = require("src.engine.saves.settings")

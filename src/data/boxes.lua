@@ -1,5 +1,3 @@
--- ~/src/data/boxes.lua
-
 local BoxConstructor = require("src.data.constructors.boxConstructor")
 
 local CosmeticData = require("src.data.boxes.cosmeticData")

@@ -1,5 +1,3 @@
--- ~/src/data/constants.lua
-
 local SETTINGS_SCHEMA = {
     {
         key = "audio",
