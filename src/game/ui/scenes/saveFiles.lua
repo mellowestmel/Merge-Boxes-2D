@@ -56,7 +56,9 @@ end
 
 local function _setupSaveFileBoxPreview(self, backgroundElement, save)
     local preview = SceneData.templateSaveFileBoxPreview
-    local highestTier = (save.stats and save.tracking.highestBoxTier) or 0
+    
+    local highestTier = (save.tracking and save.tracking.highestBoxTier) or 1
+    if highestTier == 0 then return end
 
     local boxElement = BoxesObjectModule.newElement(
         BoxesObjectModule.GetBoxDataByTier(highestTier)
