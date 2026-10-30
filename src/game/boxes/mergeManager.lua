@@ -29,6 +29,8 @@ local function _areBoxesEligible(boxA, boxB)
         and boxA.data.tier == boxB.data.tier
         and boxA.data.mergeable
         and boxB.data.mergeable
+        and boxA.data.next ~= nil
+        and BoxesData[boxA.data.next] ~= nil
 end
 
 --- Validates full merge capability, including distance checks.
@@ -83,8 +85,6 @@ end
 function Module:Merge(boxA, boxB)
     if not _areBoxesEligible(boxA, boxB) then return end
 
-    local newBoxData = BoxesObjectModule.GetBoxDataByTier(boxA.data.tier + 1)
-
     SignalHandlerModule.Get("game.boxes.mergestarted"):Fire(boxA, boxB)
 
     boxA.merging = true
@@ -125,6 +125,8 @@ function Module:Merge(boxA, boxB)
         boxA = boxA,
         boxB = boxB,
 
+        newBoxData = BoxesData[boxA.data.next],
+
         startAX = startAX,
         startAY = startAY,
 
@@ -157,7 +159,6 @@ local function _spawnMergedBox(boxA, boxB, newBoxData, middleX, middleY)
     newBox.velocityY = velocityY
 
     local credits = SavesFilesModule:Get("currencies.credits")
-
     SavesFilesModule:Set("currencies.credits", credits + newBox.data.mergeReward)
 
     newBox.element.scaleX = scaleX
@@ -213,7 +214,7 @@ function Module:MergeUpdate(deltaTime)
 
         if progress < 1 then goto continue end
 
-        local newBoxData = BoxesObjectModule.GetBoxDataByType(boxA.data.next)
+        local newBoxData = merge.newBoxData
 
         local newBox = _spawnMergedBox(boxA, boxB, newBoxData, merge.middleX, merge.middleY)
         SignalHandlerModule.Get("game.boxes.mergecompleted"):Fire(newBox, boxA, boxB)
