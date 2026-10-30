@@ -1,7 +1,7 @@
 local RenderElementModule = require("src.engine.render.element")
 local RenderUtilsModule = require("src.engine.render.utils")
 
-local COMMON_VALUES = require("src.data.ui.commonValues")
+local CONSTANTS = require("src.data.constants")
 
 local UIScrollingFrameObjectModule = require("src.game.ui.objects.scrollingFrame")
 local UIButtonObjectModule = require("src.game.ui.objects.button")
@@ -55,7 +55,7 @@ function Module.CreateElementButton(scene, hitboxData, labelData, onClick, textP
         RenderUtilsModule.FitToElement(
             label,
             hitbox,
-            textPadding or COMMON_VALUES.MEDIUM_PADDING,
+            textPadding or CONSTANTS.UI.DEFAULT_BUTTON_TEXT_PADDING,
             "x"
         )
     end

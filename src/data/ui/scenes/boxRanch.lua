@@ -4,11 +4,10 @@ local UILayoutData = require("src.data.ui.layout")
 return {
     spawnButtonHitbox = {
         spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
-
         type = "sprite",
 
-        x = UILayoutData.game.spawnButton.x,
-        y = UILayoutData.game.spawnButton.y,
+        x = UILayoutData.boxRanch.spawnButton.x,
+        y = UILayoutData.boxRanch.spawnButton.y,
 
         color = COMMON_VALUES.COLOR_YELLOW,
 
@@ -17,27 +16,28 @@ return {
 
     spawnButtonLabel = {
         textKey = "boxRanch.spawnBox",
-
         type = "text",
 
-        x = UILayoutData.game.spawnButton.x,
-        y = UILayoutData.game.spawnButton.y,
+        x = UILayoutData.boxRanch.spawnButton.x,
+        y = UILayoutData.boxRanch.spawnButton.y,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(
+            COMMON_VALUES.DEFAULT_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
+        ),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     autoSpawnButtonHitbox = {
         spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
-
         type = "sprite",
 
-        x = UILayoutData.game.spawnButton.x,
-        y = UILayoutData.game.spawnButton.y - UILayoutData.game.spawnButtonRowOffset,
+        x = UILayoutData.boxRanch.spawnButton.x,
+        y = UILayoutData.boxRanch.spawnButton.y - UILayoutData.boxRanch.spawnButton.rowOffset,
 
-        scaleY = UILayoutData.game.autoSpawnButtonHeightScale,
+        scaleY = UILayoutData.boxRanch.autoSpawnButton.heightScale,
 
         color = COMMON_VALUES.COLOR_RED,
 
@@ -46,24 +46,25 @@ return {
 
     autoSpawnButtonLabel = {
         textKey = "boxRanch.autoSpawn",
-
         type = "text",
 
-        x = UILayoutData.game.spawnButton.x,
-        y = UILayoutData.game.spawnButton.y - UILayoutData.game.spawnButtonRowOffset,
+        x = UILayoutData.boxRanch.spawnButton.x,
+        y = UILayoutData.boxRanch.spawnButton.y - UILayoutData.boxRanch.spawnButton.rowOffset,
 
-        scaleX = UILayoutData.game.autoSpawnLabelScale,
-        scaleY = UILayoutData.game.autoSpawnLabelScale,
+        scaleX = UILayoutData.boxRanch.autoSpawnButton.labelScale,
+        scaleY = UILayoutData.boxRanch.autoSpawnButton.labelScale,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(
+            COMMON_VALUES.DEFAULT_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
+        ),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     playAreaBackground = {
         spritePath = "assets/sprites/ui/backgrounds/areabg.png",
-
         type = "sprite",
 
         anchorX = 0,
@@ -74,11 +75,10 @@ return {
 
     upgradeShopButtonHitbox = {
         spritePath = "assets/sprites/ui/buttons/buttoncart74x74.png",
-
         type = "sprite",
 
-        x = UILayoutData.game.spawnButton.x - COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
-        y = UILayoutData.game.spawnButton.y + COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
+        x = UILayoutData.boxRanch.spawnButton.x - COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
+        y = UILayoutData.boxRanch.spawnButton.y + COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
 
         scaleX = COMMON_VALUES.ICON_MEDIUM_SCALE,
         scaleY = COMMON_VALUES.ICON_MEDIUM_SCALE,
@@ -90,11 +90,10 @@ return {
 
     blackMarketButtonHitbox = {
         spritePath = "assets/sprites/ui/buttons/buttonbm74x74.png",
-
         type = "sprite",
 
-        x = UILayoutData.game.spawnButton.x,
-        y = UILayoutData.game.spawnButton.y + COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
+        x = UILayoutData.boxRanch.spawnButton.x,
+        y = UILayoutData.boxRanch.spawnButton.y + COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
 
         scaleX = COMMON_VALUES.ICON_MEDIUM_SCALE,
         scaleY = COMMON_VALUES.ICON_MEDIUM_SCALE,
@@ -106,11 +105,10 @@ return {
 
     sacrificeButtonHitbox = {
         spritePath = "assets/sprites/ui/buttons/buttonsac74x74.png",
-
         type = "sprite",
 
-        x = UILayoutData.game.spawnButton.x + COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
-        y = UILayoutData.game.spawnButton.y + COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
+        x = UILayoutData.boxRanch.spawnButton.x + COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
+        y = UILayoutData.boxRanch.spawnButton.y + COMMON_VALUES.BUTTON_HORIZONTAL_GAP,
 
         scaleX = COMMON_VALUES.ICON_MEDIUM_SCALE,
         scaleY = COMMON_VALUES.ICON_MEDIUM_SCALE,

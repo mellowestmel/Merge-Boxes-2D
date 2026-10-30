@@ -1,3 +1,5 @@
+local COMMON_VALUES = require("src.data.ui.commonValues")
+
 local SETTINGS_SCHEMA = {
     {
         key = "audio",
@@ -208,6 +210,8 @@ return {
     },
 
     UI = {
+        DEFAULT_BUTTON_TEXT_PADDING = COMMON_VALUES.MEDIUM_PADDING,
+
         SAVES = {
             RESET_BUTTON_WARN_TIME_OUT = .5,
 

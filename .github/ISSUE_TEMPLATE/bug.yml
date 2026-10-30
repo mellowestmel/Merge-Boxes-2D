@@ -3,7 +3,7 @@ description: Report a bug or issue
 title: "[Bug]: "
 labels: ["bug"]
 assignees:
-  - ShibaTheDeveloper
+  - MellowestMel
 body:
   - type: textarea
     id: issue
@@ -21,7 +21,7 @@ body:
       placeholder: |
         1. Open the game
         2. Spawn a box
-        3. Game crashes and your entire system gets rm -rf'd
+        3. Game crashes and explodes your computer
     validations:
       required: true
   - type: checkboxes
@@ -30,6 +30,8 @@ body:
       label: Platform
       options:
         - label: Windows
+        - label: Linux
+        - label: macOS
   - type: input
     id: version
     attributes:
@@ -42,7 +44,7 @@ body:
     attributes:
       label: Submission
       options:
-        - label: I have checked the latest release (https://github.com/ShibaTheDeveloper/Merge-Boxes-2D/releases) to make sure my issue has not been fixed.
+        - label: I have checked the latest release (https://github.com/MellowestMel/Merge-Boxes-2D/releases) to make sure my issue has not been fixed.
           required: true
         - label: I have searched the closed and open issues to make sure that this problem has not already been reported.
           required: true

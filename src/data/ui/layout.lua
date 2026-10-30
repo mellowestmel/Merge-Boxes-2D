@@ -14,11 +14,17 @@ layoutData.mainMenu = {
         y = 375,
     },
 
-    logoPrimaryOffsetY = 225,
-    logoSecondaryOffsetY = 100,
+    logo = {
+        primary = {
+            offsetY = 225,
+            scale = .5,
+        },
 
-    logoPrimaryScale = .5,
-    logoSecondaryScale = .35,
+        secondary = {
+            offsetY = 100,
+            scale = .35,
+        },
+    },
 }
 
 -- SHARED UI
@@ -91,60 +97,62 @@ layoutData.shared = {
 }
 
 -- SETTINGS
+local iconHalfWidth = 74 * COMMON_VALUES.ICON_SMALL_SCALE / 2
+local padding = COMMON_VALUES.MEDIUM_PADDING
+
 layoutData.settings = {
     categoryRowY = 550,
     categoryScrollOffsetX = 125,
 
     settingNameLabelOffsetX = -225,
-
     settingToggleOffsetX = 200,
 
     settingDecreaseOffsetX = 100,
     settingIncreaseOffsetX = 300,
 
     settingValueLabelOffsetX = 200,
+
+    textBounds = {
+        categoryLabelMaxWidth =
+            (125 - iconHalfWidth - padding) * 2,
+
+        settingNameMaxWidth =
+            100 - (-225) - iconHalfWidth - padding,
+
+        settingValueMaxWidth =
+            300 - 100 - iconHalfWidth * 2 - padding * 2,
+    },
 }
 
--- SETTINGS TEXT BOUNDS
-local iconHalfWidth = 74 * COMMON_VALUES.ICON_SMALL_SCALE / 2
-local padding = COMMON_VALUES.MEDIUM_PADDING
-
-layoutData.settings.categoryLabelMaxWidth =
-    (layoutData.settings.categoryScrollOffsetX - iconHalfWidth - padding) * 2
-
-layoutData.settings.settingNameMaxWidth =
-    layoutData.settings.settingDecreaseOffsetX
-    - layoutData.settings.settingNameLabelOffsetX
-    - iconHalfWidth
-    - padding
-
-layoutData.settings.settingValueMaxWidth =
-    layoutData.settings.settingIncreaseOffsetX - layoutData.settings.settingDecreaseOffsetX
-    - iconHalfWidth * 2
-    - padding * 2
-
--- GAME
-layoutData.game = {
+-- BOX RANCH
+layoutData.boxRanch = {
     spawnButton = {
         x = CONSTANTS.BOX.AREA.WIDTH + (RESOLUTION_WIDTH - CONSTANTS.BOX.AREA.WIDTH) / 2,
         y = 475,
+
+        rowOffset = 65,
     },
 
-    spawnButtonRowOffset = 65,
-
-    autoSpawnButtonHeightScale = .6,
-    autoSpawnLabelScale = .75,
+    autoSpawnButton = {
+        heightScale = .6,
+        labelScale = .75,
+    }
 }
 
 -- SAVE FILES
 layoutData.saveFiles = {
     slotOffset = 325,
     yDivider = 1.6,
+
     loadButtonOffset = 60,
     resetButtonOffset = 10,
-    templateRotation = 90,
-    templateScaleX = 1.5,
-    templateSmallScale = .55,
+
+    template = {
+        rotation = 90,
+
+        smallScale = .55,
+        scaleX = 1.5,
+    },
 
     highestTierLabelOffset = 40,
     playtimeLabelOffset = 65,
@@ -163,12 +171,18 @@ layoutData.upgradeShop = {
         offsetY = -200,
     },
 
-    scrollWheel = {
-        scaleX = .1,
+    upgradeDescription = {
+        padding = COMMON_VALUES.MEDIUM_PADDING,
+    },
+
+    upgradeButton = {
+        scaleX = .9,
+
+        textPadding = COMMON_VALUES.MEDIUM_PADDING,
+        textOffsetRatio = .3,
     },
 
     stackIndicatorSpacing = COMMON_VALUES.MEDIUM_PADDING,
-    textOffsetRatio = .3
 }
 
 return layoutData

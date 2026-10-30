@@ -54,7 +54,7 @@ local function _setupSaveInfo(self, backgroundElement, save)
     RenderUtilsModule.FitToElement(
         highestTierLabel,
         backgroundElement,
-        COMMON_VALUES.MEDIUM_PADDING,
+        nil,
         "x"
     )
 

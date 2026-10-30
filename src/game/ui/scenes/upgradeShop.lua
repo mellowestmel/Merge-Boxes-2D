@@ -64,7 +64,7 @@ end
 local function _setDescription(self, upgradeId)
 	local panel = self._description
 	local text, background = panel.text, panel.background
-	local padding = COMMON_VALUES.MEDIUM_PADDING
+	local padding = UILayoutData.upgradeShop.upgradeDescription.padding
 
 	text.text = LocalizationHandlerModule.Get("upgrades." .. upgradeId .. ".description")
 	UITextWrappingHelperModule.Wrap(text, background, padding)
@@ -126,7 +126,7 @@ end
 
 -- Fits the upgrade name and cost within the button's width.
 local function _fitUpgradeButtonText(upgradeButton)
-	local padding = COMMON_VALUES.MEDIUM_PADDING
+	local padding = UILayoutData.upgradeShop.upgradeButton.textPadding
 	local hitbox = upgradeButton.hitbox
 
 	RenderUtilsModule.FitToElement(upgradeButton.nameLabel, hitbox, padding, "x")
@@ -182,7 +182,7 @@ end
 -- so the scrolling frame can move them together.
 local function _createUpgradeButton(self, upgradeId, x, y, children)
 	local upgrade = UpgradeHandlerModule:GetUpgrade(upgradeId)
-	local textOffsetY = UILayoutData.upgradeShop.textOffsetRatio
+	local textOffsetY = UILayoutData.upgradeShop.upgradeButton.textOffsetRatio
 
 	local hitbox = UIObjectHelperModule.CreateElement(
 		SceneData.upgradeBuyHitbox,

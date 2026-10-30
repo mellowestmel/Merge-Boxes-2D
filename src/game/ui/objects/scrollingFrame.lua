@@ -13,16 +13,18 @@ local manager = IdManagerModule.new()
 
 -- Gets an element's height without its scale.
 local function _getUnscaledHeight(element)
+	if element.height then
+		return element.height
+	end
+
 	if element.type == "sprite" then
 		local drawable = element.drawable
-
 		assert(drawable, "Sprite element requires drawable")
 
 		return drawable:getHeight()
 	end
 
 	local font = element.font or love.graphics.getFont()
-
 	return font:getHeight()
 end
 
@@ -142,28 +144,32 @@ end
 
 -- Calculates how much space the content takes.
 function ScrollingFrame:RecalculateContentHeight()
-	if #self.elements == 0 then
-		self.contentHeight = 0
-		_updateScrollBar(self)
+    if #self.elements == 0 then
+        self.contentHeight = 0
+        _updateScrollBar(self)
 
-		return 0
-	end
+        return 0
+    end
 
-	local minY = math.huge
-	local maxY = -math.huge
+    local minY = math.huge
+    local maxY = -math.huge
 
-	for _, element in pairs(self.elements) do
-		minY = math.min(minY, element.y)
-		maxY = math.max(maxY, element.y + element:GetHeight())
-	end
+    for _, element in ipairs(self.elements) do
+        local height = element:GetHeight()
+        local anchorY = element.anchorY or 0.5
 
-	self.contentHeight = (minY == math.huge)
-		and 0
-		or (maxY - minY + self.padding * 2)
+        local top = element.y - height * anchorY
+        local bottom = top + height
 
-	_updateScrollBar(self)
+        minY = math.min(minY, top)
+        maxY = math.max(maxY, bottom)
+    end
 
-	return self.contentHeight
+    self.contentHeight = maxY - minY + self.padding * 2
+
+    _updateScrollBar(self)
+
+    return self.contentHeight
 end
 
 function ScrollingFrame:Remove()

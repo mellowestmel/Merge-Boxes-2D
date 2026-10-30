@@ -4,7 +4,6 @@ local UILayoutData = require("src.data.ui.layout")
 return {
     background = {
         spritePath = "assets/sprites/ui/backgrounds/settingsmenubg.png",
-
         type = "sprite",
 
         anchorX = 0,
@@ -15,7 +14,6 @@ return {
 
     cancelButtonHitbox = {
         spritePath = "assets/sprites/ui/buttons/buttonx74x74.png",
-
         type = "sprite",
 
         x = UILayoutData.shared.settingsButton.x,
@@ -32,7 +30,7 @@ return {
     currentCategoryLabel = {
         type = "text",
 
-        maxWidth = UILayoutData.settings.categoryLabelMaxWidth,
+        maxWidth = UILayoutData.settings.textBounds.categoryLabelMaxWidth,
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.settings.categoryRowY,
@@ -50,7 +48,7 @@ return {
     settingNameLabel = {
         type = "text",
 
-        maxWidth = UILayoutData.settings.settingNameMaxWidth,
+        maxWidth = UILayoutData.settings.textBounds.settingNameMaxWidth,
 
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingNameLabelOffsetX,
         y = UILayoutData.shared.settingsButton.y,
@@ -69,7 +67,6 @@ return {
 
     booleanSettingToggleHitbox = {
         spritePath = "assets/sprites/ui/buttons/button74x74.png",
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingToggleOffsetX,
@@ -84,7 +81,6 @@ return {
 
     decreaseSettingHitbox = {
         spritePath = "assets/sprites/ui/buttons/button74x74.png",
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingDecreaseOffsetX,
@@ -99,7 +95,6 @@ return {
 
     increaseSettingHitbox = {
         spritePath = "assets/sprites/ui/buttons/button74x74.png",
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingIncreaseOffsetX,
@@ -115,7 +110,7 @@ return {
     settingValueLabel = {
         type = "text",
 
-        maxWidth = UILayoutData.settings.settingValueMaxWidth,
+        maxWidth = UILayoutData.settings.textBounds.settingValueMaxWidth,
 
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingValueLabelOffsetX,
 
@@ -129,7 +124,6 @@ return {
 
     scrollLeftButtonHitbox = {
         spritePath = "assets/sprites/ui/buttons/buttonarrowl74x74.png",
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X - UILayoutData.settings.categoryScrollOffsetX,
@@ -145,7 +139,6 @@ return {
 
     scrollRightButtonHitbox = {
         spritePath = "assets/sprites/ui/buttons/buttonarrowr74x74.png",
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.categoryScrollOffsetX,
@@ -157,5 +150,5 @@ return {
         color = COMMON_VALUES.COLOR_GREEN,
 
         zIndex = COMMON_VALUES.Z_UI_BUTTON,
-    }
+    },
 }
