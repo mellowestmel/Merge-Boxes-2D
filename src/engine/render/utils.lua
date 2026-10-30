@@ -41,9 +41,9 @@ function Module.GetScaledDimensions(x, y)
 
     local virtualX = (x - offsetX) / scale
     local virtualY = (y - offsetY) / scale
-
-    virtualX = math.max(0, math.min(baseWidth, virtualX))
-    virtualY = math.max(0, math.min(baseHeight, virtualY))
+    
+    virtualX = math.clamp(baseWidth, 0, virtualX)
+    virtualY = math.clamp(baseHeight, 0, virtualY)
 
     return virtualX, virtualY
 end

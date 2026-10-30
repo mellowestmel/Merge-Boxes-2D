@@ -118,9 +118,24 @@ local function _getDimensions(element)
         width, height = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
     end
 
+    width = element.width or width
+    height = element.height or height
+
+    -- Shrink to fit maxWidth/maxHeight, keeping proportions so text and sprites
+    -- aren't distorted. Applied before scale so hover/click scaling still works.
+    local fit = 1
+
+    if element.maxWidth and width > element.maxWidth then
+        fit = math.min(fit, element.maxWidth / width)
+    end
+
+    if element.maxHeight and height > element.maxHeight then
+        fit = math.min(fit, element.maxHeight / height)
+    end
+
     return
-        (element.width or width) * element.scaleX,
-        (element.height or height) * element.scaleY
+        width * fit * element.scaleX,
+        height * fit * element.scaleY
 end
 
 function Element:SetZIndex(zIndex)
@@ -305,7 +320,6 @@ function Module.new(data)
 
     local element = setmetatable({
         id = manager:Get(),
-        removed = false,
 
         name = data.name,
 
@@ -317,6 +331,7 @@ function Module.new(data)
             or "sprite",
 
         onDraw = data.onDraw,
+        removed = false,
 
         zIndex = data.zIndex or 0,
 
@@ -342,6 +357,9 @@ function Module.new(data)
         width = data.width,
         height = data.height,
 
+        maxWidth = data.maxWidth,
+        maxHeight = data.maxHeight,
+
         widthOverride = data.width ~= nil,
         heightOverride = data.height ~= nil,
 
@@ -359,7 +377,7 @@ function Module.new(data)
 
         shaders = data.shaders or {}
     }, Element)
-    
+
     if element.type == "sprite" then
         element:ChangeSprite(data.spritePath)
     elseif element.type == "text" and not element.font then

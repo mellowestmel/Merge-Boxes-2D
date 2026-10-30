@@ -33,7 +33,7 @@ local function _clampOffset(self, offset)
 		self.contentHeight - self.hitboxElement:GetHeight()
 	)
 
-	return math.max(0, math.min(offset, maxScroll))
+	return math.clamp(offset, 0, maxScroll)
 end
 
 -- Updates the scrollbar thumb size.
