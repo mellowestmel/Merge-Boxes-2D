@@ -252,6 +252,7 @@ local function _setupBooleanSettingControl(self, category, setting, rowY)
                 _getTogglePath(_toggleBooleanSetting(category, setting.key))
             )
         end,
+        nil,
         {
             y = rowY,
             type = "sprite",
@@ -291,6 +292,7 @@ local function _setupStepperControl(
         SceneData.decreaseSettingHitbox,
         nil,
         _step(-1),
+        nil,
         { y = rowY, spritePath = decreaseSprite }
     )
 
@@ -299,6 +301,7 @@ local function _setupStepperControl(
         SceneData.increaseSettingHitbox,
         nil,
         _step(1),
+        nil,
         { y = rowY, spritePath = increaseSprite }
     )
 

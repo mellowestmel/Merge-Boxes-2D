@@ -1,6 +1,5 @@
-local SavesFilesModule = require("src.engine.saves.files")
-
 local LocalizationHandlerModule = require("src.engine.localizationHandler")
+local RenderUtilsModule = require("src.engine.render.utils")
 local MusicHandlerModule = require("src.game.musicHandler")
 local UpgradeHandlerModule = require("src.game.upgradeHandler")
 
@@ -22,9 +21,6 @@ local CONSTANTS = require("src.data.constants")
 local SceneData = require("src.data.ui.scenes.upgradeShop")
 local ShopID = CONSTANTS.SHOP.UPGRADE_SHOP.ID
 
-local FACE_SECRET_PLAYTIME = 745 -- 12 minutes 25 seconds
-local SECRET_CLIPS_PATH = "assets/audio/sfx/secret/clips"
-
 local Module = UISceneBase.new("upgradeShop")
 Module._upgradeButtons = {}
 
@@ -39,28 +35,6 @@ local function _setupBirdSecret(self)
 		nil,
 		function()
 			UISharedFunctions:PlaySound("assets/audio/sfx/secret/chirp.wav")
-		end
-	)
-end
-
-local function _setupFaceSecret(self)
-	local sessionPlaytime =
-		SavesFilesModule:Get("tracking.playtime") - SavesFilesModule.playtimeAtSessionStart
-
-	if math.floor(sessionPlaytime) ~= FACE_SECRET_PLAYTIME then return end
-
-	UIObjectHelperModule.CreateElementButton(
-		self,
-		SceneData.faceSecret,
-		nil,
-		function()
-			local files = love.filesystem.getDirectoryItems(SECRET_CLIPS_PATH)
-
-			if #files == 0 then return end
-
-			UISharedFunctions:PlaySound(
-				SECRET_CLIPS_PATH .. "/" .. files[math.random(1, #files)]
-			)
 		end
 	)
 end
@@ -95,10 +69,15 @@ local function _setDescription(self, upgradeId)
 	text.text = LocalizationHandlerModule.Get("upgrades." .. upgradeId .. ".description")
 	UITextWrappingHelperModule.Wrap(text, background, padding)
 
+	-- Wrapping can't split a single line that is too wide (a long word, or
+	-- languages written without spaces), so shrink the whole block to fit.
+	RenderUtilsModule.FitToElement(text, background, padding, "x")
+
 	local _, breaks = text.text:gsub("\n", "")
 	local lineCount = breaks + 1
-	local lineHeight =
-		text.font:getHeight() * text.font:getLineHeight() * text.scaleY
+
+	-- GetHeight is one line's height, including any shrinking from the fit above.
+	local lineHeight = text:GetHeight() * text.font:getLineHeight()
 
 	background.scaleY = panel.baseScaleY * math.max(
 		1,
@@ -145,6 +124,15 @@ local function _updateDescription(self)
 	text.y = background.y + panel.textOffsetY
 end
 
+-- Fits the upgrade name and cost within the button's width.
+local function _fitUpgradeButtonText(upgradeButton)
+	local padding = COMMON_VALUES.MEDIUM_PADDING
+	local hitbox = upgradeButton.hitbox
+
+	RenderUtilsModule.FitToElement(upgradeButton.nameLabel, hitbox, padding, "x")
+	RenderUtilsModule.FitToElement(upgradeButton.costLabel, hitbox, padding, "x")
+end
+
 -- Filled stack indicators are yellow, empty ones are dark.
 local function _setIndicatorColor(indicator, stackIndex, currentStacks)
 	indicator:ChangeColor(
@@ -163,7 +151,7 @@ end
 -- Creates a centered row of stack indicators.
 local function _createStackIndicators(self, x, y, maximumStacks, currentStacks)
 	local indicators = {}
-	local itemSpacing = COMMON_VALUES.MEDIUM_PADDING
+	local itemSpacing = UILayoutData.upgradeShop.stackIndicatorSpacing
 
 	local startPositionX = x - (((maximumStacks - 1) * itemSpacing) / 2)
 
@@ -257,16 +245,21 @@ local function _createUpgradeButton(self, upgradeId, x, y, children)
 		end
 	)
 
-	table.insert(self._upgradeButtons, {
+	local upgradeButton = {
 		id = upgradeId,
 		button = buyButton,
 		hitbox = hitbox,
+		nameLabel = nameLabel,
 		costLabel = costLabel,
 		indicators = indicators,
 		currentStacks = currentStacks,
 		isMaxedOut = isMaxedOut,
 		upgradeCost = upgradeCost
-	})
+	}
+
+	_fitUpgradeButtonText(upgradeButton)
+
+	table.insert(self._upgradeButtons, upgradeButton)
 end
 
 local function _setupUpgradesScrollingFrame(self)
@@ -335,6 +328,8 @@ local function _updateUpgradeButton(upgradeButton)
 		upgradeButton.upgradeCost = upgradeCost
 
 		upgradeButton.costLabel.text = _formatCostText(isMaxedOut, upgradeCost)
+
+		_fitUpgradeButtonText(upgradeButton)
 	end
 end
 
@@ -354,7 +349,6 @@ function Module:Init()
 	UISharedFunctions:SetupShopScene(self)
 
 	_setupBirdSecret(self)
-	_setupFaceSecret(self)
 
 	_setupUpgradesScrollingFrame(self)
 	_setupDescriptionPanel(self)

@@ -32,6 +32,8 @@ return {
     currentCategoryLabel = {
         type = "text",
 
+        maxWidth = UILayoutData.settings.categoryLabelMaxWidth,
+
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.settings.categoryRowY,
 
@@ -47,6 +49,8 @@ return {
 
     settingNameLabel = {
         type = "text",
+
+        maxWidth = UILayoutData.settings.settingNameMaxWidth,
 
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingNameLabelOffsetX,
         y = UILayoutData.shared.settingsButton.y,
@@ -110,6 +114,8 @@ return {
 
     settingValueLabel = {
         type = "text",
+
+        maxWidth = UILayoutData.settings.settingValueMaxWidth,
 
         x = COMMON_VALUES.CENTER_X + UILayoutData.settings.settingValueLabelOffsetX,
 

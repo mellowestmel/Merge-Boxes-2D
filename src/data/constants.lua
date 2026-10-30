@@ -99,6 +99,26 @@ for key, value in pairs(_buildDefaultsFromSchema(SAVE_SCHEMA)) do
     DEFAULT_DATA[key] = value
 end
 
+local SHOP = {
+    UPGRADE_DATA = {
+        REQUIRE_DIRECTORY = "src.data.shop.upgrades.",
+        DIRECTORY = "src/data/shop/upgrades"
+    },
+
+    UPGRADE_SHOP = {
+        UNLOCK_REQUIREMENT = 5,
+        ID = "upgradeShop"
+    },
+    BLACK_MARKET = {
+        UNLOCK_REQUIREMENT = 10,
+        ID = "blackMarket"
+    },
+    SACRIFICIAL_GROUNDS = {
+        UNLOCK_REQUIREMENT = 15,
+        ID = "sacrificialGrounds"
+    }
+}
+
 return {
     SAVES = {
         SAVE_FILE_EXTENSION = ".mbsave",
@@ -178,29 +198,52 @@ return {
         BASE_ZINDEX = 2,
     },
 
-    SHOP = {
-        UPGRADE_DATA = {
-            REQUIRE_DIRECTORY = "src.data.shop.upgrades.",
-            DIRECTORY = "src/data/shop/upgrades"
-        },
+    SHOP = SHOP,
 
-        UPGRADE_SHOP = {
-            UNLOCK_REQUIREMENT = 5,
-            ID = "upgradeShop"
-        },
-        BLACK_MARKET = {
-            UNLOCK_REQUIREMENT = 10,
-            ID = "blackMarket"
-        },
-        SACRIFICIAL_GROUNDS = {
-            UNLOCK_REQUIREMENT = 15,
-            ID = "sacrificialGrounds"
-        }
+    LOCALES = {
+        DEFAULT_LANGUAGE = "english",
+
+        REQUIRE_DIRECTORY = "src.data.locales.",
+        DIRECTORY = "src/data/locales"
     },
 
     UI = {
         SAVES = {
             RESET_BUTTON_WARN_TIME_OUT = .5,
+
+            NEW_GAME_TRANSITION = { duration = 1.2 },
+        },
+
+        BOX_RANCH = {
+            LOCKED_SHOP_BUTTON_SPRITE = "assets/sprites/ui/buttons/buttonlocked74x74.png",
+
+            -- `hitboxKey` is the button's hitbox in the boxRanch scene data.
+            SHOP_BUTTONS = {
+                {
+                    key = "upgradeShop",
+
+                    hitboxKey = "upgradeShopButtonHitbox",
+                    requirement = SHOP.UPGRADE_SHOP.UNLOCK_REQUIREMENT,
+
+                    targetScene = "upgradeShop"
+                },
+                {
+                    key = "blackMarket",
+
+                    hitboxKey = "blackMarketButtonHitbox",
+                    requirement = SHOP.BLACK_MARKET.UNLOCK_REQUIREMENT,
+
+                    targetScene = "blackMarket"
+                },
+                {
+                    key = "sacrifice",
+
+                    hitboxKey = "sacrificeButtonHitbox",
+                    requirement = SHOP.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT,
+
+                    targetScene = "sacrificialGrounds"
+                }
+            }
         },
 
         SETTINGS = {

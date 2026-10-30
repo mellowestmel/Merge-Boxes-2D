@@ -20,6 +20,40 @@ function Module.CreateColor(r, g, b, a)
     }
 end
 
+--[[
+Shrinks `element` to fit inside `target` (never enlarges) by setting maxWidth/maxHeight.
+
+padding: free space on each side. 
+axis: "x" or "y" to fit one axis (use "x" for text).
+]]--
+
+function Module.FitToElement(element, target, padding, axis)
+    padding = padding or 0
+
+    local width, height = target:GetDimensions()
+
+    local radians = math.rad(target.rotation or 0)
+    local cosine, sine = math.abs(math.cos(radians)), math.abs(math.sin(radians))
+
+    width, height =
+        width * cosine + height * sine,
+        width * sine + height * cosine
+
+    -- maxWidth/maxHeight are compared before the element's own scale, so convert back.
+    local scaleX = element.scaleX ~= 0 and element.scaleX or 1
+    local scaleY = element.scaleY ~= 0 and element.scaleY or 1
+
+    if axis ~= "y" then
+        element.maxWidth = math.max(width - padding * 2, 0) / scaleX
+    end
+
+    if axis ~= "x" then
+        element.maxHeight = math.max(height - padding * 2, 0) / scaleY
+    end
+
+    return element
+end
+
 --- Calculates screen scaling and letterbox offsets to preserve virtual resolution.
 function Module.GetViewport()
     local currentWidth, currentHeight = love.graphics.getDimensions()

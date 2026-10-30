@@ -1,6 +1,9 @@
 local SavesFilesModule = require("src.engine.saves.files")
 
 local LocalizationHandlerModule = require("src.engine.localizationHandler")
+local RenderUtilsModule = require("src.engine.render.utils")
+
+local COMMON_VALUES = require("src.data.ui.commonValues")
 local MusicHandlerModule = require("src.game.musicHandler")
 
 local BoxesObjectModule = require("src.game.boxes.object")
@@ -20,8 +23,6 @@ local SceneData = require("src.data.ui.scenes.saveFiles")
 local Module = UISceneBase.new("saveFiles")
 Module._resetButtons = {}
 
-local NEW_GAME_TRANSITION = { duration = 1.2 }
-
 function Module:OnClean()
     self._resetButtons = {}
 end
@@ -38,13 +39,23 @@ end
 local function _setupSaveInfo(self, backgroundElement, save)
     local tracking = save.stats and save.tracking or {}
 
-    _createSlotElement(
+    local highestTierLabel = _createSlotElement(
         self,
         SceneData.templateSaveHighestTier,
         backgroundElement
-    ).text = LocalizationHandlerModule.Get(
+    )
+
+    highestTierLabel.text = LocalizationHandlerModule.Get(
         "saveFiles.highestTier",
         { tier = tracking.highestBoxTier or 0 }
+    )
+
+    -- The slot card is rotated, so this fits its on-screen width.
+    RenderUtilsModule.FitToElement(
+        highestTierLabel,
+        backgroundElement,
+        COMMON_VALUES.MEDIUM_PADDING,
+        "x"
     )
 
     _createSlotElement(
@@ -83,14 +94,15 @@ local function _setupSaveFileLoadButton(self, backgroundElement, slot)
         function()
             UISceneHandlerModule:TransitionTo("boxRanch", nil, slot)
         end,
+        nil,
         { x = backgroundElement.x }
     )
 end
 
 local function _setupSaveFileResetButton(self, backgroundElement, slot)
-    local resetButton, hitbox, label
+    local resetButton, _, label
 
-    resetButton, hitbox, label = UIObjectHelperModule.CreateElementButton(
+    resetButton, _, label = UIObjectHelperModule.CreateElementButton(
         self,
         SceneData.templateSaveFileResetButtonHitbox,
         SceneData.templateSaveFileResetButtonLabel,
@@ -121,6 +133,7 @@ local function _setupSaveFileResetButton(self, backgroundElement, slot)
                 duration = 1.2
             })
         end,
+        nil,
         { x = backgroundElement.x }
     )
 
@@ -130,7 +143,7 @@ local function _setupSaveFileResetButton(self, backgroundElement, slot)
     table.insert(self._resetButtons, resetButton)
 end
 
-local function _setupNewSaveButton(self, backgroundElement, slot)
+local function _setupNewSaveButton(self, backgroundElement, slot, slotLabel)
     local plusIcon = _createSlotElement(
         self,
         SceneData.templateSaveFilePlusIcon,
@@ -139,23 +152,25 @@ local function _setupNewSaveButton(self, backgroundElement, slot)
 
     UIObjectHelperModule.CreateButton(
         self,
-        { backgroundElement, plusIcon },
+        { backgroundElement, slotLabel, plusIcon },
         backgroundElement,
         function()
-            UISceneHandlerModule:TransitionTo("boxRanch", NEW_GAME_TRANSITION, slot)
+            UISceneHandlerModule:TransitionTo("boxRanch", CONSTANTS.UI.SAVES.NEW_GAME_TRANSITION, slot)
         end
     )
 end
 
 local function _setupSaveFileSlot(self, backgroundElement, slot, save)
-    _createSlotElement(
+    local slotLabel = _createSlotElement(
         self,
         SceneData.templateSaveFileLabel,
         backgroundElement
-    ).text = "Slot " .. tostring(slot)
+    )
+
+    slotLabel.text = "Slot " .. tostring(slot)
 
     if not save then
-        _setupNewSaveButton(self, backgroundElement, slot)
+        _setupNewSaveButton(self, backgroundElement, slot, slotLabel)
         return
     end
 

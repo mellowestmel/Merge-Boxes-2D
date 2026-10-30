@@ -1,13 +1,10 @@
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
-local DEFAULT_LANGUAGE = "english"
-
-local LOCALE_DIRECTORY = "src/data/locales"
-local LOCALE_REQUIRE_PATH = "src.data.locales."
+local CONSTANTS = require("src.data.constants")
 
 local Module = {}
 
-Module.language = DEFAULT_LANGUAGE
+Module.language = CONSTANTS.LOCALES.DEFAULT_LANGUAGE
 Module.languages = {}
 
 local locales = {}
@@ -50,11 +47,11 @@ local function _scanLocales()
     locales = {}
     Module.languages = {}
 
-    for _, fileName in ipairs(love.filesystem.getDirectoryItems(LOCALE_DIRECTORY)) do
+    for _, fileName in ipairs(love.filesystem.getDirectoryItems(CONSTANTS.LOCALES.DIRECTORY)) do
         local code = fileName:match("^(.+)%.lua$")
 
         if code then
-            local locale = require(LOCALE_REQUIRE_PATH .. code)
+            local locale = require(CONSTANTS.LOCALES.REQUIRE_DIRECTORY .. code)
 
             assert(type(locale) == "table", "Locale '" .. code .. "' must return a table")
             assert(locale.meta and locale.meta.name, "Locale '" .. code .. "' is missing meta.name")
@@ -108,7 +105,7 @@ end
 -- Switches language and fires "localization.changed" (language, oldLanguage).
 function Module.SetLanguage(language)
     if not locales[language] then
-        language = DEFAULT_LANGUAGE
+        language = CONSTANTS.LOCALES.DEFAULT_LANGUAGE
     end
 
     if language == Module.language then
@@ -128,11 +125,15 @@ function Module.Init()
     local SettingsModule = require("src.engine.saves.settings") -- Prevent circular dependency
 
     _scanLocales()
-    assert(locales[DEFAULT_LANGUAGE], "Default locale '" .. DEFAULT_LANGUAGE .. "' not found in " .. LOCALE_DIRECTORY)
+    assert(
+        locales[CONSTANTS.LOCALES.DEFAULT_LANGUAGE],
+        "Default locale '" .. CONSTANTS.LOCALES.DEFAULT_LANGUAGE
+            .. "' not found in " .. CONSTANTS.LOCALES.DIRECTORY
+    )
 
     local savedLanguage = SettingsModule:Get("accessibility.language")
 
-    Module.language = locales[savedLanguage] and savedLanguage or DEFAULT_LANGUAGE
+    Module.language = locales[savedLanguage] and savedLanguage or CONSTANTS.LOCALES.DEFAULT_LANGUAGE
     strings = locales[Module.language] or {}
 
     SignalHandlerModule.Get("game.saves.settingchanged"):Connect(function(settingKey, newValue)
