@@ -1,5 +1,3 @@
--- ~/src/engine/quadtree.lua
-
 local CONSTANTS = require("src.data.constants")
 
 local Quadtree = {}
@@ -120,8 +118,8 @@ end
 
 -- Check if the quadtree node intersects a circle with a given center and radius
 function Quadtree:IsInRadius(center, radius)
-    local closestX = math.max(self.x, math.min(center.x, self.x + self.width))
-    local closestY = math.max(self.y, math.min(center.y, self.y + self.height))
+    local closestX = math.clamp(center.x, self.x, self.x + self.width)
+    local closestY = math.clamp(center.y, self.y, self.y + self.height)
 
     local dx, dy = _getDistanceXY({
         x = closestX,

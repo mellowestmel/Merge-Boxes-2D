@@ -1,6 +1,7 @@
--- ~/src/game/ui/helpers/object.lua
-
 local RenderElementModule = require("src.engine.render.element")
+local RenderUtilsModule = require("src.engine.render.utils")
+
+local CONSTANTS = require("src.data.constants")
 
 local UIScrollingFrameObjectModule = require("src.game.ui.objects.scrollingFrame")
 local UIButtonObjectModule = require("src.game.ui.objects.button")
@@ -39,12 +40,25 @@ function Module.CreateButton(scene, elements, hitboxElement, onClick)
     return button
 end
 
--- Creates a hitbox element, an optional label element, and a button using both.
--- `overrides` (optional) is applied to both elements.
--- Returns button, hitbox, label.
-function Module.CreateElementButton(scene, hitboxData, labelData, onClick, overrides)
+--[[
+    Creates a hitbox element, an optional label element, and a button using both.
+    `textPadding` (optional) controls the spacing between the label and hitbox edges.
+    `overrides` (optional) is applied to both elements.
+    Returns button, hitbox, label.
+--]]
+
+function Module.CreateElementButton(scene, hitboxData, labelData, onClick, textPadding, overrides)
     local hitbox = Module.CreateElement(hitboxData, scene, overrides)
     local label = labelData and Module.CreateElement(labelData, scene, overrides)
+
+    if label and label.type == "text" then
+        RenderUtilsModule.FitToElement(
+            label,
+            hitbox,
+            textPadding or CONSTANTS.UI.DEFAULT_BUTTON_TEXT_PADDING,
+            "x"
+        )
+    end
 
     local button = Module.CreateButton(
         scene,

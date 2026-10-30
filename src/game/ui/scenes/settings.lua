@@ -1,5 +1,3 @@
--- ~/src/game/ui/scenes/settings.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local SavesFilesModule = require("src.engine.saves.files")
@@ -32,6 +30,10 @@ local currentCategoryLabel = nil
 local rowElements = {}
 local rowObjects = {}
 
+-- Functions that re-apply localized text to the current rows.
+-- Rebuilt together with the rows.
+local rowRefreshers = {}
+
 local categories = {}
 
 -- Resets category/selection state shared by Clean and Init.
@@ -41,6 +43,7 @@ local function _resetSelectionState()
 
     rowElements = {}
     rowObjects = {}
+    rowRefreshers = {}
 end
 
 function Module:OnClean()
@@ -72,6 +75,8 @@ end
 local function _clearRows(self)
     _removeAndPrune(rowElements, self._elements)
     _removeAndPrune(rowObjects, self._objects)
+
+    rowRefreshers = {}
 end
 
 -- Gets all colorblind mode keys directly from the colorblind data.
@@ -134,6 +139,16 @@ local function _getCurrentCategorySchema()
     end
 end
 
+-- Re-applies localized text in place after a language change.
+-- Buttons are left alone so the one that was just clicked isn't destroyed mid-click.
+local function _refreshLocalizedText()
+    _updateCategoryLabel()
+
+    for _, refresh in ipairs(rowRefreshers) do
+        refresh()
+    end
+end
+
 -- Persists a setting change, saving and firing the changed signal.
 local function _commitSettingChange(category, settingKey, oldValue, newValue)
     SettingsModule.loadedFile[category][settingKey] = newValue
@@ -148,8 +163,10 @@ local function _commitSettingChange(category, settingKey, oldValue, newValue)
         oldValue
     )
 
+    -- The localization handler listens to the signal above and has already
+    -- switched language by the time it returns.
     if settingKey == "language" then
-        Module:Refresh()
+        _refreshLocalizedText()
     end
 
     return newValue
@@ -201,7 +218,7 @@ local function _cycleEnumSetting(category, settingKey, direction)
         category,
         settingKey,
         oldValue,
-        options[UILayoutHelperModule.WrapIndex(currentIndex, direction, #options)]
+        options[table.wrapIndex(currentIndex, direction, #options)]
     )
 end
 
@@ -235,6 +252,7 @@ local function _setupBooleanSettingControl(self, category, setting, rowY)
                 _getTogglePath(_toggleBooleanSetting(category, setting.key))
             )
         end,
+        nil,
         {
             y = rowY,
             type = "sprite",
@@ -274,6 +292,7 @@ local function _setupStepperControl(
         SceneData.decreaseSettingHitbox,
         nil,
         _step(-1),
+        nil,
         { y = rowY, spritePath = decreaseSprite }
     )
 
@@ -282,6 +301,7 @@ local function _setupStepperControl(
         SceneData.increaseSettingHitbox,
         nil,
         _step(1),
+        nil,
         { y = rowY, spritePath = increaseSprite }
     )
 
@@ -291,7 +311,12 @@ local function _setupStepperControl(
         { y = rowY }
     )
 
-    valueLabel.text = formatValue(SettingsModule.loadedFile[category][setting.key])
+    local function _refreshValue()
+        valueLabel.text = formatValue(SettingsModule.loadedFile[category][setting.key])
+    end
+
+    _refreshValue()
+    table.insert(rowRefreshers, _refreshValue)
 
     table.insert(rowElements, decreaseHitbox)
     table.insert(rowElements, increaseHitbox)
@@ -356,7 +381,12 @@ local function _setupSettingRows(self)
             { y = rowY }
         )
 
-        label.text = LocalizationHandlerModule.Get("settings." .. setting.key)
+        local function _refreshName()
+            label.text = LocalizationHandlerModule.Get("settings." .. setting.key)
+        end
+
+        _refreshName()
+        table.insert(rowRefreshers, _refreshName)
 
         table.insert(rowElements, label)
 
@@ -370,7 +400,7 @@ local function _scrollCategory(self, increment)
         return
     end
 
-    currentCategoryIndex = UILayoutHelperModule.WrapIndex(
+    currentCategoryIndex = table.wrapIndex(
         currentCategoryIndex,
         increment,
         #categories
@@ -432,18 +462,12 @@ local function _setupCancelButton(self)
     )
 end
 
--- Accepts an optional preserved category index to keep player position on refresh.
-function Module:Init(preservedCategoryIndex)
+function Module:Init()
     MusicHandlerModule:PlayTrack("settings")
 
     BoxesObjectModule.renderBoxes = false
 
     _resetSelectionState()
-
-    if preservedCategoryIndex then
-        currentCategoryIndex = preservedCategoryIndex
-    end
-
     _buildCategories()
 
     UISharedFunctions:SetupBackground(self)
@@ -454,14 +478,6 @@ function Module:Init(preservedCategoryIndex)
         UISharedFunctions:SetupSessionPlaytimeLabel(self)
         UISharedFunctions:SetupCurrencyLabels(self)
     end
-end
-
--- Refresh the scene after a language change, keeping the player on the category they were viewing.
-function Module:Refresh()
-    local categoryIndex = currentCategoryIndex
-
-    self:Clean()
-    self:Init(categoryIndex)
 end
 
 return Module

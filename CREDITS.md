@@ -2,23 +2,19 @@
 
 # Legal Notice
 
-This project is licensed under the MIT License, except for assets explicitly covered by separate licenses or permissions.
+The source code and original assets are licensed under the MIT License, see [LICENSE](LICENSE). Assets from contributors or third parties are not covered by it and remain under the licenses listed below.
 
-Source code and original assets created by the developer may be modified, reused, distributed, and used for personal or commercial purposes under the MIT License.
-
-Artwork, music, sound effects, fonts, and other assets created by contributors or obtained from third parties are not automatically covered by the MIT License. They remain under their respective licenses or permissions as specified in the Credits.
-
-You are free to create mods, fan projects, videos, streams, reviews, and other content featuring **Merge Boxes! 2D**, subject to the applicable rights and licenses. Attribution is appreciated.
+You are free to create mods, fan projects, videos, streams, reviews, and other content featuring **Merge Boxes! 2D**, subject to those licenses. Attribution is appreciated.
 
 # Credits
 
 ## Art
 
-All artwork was created by a collaborator.
+Artwork in *Merge Boxes! 2D* was created by MellowestMel and Gochged.
 
-- **Artist:** [Gochged](https://www.youtube.com/@gochgo)
-- **Copyright:** Artwork © Gochged.
-- **License:** Licensed for use in *Merge Boxes! 2D*.
+- **Artists:** MellowestMel and [Gochged](https://www.youtube.com/@gochgo)
+- **Copyright:** Each artist retains copyright over their respective artwork.
+- **License:** Gochged's contributions are licensed for use in *Merge Boxes! 2D*. Artwork created by MellowestMel remains subject to the project's licensing terms.
 
 ## Original Soundtrack
 
@@ -26,15 +22,23 @@ All music was composed specifically for this game by a collaborator.
 
 The composer has granted free-to-use permission for all purposes. Attribution is appreciated but not required, as stated in the individual track descriptions on the official channel.
 
-- **Composer:** [Orzech05](https://www.youtube.com/@orzech05)
+- **Composer:** [Orzech05](https://github.com/Orzech05)
 - **Copyright:** Music © Orzech05.
 - **License:** Licensed for use in *Merge Boxes! 2D*.
+
+## Engine
+
+| Name | Source | License |
+|---|---|---|
+| LÖVE | [love2d.org](https://love2d.org/) | zlib License |
+
+**Merge Boxes! 2D** is built with LÖVE by the LÖVE Development Team.
 
 ## Fonts
 
 | File | Source | License |
 |---|---|---|
-| `Baloo2.ttf` | [Google Fonts — Baloo 2](https://fonts.google.com/specimen/Baloo+2) | SIL Open Font License 1.1 (OFL-1.1) |
+| `Baloo2.ttf` | [Google Fonts - Baloo 2](https://fonts.google.com/specimen/Baloo+2) | SIL Open Font License 1.1 (OFL-1.1) |
 
 ## Locales
 

@@ -15,7 +15,7 @@ I am begging on my hands and knees please somebody make a mod loader.
 But jokes aside, contributions, suggestions, and bug reports are welcome (and much appreciated)!
 
 ## Credits
-See [CREDITS.md](CREDITS.md).
+Licensed under MIT, see [CREDITS.md](CREDITS.md) for asset exceptions and attributions.
 
 ## How to run the game?
 Dedicated support for Linux and macOS is planned for the future, but for now, you'll have to run the source code manually on those platforms.
@@ -23,18 +23,18 @@ Dedicated support for Linux and macOS is planned for the future, but for now, yo
 For Linux and macOS, download the source code from the [releases page](https://github.com/mellowestmel/Merge-Boxes-2D/releases), as the `main` and `dev` branches may be unstable.
 
 ### Windows
-1. Download the latest release.
+1. [Download the latest release](https://github.com/mellowestmel/Merge-Boxes-2D/releases).
 2. Extract it.
 3. Run `play.exe`.
 
 ### Linux
-1. Install [LÖVE2D](https://love2d.org/).
+1. Install [LÖVE2D 11.5](https://love2d.org/).
 2. Extract the source code.
 3. Open a terminal in the extracted directory.
 4. Run `love .`.
 
 ### macOS
-1. Install [LÖVE2D](https://love2d.org/).
+1. Install [LÖVE2D 11.5](https://love2d.org/).
 2. Extract the source code.
 3. Open Terminal and navigate to the extracted directory.
 4. Run `open -n -a love "$PWD"`. (Note that this command might not work on every Mac. Sorry not sorry, I do not own or plan on owning a Mac.)

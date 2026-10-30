@@ -1,9 +1,7 @@
--- ~/src/data/locales/polish.lua
-
 return {
     meta = {
         name = "Polski",
-        sortOrder = 5,
+        sortOrder = 3,
     },
 
     common = {

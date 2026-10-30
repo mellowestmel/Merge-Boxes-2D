@@ -1,7 +1,4 @@
--- ~/src/game/ui/sceneHandler.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
-
 local ScreenTransitionModule = require("src.game.vfx.screenTransition")
 
 local Module = {}

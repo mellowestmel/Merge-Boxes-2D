@@ -1,5 +1,3 @@
--- ~/src/game/box/object.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local RenderElementModule = require("src.engine.render.element")

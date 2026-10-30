@@ -1,5 +1,3 @@
--- ~/src/game/boxes/mergeManager.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local QuadtreeModule = require("src.engine.quadtree")

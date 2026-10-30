@@ -1,12 +1,9 @@
--- ~/src/data/ui/scenes/upgradeShop.lua
-
 local COMMON_VALUES = require("src.data.ui.commonValues")
 local UILayoutData = require("src.data.ui.layout")
 
 return {
     background = {
         spritePath = "assets/sprites/ui/backgrounds/upgradeshopbg.png",
-
         type = "sprite",
 
         anchorX = 0,
@@ -17,14 +14,13 @@ return {
 
     upgradesFrameBackground = {
         spritePath = "assets/sprites/ui/backgrounds/sidebar.png",
-
         type = "sprite",
 
         scaleX = UILayoutData.upgradeShop.backgroundFrame.scaleX,
         scaleY = UILayoutData.upgradeShop.backgroundFrame.scaleY,
 
-        x = UILayoutData.game.spawnButton.x,
-        y = UILayoutData.game.spawnButton.y + UILayoutData.upgradeShop.backgroundFrame.offsetY,
+        x = UILayoutData.boxRanch.spawnButton.x,
+        y = UILayoutData.boxRanch.spawnButton.y + UILayoutData.upgradeShop.backgroundFrame.offsetY,
 
         color = COMMON_VALUES.COLOR_DARK,
 
@@ -32,11 +28,8 @@ return {
     },
 
     upgradesFrameScrollWheel = {
-        spritePath = "assets/sprites/ui/buttons/button74x74.png",
-
+        spritePath = "assets/sprites/ui/misc/scroller.png",
         type = "sprite",
-
-        scaleX = UILayoutData.upgradeShop.scrollWheel.scaleX,
 
         x = COMMON_VALUES.CENTER_X,
         y = COMMON_VALUES.CENTER_Y,
@@ -48,10 +41,9 @@ return {
 
     upgradeBuyHitbox = {
         spritePath = "assets/sprites/ui/buttons/button220x75.png",
-
         type = "sprite",
 
-        scaleX = .9,
+        scaleX = UILayoutData.upgradeShop.upgradeButton.scaleX,
 
         color = COMMON_VALUES.COLOR_GRAY,
 
@@ -84,7 +76,6 @@ return {
 
     upgradeStackCounter = {
         spritePath = "assets/sprites/ui/misc/light10x10.png",
-
         type = "sprite",
 
         color = COMMON_VALUES.COLOR_DARK,
@@ -113,12 +104,11 @@ return {
 
     birdSecret = {
         spritePath = "assets/sprites/ui/misc/familiarbird.png",
-
         type = "sprite",
 
         x = UILayoutData.upgradeShop.birdSecret.x,
         y = UILayoutData.upgradeShop.birdSecret.y,
 
         zIndex = COMMON_VALUES.Z_UI_BUTTON,
-    }
+    },
 }

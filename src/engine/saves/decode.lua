@@ -1,9 +1,5 @@
 local BoxesObjectModule = require("src.game.boxes.object")
-
 local CONSTANTS = require("src.data.constants")
-
-
-
 
 local Module = {}
 

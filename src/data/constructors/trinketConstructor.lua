@@ -1,5 +1,3 @@
--- ~/src/data/constructors/trinketConstructor.lua
-
 local Module = {}
 
 function Module.new(data)

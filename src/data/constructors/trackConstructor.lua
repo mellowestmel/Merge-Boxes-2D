@@ -1,5 +1,3 @@
--- ~/src/data/constructors/trackConstructor.lua
-
 local Module = {}
 
 function Module.new(data)

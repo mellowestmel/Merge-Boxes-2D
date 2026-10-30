@@ -1,6 +1,3 @@
--- ~/src/game/shop/upgrades/purchase.lua
-
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local TransactionModule = require("src.game.shop.transaction")

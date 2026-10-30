@@ -1,5 +1,3 @@
--- ~/src/data/ui/scenes/blackMarket.lua
-
 local COMMON_VALUES = require("src.data.ui.commonValues")
 
 return {

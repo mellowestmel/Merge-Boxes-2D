@@ -1,5 +1,3 @@
--- ~/src/engine/helpers/string.lua
-
 local Module = {}
 
 -- Insert base functions into module

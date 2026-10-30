@@ -1,12 +1,9 @@
--- ~/src/data/ui/scenes/saveFiles.lua
-
 local COMMON_VALUES = require("src.data.ui.commonValues")
 local UILayoutData = require("src.data.ui.layout")
 
 return {
     background = {
         spritePath = "assets/sprites/ui/backgrounds/mainmenubg.png",
-
         type = "sprite",
 
         anchorX = 0,
@@ -17,7 +14,6 @@ return {
 
     backToMenuButtonHitbox = {
         spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
@@ -30,28 +26,29 @@ return {
 
     backToMenuButtonLabel = {
         textKey = "common.back",
-
         type = "text",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y + COMMON_VALUES.BUTTON_VERTICAL_GAP,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(
+            COMMON_VALUES.DEFAULT_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
+        ),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     templateSaveFileBackground = {
         spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y / UILayoutData.saveFiles.yDivider,
 
-        rotation = UILayoutData.saveFiles.templateRotation,
-        scaleX = UILayoutData.saveFiles.templateScaleX,
+        rotation = UILayoutData.saveFiles.template.rotation,
+        scaleX = UILayoutData.saveFiles.template.scaleX,
         scaleY = COMMON_VALUES.SPRITE_LARGE_SCALE,
 
         color = {
@@ -71,21 +68,23 @@ return {
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(
+            COMMON_VALUES.DEFAULT_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
+        ),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     templateSaveFileLoadButtonHitbox = {
         spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.loadButtonOffset,
 
-        scaleX = UILayoutData.saveFiles.templateSmallScale,
-        scaleY = UILayoutData.saveFiles.templateSmallScale,
+        scaleX = UILayoutData.saveFiles.template.smallScale,
+        scaleY = UILayoutData.saveFiles.template.smallScale,
 
         color = COMMON_VALUES.COLOR_GREEN,
 
@@ -94,31 +93,32 @@ return {
 
     templateSaveFileLoadButtonLabel = {
         textKey = "saveFiles.loadFile",
-
         type = "text",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.loadButtonOffset,
 
-        scaleX = UILayoutData.saveFiles.templateSmallScale,
-        scaleY = UILayoutData.saveFiles.templateSmallScale,
+        scaleX = UILayoutData.saveFiles.template.smallScale,
+        scaleY = UILayoutData.saveFiles.template.smallScale,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(
+            COMMON_VALUES.DEFAULT_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
+        ),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT_OVERLAY,
     },
 
     templateSaveFileResetButtonHitbox = {
         spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.resetButtonOffset,
 
-        scaleX = UILayoutData.saveFiles.templateSmallScale,
-        scaleY = UILayoutData.saveFiles.templateSmallScale,
+        scaleX = UILayoutData.saveFiles.template.smallScale,
+        scaleY = UILayoutData.saveFiles.template.smallScale,
 
         color = COMMON_VALUES.COLOR_RED,
 
@@ -127,17 +127,19 @@ return {
 
     templateSaveFileResetButtonLabel = {
         textKey = "saveFiles.resetFile",
-
         type = "text",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.resetButtonOffset,
 
-        scaleX = UILayoutData.saveFiles.templateSmallScale,
-        scaleY = UILayoutData.saveFiles.templateSmallScale,
+        scaleX = UILayoutData.saveFiles.template.smallScale,
+        scaleY = UILayoutData.saveFiles.template.smallScale,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_LARGE),
+        font = love.graphics.newFont(
+            COMMON_VALUES.DEFAULT_FONT_PATH,
+            COMMON_VALUES.FONT_LARGE
+        ),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT_OVERLAY,
     },
@@ -156,7 +158,6 @@ return {
 
     templateSaveFilePlusIcon = {
         spritePath = "assets/sprites/ui/buttons/buttonplus100x100.png",
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
@@ -175,21 +176,26 @@ return {
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.highestTierLabelOffset,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_SMALL),
+        font = love.graphics.newFont(
+            COMMON_VALUES.DEFAULT_FONT_PATH,
+            COMMON_VALUES.FONT_SMALL
+        ),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     templateSavePlaytime = {
         text = "0:00:00",
-
         type = "text",
 
         x = COMMON_VALUES.CENTER_X,
         y = UILayoutData.mainMenu.startButton.y - UILayoutData.saveFiles.slotOffset + UILayoutData.saveFiles.playtimeLabelOffset,
 
         color = COMMON_VALUES.COLOR_WHITE,
-        font = love.graphics.newFont(COMMON_VALUES.DEFAULT_FONT_PATH, COMMON_VALUES.FONT_MEDIUM),
+        font = love.graphics.newFont(
+            COMMON_VALUES.DEFAULT_FONT_PATH,
+            COMMON_VALUES.FONT_MEDIUM
+        ),
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },

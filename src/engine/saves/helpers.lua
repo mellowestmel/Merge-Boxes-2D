@@ -1,5 +1,3 @@
--- ~/src/engine/saves/helpers.lua
-
 local Module = {}
 
 function Module.GetPath(givenTable, path)

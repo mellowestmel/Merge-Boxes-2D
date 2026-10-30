@@ -1,5 +1,3 @@
--- ~/src/game/vfx/sceneTransition.lua
-
 local SettingsModule = require("src.engine.saves.settings")
 local RenderElementModule = require("src.engine.render.element")
 

@@ -1,5 +1,3 @@
--- ~/src/game/ui/scenes/boxRanch.lua
-
 local SavesFilesModule = require("src.engine.saves.files")
 
 local LocalizationHandlerModule = require("src.engine.localizationHandler")
@@ -22,44 +20,15 @@ local SceneData = require("src.data.ui.scenes.boxRanch")
 
 local Module = UISceneBase.new("boxRanch")
 
-local LOCKED_SHOP_BUTTON_SPRITE = "assets/sprites/ui/buttons/buttonlocked74x74.png"
-
 local spawnButton
 local spawnButtonLabel
-
-local SHOP_BUTTONS = {
-    {
-        key = "upgradeShop",
-
-        hitboxData = SceneData.upgradeShopButtonHitbox,
-        requirement = CONSTANTS.SHOP.UPGRADE_SHOP.UNLOCK_REQUIREMENT,
-
-        targetScene = "upgradeShop"
-    },
-    {
-        key = "blackMarket",
-
-        hitboxData = SceneData.blackMarketButtonHitbox,
-        requirement = CONSTANTS.SHOP.BLACK_MARKET.UNLOCK_REQUIREMENT,
-
-        targetScene = "blackMarket"
-    },
-    {
-        key = "sacrifice",
-
-        hitboxData = SceneData.sacrificeButtonHitbox,
-        requirement = CONSTANTS.SHOP.SACRIFICIAL_GROUNDS.UNLOCK_REQUIREMENT,
-
-        targetScene = "sacrificialGrounds"
-    }
-}
 
 local shopButtonHitboxes = {}
 
 local function _setupSpawnButton(self)
-    local hitbox
+    local _
 
-    spawnButton, hitbox, spawnButtonLabel = UIObjectHelperModule.CreateElementButton(
+    spawnButton, _, spawnButtonLabel = UIObjectHelperModule.CreateElementButton(
         self,
         SceneData.spawnButtonHitbox,
         SceneData.spawnButtonLabel,
@@ -70,7 +39,7 @@ local function _setupSpawnButton(self)
 end
 
 local function _setupAutoSpawnButton(self)
-    local button, hitbox, label
+    local _, hitbox, label
 
     local function _refresh()
         local enabled = BoxFactoryModule.autoSpawnEnabled
@@ -87,7 +56,7 @@ local function _setupAutoSpawnButton(self)
         )
     end
 
-    button, hitbox, label = UIObjectHelperModule.CreateElementButton(
+    _, hitbox, label = UIObjectHelperModule.CreateElementButton(
         self,
         SceneData.autoSpawnButtonHitbox,
         SceneData.autoSpawnButtonLabel,
@@ -104,10 +73,10 @@ end
 local function _setupShopButtons(self)
     shopButtonHitboxes = {}
 
-    for _, shopButton in ipairs(SHOP_BUTTONS) do
+    for _, shopButton in ipairs(CONSTANTS.UI.BOX_RANCH.SHOP_BUTTONS) do
         local _, hitbox = UIObjectHelperModule.CreateElementButton(
             self,
-            shopButton.hitboxData,
+            SceneData[shopButton.hitboxKey],
             nil,
             function()
                 if SavesFilesModule:Get("tracking.highestBoxTier") < shopButton.requirement then
@@ -127,14 +96,14 @@ end
 local function _updateShopButtons()
     local highestBoxTier = SavesFilesModule:Get("tracking.highestBoxTier")
 
-    for _, shopButton in ipairs(SHOP_BUTTONS) do
+    for _, shopButton in ipairs(CONSTANTS.UI.BOX_RANCH.SHOP_BUTTONS) do
         local hitbox = shopButtonHitboxes[shopButton.key]
 
         if hitbox then
             hitbox:ChangeSprite(
                 highestBoxTier < shopButton.requirement
-                    and LOCKED_SHOP_BUTTON_SPRITE
-                    or shopButton.hitboxData.spritePath
+                    and CONSTANTS.UI.BOX_RANCH.LOCKED_SHOP_BUTTON_SPRITE
+                    or SceneData[shopButton.hitboxKey].spritePath
             )
         end
     end

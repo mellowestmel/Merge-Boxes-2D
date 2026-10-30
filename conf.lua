@@ -1,5 +1,3 @@
--- ~/conf.lua
-
 SAWE_FILE_ENCRYPTION_KEY = "Next Update: Femboys"
 
 RESOLUTION_WIDTH = 800
@@ -15,6 +13,7 @@ table = require("src.engine.helpers.table")
 math = require("src.engine.helpers.math")
 
 function love.conf(config)
+    config.version = "11.5" -- LOVE2D version
     config.identity = "MERGE-BOXES-2D"
 
     config.window.width = RESOLUTION_WIDTH

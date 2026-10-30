@@ -1,5 +1,3 @@
--- ~/src/data/boxes/gameplayData.lua
-
 local gameplay
 gameplay = {
     -- Special

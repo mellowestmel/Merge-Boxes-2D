@@ -1,11 +1,7 @@
--- ~/src/game/box/physicsHandler.lua
-
 local Module = {}
 
 local SavesFilesModule = require("src.engine.saves.files")
-
 local RenderUtilsModule = require("src.engine.render.utils")
-
 
 local CONSTANTS = require("src.data.constants")
 

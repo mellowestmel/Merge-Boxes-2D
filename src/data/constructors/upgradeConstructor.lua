@@ -1,5 +1,3 @@
--- ~/src/data/constructors/upgradeConstructor.lua
-
 local Module = {}
 
 function Module.new(data)

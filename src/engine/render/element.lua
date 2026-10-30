@@ -1,5 +1,3 @@
--- ~/src/engine/render/element.lua
-
 local LocalizationHandlerModule = require("src.engine.localizationHandler")
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local ShaderHandlerModule = require("src.engine.shaderHandler")
@@ -49,6 +47,16 @@ function Element:ChangeSprite(path)
 
     self.drawable = Module:PreloadSprite(path)
     self.spritePath = path
+
+    local spriteWidth, spriteHeight = self.drawable:getDimensions()
+
+    if not self.widthOverride then
+        self.width = spriteWidth
+    end
+
+    if not self.heightOverride then
+        self.height = spriteHeight
+    end
 
     Module._dirty = true
 end
@@ -110,9 +118,24 @@ local function _getDimensions(element)
         width, height = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
     end
 
+    width = element.width or width
+    height = element.height or height
+
+    -- Shrink to fit maxWidth/maxHeight, keeping proportions so text and sprites
+    -- aren't distorted. Applied before scale so hover/click scaling still works.
+    local fit = 1
+
+    if element.maxWidth and width > element.maxWidth then
+        fit = math.min(fit, element.maxWidth / width)
+    end
+
+    if element.maxHeight and height > element.maxHeight then
+        fit = math.min(fit, element.maxHeight / height)
+    end
+
     return
-        (element.width or width) * element.scaleX,
-        (element.height or height) * element.scaleY
+        width * fit * element.scaleX,
+        height * fit * element.scaleY
 end
 
 function Element:SetZIndex(zIndex)
@@ -331,8 +354,14 @@ function Module.new(data)
         scaleX = data.scaleX or 1,
         scaleY = data.scaleY or 1,
 
-        height = data.height,
         width = data.width,
+        height = data.height,
+
+        maxWidth = data.maxWidth,
+        maxHeight = data.maxHeight,
+
+        widthOverride = data.width ~= nil,
+        heightOverride = data.height ~= nil,
 
         x = data.x or 0,
         y = data.y or 0,

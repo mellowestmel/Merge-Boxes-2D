@@ -1,7 +1,4 @@
--- ~/src/game/ui/handler.lua
-
 local RenderUtilsModule = require("src.engine.render.utils")
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 
 local UISceneHandlerModule = require("src.game.ui.sceneHandler")

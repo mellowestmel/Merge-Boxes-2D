@@ -1,12 +1,9 @@
--- ~/src/data/ui/scenes/mainMenu.lua
-
 local COMMON_VALUES = require("src.data.ui.commonValues")
 local UILayoutData = require("src.data.ui.layout")
 
 return {
     background = {
         spritePath = "assets/sprites/ui/backgrounds/mainmenubg.png",
-
         type = "sprite",
 
         anchorX = 0,
@@ -17,35 +14,32 @@ return {
 
     logo = {
         spritePath = "assets/sprites/ui/logos/mergeboxes.png",
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
-        y = UILayoutData.mainMenu.startButton.y - UILayoutData.mainMenu.logoPrimaryOffsetY,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.mainMenu.logo.primary.offsetY,
 
-        scaleX = UILayoutData.mainMenu.logoPrimaryScale,
-        scaleY = UILayoutData.mainMenu.logoPrimaryScale,
+        scaleX = UILayoutData.mainMenu.logo.primary.scale,
+        scaleY = UILayoutData.mainMenu.logo.primary.scale,
 
         zIndex = COMMON_VALUES.Z_UI_BUTTON,
     },
 
     logo2 = {
         spritePath = "assets/sprites/ui/logos/2d.png",
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
-        y = UILayoutData.mainMenu.startButton.y - UILayoutData.mainMenu.logoSecondaryOffsetY,
+        y = UILayoutData.mainMenu.startButton.y - UILayoutData.mainMenu.logo.secondary.offsetY,
 
-        scaleX = UILayoutData.mainMenu.logoSecondaryScale,
-        scaleY = UILayoutData.mainMenu.logoSecondaryScale,
+        scaleX = UILayoutData.mainMenu.logo.secondary.scale,
+        scaleY = UILayoutData.mainMenu.logo.secondary.scale,
 
         zIndex = COMMON_VALUES.Z_UI_TEXT,
     },
 
     playGameButtonHitbox = {
         spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
@@ -58,7 +52,6 @@ return {
 
     playGameButtonLabel = {
         textKey = "mainMenu.play",
-
         type = "text",
 
         x = COMMON_VALUES.CENTER_X,
@@ -75,7 +68,6 @@ return {
 
     quitButtonHitbox = {
         spritePath = COMMON_VALUES.DEFAULT_BUTTON_PATH,
-
         type = "sprite",
 
         x = COMMON_VALUES.CENTER_X,
@@ -88,7 +80,6 @@ return {
 
     quitButtonLabel = {
         textKey = "mainMenu.quit",
-
         type = "text",
 
         x = COMMON_VALUES.CENTER_X,

@@ -1,5 +1,3 @@
--- ~/src/game/ui/helpers/layout.lua
-
 local Module = {}
 
 --- Calculates a vertical stack coordinate based on an index and item spacing.
@@ -75,12 +73,6 @@ function Module.GetGridPosition(index, columnCount, startPositionX, startPositio
     local positionY = startPositionY + (row * cellHeight)
 
     return positionX, positionY
-end
-
---- Wraps array index looping cleanly in both directions.
-function Module.WrapIndex(currentIndex, stepDirection, maximumItems)
-    if maximumItems <= 0 then return 1 end
-    return ((currentIndex - 1 + stepDirection) % maximumItems) + 1
 end
 
 return Module

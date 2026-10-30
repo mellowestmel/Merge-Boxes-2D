@@ -1,5 +1,3 @@
--- ~/src/game/ui/scenes/splashScreen.lua
-
 local SoundHandlerModule = require("src.engine.soundHandler")
 local SettingsModule = require("src.engine.saves.settings")
 

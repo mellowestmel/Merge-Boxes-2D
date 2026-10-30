@@ -1,5 +1,3 @@
--- ~/src/game/ui/helpers/textWrapping.lua
-
 local Module = {}
 
 function Module.Wrap(textElement, spriteElement, padding)

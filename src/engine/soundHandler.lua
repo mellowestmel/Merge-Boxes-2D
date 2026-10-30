@@ -1,4 +1,3 @@
--- ~/src/engine/soundHandler.lua
 -- Generic sound handler for creating, playing, updating, and removing sounds.
 
 local SignalHandlerModule = require("src.engine.events.signalHandler")

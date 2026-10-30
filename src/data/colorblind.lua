@@ -1,3 +1,11 @@
+--[[
+    Each matrix adjusts the RGB values to simulate how different
+    types of color blindness affect color perception.
+
+    Alpha isn't being changed for obvious reasons 
+    (Yes, my favorite type of colorblindness, the "makeeverythingslightlytransparent" one)
+]]
+
 return {
     none = {},
 

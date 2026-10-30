@@ -1,5 +1,3 @@
--- ~/src/data/shop/upgrades/upgradeShop.lua
-
 local UpgradeConstructor = require("src.data.constructors.upgradeConstructor")
 
 local rawUpgrades = {

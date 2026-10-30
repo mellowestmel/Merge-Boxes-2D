@@ -1,5 +1,3 @@
--- ~/src/data/boxes/cosmeticData.lua
-
 local cosmetic = {
 	-- Special
     ["goldenGerald"] = {

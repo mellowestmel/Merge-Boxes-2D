@@ -1,5 +1,3 @@
--- ~/src/engine/shaderHandler.lua
-
 local Module = {}
 Module.shaders = {}
 

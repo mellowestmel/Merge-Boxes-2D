@@ -191,8 +191,8 @@ local _lastFullscreen = nil
 local _lastVSync = nil
 
 function Module:Update()
-    local fullscreen = SettingsModule:Get("graphics.fullscreen")
-    local vsync = SettingsModule:Get("graphics.vsync")
+    local fullscreen = (SettingsModule:Get("graphics.fullscreen") and true or false)
+    local vsync = (SettingsModule:Get("graphics.vsync") and 1 or 0)
 
     -- Only apply if the fullscreen state changed
     if fullscreen ~= _lastFullscreen then

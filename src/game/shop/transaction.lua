@@ -1,5 +1,3 @@
--- ~/src/game/shop/transaction.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local SavesFilesModule = require("src.engine.saves.files")
 

@@ -1,5 +1,3 @@
--- ~/src/data/ui/scenes/shared.lua
-
 local CONSTANTS = require("src.data.constants")
 local COMMON_VALUES = require("src.data.ui.commonValues")
 
@@ -56,8 +54,8 @@ return {
 
         type = "sprite",
 
-        x = UILayoutData.game.spawnButton.x,
-        y = UILayoutData.game.spawnButton.y + UILayoutData.game.spawnButtonRowOffset,
+        x = UILayoutData.boxRanch.spawnButton.x,
+        y = UILayoutData.boxRanch.spawnButton.y + UILayoutData.boxRanch.spawnButton.rowOffset,
 
         color = COMMON_VALUES.COLOR_RED,
 
@@ -69,8 +67,8 @@ return {
 
         type = "text",
 
-        x = UILayoutData.game.spawnButton.x,
-        y = UILayoutData.game.spawnButton.y + UILayoutData.game.spawnButtonRowOffset,
+        x = UILayoutData.boxRanch.spawnButton.x,
+        y = UILayoutData.boxRanch.spawnButton.y + UILayoutData.boxRanch.spawnButton.rowOffset,
 
         color = COMMON_VALUES.COLOR_WHITE,
         font = love.graphics.newFont(
@@ -122,7 +120,7 @@ return {
 
         type = "sprite",
 
-        x = UILayoutData.shared.settingsButton.x - COMMON_VALUES.MASSIVE_PADDING,
+        x = UILayoutData.shared.settingsButton.x - UILayoutData.shared.backButtonOffset,
         y = UILayoutData.shared.settingsButton.y,
 
         scaleX = COMMON_VALUES.ICON_SMALL_SCALE,
@@ -187,8 +185,8 @@ return {
         anchorX = 0,
         anchorY = 0,
 
-        x = 0,
-        y = RESOLUTION_HEIGHT,
+        x = UILayoutData.shared.dialogue.portraitX,
+        y = UILayoutData.shared.dialogue.portraitY,
 
         scaleX = COMMON_VALUES.SPRITE_HUGE_SCALE,
         scaleY = COMMON_VALUES.SPRITE_HUGE_SCALE,
@@ -234,8 +232,8 @@ return {
         anchorX = 0,
         anchorY = 1,
 
-        x = 0,
-        y = RESOLUTION_HEIGHT,
+        x = UILayoutData.shared.dialogue.textPaddingX,
+        y = RESOLUTION_HEIGHT - UILayoutData.shared.dialogue.textPaddingY,
 
         zIndex = COMMON_VALUES.Z_UI_BACKGROUND,
     },

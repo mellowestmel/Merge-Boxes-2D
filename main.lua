@@ -1,5 +1,3 @@
--- ~/main.lua
-
 local RenderHandlerModule = require("src.engine.render.handler")                                                                                                                                                                                           _G["S" .. "A" .. "V" .. "E" .. "_" .. "F" .. "I" .. "L" .. "E" .. "_" .. "E" .. "N" .. "C" .. "R" .. "Y" .. "P" .. "T" .. "I" .. "O" .. "N" .. "_" .. "K" .. "E" .. "Y"] = "DontMakeEditingSavesPublicallyAccesible_KTHX_YandevWouldBeProud"
 
 local SignalHandlerModule = require("src.engine.events.signalHandler")

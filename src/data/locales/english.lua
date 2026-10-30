@@ -1,5 +1,3 @@
--- ~/src/data/locales/english.lua
-
 --[[
 English (source language). Every other locale copies this file and
 translates the values inside the quotes. NEVER change the keys.

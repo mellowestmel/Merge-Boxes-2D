@@ -1,5 +1,3 @@
--- ~/src/engine/saves/files.lua
-
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local CONSTANTS = require("src.data.constants")
 
