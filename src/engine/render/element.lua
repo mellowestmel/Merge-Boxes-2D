@@ -305,6 +305,7 @@ function Module.new(data)
 
     local element = setmetatable({
         id = manager:Get(),
+        removed = false,
 
         name = data.name,
 
@@ -316,7 +317,6 @@ function Module.new(data)
             or "sprite",
 
         onDraw = data.onDraw,
-        removed = false,
 
         zIndex = data.zIndex or 0,
 
@@ -359,7 +359,7 @@ function Module.new(data)
 
         shaders = data.shaders or {}
     }, Element)
-
+    
     if element.type == "sprite" then
         element:ChangeSprite(data.spritePath)
     elseif element.type == "text" and not element.font then

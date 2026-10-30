@@ -18,35 +18,32 @@ Module._buttons = {}
 local manager = IdManagerModule.new()
 
 function Button:Remove()
+	self.removed = true
+
 	Module._buttons[self.id] = nil
 	manager:Release(self.id)
 end
 
 function Button:MousePressed(x, y, mouseButton)
-	if ScreenTransitionModule.transitioning then return end
-	if not self.hitboxElement.render then return end
-	if (love.timer.getTime() - self.lastUsed) < self.cooldown then return end
-	if not self.hitboxElement:IsPointInside(x, y) then return end
-	if mouseButton ~= self.mouseButton then return end
+	if mouseButton ~= self.mouseButton then return end -- Wrong mouse button
+	if self.removed then return end -- Button was removed earlier
+	if ScreenTransitionModule.transitioning then return end -- Screen transitioning
+	if not self.hitboxElement.render then return end -- Hitbox is hidden
+	if (love.timer.getTime() - self.lastUsed) < self.cooldown then return end -- Still on cooldown
+	if not self.hitboxElement:IsPointInside(x, y) then return end -- Clicked outside the hitbox
 
 	self.lastUsed = love.timer.getTime()
 
-	local animationsEnabled =
-		SettingsModule:Get("graphics.uiAnimationsEnabled")
+	local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
 
 	if animationsEnabled then
 		for _, element in pairs(self.elements) do
-			element._baseScaleX =
-				element._baseScaleX or (element.scaleX or 1)
+			element._baseScaleX = element._baseScaleX or (element.scaleX or 1)
+			element._baseScaleY = element._baseScaleY or (element.scaleY or 1)
 
-			element._baseScaleY =
-				element._baseScaleY or (element.scaleY or 1)
+			element.scaleX = element._baseScaleX - self._clickScale
 
-			element.scaleX =
-				element._baseScaleX - self._clickScale
-
-			element.scaleY =
-				element._baseScaleY - self._clickScale
+			element.scaleY = element._baseScaleY - self._clickScale
 		end
 	end
 
@@ -64,45 +61,29 @@ function Button:MousePressed(x, y, mouseButton)
 end
 
 function Button:Update(deltaTime)
-	local mouseX, mouseY =
-		RenderUtilsModule.GetScaledMousePosition()
+	local mouseX, mouseY = RenderUtilsModule.GetScaledMousePosition()
+	self._isHovered = self.hitboxElement:IsPointInside(mouseX, mouseY)
 
-	self._isHovered =
-		self.hitboxElement:IsPointInside(mouseX, mouseY)
-
-	local animationsEnabled =
-		SettingsModule:Get("graphics.uiAnimationsEnabled")
-
-	local scaleLerp =
-		animationsEnabled
-		and math.min(1, self._scaleSpeed * deltaTime * 10)
-		or 1
+	local animationsEnabled = SettingsModule:Get("graphics.uiAnimationsEnabled")
+	local scaleLerp = (animationsEnabled and math.min(1, self._scaleSpeed * deltaTime * 10) or 1)
 
 	for _, element in pairs(self.elements) do
-		element._baseScaleX =
-			element._baseScaleX or (element.scaleX or 1)
+		element._baseScaleX = element._baseScaleX or (element.scaleX or 1)
 
-		element._baseScaleY =
-			element._baseScaleY or (element.scaleY or 1)
+		element._baseScaleY = element._baseScaleY or (element.scaleY or 1)
 
 		local targetScaleX = element._baseScaleX
 		local targetScaleY = element._baseScaleY
 
 		if self._isHovered then
-			targetScaleX =
-				targetScaleX + self._hoverScale
+			targetScaleX = targetScaleX + self._hoverScale
 
-			targetScaleY =
-				targetScaleY + self._hoverScale
+			targetScaleY = targetScaleY + self._hoverScale
 		end
 
-		element.scaleX =
-			element.scaleX
-			+ (targetScaleX - element.scaleX) * scaleLerp
+		element.scaleX = element.scaleX + (targetScaleX - element.scaleX) * scaleLerp
 
-		element.scaleY =
-			element.scaleY
-			+ (targetScaleY - element.scaleY) * scaleLerp
+		element.scaleY = element.scaleY + (targetScaleY - element.scaleY) * scaleLerp
 	end
 end
 
@@ -114,6 +95,7 @@ function Module.new(data)
 
 	local button = setmetatable({
 		id = manager:Get(),
+		removed = false,
 
 		elements = data.elements,
 
@@ -142,9 +124,20 @@ function Module.new(data)
 	return button
 end
 
+-- Click handlers can rebuild UI, which adds and removes buttons.
+-- Iterating a snapshot keeps new buttons from receiving the click that created them,
+-- and removed buttons are skipped.
 function Module:MousePressed(x, y, mouseButton)
+	local snapshot = {}
+
 	for _, button in pairs(self._buttons) do
-		button:MousePressed(x, y, mouseButton)
+		snapshot[#snapshot + 1] = button
+	end
+
+	for _, button in ipairs(snapshot) do
+		if not button.removed then
+			button:MousePressed(x, y, mouseButton)
+		end
 	end
 end
 
