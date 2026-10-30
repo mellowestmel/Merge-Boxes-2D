@@ -122,6 +122,11 @@ local SHOP = {
 }
 
 return {
+    PLATFORM = {
+        USE_STEAM_API = false, -- cloud saving, hook into the achievements system (the very real and currently implemented one) 
+        DEVICE_TYPE = "pc", -- "pc" | "mobile" | "console" | "whateverthefuck"
+    },
+
     SAVES = {
         SAVE_FILE_EXTENSION = ".mbsave",
         SAVE_FILE_PREFIX = "slot-",
@@ -143,13 +148,6 @@ return {
             contrast = { min = .5, max = 2 },
             gamma = { min = .5, max = 2 }
         },
-
-        COLORBLIND_MODES = {
-            "none",
-            "protanopia",
-            "deuteranopia",
-            "tritanopia"
-        }
     },
 
     BOX = {
