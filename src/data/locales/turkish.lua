@@ -1,6 +1,6 @@
 return {
     meta = {
         name = "Türkçe",
-        sortOrder = 4
+        sortOrder = 2
     },
 }

@@ -103,4 +103,10 @@ function Module.merge(a, b)
     return a
 end
 
+-- Wraps an array index, looping cleanly in both directions
+function Module.wrapIndex(currentIndex, stepDirection, maximumItems)
+    if maximumItems <= 0 then return 1 end
+    return ((currentIndex - 1 + stepDirection) % maximumItems) + 1
+end
+
 return Module -- Returns Module :3

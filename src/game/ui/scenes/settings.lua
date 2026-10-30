@@ -199,7 +199,7 @@ local function _cycleEnumSetting(category, settingKey, direction)
         category,
         settingKey,
         oldValue,
-        options[UILayoutHelperModule.WrapIndex(currentIndex, direction, #options)]
+        options[table.wrapIndex(currentIndex, direction, #options)]
     )
 end
 
@@ -368,7 +368,7 @@ local function _scrollCategory(self, increment)
         return
     end
 
-    currentCategoryIndex = UILayoutHelperModule.WrapIndex(
+    currentCategoryIndex = table.wrapIndex(
         currentCategoryIndex,
         increment,
         #categories
