@@ -11,7 +11,6 @@ local ScreenTransitionModule = require("src.game.vfx.screenTransition")
 local UILayoutData = require("src.data.ui.layout")
 
 local COMMON_VALUES = require("src.data.ui.commonValues")
-local CONSTANTS = require("src.data.constants")
 
 local SharedData = require("src.data.ui.scenes.shared")
 local BoxesData = require("src.data.boxes")

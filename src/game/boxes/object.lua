@@ -3,7 +3,6 @@ local SignalHandlerModule = require("src.engine.events.signalHandler")
 local RenderElementModule = require("src.engine.render.element")
 local IdManagerModule = require("src.engine.idManager")
 
-local CONSTANTS = require("src.data.constants")
 
 local BoxesData = require("src.data.boxes")
 

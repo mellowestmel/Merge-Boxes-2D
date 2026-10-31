@@ -3,7 +3,6 @@ local RenderUtilsModule = require("src.engine.render.utils")
 local SettingsModule = require("src.engine.saves.settings")
 local TweenHandlerModule = require("src.engine.tweenHandler")
 
-local CONSTANTS = require("src.data.constants")
 
 local Module = {
     _sprites = {},

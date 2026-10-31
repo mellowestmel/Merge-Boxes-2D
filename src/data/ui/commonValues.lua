@@ -3,8 +3,8 @@ local COMMON_VALUES = {}
 -- In short, this is a bunch of random values I made up and use so that the game's UI has a consistent layout
 
 -- SCREEN
-COMMON_VALUES.CENTER_X = RESOLUTION_WIDTH / 2
-COMMON_VALUES.CENTER_Y = RESOLUTION_HEIGHT / 2
+COMMON_VALUES.CENTER_X = CONSTANTS.DISPLAY.RESOLUTION_WIDTH / 2
+COMMON_VALUES.CENTER_Y = CONSTANTS.DISPLAY.RESOLUTION_HEIGHT / 2
 
 -- BUTTONS
 COMMON_VALUES.DEFAULT_BUTTON_PATH = "assets/sprites/ui/buttons/button220x75.png"

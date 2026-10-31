@@ -2,7 +2,6 @@ local RenderElementModule = require("src.engine.render.element")
 
 local SettingsModule = require("src.engine.saves.settings")
 
-local CONSTANTS = require("src.data.constants")
 
 local Module = {}
 Module._screenFlashElement = nil
@@ -43,8 +42,8 @@ function Module.Init()
 
         bypassShaders = true,
 
-        width = RESOLUTION_WIDTH,
-        height = RESOLUTION_HEIGHT,
+        width = CONSTANTS.DISPLAY.RESOLUTION_WIDTH,
+        height = CONSTANTS.DISPLAY.RESOLUTION_HEIGHT,
 
         anchorX = 0,
         anchorY = 0,

@@ -1,7 +1,6 @@
 local RenderElementModule = require("src.engine.render.element")
 local RenderUtilsModule = require("src.engine.render.utils")
 
-local CONSTANTS = require("src.data.constants")
 
 local UIScrollingFrameObjectModule = require("src.game.ui.objects.scrollingFrame")
 local UIButtonObjectModule = require("src.game.ui.objects.button")

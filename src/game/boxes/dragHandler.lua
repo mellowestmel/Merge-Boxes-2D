@@ -1,7 +1,6 @@
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local RenderUtilsModule = require("src.engine.render.utils")
 
-local CONSTANTS = require("src.data.constants")
 
 local BoxesObjectModule = require("src.game.boxes.object")
 local UICursorModule = require("src.game.ui.cursor")

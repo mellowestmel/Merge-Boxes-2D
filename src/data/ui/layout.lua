@@ -3,7 +3,6 @@
 
 -- Basically this file is full of layout variables that deviate from COMMON_VALUES
 
-local CONSTANTS = require("src.data.constants")
 local COMMON_VALUES = require("src.data.ui.commonValues")
 
 local layoutData = {}
@@ -30,13 +29,13 @@ layoutData.mainMenu = {
 -- SHARED UI
 layoutData.shared = {
     settingsButton = {
-        x = RESOLUTION_WIDTH - 35,
+        x = CONSTANTS.DISPLAY.RESOLUTION_WIDTH - 35,
         y = 35
     },
 
     discordButton = {
-        x = RESOLUTION_WIDTH - 35,
-        y = RESOLUTION_HEIGHT - 35
+        x = CONSTANTS.DISPLAY.RESOLUTION_WIDTH - 35,
+        y = CONSTANTS.DISPLAY.RESOLUTION_HEIGHT - 35
     },
 
     backButtonOffset = 50,
@@ -49,7 +48,7 @@ layoutData.shared = {
         textPaddingY = 45,
 
         arrowX = CONSTANTS.BOX.AREA.WIDTH - COMMON_VALUES.MASSIVE_PADDING,
-        arrowY = RESOLUTION_HEIGHT - COMMON_VALUES.MASSIVE_PADDING
+        arrowY = CONSTANTS.DISPLAY.RESOLUTION_HEIGHT - COMMON_VALUES.MASSIVE_PADDING
     },
 
     backgroundBoxesPathPrefix = "assets/sprites/boxes/background/",
@@ -127,7 +126,7 @@ layoutData.settings = {
 -- BOX RANCH
 layoutData.boxRanch = {
     spawnButton = {
-        x = CONSTANTS.BOX.AREA.WIDTH + (RESOLUTION_WIDTH - CONSTANTS.BOX.AREA.WIDTH) / 2,
+        x = CONSTANTS.BOX.AREA.WIDTH + (CONSTANTS.DISPLAY.RESOLUTION_WIDTH - CONSTANTS.BOX.AREA.WIDTH) / 2,
         y = 475,
 
         rowOffset = 65,

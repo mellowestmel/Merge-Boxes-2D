@@ -2,7 +2,6 @@
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local easingData = require("src.data.easing")
 
-local CONSTANTS = require("src.data.constants")
 
 local Module = {}
 Module._active = {}

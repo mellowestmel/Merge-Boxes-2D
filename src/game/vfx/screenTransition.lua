@@ -72,8 +72,8 @@ function Module.Init()
 
         bypassShaders = true,
 
-        width = RESOLUTION_WIDTH,
-        height = RESOLUTION_HEIGHT,
+        width = CONSTANTS.DISPLAY.RESOLUTION_WIDTH,
+        height = CONSTANTS.DISPLAY.RESOLUTION_HEIGHT,
 
         anchorX = 0,
         anchorY = 0,

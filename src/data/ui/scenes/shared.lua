@@ -1,4 +1,3 @@
-local CONSTANTS = require("src.data.constants")
 local COMMON_VALUES = require("src.data.ui.commonValues")
 
 local UILayoutData = require("src.data.ui.layout")
@@ -203,7 +202,7 @@ return {
         anchorY = 1,
 
         x = 0,
-        y = RESOLUTION_HEIGHT,
+        y = CONSTANTS.DISPLAY.RESOLUTION_HEIGHT,
 
         scaleX = COMMON_VALUES.SPRITE_HUGE_SCALE,
         scaleY = COMMON_VALUES.SPRITE_HUGE_SCALE,
@@ -233,7 +232,7 @@ return {
         anchorY = 1,
 
         x = UILayoutData.shared.dialogue.textPaddingX,
-        y = RESOLUTION_HEIGHT - UILayoutData.shared.dialogue.textPaddingY,
+        y = CONSTANTS.DISPLAY.RESOLUTION_HEIGHT - UILayoutData.shared.dialogue.textPaddingY,
 
         zIndex = COMMON_VALUES.Z_UI_BACKGROUND,
     },

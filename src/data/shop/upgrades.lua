@@ -1,5 +1,3 @@
-local CONSTANTS = require("src.data.constants")
-
 local upgradesByShop = {}
 local upgrades = {}
 

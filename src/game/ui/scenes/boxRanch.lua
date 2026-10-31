@@ -7,7 +7,6 @@ local BoxesObjectModule = require("src.game.boxes.object")
 local BoxFactoryModule = require("src.game.boxes.factory")
 
 local COMMON_VALUES = require("src.data.ui.commonValues")
-local CONSTANTS = require("src.data.constants")
 
 local UISceneHandlerModule = require("src.game.ui.sceneHandler")
 local UISharedFunctions = require("src.game.ui.shared")

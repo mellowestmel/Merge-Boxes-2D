@@ -28,8 +28,8 @@ end
 local function _getSceneCanvas()
     if not Module._sceneCanvas then
         Module._sceneCanvas = love.graphics.newCanvas(
-            RESOLUTION_WIDTH,
-            RESOLUTION_HEIGHT
+            CONSTANTS.DISPLAY.RESOLUTION_WIDTH,
+            CONSTANTS.DISPLAY.RESOLUTION_HEIGHT
         )
 
         Module._sceneCanvas:setFilter("nearest", "nearest")
@@ -47,8 +47,8 @@ local function _getPrescaleCanvas(factor)
         end
 
         Module._prescaleCanvas = love.graphics.newCanvas(
-            RESOLUTION_WIDTH * factor,
-            RESOLUTION_HEIGHT * factor
+            CONSTANTS.DISPLAY.RESOLUTION_WIDTH * factor,
+            CONSTANTS.DISPLAY.RESOLUTION_HEIGHT * factor
         )
 
         Module._prescaleCanvas:setFilter("linear", "linear")
@@ -83,15 +83,15 @@ function Module:Draw()
     -- Compute resolution scale & letterbox offsets.
     local currentWindowWidth, currentWindowHeight = love.graphics.getDimensions()
 
-    local windowScaleX = currentWindowWidth / RESOLUTION_WIDTH
-    local windowScaleY = currentWindowHeight / RESOLUTION_HEIGHT
+    local windowScaleX = currentWindowWidth / CONSTANTS.DISPLAY.RESOLUTION_WIDTH
+    local windowScaleY = currentWindowHeight / CONSTANTS.DISPLAY.RESOLUTION_HEIGHT
     local windowScaleFactor = math.min(windowScaleX, windowScaleY)
 
     local windowOffsetX =
-        (currentWindowWidth - RESOLUTION_WIDTH * windowScaleFactor) / 2
+        (currentWindowWidth - CONSTANTS.DISPLAY.RESOLUTION_WIDTH * windowScaleFactor) / 2
 
     local windowOffsetY =
-        (currentWindowHeight - RESOLUTION_HEIGHT * windowScaleFactor) / 2
+        (currentWindowHeight - CONSTANTS.DISPLAY.RESOLUTION_HEIGHT * windowScaleFactor) / 2
 
     local sceneCanvas = _getSceneCanvas()
 

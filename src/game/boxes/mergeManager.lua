@@ -9,7 +9,6 @@ local SavesFilesModule = require("src.engine.saves.files")
 
 local easingData = require("src.data.easing")
 
-local CONSTANTS = require("src.data.constants")
 local BoxesObjectModule = require("src.game.boxes.object")
 
 local ScreenFlashModule = require("src.game.vfx.screenFlash")

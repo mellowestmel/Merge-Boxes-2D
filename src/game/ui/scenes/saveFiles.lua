@@ -8,7 +8,6 @@ local MusicHandlerModule = require("src.game.musicHandler")
 
 local BoxesObjectModule = require("src.game.boxes.object")
 
-local CONSTANTS = require("src.data.constants")
 
 local UISceneHandlerModule = require("src.game.ui.sceneHandler")
 local UISharedFunctions = require("src.game.ui.shared")

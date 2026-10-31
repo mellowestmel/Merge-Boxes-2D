@@ -3,7 +3,6 @@ local SignalHandlerModule = require("src.engine.events.signalHandler")
 local SavesFilesModule = require("src.engine.saves.files")
 local SettingsModule = require("src.engine.saves.settings")
 
-local CONSTANTS = require("src.data.constants")
 local ColorblindData = require("src.data.colorblind")
 
 local LocalizationHandlerModule = require("src.engine.localizationHandler")

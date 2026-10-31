@@ -1,106 +1,5 @@
 local COMMON_VALUES = require("src.data.ui.commonValues")
 
-local SETTINGS_SCHEMA = {
-    {
-        key = "audio",
-        fields = {
-            { key = "masterVolume", default = .5 },
-            { key = "soundVolume", default = 1 },
-            { key = "trackVolume", default = 1 },
-            { key = "muteGame", default = false }
-        }
-    },
-    {
-        key = "graphics",
-        fields = {
-            { key = "contrast", default = 1 },
-            { key = "gamma", default = 1 },
-            { key = "fullscreen", default = true },
-            { key = "vsync", default = true },
-            { key = "uiAnimationsEnabled", default = true },
-            { key = "cursorAnimationsEnabled", default = true },
-            { key = "transitionsEnabled", default = true },
-            { key = "particlesEnabled", default = true }
-        }
-    },
-    {
-        key = "accessibility",
-        fields = {
-            { key = "language", default = "english" },
-            { key = "colorblindMode", default = "none" },
-            { key = "screenFlashEnabled", default = true }
-        }
-    }
-}
-
-local function _buildDefaultsFromSchema(schema)
-    local defaults = {}
-
-    for _, category in pairs(schema) do
-        local values = {}
-
-        for _, item in pairs(category.fields or {}) do
-            if item.fields then
-                local nested = _buildDefaultsFromSchema({
-                    { key = item.key, fields = item.fields }
-                })
-
-                values[item.key] = nested[item.key]
-            else
-                values[item.key] = item.default
-            end
-        end
-
-        defaults[category.key] = values
-    end
-
-    return defaults
-end
-
-local SAVE_SCHEMA = {
-    { key = "currencies", fields = { { key = "credits", default = 50 } } },
-    { key = "stats", fields = {
-        { key = "upgradeable", fields = {
-            { key = "extraSpawnTierChance", default = 0 },
-
-            { key = "spawnCooldown", default = 1.4 },
-            { key = "spawnCount", default = 1 },
-            { key = "spawnTier", default = 1 },
-
-            { key = "autoSpawnUnlocked", default = false },
-            { key = "dragMultiplier", default = 1 }
-        }}
-    }},
-
-    { key = "tracking", fields = {
-        { key = "highestBoxTier", default = 0 },
-        { key = "playtime", default = 0 },
-    }},
-
-    { key = "boxes", fields = {} },
-
-    { key = "upgrades", fields = {
-        { key = "luckyRoll", default = 0 },
-
-        { key = "spawnCooldown", default = 0 },
-        { key = "multiSpawn", default = 0 },
-        { key = "spawnTier", default = 0 },
-
-        { key = "autoSpawn", default = 0 },
-        { key = "pullPower", default = 0 }
-    }},
-    { key = "trinkets", fields = {} }
-}
-
-local DEFAULT_DATA = {
-    version = 4,
-    slot = 1,
-}
--- Merge schema defaults into DEFAULT_DATA
-for key, value in pairs(_buildDefaultsFromSchema(SAVE_SCHEMA)) do
-    DEFAULT_DATA[key] = value
-end
-
 local SHOP = {
     UPGRADE_DATA = {
         REQUIRE_DIRECTORY = "src.data.shop.upgrades.",
@@ -127,27 +26,78 @@ return {
         DEVICE_TYPE = "pc", -- "pc" | "mobile" | "console" | "whateverthefuck"
     },
 
+    DISPLAY = {
+        RESOLUTION_WIDTH = 800,
+        RESOLUTION_HEIGHT = 600,
+
+        FPS_SCALE = 240,
+
+        MIN_WINDOW_WIDTH = 400,
+        MIN_WINDOW_HEIGHT = 300
+    },
+
     SAVES = {
         SAVE_FILE_EXTENSION = ".mbsave",
         SAVE_FILE_PREFIX = "slot-",
 
         MAX_SAVE_SLOTS = 3,
 
-        DEFAULT_DATA = DEFAULT_DATA,
-        SAVE_SCHEMA = SAVE_SCHEMA,
+        DEFAULT_DATA = {
+            version = 1,
+
+            currencies = {
+                credits = 50
+            },
+            stats = {
+                extraSpawnTierChance = 0,
+                
+                spawnCooldown = 1.4,
+                spawnCount = 1,
+                spawnTier = 1,
+
+                dragMultiplier = 1
+            },
+            unlocks = {},
+            tracking = {
+                highestBoxTier = 0,
+                playtime = 0
+            },
+            inventory = {},
+
+            boxes = {},
+        },
 
         SETTINGS_FILE_NAME = "settings.conf",
+        DEFAULT_SETTINGS = {
+            audio = {
+                masterVolume = .5,
 
-        DEFAULT_SETTINGS =_buildDefaultsFromSchema(SETTINGS_SCHEMA),
-        SETTINGS_SCHEMA = SETTINGS_SCHEMA,
+                soundVolume = 1,
+                trackVolume = 1,
 
-        NUMBER_SETTING_RANGES = {
-            masterVolume = { min = 0, max = 1.5 },
-            soundVolume = { min = 0, max = 1.5 },
-            trackVolume = { min = 0, max = 1.5 },
-            contrast = { min = .5, max = 2 },
-            gamma = { min = .5, max = 2 }
-        },
+                muteGame = false
+            },
+
+            graphics = {
+                contrast = 1,
+                gamma = 1,
+
+                fullscreen = true,
+                vsync = true,
+
+                uiAnimationsEnabled = true,
+                cursorAnimationsEnabled = true,
+                transitionsEnabled = true,
+
+                particlesEnabled = true
+            },
+
+            accessibility = {
+                language = "english",
+                colorblindMode = "none",
+                screenFlashEnabled = true
+            }
+        }
     },
 
     BOX = {
@@ -212,7 +162,6 @@ return {
 
         SAVES = {
             RESET_BUTTON_WARN_TIME_OUT = .5,
-
             NEW_GAME_TRANSITION = { duration = 1.2 },
         },
 
@@ -250,6 +199,14 @@ return {
 
         SETTINGS = {
             NUMBER_SETTING_CHANGE_INCREMENT = .1,
+
+            NUMBER_SETTING_RANGES = {
+                masterVolume = { min = 0, max = 1.5 },
+                soundVolume = { min = 0, max = 1.5 },
+                trackVolume = { min = 0, max = 1.5 },
+                contrast = { min = .5, max = 2 },
+                gamma = { min = .5, max = 2 }
+            },
         },
 
         DIALOGUE = {

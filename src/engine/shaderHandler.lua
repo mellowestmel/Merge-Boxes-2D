@@ -5,7 +5,6 @@ Module._textures = {}
 Module._canvases = {}
 Module._previousShaders = {}
 
-local CONSTANTS = require("src.data.constants")
 
 -- Loads and caches a shader. Returns nil for empty files.
 function Module:Load(name, path, prelude)
@@ -93,12 +92,12 @@ Module._uniformProviders = {
     end,
 
     canvasSize = function()
-        _vector[1], _vector[2] = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
+        _vector[1], _vector[2] = CONSTANTS.DISPLAY.RESOLUTION_WIDTH, CONSTANTS.DISPLAY.RESOLUTION_HEIGHT
         return _vector
     end,
 
     texelSize = function()
-        _vector[1], _vector[2] = 1 / RESOLUTION_WIDTH, 1 / RESOLUTION_HEIGHT
+        _vector[1], _vector[2] = 1 / CONSTANTS.DISPLAY.RESOLUTION_WIDTH, 1 / CONSTANTS.DISPLAY.RESOLUTION_HEIGHT
         return _vector
     end,
 
@@ -177,19 +176,19 @@ end
 local function _getCanvases()
     local canvases = Module._canvases
 
-    if canvases.width ~= RESOLUTION_WIDTH
-        or canvases.height ~= RESOLUTION_HEIGHT
+    if canvases.width ~= CONSTANTS.DISPLAY.RESOLUTION_WIDTH
+        or canvases.height ~= CONSTANTS.DISPLAY.RESOLUTION_HEIGHT
         or not canvases.a
         or not canvases.b
     then
         if canvases.a then canvases.a:release() end
         if canvases.b then canvases.b:release() end
 
-        canvases.a = love.graphics.newCanvas(RESOLUTION_WIDTH, RESOLUTION_HEIGHT)
-        canvases.b = love.graphics.newCanvas(RESOLUTION_WIDTH, RESOLUTION_HEIGHT)
+        canvases.a = love.graphics.newCanvas(CONSTANTS.DISPLAY.RESOLUTION_WIDTH, CONSTANTS.DISPLAY.RESOLUTION_HEIGHT)
+        canvases.b = love.graphics.newCanvas(CONSTANTS.DISPLAY.RESOLUTION_WIDTH, CONSTANTS.DISPLAY.RESOLUTION_HEIGHT)
 
-        canvases.width = RESOLUTION_WIDTH
-        canvases.height = RESOLUTION_HEIGHT
+        canvases.width = CONSTANTS.DISPLAY.RESOLUTION_WIDTH
+        canvases.height = CONSTANTS.DISPLAY.RESOLUTION_HEIGHT
     end
 
     return canvases.a, canvases.b

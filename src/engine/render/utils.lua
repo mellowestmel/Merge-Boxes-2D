@@ -57,7 +57,7 @@ end
 --- Calculates screen scaling and letterbox offsets to preserve virtual resolution.
 function Module.GetViewport()
     local currentWidth, currentHeight = love.graphics.getDimensions()
-    local baseWidth, baseHeight = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
+    local baseWidth, baseHeight = CONSTANTS.DISPLAY.RESOLUTION_WIDTH, CONSTANTS.DISPLAY.RESOLUTION_HEIGHT
 
     local scaleX = currentWidth / baseWidth
     local scaleY = currentHeight / baseHeight

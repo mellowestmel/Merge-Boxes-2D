@@ -115,7 +115,7 @@ local function _getDimensions(element)
         height = font:getHeight()
 
     else
-        width, height = RESOLUTION_WIDTH, RESOLUTION_HEIGHT
+        width, height = CONSTANTS.DISPLAY.RESOLUTION_WIDTH, CONSTANTS.DISPLAY.RESOLUTION_HEIGHT
     end
 
     width = element.width or width

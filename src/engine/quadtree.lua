@@ -1,4 +1,3 @@
-local CONSTANTS = require("src.data.constants")
 
 local Quadtree = {}
 Quadtree.__index = Quadtree

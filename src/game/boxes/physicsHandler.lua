@@ -3,20 +3,15 @@ local Module = {}
 local SavesFilesModule = require("src.engine.saves.files")
 local RenderUtilsModule = require("src.engine.render.utils")
 
-local CONSTANTS = require("src.data.constants")
-
 local BoxDragHandlerModule = require("src.game.boxes.dragHandler")
 local BoxesObjectModule = require("src.game.boxes.object")
-
--- Globals are defined in conf.lua
-local FPS_SCALE = _G.FPS_SCALE
 
 local function _getWeightFactor(box)
     return box.data.weight / CONSTANTS.BOX.PHYSICS.BASE_WEIGHT
 end
 
 local function _applyFriction(box, deltaTime)
-    local fpsFactor = deltaTime * FPS_SCALE
+    local fpsFactor = deltaTime * CONSTANTS.DISPLAY.FPS_SCALE
     local friction = CONSTANTS.BOX.PHYSICS.FRICTION
 
     local damping = math.max(0, 1 - friction * fpsFactor)
@@ -76,14 +71,14 @@ local function _dragPhysics(box)
 end
 
 local function _changePosition(box, deltaTime)
-    local fpsFactor = deltaTime * FPS_SCALE
+    local fpsFactor = deltaTime * CONSTANTS.DISPLAY.FPS_SCALE
 
     box.element.x = box.element.x + box.velocityX * fpsFactor
     box.element.y = box.element.y + box.velocityY * fpsFactor
 end
 
 local function _rotationHandler(box, deltaTime)
-    local fpsFactor = deltaTime * FPS_SCALE
+    local fpsFactor = deltaTime * CONSTANTS.DISPLAY.FPS_SCALE
 
     if box.dragging then
         local width = box.element:GetWidth()

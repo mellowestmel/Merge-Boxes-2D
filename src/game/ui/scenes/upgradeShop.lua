@@ -16,7 +16,6 @@ local UISceneBase = require("src.game.ui.helpers.scene")
 local UILayoutData = require("src.data.ui.layout")
 
 local COMMON_VALUES = require("src.data.ui.commonValues")
-local CONSTANTS = require("src.data.constants")
 
 local SceneData = require("src.data.ui.scenes.upgradeShop")
 local ShopID = CONSTANTS.SHOP.UPGRADE_SHOP.ID

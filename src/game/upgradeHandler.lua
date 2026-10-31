@@ -1,7 +1,6 @@
 local SignalHandlerModule = require("src.engine.events.signalHandler")
 local SavesFilesModule = require("src.engine.saves.files")
 
-local CONSTANTS = require("src.data.constants")
 
 local UpgradesData = require("src.data.shop.upgrades")
 
